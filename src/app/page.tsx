@@ -290,9 +290,33 @@ const systems = [
 ];
 
 const featuredProducts = [
-  { id: "1", name: "Victron MultiPlus 12/3000/120-16", brand: "VICTRON ENERGY", price: 124500, image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1000", category: "Electrical", specs: { "Voltage": "12V", "Inverter": "3000VA", "Charger": "120A" } },
-  { id: "2", name: "Dometic CFX3 55IM Fridge", brand: "DOMETIC", price: 89900, image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1000", category: "Appliances", specs: { "Capacity": "55L", "Power": "12/24V", "Weight": "21kg" } },
-  { id: "3", name: "Truma Combi 4E Kit", brand: "TRUMA", price: 185000, image: "https://images.unsplash.com/photo-1590487988256-9ed24133863e?q=80&w=1000", category: "Heating", specs: { "Output": "4kW", "Input": "Gas/230V", "Vessel": "10L" } },
+  { 
+    id: "1", 
+    name: "Victron MultiPlus 12/3000/120-16", 
+    brand: "VICTRON ENERGY", 
+    price: 124500, 
+    image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1000", 
+    category: "Electrical", 
+    specs: { "Voltage": "12V", "Inverter": "3000VA", "Charger": "120A" } as Record<string, string> 
+  },
+  { 
+    id: "2", 
+    name: "Dometic CFX3 55IM Fridge", 
+    brand: "DOMETIC", 
+    price: 89900, 
+    image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1000", 
+    category: "Appliances", 
+    specs: { "Capacity": "55L", "Power": "12/24V", "Weight": "21kg" } as Record<string, string>
+  },
+  { 
+    id: "3", 
+    name: "Truma Combi 4E Kit", 
+    brand: "TRUMA", 
+    price: 185000, 
+    image: "https://images.unsplash.com/photo-1590487988256-9ed24133863e?q=80&w=1000", 
+    category: "Heating", 
+    specs: { "Output": "4kW", "Input": "Gas/230V", "Vessel": "10L" } as Record<string, string>
+  },
 ];
 
 const showcaseBuilds = [
