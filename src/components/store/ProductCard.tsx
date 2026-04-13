@@ -12,7 +12,7 @@ interface ProductCardProps {
   price: number;
   image: string;
   category: string;
-  specs?: Record<string, string>;
+  specs?: Record<string, string | number | undefined>;
   className?: string;
 }
 
