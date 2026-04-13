@@ -28,7 +28,7 @@ export default function SystemsPage() {
                   <div className="w-16 h-16 bg-brand-obsidian border border-brand-border flex items-center justify-center text-brand-orange group-hover:scale-110 transition-transform">
                     <s.icon className="w-8 h-8" />
                   </div>
-                  <span className="font-mono text-[10px] text-brand-grey">0{s.index} // TECHNICAL MODULE</span>
+                  <span className="font-mono text-[10px] text-brand-grey">0{s.index} {"//"} TECHNICAL MODULE</span>
                 </div>
                 <h3 className="font-display text-3xl mb-4 group-hover:text-brand-orange transition-colors">{s.name}</h3>
                 <p className="font-mono text-[10px] text-brand-orange uppercase tracking-widest mb-6 opacity-60">{s.tagline}</p>

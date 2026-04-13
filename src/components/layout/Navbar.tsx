@@ -55,7 +55,8 @@ export function Navbar() {
             DIY MOTORHOMES
           </span>
           <span className="font-mono text-[10px] tracking-[0.2em] text-brand-orange transition-opacity duration-300 group-hover:opacity-100">
-            // BUILT FOR THE ROAD
+            {/* // BUILT FOR THE ROAD */}
+            BUILT FOR THE ROAD
           </span>
         </Link>
 

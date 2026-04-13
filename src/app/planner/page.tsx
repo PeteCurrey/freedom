@@ -6,10 +6,10 @@ import { Footer } from "@/components/layout/Footer";
 import { SVGSchematic, SystemTier } from "@/components/planner/SVGSchematic";
 import { cn } from "@/lib/utils";
 import { 
-  Zap, Thermometer, Droplets, Shield, Weight, 
-  PoundSterling, CheckCircle2, Ruler, Layout, 
-  ChevronRight, ArrowLeft, Download, Eye, Sparkles,
-  Wind, Flame, Box, Loader2
+  Zap, Thermometer, Droplets, Weight, 
+  PoundSterling, CheckCircle2,
+  ChevronRight, ArrowLeft, Download, Eye,
+  Wind, Flame, Loader2
 } from "lucide-react";
 
 // --- CONFIGURATION DATA ---
@@ -103,7 +103,6 @@ export default function BuildPlanner() {
   }, [selections.systems]);
 
   const vehicle = vehicleFoundations.find(v => v.id === selections.vehicleId);
-  const totalWeight = (vehicle?.baseWeight || 0) + totals.weight;
   const payloadLimit = vehicle?.payload || 0;
   const payloadUsagePercent = (totals.weight / payloadLimit) * 100;
 
@@ -252,7 +251,7 @@ export default function BuildPlanner() {
                             <p className="font-sans text-brand-grey text-sm">Choose the tier that matches your mission profile.</p>
                           </div>
                           <div className="w-48">
-                            <SVGSchematic system={systemKey as any} tier={selections.systems[systemKey as keyof typeof selections.systems] as any} />
+                            <SVGSchematic system={systemKey} tier={selections.systems[systemKey as keyof typeof selections.systems] as SystemTier} />
                           </div>
                         </div>
                         

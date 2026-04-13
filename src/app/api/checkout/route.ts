@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { planId, tier, priceId } = await req.json();
+    const { planId, tier } = await req.json();
 
     // Mocking Stripe Session Creation
     const mockSession = {

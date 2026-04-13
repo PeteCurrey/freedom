@@ -4,14 +4,29 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { HeroSection } from "@/components/home/HeroSection";
 import { HorizontalScroll } from "@/components/ui/HorizontalScroll";
-import { SpecCard } from "@/components/ui/SpecCard";
 import { ProductCard } from "@/components/store/ProductCard";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Zap, Thermometer, Droplets, Shield, Layers, Layout } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+// Definining types for better safety
+interface Vehicle {
+  name: string;
+  slug: string;
+  specs: string;
+  image: string;
+}
+
+interface System {
+  index: number;
+  name: string;
+  slug: string;
+  icon: React.ElementType;
+  description: string;
+}
 
 export default function Home() {
   const whyRef = useRef<HTMLDivElement>(null);
@@ -107,8 +122,8 @@ export default function Home() {
         title="CHOOSE YOUR FOUNDATION"
         subtitle="6 Pro-grade chassis compared for your next build."
       >
-        {vehicles.map((vehicle, i) => (
-          <VehicleCard key={vehicle.name} vehicle={vehicle} index={i} />
+        {vehicles.map((vehicle) => (
+          <VehicleCard key={vehicle.name} vehicle={vehicle} />
         ))}
       </HorizontalScroll>
 
@@ -127,7 +142,8 @@ export default function Home() {
               href="/systems" 
               className="font-mono text-xs uppercase tracking-[0.2em] text-brand-orange border-b border-brand-orange/30 pb-2 hover:border-brand-orange transition-all"
             >
-              // Explore All Systems
+              {/* // Explore All Systems */}
+              Explore All Systems
             </Link>
           </div>
 
@@ -218,7 +234,7 @@ export default function Home() {
 
 // Sub-components & Mock Data
 
-function VehicleCard({ vehicle, index }: { vehicle: any; index: number }) {
+function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
   return (
     <div className="w-[450px] group blueprint-border bg-brand-graphite/30 overflow-hidden">
       <div className="relative aspect-[16/10] overflow-hidden">
@@ -241,14 +257,15 @@ function VehicleCard({ vehicle, index }: { vehicle: any; index: number }) {
           href={`/vehicles/${vehicle.slug}`}
           className="font-mono text-[10px] text-brand-white uppercase tracking-[0.2em] border-b border-brand-white/20 pb-2 hover:border-brand-orange hover:text-brand-orange transition-all"
         >
-          // View Full Profile
+          {/* // View Full Profile */}
+          View Full Profile
         </Link>
       </div>
     </div>
   );
 }
 
-function SystemCard({ system }: { system: any }) {
+function SystemCard({ system }: { system: System }) {
   const Icon = system.icon;
   return (
     <Link href={`/systems/${system.slug}`} className="group blueprint-border p-10 bg-brand-surface hover:bg-brand-graphite transition-all duration-500 hover:-translate-y-2">

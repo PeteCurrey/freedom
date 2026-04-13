@@ -5,7 +5,7 @@ import React from 'react';
 export type SystemTier = 'basic' | 'mid' | 'pro' | 'none';
 
 interface SchematicProps {
-  system: 'electrical' | 'plumbing' | 'heating';
+  system: string;
   tier: SystemTier;
   vehicleWidth?: number;
   vehicleLength?: number;
@@ -45,7 +45,7 @@ export const SVGSchematic: React.FC<SchematicProps> = ({ system, tier, vehicleWi
 
       {/* Dynamic Schematic Layer */}
       {system === 'electrical' && <ElectricalLayer tier={tier} viewWidth={viewWidth} viewHeight={viewHeight} />}
-      {system === 'plumbing' && <PlumbingLayer tier={tier} viewWidth={viewWidth} viewHeight={viewHeight} />}
+      {(system === 'plumbing' || system === 'water') && <PlumbingLayer tier={tier} viewWidth={viewWidth} viewHeight={viewHeight} />}
       {system === 'heating' && <HeatingLayer tier={tier} viewWidth={viewWidth} viewHeight={viewHeight} />}
 
       {/* Annotations */}
@@ -89,7 +89,7 @@ const ElectricalLayer = ({ tier, viewWidth, viewHeight }: { tier: SystemTier, vi
   );
 };
 
-const PlumbingLayer = ({ tier, viewWidth, viewHeight }: { tier: SystemTier, viewWidth: number, viewHeight: number }) => {
+const PlumbingLayer: React.FC<{ tier: SystemTier, viewWidth: number, viewHeight: number }> = () => {
   return (
     <g>
       {/* Fresh Tank */}
@@ -97,13 +97,13 @@ const PlumbingLayer = ({ tier, viewWidth, viewHeight }: { tier: SystemTier, view
       <text x="45" y="38" fill="white" fontSize="4" className="font-mono">FRESH WATER (80L+)</text>
       
       {/* Grey Tank (External) */}
-      <rect x="40" y={viewHeight - 15} width="40" height="10" fill="rgba(100,100,100,0.1)" stroke="#646464" strokeWidth="1" strokeDasharray="2,2" />
-      <text x="42" y={viewHeight - 8} fill="white" fontSize="3" className="font-mono">GREY TANK (EXT)</text>
+      <rect x="40" y="185" width="40" height="10" fill="rgba(100,100,100,0.1)" stroke="#646464" strokeWidth="1" strokeDasharray="2,2" />
+      <text x="42" y="192" fill="white" fontSize="3" className="font-mono">GREY TANK (EXT)</text>
     </g>
   );
 };
 
-const HeatingLayer = ({ tier, viewWidth, viewHeight }: { tier: SystemTier, viewWidth: number, viewHeight: number }) => {
+const HeatingLayer: React.FC<{ tier: SystemTier, viewWidth: number, viewHeight: number }> = ({ viewWidth, viewHeight }) => {
   return (
     <g>
       {/* Heater Unit */}

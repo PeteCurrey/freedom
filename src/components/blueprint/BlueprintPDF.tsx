@@ -1,7 +1,17 @@
 "use client";
 
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+
+interface BlueprintPDFProps {
+  data: {
+    vehicleName: string;
+    configId: string;
+    buildId: string;
+    tier: string;
+    totalWeight: number;
+  };
+}
 
 const styles = StyleSheet.create({
   page: {
@@ -29,28 +39,31 @@ const styles = StyleSheet.create({
   footer: { position: 'absolute', bottom: 30, left: 40, right: 40, fontSize: 8, textAlign: 'center', color: '#666666', borderTopWidth: 1, borderTopColor: '#333333', paddingTop: 10 }
 });
 
-export const BlueprintPDF = ({ data }: { data: any }) => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ fontSize: 40, color: '#FF6B00', marginBottom: 20 }}>DIY MOTORHOMES</Text>
-        <Text style={styles.title}>BUILD BLUEPRINT PACK</Text>
-        <Text style={[styles.text, { fontSize: 14 }]}>FOR: {data.vehicleName} {data.configId}</Text>
-        <Text style={[styles.text, { marginTop: 40 }]}>Build ID: {data.buildId}</Text>
-        <Text style={styles.text}>TIER: {data.tier.toUpperCase()}</Text>
-      </View>
-      <View style={styles.footer}><Text>© 2026 DIY MOTORHOMES | ENGINEERED FOR LIFE</Text></View>
-    </Page>
-    <Page size="A4" style={styles.page}>
-      <View style={styles.header}><Text style={styles.logo}>DIYM</Text><Text style={{ fontSize: 10 }}>PROJECT OVERVIEW // SECTION 01</Text></View>
-      <Text style={styles.sectionTitle}>Vehicle Specifications</Text>
-      <View style={styles.table}>
-        <View style={styles.tableRow}><Text style={styles.tableCol}>SPECIFICATION</Text><Text style={styles.tableCol}>VALUE</Text></View>
-        <View style={styles.tableRow}><Text style={styles.tableCol}>Foundation</Text><Text style={styles.tableCol}>{data.vehicleName}</Text></View>
-        <View style={styles.tableRow}><Text style={styles.tableCol}>Configuration</Text><Text style={styles.tableCol}>{data.configId}</Text></View>
-        <View style={styles.tableRow}><Text style={styles.tableCol}>Est. Build Weight</Text><Text style={styles.tableCol}>{data.totalWeight} kg</Text></View>
-      </View>
-      <View style={styles.footer}><Text>PAGE 2 | {data.buildId}</Text></View>
-    </Page>
-  </Document>
-);
+export const BlueprintPDF = ({ data }: BlueprintPDFProps) => {
+  const { vehicleName, configId, buildId, tier, totalWeight } = data;
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ fontSize: 40, color: '#FF6B00', marginBottom: 20 }}>DIY MOTORHOMES</Text>
+          <Text style={styles.title}>BUILD BLUEPRINT PACK</Text>
+          <Text style={[styles.text, { fontSize: 14 }]}>FOR: {vehicleName} {configId}</Text>
+          <Text style={[styles.text, { marginTop: 40 }]}>Build ID: {buildId}</Text>
+          <Text style={styles.text}>TIER: {tier.toUpperCase()}</Text>
+        </View>
+        <View style={styles.footer}><Text>© 2026 DIY MOTORHOMES | ENGINEERED FOR LIFE</Text></View>
+      </Page>
+      <Page size="A4" style={styles.page}>
+        <View style={styles.header}><Text style={styles.logo}>DIYM</Text><Text style={{ fontSize: 10 }}>PROJECT OVERVIEW // SECTION 01</Text></View>
+        <Text style={styles.sectionTitle}>Vehicle Specifications</Text>
+        <View style={styles.table}>
+          <View style={styles.tableRow}><Text style={styles.tableCol}>SPECIFICATION</Text><Text style={styles.tableCol}>VALUE</Text></View>
+          <View style={styles.tableRow}><Text style={styles.tableCol}>Foundation</Text><Text style={styles.tableCol}>{vehicleName}</Text></View>
+          <View style={styles.tableRow}><Text style={styles.tableCol}>Configuration</Text><Text style={styles.tableCol}>{configId}</Text></View>
+          <View style={styles.tableRow}><Text style={styles.tableCol}>Est. Build Weight</Text><Text style={styles.tableCol}>{totalWeight} kg</Text></View>
+        </View>
+        <View style={styles.footer}><Text>PAGE 2 | {buildId}</Text></View>
+      </Page>
+    </Document>
+  );
+};

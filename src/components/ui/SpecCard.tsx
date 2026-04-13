@@ -47,7 +47,7 @@ export function SpecCard({ title, specs, className, variant = "blueprint" }: Spe
       {variant === "blueprint" && (
         <div className="mt-6 pt-4 border-t border-brand-border/50 flex justify-end">
           <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">
-            // TECHNICAL REF: {Math.random().toString(36).substring(7).toUpperCase()}
+            {/* // TECHNICAL REF: {Math.random().toString(36).substring(7).toUpperCase()} */}
           </span>
         </div>
       )}

@@ -8,7 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 import { HorizontalScroll } from "@/components/ui/HorizontalScroll";
 import { SpecCard } from "@/components/ui/SpecCard";
 import { ProductCard } from "@/components/store/ProductCard";
-import { Check, X, ArrowRight, Ruler, Wrench, ShieldCheck } from "lucide-react";
+import { Check, X, Ruler, ShieldCheck } from "lucide-react";
 
 // Mock Data
 const vehicleData = {
@@ -61,7 +61,7 @@ export default function VehicleProfile() {
           <div className="max-w-4xl">
             <h1 className="font-display text-6xl lg:text-9xl mb-4 leading-none">{vehicle.name}</h1>
             <p className="font-mono text-sm lg:text-lg text-brand-orange uppercase tracking-[0.3em]">
-              // {vehicle.tagline}
+              {"//"} {vehicle.tagline}
             </p>
           </div>
         </div>
@@ -168,7 +168,7 @@ export default function VehicleProfile() {
         <div className="container mx-auto px-6">
           <div className="flex justify-between items-end mb-16">
             <h2 className="font-display text-4xl">COMPATIBLE GEAR</h2>
-            <Link href="/store" className="font-mono text-xs uppercase tracking-widest text-brand-orange">// Shop All Parts</Link>
+            <Link href="/store" className="font-mono text-xs uppercase tracking-widest text-brand-orange">{/* // Shop All Parts */}Shop All Parts</Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {featuredProducts.map((p) => (

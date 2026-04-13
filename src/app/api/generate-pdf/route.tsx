@@ -13,8 +13,10 @@ export async function POST(req: Request) {
     const stream = await renderToStream(<BlueprintPDF data={planData} />);
     
     // Convert stream to Buffer
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const chunks: any[] = [];
-    for await (const chunk of stream) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    for await (const chunk of stream as any) {
       chunks.push(chunk);
     }
     const buffer = Buffer.concat(chunks);

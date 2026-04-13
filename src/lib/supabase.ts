@@ -9,13 +9,13 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export type Database = {
   public: {
     Tables: {
-      vehicles: any;
-      products: any;
-      build_systems: any;
-      resources: any;
-      orders: any;
-      build_plans: any;
-      showcase_builds: any;
+      vehicles: { Row: Record<string, unknown> };
+      products: { Row: Record<string, unknown> };
+      build_systems: { Row: Record<string, unknown> };
+      resources: { Row: Record<string, unknown> };
+      orders: { Row: Record<string, unknown> };
+      build_plans: { Row: Record<string, unknown> };
+      showcase_builds: { Row: Record<string, unknown> };
     };
   };
 };
