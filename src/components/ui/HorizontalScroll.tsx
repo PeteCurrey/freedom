@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, ReactNode } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
 
 interface HorizontalScrollProps {
@@ -16,6 +17,10 @@ export function HorizontalScroll({ children, title, subtitle, className }: Horiz
   const triggerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    gsap.registerPlugin(ScrollTrigger);
+    
     const ctx = gsap.context(() => {
       const pin = gsap.fromTo(
         sectionRef.current,

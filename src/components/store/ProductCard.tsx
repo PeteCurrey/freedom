@@ -25,7 +25,10 @@ export function ProductCard({
   specs,
   className,
 }: ProductCardProps) {
-  const formattedPrice = (price / 100).toLocaleString("en-GB", {
+  // Defensive price check to prevent logic crashes
+  const safePrice = typeof price === 'number' ? price : 0;
+  
+  const formattedPrice = (safePrice / 100).toLocaleString("en-GB", {
     style: "currency",
     currency: "GBP",
   });
