@@ -8,7 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 import { HorizontalScroll } from "@/components/ui/HorizontalScroll";
 import { SpecCard } from "@/components/ui/SpecCard";
 import { ProductCard } from "@/components/store/ProductCard";
-import { Check, X, Ruler, ShieldCheck } from "lucide-react";
+import { Check, X, Ruler, ShieldCheck, ExternalLink } from "lucide-react";
 
 // Mock Data
 const vehicleData = {
