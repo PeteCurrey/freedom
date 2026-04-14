@@ -290,11 +290,11 @@ function SystemCard({ system }: { system: System }) {
 
 const vehicles = [
   { name: "MERCEDES SPRINTER", slug: "mercedes-sprinter", specs: "L3H3 — 170\" WB — High Roof", image: "/images/sprinter.png" },
-  { name: "VW CRAFTER", slug: "vw-crafter", specs: "LWB — High Roof — 4Motion", image: "https://images.unsplash.com/photo-1542362567-b052d8cc960f?q=80&w=2000" },
-  { name: "MAN TGE", slug: "man-tge", specs: "LWB — Lion's Cap Cab", image: "https://images.unsplash.com/photo-1621259182978-f09e5e2ca1ec?q=80&w=2000" },
+  { name: "VW CRAFTER", slug: "vw-crafter", specs: "LWB — High Roof — 4Motion", image: "/images/hero-background.png" },
+  { name: "MAN TGE", slug: "man-tge", specs: "LWB — Lion's Cap Cab", image: "/images/interior-showcase.png" },
   { name: "FORD TRANSIT", slug: "ford-transit", specs: "L4H3 — AWD — Jumbo", image: "/images/transit.png" },
-  { name: "FIAT DUCATO", slug: "fiat-ducato", specs: "L4H3 — Maxi — 180 MultiJet", image: "https://images.unsplash.com/photo-1544621443-42468301beaf?q=80&w=2000" },
-  { name: "IVECO DAILY", slug: "iveco-daily", specs: "7-Tonne — 4100L — Hi-Matic", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2000" },
+  { name: "FIAT DUCATO", slug: "fiat-ducato", specs: "L4H3 — Maxi — 180 MultiJet", image: "/images/community-showcase.png" },
+  { name: "IVECO DAILY", slug: "iveco-daily", specs: "7-Tonne — 4100L — Hi-Matic", image: "/images/systems-showcase.png" },
 ];
 
 const systems = [
@@ -312,7 +312,7 @@ const featuredProducts = [
     name: "Victron MultiPlus 12/3000/120-16", 
     brand: "VICTRON ENERGY", 
     price: 124500, 
-    image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1000", 
+    image: "/images/systems-showcase.png", 
     category: "Electrical", 
     specs: { "Voltage": "12V", "Inverter": "3000VA", "Charger": "120A" } as Record<string, string> 
   },
@@ -321,7 +321,7 @@ const featuredProducts = [
     name: "Dometic CFX3 55IM Fridge", 
     brand: "DOMETIC", 
     price: 89900, 
-    image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1000", 
+    image: "/images/interior-showcase.png", 
     category: "Appliances", 
     specs: { "Capacity": "55L", "Power": "12/24V", "Weight": "21kg" } as Record<string, string>
   },
@@ -330,7 +330,7 @@ const featuredProducts = [
     name: "Truma Combi 4E Kit", 
     brand: "TRUMA", 
     price: 185000, 
-    image: "https://images.unsplash.com/photo-1590487988256-9ed24133863e?q=80&w=1000", 
+    image: "/images/hero-background.png", 
     category: "Heating", 
     specs: { "Output": "4kW", "Input": "Gas/230V", "Vessel": "10L" } as Record<string, string>
   },
@@ -338,7 +338,7 @@ const featuredProducts = [
 
 const showcaseBuilds = [
   { title: "THE SUMMIT OVERLANDER", vehicle: "MERCEDES SPRINTER 170 4X4", image: "/images/community-showcase.png" },
-  { title: "ALPHINE NOMAD", vehicle: "VW CRAFTER LWB", image: "https://images.unsplash.com/photo-1469002064111-c3da21400531?q=80&w=1000" },
-  { title: "DESERT WARRIOR", vehicle: "IVECO DAILY 4X4", image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=1000" },
-  { title: "ARCTIC EXPLORER", vehicle: "FORD TRANSIT AWD", image: "https://images.unsplash.com/photo-1445991842772-097fea258e7b?q=80&w=1000" },
+  { title: "ALPHINE NOMAD", vehicle: "VW CRAFTER LWB", image: "/images/interior-showcase.png" },
+  { title: "DESERT WARRIOR", vehicle: "IVECO DAILY 4X4", image: "/images/hero-background.png" },
+  { title: "ARCTIC EXPLORER", vehicle: "FORD TRANSIT AWD", image: "/images/systems-showcase.png" },
 ];

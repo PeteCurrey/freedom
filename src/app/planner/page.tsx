@@ -9,21 +9,22 @@ import {
   Zap, Thermometer, Droplets, Weight, 
   PoundSterling, CheckCircle2,
   ChevronRight, ArrowLeft, Download, Eye,
-  Wind, Flame, Loader2
+  Wind, Flame, Loader2, Layout
 } from "lucide-react";
 
 // --- CONFIGURATION DATA ---
 
 const steps = [
-  "Foundation", "Layout", "Electrical", "Heating", 
-  "Water", "Insulation", "Gas", "Interior", 
-  "Diagnostics", "Checkout"
+  "Foundation", "Chassis", "Layout", "Sleeping", 
+  "Electrical", "Heating", "Water", "Gas", 
+  "Windows", "Insulation", "Checkout"
 ];
 
 const vehicleFoundations = [
   { id: "sprinter", name: "Mercedes Sprinter", configs: ["144\" WB", "170\" WB", "170\" EXT"], baseWeight: 2200, payload: 1300 },
   { id: "crafter", name: "VW Crafter", configs: ["MWB", "LWB", "LWB Maxi"], baseWeight: 2150, payload: 1350 },
   { id: "ducato", name: "Fiat Ducato", configs: ["L2H2", "L3H2", "L4H3"], baseWeight: 2000, payload: 1500 },
+  { id: "transit", name: "Ford Transit", configs: ["L2H2", "L3H3", "L4H3"], baseWeight: 1950, payload: 1550 },
 ];
 
 const layoutTemplates = [
@@ -32,14 +33,20 @@ const layoutTemplates = [
   { id: "workshop", name: "The Workshop", description: "Rear garage for bikes/tools, mid galley, front bed over cab.", bestFor: "Digital Nomads / Gearheads" },
 ];
 
+const sleepSystems = [
+  { id: "fixed-rear", name: "Fixed Rear Bed", price: 800, weight: 45, features: ["Standard Double", "Huge Garage Space"], icon: Layout },
+  { id: "rib-seat", name: "RIB Seat/Bed", price: 2800, weight: 85, features: ["Crash Tested", "Passenger Safety", "Flexible Space"], icon: Layout },
+  { id: "transverse", name: "Transverse Bed", price: 1200, weight: 35, features: ["Flares Required", "Maximizes Living Space"], icon: Layout },
+];
+
 const systemConfigs = {
   electrical: [
     { id: "basic", name: "First Light (Basic 12V)", price: 500, weight: 15, features: ["100Ah AGM", "Split Charge", "USB Sockets"], icon: Zap },
     { id: "mid", name: "Grid Independent (Lithium)", price: 2400, weight: 35, features: ["200Ah Lithium", "200W Solar", "800W Inverter"], icon: Zap },
-    { id: "pro", name: "Full Autonomy (Premium)", price: 6500, weight: 65, features: ["400Ah Lithium", "400W Solar", "3000W Multiplus"], icon: Zap },
+    { id: "pro", name: "Full Autonomy (Premium)", price: 6500, weight: 65, features: ["400Ah Lithium", "600W Solar", "3000W Multiplus"], icon: Zap },
   ],
   heating: [
-    { id: "basic", name: "Take the Edge Off", price: 250, weight: 5, features: ["Chinese Diesel Heater", "2 Outlets"], icon: Thermometer },
+    { id: "basic", name: "Take the Edge Off", price: 250, weight: 5, features: ["5kW Diesel Heater", "2 Outlets"], icon: Thermometer },
     { id: "mid", name: "Four Season (Webasto)", price: 1500, weight: 12, features: ["Webasto Air Top", "Digital Controller"], icon: Thermometer },
     { id: "pro", name: "Home Comfort (Truma)", price: 3000, weight: 22, features: ["Truma Combi 4E", "Dual Fuel", "10L Water Tank"], icon: Thermometer },
   ],
@@ -48,16 +55,20 @@ const systemConfigs = {
     { id: "mid", name: "Clean Living", price: 700, weight: 25, features: ["80L Fresh", "Pressure Pump", "Hot Mixer Tap"], icon: Droplets },
     { id: "pro", name: "Full Wet Room", price: 1200, weight: 45, features: ["100L Fresh", "Internal Shower", "Water Filter"], icon: Droplets },
   ],
+  gas: [
+    { id: "none", name: "No Gas (All Electric)", price: 0, weight: 0, features: ["Induction Cooking", "Diesel Heating"], icon: Flame },
+    { id: "basic", name: "Single Bottle", price: 300, weight: 15, features: ["6kg Calor", "2-Burner Hob"], icon: Flame },
+    { id: "pro", name: "Dual Bottle / Auto Change", price: 700, weight: 30, features: ["2x 6kg Bottles", "Oven/Grill", "BBQ Point"], icon: Flame },
+  ],
+  windows: [
+    { id: "basic", name: "Standard Venting", price: 400, weight: 12, features: ["1x Sliding Window", "1x Fixed Window"], icon: Eye },
+    { id: "pro", name: "Full Panoramic", price: 1200, weight: 35, features: ["All-Round Glass", "Privacy Tint", "Blackout Blinds"], icon: Eye },
+  ],
   insulation: [
     { id: "basic", name: "Three Season", price: 400, weight: 30, features: ["25mm Foam", "Dodo Mat", "1x MaxxFan"], icon: Wind },
     { id: "mid", name: "All Season", price: 800, weight: 50, features: ["50mm Rigid Board", "Thinsulate", "Rain Sensor Fan"], icon: Wind },
     { id: "pro", name: "Extreme Climate", price: 1700, weight: 80, features: ["Full Composite", "Underfloor Heating", "Double Glazing"], icon: Wind },
   ],
-  gas: [
-    { id: "none", name: "No Gas (All Electric)", price: 0, weight: 0, features: ["Induction Cooking", "Diesel Heating"], icon: Flame },
-    { id: "basic", name: "Single Bottle", price: 300, weight: 15, features: ["6kg Calor", "2-Burner Hob"], icon: Flame },
-    { id: "pro", name: "Dual Bottle / Auto Change", price: 700, weight: 30, features: ["2x 6kg Bottles", "Oven/Grill", "BBQ Point"], icon: Flame },
-  ]
 };
 
 // --- COMPONENT ---
@@ -70,12 +81,14 @@ export default function BuildPlanner() {
     vehicleId: "sprinter",
     configId: "144\" WB",
     layoutId: "expedition",
+    sleepingId: "fixed-rear",
     systems: {
       electrical: "basic" as SystemTier,
       heating: "basic" as SystemTier,
       water: "basic" as SystemTier,
+      gas: "none" as SystemTier,
+      windows: "basic" as SystemTier,
       insulation: "basic" as SystemTier,
-      gas: "none" as SystemTier
     },
     powerBudget: {
       consumers: [
@@ -93,15 +106,22 @@ export default function BuildPlanner() {
     
     // Sum system tiers
     Object.entries(selections.systems).forEach(([key, tierId]) => {
-      const config = systemConfigs[key as keyof typeof systemConfigs].find(t => t.id === tierId);
+      const config = (systemConfigs as any)[key]?.find((t: any) => t.id === tierId);
       if (config) {
         cost += config.price;
         weight += config.weight;
       }
     });
 
+    // Add layout/sleeping defaults
+    const sleep = sleepSystems.find(s => s.id === selections.sleepingId);
+    if (sleep) {
+      cost += sleep.price;
+      weight += sleep.weight;
+    }
+
     return { cost, weight };
-  }, [selections.systems]);
+  }, [selections.systems, selections.sleepingId]);
 
   const vehicle = vehicleFoundations.find(v => v.id === selections.vehicleId);
   const payloadLimit = vehicle?.payload || 0;
@@ -252,8 +272,30 @@ export default function BuildPlanner() {
                     </div>
                   )}
 
-                  {/* Step 1: Layout */}
+                  {/* Step 1: Chassis */}
                   {currentStep === 1 && (
+                    <div className="space-y-12 animate-in fade-in duration-500">
+                      <h2 className="font-display text-4xl uppercase">Select Chassis Configuration</h2>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {vehicleFoundations.find(v => v.id === selections.vehicleId)?.configs.map(c => (
+                          <button
+                            key={c}
+                            onClick={() => setSelections({...selections, configId: c})}
+                            className={cn(
+                              "p-8 blueprint-border text-center transition-all",
+                              selections.configId === c ? "bg-brand-orange/10 border-brand-orange" : "bg-brand-obsidian/50 border-brand-border/30 hover:border-brand-grey"
+                            )}
+                          >
+                             <span className="font-display text-xl uppercase block mb-2">{c}</span>
+                             <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Blueprint Optimised</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Step 2: Layout */}
+                  {currentStep === 2 && (
                     <div className="space-y-12 animate-in fade-in duration-500">
                       <h2 className="font-display text-4xl uppercase">Select Your Layout</h2>
                       <div className="grid grid-cols-1 gap-6">
@@ -284,10 +326,46 @@ export default function BuildPlanner() {
                     </div>
                   )}
 
-                  {/* Steps 2-6: Systems */}
-                  {currentStep >= 2 && currentStep <= 6 && (() => {
-                    const systemKey = steps[currentStep].toLowerCase() as keyof typeof systemConfigs;
-                    const configs = systemConfigs[systemKey];
+                  {/* Step 3: Sleeping */}
+                  {currentStep === 3 && (
+                    <div className="space-y-12 animate-in fade-in duration-500">
+                      <h2 className="font-display text-4xl uppercase">Sleeping Configuration</h2>
+                      <div className="grid grid-cols-1 gap-4">
+                        {sleepSystems.map((s) => (
+                           <button
+                             key={s.id}
+                             onClick={() => setSelections({ ...selections, sleepingId: s.id })}
+                             className={cn(
+                               "flex flex-col md:flex-row items-center gap-8 p-8 blueprint-border transition-all text-left",
+                               selections.sleepingId === s.id ? "bg-brand-orange/10 border-brand-orange" : "bg-brand-obsidian/50 border-brand-border/30 hover:border-brand-grey"
+                             )}
+                           >
+                             <div className="w-12 h-12 bg-brand-carbon flex items-center justify-center text-brand-orange shrink-0">
+                                <s.icon className="w-6 h-6" />
+                             </div>
+                             <div className="flex-1">
+                                <h3 className="font-display text-xl uppercase mb-1">{s.name}</h3>
+                                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                                  {s.features.map(f => (
+                                    <span key={f} className="font-mono text-[9px] text-brand-grey uppercase">○ {f}</span>
+                                  ))}
+                                </div>
+                             </div>
+                             <div className="text-right shrink-0">
+                                <div className="font-display text-2xl text-brand-white">£{s.price.toLocaleString()}</div>
+                                <div className="font-mono text-[9px] text-brand-grey uppercase">+{s.weight}kg</div>
+                             </div>
+                           </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Steps 4-9: Systems */}
+                  {currentStep >= 4 && currentStep <= 9 && (() => {
+                    const systemIdMap = [null, null, null, null, "electrical", "heating", "water", "gas", "windows", "insulation"];
+                    const systemKey = systemIdMap[currentStep] as keyof typeof systemConfigs;
+                    const configs = (systemConfigs as any)[systemKey];
                     return (
                       <div className="space-y-12 animate-in fade-in duration-500">
                         <div className="flex justify-between items-end">
@@ -301,7 +379,7 @@ export default function BuildPlanner() {
                         </div>
                         
                         <div className="grid grid-cols-1 gap-4">
-                          {configs.map((config) => (
+                          {configs.map((config: any) => (
                             <button
                               key={config.id}
                               onClick={() => setSelections({
@@ -321,7 +399,7 @@ export default function BuildPlanner() {
                               <div className="flex-1">
                                 <h3 className="font-display text-xl uppercase mb-1">{config.name}</h3>
                                 <div className="flex flex-wrap gap-x-4 gap-y-1">
-                                  {config.features.map(f => (
+                                  {config.features.map((f: string) => (
                                     <span key={f} className="font-mono text-[9px] text-brand-grey uppercase">○ {f}</span>
                                   ))}
                                 </div>
@@ -337,47 +415,8 @@ export default function BuildPlanner() {
                     );
                   })()}
 
-                  {/* Step 8: Diagnostics */}
-                  {currentStep === 8 && (
-                    <div className="space-y-12 animate-in fade-in duration-500">
-                      <h2 className="font-display text-4xl uppercase">Build Diagnostics</h2>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="blueprint-border p-8 bg-brand-obsidian">
-                          <h3 className="font-display text-lg mb-8 uppercase flex items-center gap-2"><Zap className="w-4 h-4 text-brand-orange" /> Power Balance</h3>
-                          <div className="space-y-4">
-                            <div className="flex justify-between font-mono text-[10px] uppercase">
-                              <span className="text-brand-grey">Total Usage</span>
-                              <span className="text-brand-white">46 AH / Day</span>
-                            </div>
-                            <div className="flex justify-between font-mono text-[10px] uppercase">
-                              <span className="text-brand-grey">Solar Yield (Avg)</span>
-                              <span className="text-brand-orange">85 AH / Day</span>
-                            </div>
-                            <div className="pt-4 border-t border-brand-border">
-                              <p className="font-sans text-[10px] text-brand-grey leading-relaxed">
-                                <span className="text-green-500 font-bold uppercase">Verdict:</span> Your system is net-positive. You can sustain this load indefinitely in summer conditions.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="blueprint-border p-8 bg-brand-obsidian">
-                          <h3 className="font-display text-lg mb-8 uppercase flex items-center gap-2"><Weight className="w-4 h-4 text-brand-orange" /> Payload Safety</h3>
-                          <div className="relative h-2 bg-brand-carbon w-full mb-4">
-                            <div className={cn(
-                              "h-full transition-all duration-1000",
-                              payloadUsagePercent > 90 ? "bg-red-500" : payloadUsagePercent > 70 ? "bg-yellow-500" : "bg-brand-orange"
-                            )} style={{ width: `${payloadUsagePercent}%` }} />
-                          </div>
-                          <p className="font-mono text-[10px] text-brand-grey uppercase">
-                            Conversion Weight: {totals.weight}kg / Payload: {payloadLimit}kg ({payloadUsagePercent.toFixed(1)}%)
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Step 9: Checkout */}
-                  {currentStep === 9 && (
+                  {/* Step 10: Checkout */}
+                  {currentStep === 10 && (
                     <div className="space-y-12 animate-in fade-in duration-500">
                       <h2 className="font-display text-4xl uppercase">Select Blueprint Tier</h2>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -390,20 +429,20 @@ export default function BuildPlanner() {
                             "blueprint-border p-8 bg-brand-obsidian flex flex-col items-center text-center transition-all",
                             t.popular ? "border-brand-orange scale-105 shadow-2xl shadow-brand-orange/10 relative z-20" : "opacity-60"
                           )}>
-                            {t.popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-orange text-white font-mono text-[8px] px-3 py-1 uppercase tracking-widest">Recommended</div>}
-                            <h3 className="font-display text-2xl mb-2 uppercase">{t.tier}</h3>
-                            <div className="font-display text-4xl mb-4">£{t.price}</div>
-                            <p className="font-mono text-[9px] text-brand-grey uppercase mb-8">{t.pages} Page Technical PDF</p>
-                            <button 
-                              disabled={isProcessing}
-                              onClick={() => handleCheckout(t.tier.toLowerCase())}
-                              className={cn(
-                                "w-full py-4 font-display text-[10px] uppercase tracking-widest transition-all mt-auto flex items-center justify-center gap-2",
-                                t.popular ? "bg-brand-orange text-white" : "border border-brand-border text-white hover:border-brand-orange"
-                              )}
-                            >
-                              {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : `Select ${t.tier}`}
-                            </button>
+                             {t.popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-orange text-white font-mono text-[8px] px-3 py-1 uppercase tracking-widest">Recommended</div>}
+                             <h3 className="font-display text-2xl mb-2 uppercase">{t.tier}</h3>
+                             <div className="font-display text-4xl mb-4">£{t.price}</div>
+                             <p className="font-mono text-[9px] text-brand-grey uppercase mb-8">{t.pages} Page Technical PDF</p>
+                             <button 
+                               disabled={isProcessing}
+                               onClick={() => handleCheckout(t.tier.toLowerCase())}
+                               className={cn(
+                                 "w-full py-4 font-display text-[10px] uppercase tracking-widest transition-all mt-auto flex items-center justify-center gap-2",
+                                 t.popular ? "bg-brand-orange text-white" : "border border-brand-border text-white hover:border-brand-orange"
+                               )}
+                             >
+                               {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : `Select ${t.tier}`}
+                             </button>
                           </div>
                         ))}
                       </div>

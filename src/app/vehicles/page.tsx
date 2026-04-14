@@ -14,25 +14,28 @@ const vehicles = [
     image: "/images/sprinter.png",
     specs: { L: "Up to 4.7m", W: "1.78m", H: "2.24m" },
     payload: "Up to 1500kg",
-    rating: 9
+    rating: 9,
+    bestFor: "Premium off-grid / 4×4 overlanding"
   },
   { 
     name: "VW CRAFTER", 
     slug: "vw-crafter", 
     tagline: "Refined Engineering Meets Workhorse Reliability",
-    image: "https://images.unsplash.com/photo-1542362567-b052d8cc960f?q=80&w=2000",
+    image: "/images/hero-background.png",
     specs: { L: "Up to 4.8m", W: "1.83m", H: "2.19m" },
     payload: "Up to 1450kg",
-    rating: 8
+    rating: 8,
+    bestFor: "High-spec touring / FWD + AWD flexibility"
   },
   { 
     name: "MAN TGE", 
     slug: "man-tge", 
     tagline: "The Heavy-Duty Alternative with Premium Support",
-    image: "https://images.unsplash.com/photo-1621259182978-f09e5e2ca1ec?q=80&w=2000",
+    image: "/images/interior-showcase.png",
     specs: { L: "Up to 4.8m", W: "1.83m", H: "2.19m" },
     payload: "Up to 1450kg",
-    rating: 8
+    rating: 8,
+    bestFor: "Heavy-duty builds / Fleet service network"
   },
   { 
     name: "FORD TRANSIT", 
@@ -41,25 +44,38 @@ const vehicles = [
     image: "/images/transit.png",
     specs: { L: "Up to 4.3m", W: "1.78m", H: "2.12m" },
     payload: "Up to 1350kg",
-    rating: 7
+    rating: 7,
+    bestFor: "Budget-conscious builds / Parts availability"
   },
   { 
     name: "FIAT DUCATO", 
     slug: "fiat-ducato", 
     tagline: "Wider Internal Dimensions for Transverse Beds",
-    image: "https://images.unsplash.com/photo-1544621443-42468301beaf?q=80&w=2000",
+    image: "/images/community-showcase.png",
     specs: { L: "Up to 4.0m", W: "1.87m", H: "2.17m" },
     payload: "Up to 1400kg",
-    rating: 8
+    rating: 8,
+    bestFor: "Transverse bed layouts / Maximum width"
   },
   { 
     name: "IVECO DAILY", 
     slug: "iveco-daily", 
     tagline: "The Truck-Based Beast for Heavy Builds",
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2000",
+    image: "/images/systems-showcase.png",
     specs: { L: "Up to 5.1m", W: "1.80m", H: "2.10m" },
     payload: "Up to 4500kg",
-    rating: 7
+    rating: 7,
+    bestFor: "Heavy conversion / High payload capacity"
+  },
+  { 
+    name: "RENAULT MASTER", 
+    slug: "renault-master", 
+    tagline: "The Efficient Front-Runner with Modern Tech",
+    image: "/images/hero-background.png",
+    specs: { L: "Up to 4.4m", W: "1.76m", H: "2.15m" },
+    payload: "Up to 1400kg",
+    rating: 7,
+    bestFor: "Deliveries & Efficiency / FWD Ease"
   },
 ];
 

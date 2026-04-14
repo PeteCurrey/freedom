@@ -7,11 +7,60 @@ import { Search, User, ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
 
-const navLinks = [
-  { name: "Base Vehicles", href: "/vehicles", mega: true },
-  { name: "Build Systems", href: "/systems", mega: true },
+interface NavSubItem {
+  name: string;
+  href: string;
+  tagline: string;
+  image: string;
+}
+
+interface NavLink {
+  name: string;
+  href: string;
+  mega?: boolean;
+  items?: NavSubItem[];
+}
+
+const navLinks: NavLink[] = [
+  { 
+    name: "Base Vehicles", 
+    href: "/vehicles", 
+    mega: true,
+    items: [
+      { name: "Mercedes Sprinter", href: "/vehicles/mercedes-sprinter", image: "/images/sprinter.png", tagline: "The Gold Standard" },
+      { name: "Ford Transit", href: "/vehicles/ford-transit", image: "/images/transit.png", tagline: "The Practical Choice" },
+      { name: "VW Crafter", href: "/vehicles/vw-crafter", image: "/images/hero-background.png", tagline: "Modern Touring" },
+      { name: "MAN TGE", href: "/vehicles/man-tge", image: "/images/interior-showcase.png", tagline: "Heavy Duty Build" },
+      { name: "Fiat Ducato", href: "/vehicles/fiat-ducato", image: "/images/community-showcase.png", tagline: "Maximum Width" },
+      { name: "Iveco Daily", href: "/vehicles/iveco-daily", image: "/images/systems-showcase.png", tagline: "Ultimate Payload" },
+    ]
+  },
+  { 
+    name: "Build Systems", 
+    href: "/systems", 
+    mega: true,
+    items: [
+      { name: "Electrical & Solar", href: "/systems/electrical-solar", tagline: "Power Your Independence", image: "/images/systems-showcase.png" },
+      { name: "Heating & Hot Water", href: "/systems/heating-hot-water", tagline: "Climate Control", image: "/images/interior-showcase.png" },
+      { name: "Water & Plumbing", href: "/systems/water-plumbing", tagline: "Flowing Without Constraints", image: "/images/hero-background.png" },
+      { name: "Insulation & Vent", href: "/systems/insulation-ventilation", tagline: "The Foundation", image: "/images/sprinter.png" },
+      { name: "Gas & LPG", href: "/systems/gas-lpg", tagline: "Fueling the Adventure", image: "/images/transit.png" },
+      { name: "Interior & Furniture", href: "/systems/interior-furniture", tagline: "Design the Core", image: "/images/interior-showcase.png" },
+    ]
+  },
   { name: "Resources", href: "/resources" },
-  { name: "Store", href: "/store", mega: true },
+  { 
+    name: "Store", 
+    href: "/store", 
+    mega: true,
+    items: [
+      { name: "Power Systems", href: "/store/power", tagline: "Victron, Lithium, Solar", image: "/images/systems-showcase.png" },
+      { name: "Climate Control", href: "/store/climate", tagline: "Heaters, AC, Fans", image: "/images/interior-showcase.png" },
+      { name: "Plumbing", href: "/store/plumbing", tagline: "Tanks, Pumps, Filtration", image: "/images/hero-background.png" },
+      { name: "Hardware", href: "/store/hardware", tagline: "Fixings, Latches, Rails", image: "/images/sprinter.png" },
+      { name: "Build Kits", href: "/store/kits", tagline: "Bundled System Packs", image: "/images/community-showcase.png" },
+    ]
+  },
   { name: "Build Planner", href: "/planner" },
   { name: "Showcase", href: "/showcase" },
 ];
@@ -19,6 +68,7 @@ const navLinks = [
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -61,19 +111,57 @@ export function Navbar() {
         </Link>
 
         {/* Primary Nav (Desktop) */}
-        <div className="hidden lg:flex items-center space-x-8">
+        <div className="hidden lg:flex items-center space-x-8 h-full">
           {navLinks.map((link) => (
-            <Link
+            <div 
               key={link.name}
-              href={link.href}
-              className={cn(
-                "relative font-sans text-xs uppercase tracking-widest transition-colors hover:text-brand-orange",
-                pathname === link.href ? "text-brand-orange" : "text-brand-white/70"
-              )}
+              className="h-full flex items-center"
+              onMouseEnter={() => link.mega && setHoveredNav(link.name)}
+              onMouseLeave={() => setHoveredNav(null)}
             >
-              {link.name}
-              {link.mega && <ChevronDown className="inline-block ml-1 w-3 h-3 opacity-50" />}
-            </Link>
+              <Link
+                href={link.href}
+                className={cn(
+                  "relative font-sans text-xs uppercase tracking-widest transition-colors hover:text-brand-orange py-8",
+                  pathname === link.href ? "text-brand-orange" : "text-brand-white/70"
+                )}
+              >
+                {link.name}
+                {link.mega && <ChevronDown className={cn("inline-block ml-1 w-3 h-3 opacity-50 transition-transform", hoveredNav === link.name && "rotate-180")} />}
+              </Link>
+
+              {/* Mega Menu Dropdown */}
+              {link.mega && link.items && (
+                <div className={cn(
+                  "absolute top-full left-0 right-0 bg-brand-obsidian border-b border-brand-border transition-all duration-300 overflow-hidden",
+                  hoveredNav === link.name ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
+                )}>
+                  <div className="container mx-auto px-6 py-12">
+                    <div className="grid grid-cols-6 gap-6">
+                      {link.items.map((item) => (
+                        <Link 
+                          key={item.name} 
+                          href={item.href}
+                          className="group/item block space-y-4"
+                        >
+                          <div className="aspect-[16/10] overflow-hidden blueprint-border bg-brand-carbon">
+                              <img 
+                                src={item.image} 
+                                alt={item.name} 
+                                className="w-full h-full object-cover grayscale group-hover/item:grayscale-0 group-hover/item:scale-110 transition-all duration-500"
+                              />
+                          </div>
+                          <div>
+                            <span className="block font-display text-sm uppercase group-hover/item:text-brand-orange transition-colors tracking-tighter">{item.name}</span>
+                            <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-widest mt-1">{item.tagline}</span>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           ))}
         </div>
 
