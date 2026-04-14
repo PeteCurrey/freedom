@@ -8,9 +8,22 @@ export async function POST(req: Request) {
 
     // In a real implementation:
     // 1. Fetch full plan data from Supabase
-    // 2. Map tiers to specific schematic SVG components
+    // 2. Fetch BOM based on selected tiers
+
+    // Mock BOM for demonstration based on the selected tier.
+    let bom: { sku: string; name: string; brand: string; qty: number; price: number }[] = [];
+    if (planData.tier && planData.tier !== 'starter') {
+        bom = [
+            { sku: "PMP122305010", name: "MultiPlus-II 12/3000/120-32", brand: "Victron Energy", qty: 1, price: 125000 },
+            { sku: "SCC110030210", name: "SmartSolar MPPT 100/30", brand: "Victron Energy", qty: 1, price: 19500 },
+            { sku: "ORI121236140", name: "Orion-Tr Smart 12/12-30A DC-DC charger", brand: "Victron Energy", qty: 1, price: 21000 },
+            { sku: "BAT512132410", name: "LiFePO4 Battery 12,8V/330Ah Smart", brand: "Victron Energy", qty: 1, price: 185000 },
+            { sku: "33512-01", name: "Combi D4 E", brand: "Truma", qty: 1, price: 235000 }
+        ];
+    }
     
-    const stream = await renderToStream(<BlueprintPDF data={planData} />);
+    const pdfData = { ...planData, bom };
+    const stream = await renderToStream(<BlueprintPDF data={pdfData} />);
     
     // Convert stream to Buffer
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

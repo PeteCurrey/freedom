@@ -10,6 +10,13 @@ interface BlueprintPDFProps {
     buildId: string;
     tier: string;
     totalWeight: number;
+    bom?: {
+      sku: string;
+      name: string;
+      brand: string;
+      qty: number;
+      price: number;
+    }[];
   };
 }
 
@@ -63,6 +70,36 @@ export const BlueprintPDF = ({ data }: BlueprintPDFProps) => {
           <View style={styles.tableRow}><Text style={styles.tableCol}>Est. Build Weight</Text><Text style={styles.tableCol}>{totalWeight} kg</Text></View>
         </View>
         <View style={styles.footer}><Text>PAGE 2 | {buildId}</Text></View>
+      </Page>
+      
+      <Page size="A4" style={styles.page}>
+        <View style={styles.header}><Text style={styles.logo}>DIYM</Text><Text style={{ fontSize: 10 }}>BILL OF MATERIALS // SECTION 02</Text></View>
+        <Text style={styles.sectionTitle}>Technical Components</Text>
+        <View style={styles.table}>
+          <View style={styles.tableRow}>
+            <Text style={[styles.tableCol, { flex: 0.5 }]}>QTY</Text>
+            <Text style={[styles.tableCol, { flex: 1 }]}>BRAND</Text>
+            <Text style={[styles.tableCol, { flex: 2 }]}>PRODUCT</Text>
+            <Text style={[styles.tableCol, { flex: 1 }]}>SKU</Text>
+            <Text style={[styles.tableCol, { flex: 0.8, textAlign: 'right' }]}>EST. PRICE</Text>
+          </View>
+          {data.bom && data.bom.length > 0 ? (
+            data.bom.map((item, index) => (
+              <View key={index} style={styles.tableRow}>
+                <Text style={[styles.tableCol, { flex: 0.5 }]}>{item.qty}x</Text>
+                <Text style={[styles.tableCol, { flex: 1 }]}>{item.brand}</Text>
+                <Text style={[styles.tableCol, { flex: 2, color: '#FFFFFF' }]}>{item.name}</Text>
+                <Text style={[styles.tableCol, { flex: 1 }]}>{item.sku}</Text>
+                <Text style={[styles.tableCol, { flex: 0.8, textAlign: 'right' }]}>£{(item.price / 100).toFixed(2)}</Text>
+              </View>
+            ))
+          ) : (
+            <View style={styles.tableRow}>
+              <Text style={styles.tableCol}>No components specified for this tier.</Text>
+            </View>
+          )}
+        </View>
+        <View style={styles.footer}><Text>PAGE 3 | {buildId}</Text></View>
       </Page>
     </Document>
   );
