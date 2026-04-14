@@ -1,11 +1,13 @@
 "use client";
 
-import { useLayoutEffect } from "react";
+import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function GSAPInit() {
-  useLayoutEffect(() => {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
     gsap.registerPlugin(ScrollTrigger);
 
     // Global GSAP settings
@@ -18,10 +20,10 @@ export function GSAPInit() {
       ignoreMobileResize: true,
     });
 
-    // Final refresh to ensure all pins are settled
+    // Final refresh to ensure all pins are settled after hydration
     const timeout = setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 500);
+    }, 100);
 
     return () => clearTimeout(timeout);
   }, []);
