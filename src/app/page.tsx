@@ -106,10 +106,10 @@ export default function Home() {
             <div className="why-text-item relative aspect-square blueprint-border">
               <div className="blueprint-grid absolute inset-0 opacity-20" />
               <Image
-                src="https://images.unsplash.com/photo-1523995462485-3d171b5c8fb9?q=80&w=2000&auto=format&fit=crop"
+                src="/images/interior-showcase.png"
                 alt="Engineering focus"
                 fill
-                className="object-cover grayscale opacity-60"
+                className="object-cover grayscale-0 opacity-80"
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-brand-orange/20 to-transparent" />
             </div>
@@ -289,10 +289,10 @@ function SystemCard({ system }: { system: System }) {
 }
 
 const vehicles = [
-  { name: "MERCEDES SPRINTER", slug: "mercedes-sprinter", specs: "L3H3 — 170\" WB — High Roof", image: "https://images.unsplash.com/photo-1551522435-a13afa10f103?q=80&w=2000" },
+  { name: "MERCEDES SPRINTER", slug: "mercedes-sprinter", specs: "L3H3 — 170\" WB — High Roof", image: "/images/sprinter.png" },
   { name: "VW CRAFTER", slug: "vw-crafter", specs: "LWB — High Roof — 4Motion", image: "https://images.unsplash.com/photo-1542362567-b052d8cc960f?q=80&w=2000" },
   { name: "MAN TGE", slug: "man-tge", specs: "LWB — Lion's Cap Cab", image: "https://images.unsplash.com/photo-1621259182978-f09e5e2ca1ec?q=80&w=2000" },
-  { name: "FORD TRANSIT", slug: "ford-transit", specs: "L4H3 — AWD — Jumbo", image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=2000" },
+  { name: "FORD TRANSIT", slug: "ford-transit", specs: "L4H3 — AWD — Jumbo", image: "/images/transit.png" },
   { name: "FIAT DUCATO", slug: "fiat-ducato", specs: "L4H3 — Maxi — 180 MultiJet", image: "https://images.unsplash.com/photo-1544621443-42468301beaf?q=80&w=2000" },
   { name: "IVECO DAILY", slug: "iveco-daily", specs: "7-Tonne — 4100L — Hi-Matic", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2000" },
 ];
@@ -337,7 +337,7 @@ const featuredProducts = [
 ];
 
 const showcaseBuilds = [
-  { title: "THE SUMMIT OVERLANDER", vehicle: "MERCEDES SPRINTER 170 4X4", image: "https://images.unsplash.com/photo-1523983388277-336a66bf9bcd?q=80&w=1000" },
+  { title: "THE SUMMIT OVERLANDER", vehicle: "MERCEDES SPRINTER 170 4X4", image: "/images/community-showcase.png" },
   { title: "ALPHINE NOMAD", vehicle: "VW CRAFTER LWB", image: "https://images.unsplash.com/photo-1469002064111-c3da21400531?q=80&w=1000" },
   { title: "DESERT WARRIOR", vehicle: "IVECO DAILY 4X4", image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=1000" },
   { title: "ARCTIC EXPLORER", vehicle: "FORD TRANSIT AWD", image: "https://images.unsplash.com/photo-1445991842772-097fea258e7b?q=80&w=1000" },

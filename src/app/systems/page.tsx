@@ -18,9 +18,20 @@ export default function SystemsPage() {
   return (
     <main className="bg-brand-obsidian">
       <Navbar />
-      <section className="pt-48 pb-32">
-        <div className="container mx-auto px-6">
-          <h1 className="font-display text-6xl lg:text-8xl mb-12">ENGINEER YOUR <span className="text-brand-orange">FREEDOM</span></h1>
+      <section className="pt-48 pb-32 relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/images/systems-showcase.png" 
+            alt="Technical systems background" 
+            className="w-full h-full object-cover opacity-20 grayscale"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-obsidian via-transparent to-brand-obsidian" />
+        </div>
+        <div className="container mx-auto px-6 relative z-10">
+          <h1 className="font-display text-6xl lg:text-8xl mb-12 uppercase">ENGINEER YOUR <span className="text-brand-orange">FREEDOM</span></h1>
+          <p className="font-sans text-brand-grey text-xl max-w-2xl mb-16 leading-relaxed">
+            From lithium power banks to diesel heating, explore the components that make serious off-grid travel possible.
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {systems.map((s) => (
               <Link key={s.slug} href={`/systems/${s.slug}`} className="group blueprint-border p-12 bg-brand-carbon hover:bg-brand-graphite transition-all">

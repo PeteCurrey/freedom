@@ -65,6 +65,7 @@ const systemConfigs = {
 export default function BuildPlanner() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [savedPlanId, setSavedPlanId] = useState<string | null>(null);
   const [selections, setSelections] = useState({
     vehicleId: "sprinter",
     configId: "144\" WB",
@@ -109,14 +110,49 @@ export default function BuildPlanner() {
   const nextStep = () => setCurrentStep((s) => Math.min(s + 1, steps.length - 1));
   const prevStep = () => setCurrentStep((s) => Math.max(s - 1, 0));
 
+  const savePlan = async () => {
+    try {
+      const response = await fetch("/api/plans", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: `${selections.vehicleId.toUpperCase()} - ${selections.configId}`,
+          vehicleId: selections.vehicleId,
+          configId: selections.configId,
+          layoutId: selections.layoutId,
+          systems: selections.systems,
+          powerBudget: selections.powerBudget,
+          totalWeight: totals.weight,
+          totalCost: totals.cost
+        }),
+      });
+      const data = await response.json();
+      if (data.id) {
+        setSavedPlanId(data.id);
+        return data.id;
+      }
+    } catch (err) {
+      console.error("Save plan error", err);
+    }
+    return null;
+  };
+
   const handleCheckout = async (tier: string) => {
     setIsProcessing(true);
     try {
+      // 1. Ensure the plan is saved to the database first
+      const planId = savedPlanId || await savePlan();
+      
+      if (!planId) {
+        throw new Error("Could not save build plan. Please check your connection.");
+      }
+
+      // 2. Proceed to Stripe Checkout using the real Plan ID
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          planId: "mock-id", // In real app, save plan to DB first to get ID
+          planId: planId,
           tier 
         }),
       });
@@ -126,6 +162,7 @@ export default function BuildPlanner() {
       }
     } catch (err) {
       console.error("Checkout redir error", err);
+      alert("Checkout failed. Please try again.");
     } finally {
       setIsProcessing(false);
     }
@@ -135,8 +172,16 @@ export default function BuildPlanner() {
     <main className="bg-brand-obsidian min-h-screen flex flex-col">
       <Navbar />
       
-      <section className="flex-1 pt-32 pb-16">
-        <div className="container mx-auto px-6">
+      <section className="flex-1 pt-32 pb-16 relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/images/interior-showcase.png" 
+            alt="Van interior background" 
+            className="w-full h-full object-cover opacity-10 grayscale"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-obsidian via-transparent to-brand-obsidian" />
+        </div>
+        <div className="container mx-auto px-6 relative z-10">
           
           {/* Progress Tracker */}
           <div className="flex overflow-x-auto pb-8 mb-12 no-scrollbar gap-8 justify-between max-w-6xl mx-auto border-b border-brand-border/30">

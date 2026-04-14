@@ -11,7 +11,7 @@ const vehicles = [
     name: "MERCEDES-BENZ SPRINTER", 
     slug: "mercedes-sprinter", 
     tagline: "The Gold Standard for High-End Conversions",
-    image: "https://images.unsplash.com/photo-1551522435-a13afa10f103?q=80&w=2000",
+    image: "/images/sprinter.png",
     specs: { L: "Up to 4.7m", W: "1.78m", H: "2.24m" },
     payload: "Up to 1500kg",
     rating: 9
@@ -38,7 +38,7 @@ const vehicles = [
     name: "FORD TRANSIT", 
     slug: "ford-transit", 
     tagline: "The Most Versatile Chassis for Any Budget",
-    image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=2000",
+    image: "/images/transit.png",
     specs: { L: "Up to 4.3m", W: "1.78m", H: "2.12m" },
     payload: "Up to 1350kg",
     rating: 7

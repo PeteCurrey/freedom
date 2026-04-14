@@ -1,34 +1,73 @@
 import { renderToStream } from "@react-pdf/renderer";
 import { BlueprintPDF } from "@/components/blueprint/BlueprintPDF";
 import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+
+// Initialize admin client to fetch plans and products
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder_key'
+);
 
 export async function POST(req: Request) {
   try {
-    const { planData } = await req.json();
+    const { planId, tier } = await req.json();
 
-    // In a real implementation:
-    // 1. Fetch full plan data from Supabase
+    if (!planId) {
+      return NextResponse.json({ error: "Missing planId" }, { status: 400 });
+    }
+
+    // 1. Fetch the plan from Supabase
+    const { data: plan, error: planError } = await supabaseAdmin
+      .from('build_plans')
+      .select('*')
+      .eq('id', planId)
+      .single();
+
+    if (planError || !plan) {
+      console.error("Error fetching plan for PDF:", planError);
+      return NextResponse.json({ error: "Build plan not found" }, { status: 404 });
+    }
+
     // 2. Fetch BOM based on selected tiers
+    // For this implementation, we fetch products from relevant categories
+    // that match the "Professional" or "Mid" tier requirements.
+    
+    const { data: products, error: prodError } = await supabaseAdmin
+      .from('products')
+      .select('*')
+      .is('is_active', true);
 
-    // Mock BOM for demonstration based on the selected tier.
-    let bom: { sku: string; name: string; brand: string; qty: number; price: number }[] = [];
-    if (planData.tier && planData.tier !== 'starter') {
-        bom = [
-            { sku: "PMP122305010", name: "MultiPlus-II 12/3000/120-32", brand: "Victron Energy", qty: 1, price: 125000 },
-            { sku: "SCC110030210", name: "SmartSolar MPPT 100/30", brand: "Victron Energy", qty: 1, price: 19500 },
-            { sku: "ORI121236140", name: "Orion-Tr Smart 12/12-30A DC-DC charger", brand: "Victron Energy", qty: 1, price: 21000 },
-            { sku: "BAT512132410", name: "LiFePO4 Battery 12,8V/330Ah Smart", brand: "Victron Energy", qty: 1, price: 185000 },
-            { sku: "33512-01", name: "Combi D4 E", brand: "Truma", qty: 1, price: 235000 }
-        ];
+    if (prodError) {
+      console.error("Error fetching products for BOM:", prodError);
+    }
+
+    // Basic BOM logic: If tier is not starter, include relevant high-end components
+    let bom: any[] = [];
+    if (tier && tier !== 'starter' && products) {
+        // Filter products that resemble the selected system tiers
+        // In a production app, this would be a specific mapping table or kit ID
+        bom = products.map(p => ({
+            sku: p.sku,
+            name: p.name,
+            brand: p.brand,
+            qty: 1,
+            price: p.price_gbp
+        }));
     }
     
-    const pdfData = { ...planData, bom };
-    const stream = await renderToStream(<BlueprintPDF data={pdfData} />);
+    const planData = {
+        buildId: plan.id.substring(0, 8).toUpperCase(),
+        vehicleName: plan.name || "Unknown Vehicle",
+        configId: plan.configuration_id || "Standard",
+        tier: tier || 'starter',
+        totalWeight: plan.total_weight_grams / 1000, // convert grams back to kg
+        bom
+    };
+
+    const stream = await renderToStream(<BlueprintPDF data={planData} />);
     
-    // Convert stream to Buffer
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const chunks: any[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const chunks: Uint8Array[] = [];
     for await (const chunk of stream as any) {
       chunks.push(chunk);
     }

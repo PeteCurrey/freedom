@@ -16,7 +16,7 @@ const vehicleData = {
     name: "MERCEDES-BENZ SPRINTER",
     tagline: "Where Engineering Meets Capability.",
     description: "The Mercedes-Benz Sprinter is the undisputed gold standard for off-grid campervan conversions. Its combination of structural integrity, 4x4 availability, and extensive aftermarket support makes it the premier choice for serious builders who refuse to compromise on quality or capability.",
-    heroImage: "https://images.unsplash.com/photo-1551522435-a13afa10f103?q=80&w=2500",
+    heroImage: "/images/sprinter.png",
     specs: [
       { label: "Engine Options", value: "2.0L 4-Cyl CDI" },
       { label: "Power Output", value: "114 - 190", unit: "HP" },

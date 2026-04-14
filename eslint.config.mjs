@@ -10,8 +10,10 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  { ignores: [".next/", "node_modules/", "supabase/", "diy-motorhomes/"] },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  { 
+    ignores: [".next/", "node_modules/", "supabase/", "diy-motorhomes/", "public/"] 
+  },
 ];
 
 export default eslintConfig;

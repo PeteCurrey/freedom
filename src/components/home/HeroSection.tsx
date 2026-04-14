@@ -59,16 +59,11 @@ export function HeroSection() {
     >
       {/* Background Video / Overlay */}
       <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="h-full w-full object-cover opacity-60 grayscale-[0.5]"
-          poster="/images/hero-fallback.jpg"
-        >
-          <source src="https://assets.mixkit.co/videos/preview/mixkit-mechanical-workshop-machinery-4155-large.mp4" type="video/mp4" />
-        </video>
+        <img
+          src="/images/hero-background.png"
+          alt="Luxury off-grid adventure motorhome at dusk"
+          className="h-full w-full object-cover grayscale-[0.2]"
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-brand-obsidian/40 via-transparent to-brand-obsidian" />
         <div className="absolute inset-0 bg-brand-obsidian/20" />
       </div>
@@ -77,7 +72,7 @@ export function HeroSection() {
       <div className="container relative z-10 px-6 text-center">
         <h1
           ref={headingRef}
-          className="font-display text-[12vw] lg:text-[10vw] leading-[0.8] tracking-tighter text-brand-white mb-8"
+          className="font-display text-[9vw] lg:text-[7vw] leading-[0.8] tracking-tighter text-brand-white mb-8 whitespace-nowrap"
         >
           BUILD YOUR WORLD
         </h1>
