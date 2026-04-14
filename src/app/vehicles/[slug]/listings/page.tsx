@@ -106,7 +106,7 @@ export default function MarketplacePage() {
                 <ListingChannelCard 
                   title="VanTrader Classifieds"
                   description="Professional dealer network. Best for low-mileage, newer models with VAT-deductible pricing."
-                  url={`https://www.autotrader.co.uk/vans/used-vans/${slug.toString().replace('-', '/')}`}
+                  url={`https://www.autotrader.co.uk/vans/used-vans/${(slug as string || "").replace('-', '/')}`}
                   logo="/images/hero-background.png"
                   badge="Verified Source"
                 />
