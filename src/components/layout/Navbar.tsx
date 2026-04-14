@@ -69,7 +69,20 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const pathname = usePathname();
+
+  const handleMouseEnter = (linkName: string) => {
+    if (timeoutId) clearTimeout(timeoutId);
+    setHoveredNav(linkName);
+  };
+
+  const handleMouseLeave = () => {
+    const id = setTimeout(() => {
+      setHoveredNav(null);
+    }, 150);
+    setTimeoutId(id);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -116,8 +129,8 @@ export function Navbar() {
             <div 
               key={link.name}
               className="h-full flex items-center"
-              onMouseEnter={() => link.mega && setHoveredNav(link.name)}
-              onMouseLeave={() => setHoveredNav(null)}
+              onMouseEnter={() => link.mega && handleMouseEnter(link.name)}
+              onMouseLeave={() => link.mega && handleMouseLeave()}
             >
               <Link
                 href={link.href}
@@ -134,6 +147,7 @@ export function Navbar() {
               {link.mega && link.items && (
                 <div className={cn(
                   "absolute top-full left-0 right-0 bg-brand-obsidian border-b border-brand-border transition-all duration-300 overflow-hidden",
+                  "before:absolute before:-top-8 before:left-0 before:right-0 before:h-8 before:content-['']",
                   hoveredNav === link.name ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
                 )}>
                   <div className="container mx-auto px-6 py-12">

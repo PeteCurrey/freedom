@@ -128,22 +128,40 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-12 border-t border-brand-border gap-6">
-          <p className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">
-            © {new Date().getFullYear()} DIY MOTORHOMES. Part of the Avorria family.
-          </p>
-          <div className="flex items-center space-x-8">
-            <Link
-              href="/privacy"
-              className="font-mono text-[10px] text-brand-grey uppercase tracking-widest hover:text-brand-orange"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              href="/terms"
-              className="font-mono text-[10px] text-brand-grey uppercase tracking-widest hover:text-brand-orange"
-            >
-              Terms & Conditions
-            </Link>
+          <div className="flex flex-col gap-2">
+            <p className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">
+              © {new Date().getFullYear()} DIY MOTORHOMES. Part of the Avorria family.
+            </p>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[9px] text-brand-grey/50 uppercase tracking-widest">A signature build by</span>
+              <a href="https://avorria.co.uk" target="_blank" rel="noopener noreferrer" className="font-display text-[10px] text-brand-white hover:text-brand-orange transition-colors">AVORRIA</a>
+            </div>
+          </div>
+          
+          <div className="flex flex-col md:items-end gap-6">
+            <div className="flex items-center space-x-8">
+              <Link
+                href="/privacy"
+                className="font-mono text-[10px] text-brand-grey uppercase tracking-widest hover:text-brand-orange"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                href="/terms"
+                className="font-mono text-[10px] text-brand-grey uppercase tracking-widest hover:text-brand-orange"
+              >
+                Terms & Conditions
+              </Link>
+            </div>
+            
+            {/* Hand-drawn style signature for Pete Currey */}
+            <div className="flex flex-col items-end opacity-60">
+               <svg width="120" height="40" viewBox="0 0 120 40" className="text-brand-white fill-none stroke-current" style={{ strokeWidth: 1.5, strokeLinecap: 'round' }}>
+                  <path d="M10 25c5-2 15-10 20-10s5 15 2 20-10 5-15 2 5-15 10-18 20 5 25 10-5 15-12 15-10-5-5-12 15-10 25-5 5 15 0 20-20 2-25-8" />
+                  <path d="M70 20c2-5 8-10 12-10s5 15 2 20-8 5-12 2 4-15 8-18 15 5 20 10-4 15-10 15-8-5-4-12 12-10 20-5" />
+               </svg>
+               <span className="font-mono text-[8px] text-brand-grey uppercase tracking-[0.3em] mt-1 pr-2">Pete Currey // Founder</span>
+            </div>
           </div>
         </div>
       </div>

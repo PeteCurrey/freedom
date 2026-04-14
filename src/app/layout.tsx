@@ -24,6 +24,10 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "DIY MOTORHOMES // Built for the road. Engineered for life.",
   description: "The UK's definitive resource hub and online store for serious self-build motorhome and campervan conversions.",
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
