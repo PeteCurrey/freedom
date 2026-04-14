@@ -1,0 +1,165 @@
+"use client";
+
+import { useParams } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { generateEbaySearchUrl } from "@/lib/affiliate";
+import { ExternalLink, ShieldCheck, Gauge, Calendar, MapPin } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+// Vehicle Metadata to ensure we have the right display name
+const vehicleMap: Record<string, string> = {
+  "mercedes-sprinter": "Mercedes-Benz Sprinter",
+  "vw-crafter": "VW Crafter",
+  "ford-transit": "Ford Transit",
+  "man-tge": "MAN TGE",
+  "fiat-ducato": "Fiat Ducato",
+  "iveco-daily": "Iveco Daily",
+};
+
+export default function MarketplacePage() {
+  const { slug } = useParams();
+  const vehicleName = vehicleMap[slug as string] || "Base";
+  const ebayUrl = generateEbaySearchUrl({ vehicleName });
+
+  return (
+    <main className="bg-brand-obsidian min-h-screen">
+      <Navbar />
+
+      {/* Hero Section */}
+      <section className="pt-32 pb-16 border-b border-brand-border">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div className="max-w-3xl">
+              <nav className="flex items-center gap-2 font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-8">
+                <Link href="/" className="hover:text-brand-orange">Home</Link>
+                <span>/</span>
+                <Link href={`/vehicles/${slug}`} className="hover:text-brand-orange">{vehicleName}</Link>
+                <span>/</span>
+                <span className="text-brand-white">Used Listings</span>
+              </nav>
+              <h1 className="font-display text-5xl lg:text-7xl mb-6 leading-none uppercase">
+                THE <span className="text-brand-orange">MARKETPLACE</span>
+              </h1>
+              <p className="font-sans text-brand-grey text-lg lg:text-xl max-w-xl">
+                Sourcing the perfect {vehicleName} foundation. Below are live search results and 
+                vetted sourcing channels.
+              </p>
+            </div>
+            <a 
+              href={ebayUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-brand-orange text-white px-10 py-5 font-display text-xs uppercase tracking-[0.2em] hover:scale-105 transition-transform inline-flex items-center gap-3"
+            >
+              Browse all on eBay <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Marketplace Grid */}
+      <section className="py-24">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+            {/* Sidebar / Filters Placeholder */}
+            <div className="space-y-12">
+              <div>
+                <h3 className="font-display text-xs tracking-[0.3em] text-brand-white uppercase mb-8 italic">Buying Guide</h3>
+                <div className="space-y-6">
+                  <div className="blueprint-border p-6 bg-brand-carbon/50">
+                    <p className="font-mono text-[10px] text-brand-orange uppercase mb-2">Check 01 // Rust</p>
+                    <p className="font-sans text-brand-grey text-[11px] leading-relaxed">
+                      Check rear arches and step wells. For Sprinters, inspect the roof seams.
+                    </p>
+                  </div>
+                  <div className="blueprint-border p-6 bg-brand-carbon/50">
+                    <p className="font-mono text-[10px] text-brand-orange uppercase mb-2">Check 02 // History</p>
+                    <p className="font-sans text-brand-grey text-[11px] leading-relaxed">
+                      Full service history (FSH) is vital. Ex-lease vans are often well-maintained.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Listings Bridge */}
+            <div className="lg:col-span-3">
+              <div className="flex items-center justify-between mb-12">
+                <h2 className="font-display text-xl">RECOMMENDED SEARCH CHANNELS</h2>
+                <div className="h-px flex-1 bg-brand-border mx-8 hidden md:block" />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* eBay Channel Card */}
+                <ListingChannelCard 
+                  title="eBay Motors UK"
+                  description={`Direct auctions and classifieds for ${vehicleName}s. Best for finding private sales and unique specifications.`}
+                  url={ebayUrl}
+                  logo="/images/systems-showcase.png"
+                  badge="Affiliate Partner"
+                />
+                
+                {/* VanTrader Channel Card (Mock) */}
+                <ListingChannelCard 
+                  title="VanTrader Classifieds"
+                  description="Professional dealer network. Best for low-mileage, newer models with VAT-deductible pricing."
+                  url={`https://www.autotrader.co.uk/vans/used-vans/${slug.toString().replace('-', '/')}`}
+                  logo="/images/hero-background.png"
+                  badge="Verified Source"
+                />
+              </div>
+
+              {/* Technical Notice */}
+              <div className="mt-16 blueprint-border p-8 border-brand-orange/20 bg-brand-orange/5">
+                <div className="flex gap-6 items-start">
+                  <ShieldCheck className="w-8 h-8 text-brand-orange shrink-0" />
+                  <div>
+                    <h4 className="font-display text-sm mb-2">Technical Disclaimer</h4>
+                    <p className="font-sans text-brand-grey text-xs leading-relaxed max-w-2xl">
+                      DIY Motorhomes may receive a small commission from sales generated through the links on this 
+                      page. This helps fund our technical research and free build guides. All listings are 
+                      third-party; always perform an HPI check before purchasing.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </main>
+  );
+}
+
+function ListingChannelCard({ title, description, url, logo, badge }: any) {
+  return (
+    <div className="group blueprint-border bg-brand-carbon hover:bg-brand-graphite transition-all duration-500 overflow-hidden">
+      <div className="relative h-48 overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700">
+        <Image src={logo} alt={title} fill className="object-cover opacity-30 group-hover:opacity-60 group-hover:scale-110 transition-transform duration-1000" />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-carbon to-transparent" />
+        <div className="absolute top-4 right-4">
+          <span className="font-mono text-[8px] text-brand-orange border border-brand-orange/40 px-2 py-1 uppercase tracking-widest bg-brand-obsidian/80">
+            {badge}
+          </span>
+        </div>
+      </div>
+      <div className="p-8">
+        <h3 className="font-display text-xl mb-4 group-hover:text-brand-orange transition-colors">{title}</h3>
+        <p className="font-sans text-brand-grey text-xs leading-relaxed mb-8">{description}</p>
+        <a 
+          href={url} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-3 font-mono text-[10px] text-brand-white uppercase tracking-widest border-b border-brand-white/20 pb-2 hover:border-brand-orange hover:text-brand-orange transition-all"
+        >
+          Open Marketplace <ExternalLink className="w-3 h-3" />
+        </a>
+      </div>
+    </div>
+  );
+}

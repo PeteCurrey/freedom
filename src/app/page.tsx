@@ -236,7 +236,10 @@ export default function Home() {
 
 function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
   return (
-    <div className="w-[450px] group blueprint-border bg-brand-graphite/30 overflow-hidden">
+    <Link 
+      href={`/vehicles/${vehicle.slug}`}
+      className="w-[450px] group blueprint-border bg-brand-graphite/30 overflow-hidden block hover:border-brand-orange transition-colors"
+    >
       <div className="relative aspect-[16/10] overflow-hidden">
         <Image
           src={vehicle.image}
@@ -253,15 +256,11 @@ function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
         <p className="font-mono text-xs text-brand-grey uppercase tracking-widest mb-8">
           {vehicle.specs}
         </p>
-        <Link 
-          href={`/vehicles/${vehicle.slug}`}
-          className="font-mono text-[10px] text-brand-white uppercase tracking-[0.2em] border-b border-brand-white/20 pb-2 hover:border-brand-orange hover:text-brand-orange transition-all"
-        >
-          {/* // View Full Profile */}
+        <span className="font-mono text-[10px] text-brand-white uppercase tracking-[0.2em] border-b border-brand-white/20 pb-2 group-hover:border-brand-orange group-hover:text-brand-orange transition-all">
           View Full Profile
-        </Link>
+        </span>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -290,11 +289,11 @@ function SystemCard({ system }: { system: System }) {
 
 const vehicles = [
   { name: "MERCEDES SPRINTER", slug: "mercedes-sprinter", specs: "L3H3 — 170\" WB — High Roof", image: "/images/sprinter.png" },
-  { name: "VW CRAFTER", slug: "vw-crafter", specs: "LWB — High Roof — 4Motion", image: "/images/hero-background.png" },
-  { name: "MAN TGE", slug: "man-tge", specs: "LWB — Lion's Cap Cab", image: "/images/interior-showcase.png" },
+  { name: "VW CRAFTER", slug: "vw-crafter", specs: "LWB — High Roof — 4Motion", image: "/images/vw-crafter.png" },
+  { name: "MAN TGE", slug: "man-tge", specs: "LWB — Lion's Cap Cab", image: "/images/man-tge.png" },
   { name: "FORD TRANSIT", slug: "ford-transit", specs: "L4H3 — AWD — Jumbo", image: "/images/transit.png" },
-  { name: "FIAT DUCATO", slug: "fiat-ducato", specs: "L4H3 — Maxi — 180 MultiJet", image: "/images/community-showcase.png" },
-  { name: "IVECO DAILY", slug: "iveco-daily", specs: "7-Tonne — 4100L — Hi-Matic", image: "/images/systems-showcase.png" },
+  { name: "FIAT DUCATO", slug: "fiat-ducato", specs: "L4H3 — Maxi — 180 MultiJet", image: "/images/fiat-ducato.png" },
+  { name: "IVECO DAILY", slug: "iveco-daily", specs: "7-Tonne — 4100L — Hi-Matic", image: "/images/iveco-daily.png" },
 ];
 
 const systems = [

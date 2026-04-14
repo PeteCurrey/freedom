@@ -17,6 +17,13 @@ export function GSAPInit() {
     ScrollTrigger.config({
       ignoreMobileResize: true,
     });
+
+    // Final refresh to ensure all pins are settled
+    const timeout = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 500);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   return null;

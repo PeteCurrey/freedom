@@ -33,6 +33,10 @@ export function HorizontalScroll({ children, title, subtitle, className }: Horiz
           },
         }
       );
+
+      // Force a refresh after the pin is set
+      ScrollTrigger.refresh();
+
       return () => pin.kill();
     }, triggerRef);
 
