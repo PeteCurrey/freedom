@@ -30,7 +30,7 @@ const footerLinks = [
     links: [
       { name: "Our Story", href: "/about" },
       { name: "Community Showcase", href: "/showcase" },
-      { name: "Contact Us", href: "/contact" },
+      { name: "Engineering Tools", href: "/tools/cable-calculator" },
       { name: "Privacy Policy", href: "/privacy" },
     ],
   },
@@ -44,12 +44,12 @@ const footerLinks = [
     ],
   },
   {
-    title: "Build Systems",
+    title: "Engineering",
     links: [
+      { name: "Cable Sizing Tool", href: "/tools/cable-calculator" },
       { name: "Electrical & Solar", href: "/systems/electrical-solar" },
       { name: "Heating & Hot Water", href: "/systems/heating-hot-water" },
-      { name: "Water & Plumbing", href: "/systems/water-plumbing" },
-      { name: "Insulation & Vent", href: "/systems/insulation-ventilation" },
+      { name: "Tech Standards", href: "/resources" },
     ],
   },
 ];

@@ -4,13 +4,16 @@ import { useState, useMemo } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SVGSchematic, SystemTier } from "@/components/planner/SVGSchematic";
+import { BlueprintPDF } from "@/components/blueprint/BlueprintPDF";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import { cn } from "@/lib/utils";
 import { 
   Zap, Thermometer, Droplets, Weight, 
   PoundSterling, CheckCircle2,
   ChevronRight, ArrowLeft, Download, Eye,
-  Wind, Flame, Loader2, Layout
+  Wind, Flame, Loader2, Layout, AlertTriangle
 } from "lucide-react";
+import { BuildAdvisor } from "@/components/chat/BuildAdvisor";
 
 // --- CONFIGURATION DATA ---
 
@@ -21,10 +24,10 @@ const steps = [
 ];
 
 const vehicleFoundations = [
-  { id: "sprinter", name: "Mercedes Sprinter", configs: ["144\" WB", "170\" WB", "170\" EXT"], baseWeight: 2200, payload: 1300 },
-  { id: "crafter", name: "VW Crafter", configs: ["MWB", "LWB", "LWB Maxi"], baseWeight: 2150, payload: 1350 },
-  { id: "ducato", name: "Fiat Ducato", configs: ["L2H2", "L3H2", "L4H3"], baseWeight: 2000, payload: 1500 },
-  { id: "transit", name: "Ford Transit", configs: ["L2H2", "L3H3", "L4H3"], baseWeight: 1950, payload: 1550 },
+  { id: "sprinter", name: "Mercedes Sprinter", configs: ["144\" WB", "170\" WB", "170\" EXT"], baseWeight: 2200, payload: 1300, price: 0 },
+  { id: "crafter", name: "VW Crafter", configs: ["MWB", "LWB", "LWB Maxi"], baseWeight: 2150, payload: 1350, price: 0 },
+  { id: "ducato", name: "Fiat Ducato", configs: ["L2H2", "L3H2", "L4H3"], baseWeight: 1950, payload: 1550, price: 0 },
+  { id: "transit", name: "Ford Transit", configs: ["L2H2", "L3H3", "L4H3"], baseWeight: 1950, payload: 1550, price: 0 },
 ];
 
 const layoutTemplates = [
@@ -104,6 +107,19 @@ export default function BuildPlanner() {
     let cost = 0;
     let weight = 0;
     
+    // Add vehicle foundation cost/weight impact if any
+    const base = vehicleFoundations.find(v => v.id === selections.vehicleId);
+    if (base) {
+      // Foundations are usually free (base price of van), but configs might add weight
+      // cost += base.price || 0;
+    }
+
+    // Add layout base costs
+    const layout = layoutTemplates.find(l => l.id === selections.layoutId);
+    if (layout) {
+      // layout.price could be added here if defined
+    }
+
     // Sum system tiers
     Object.entries(selections.systems).forEach(([key, tierId]) => {
       const config = (systemConfigs as any)[key]?.find((t: any) => t.id === tierId);
@@ -113,7 +129,7 @@ export default function BuildPlanner() {
       }
     });
 
-    // Add layout/sleeping defaults
+    // Add sleeping system
     const sleep = sleepSystems.find(s => s.id === selections.sleepingId);
     if (sleep) {
       cost += sleep.price;
@@ -121,7 +137,7 @@ export default function BuildPlanner() {
     }
 
     return { cost, weight };
-  }, [selections.systems, selections.sleepingId]);
+  }, [selections.systems, selections.sleepingId, selections.vehicleId, selections.layoutId]);
 
   const vehicle = vehicleFoundations.find(v => v.id === selections.vehicleId);
   const payloadLimit = vehicle?.payload || 0;
@@ -501,10 +517,45 @@ export default function BuildPlanner() {
                       </div>
                     </div>
 
+                    {/* Payload Warning */}
+                    {payloadUsagePercent > 80 && (
+                      <div className={cn(
+                        "p-4 border font-mono text-[9px] uppercase tracking-widest flex items-center gap-3",
+                        payloadUsagePercent > 100 ? "bg-red-500/10 border-red-500 text-red-500" : "bg-yellow-500/10 border-yellow-500 text-yellow-500"
+                      )}>
+                        <AlertTriangle className="w-4 h-4" />
+                        {payloadUsagePercent > 100 
+                          ? "CRITICAL: Payload Exceeded. Reduce build weight." 
+                          : "WARNING: High payload usage. Monitor chassis weight."}
+                      </div>
+                    )}
+
                     <div className="pt-8 space-y-3">
-                      <button className="w-full flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-brand-grey hover:text-brand-white p-4 border border-brand-border transition-all">
-                        <Download className="w-4 h-4" /> Export Summary (Free)
-                      </button>
+                      <PDFDownloadLink 
+                        document={
+                          <BlueprintPDF 
+                            data={{
+                              vehicleName: vehicle?.name || "Unknown Chassis",
+                              configId: selections.configId,
+                              buildId: "BUILD-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                              tier: "Free Preview",
+                              totalWeight: totals.weight,
+                              bom: [] // In a real app, populate from systemConfigs selections
+                            }} 
+                          />
+                        }
+                        fileName="DIYM-Build-Plan.pdf"
+                        className="w-full flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-brand-grey hover:text-brand-white p-4 border border-brand-border transition-all"
+                      >
+                         {/* @ts-ignore */}
+                        {({ loading }) => (
+                          <>
+                            <Download className="w-4 h-4" /> 
+                            {loading ? "Preparing PDF..." : "Export Summary (Free)"}
+                          </>
+                        )}
+                      </PDFDownloadLink>
+                      
                       <button className="w-full flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-brand-white p-4 bg-brand-carbon border border-brand-border hover:border-brand-orange transition-all">
                         <Eye className="w-4 h-4" /> Blueprint Preview
                       </button>
@@ -516,6 +567,15 @@ export default function BuildPlanner() {
           </div>
         </div>
       </section>
+
+      {/* AI Advisor Contextual Integration */}
+      <BuildAdvisor 
+        context={{
+          vehicle: vehicle?.name,
+          layout: layoutTemplates.find(l => l.id === selections.layoutId)?.name,
+          systems: selections.systems
+        }}
+      />
 
       <Footer />
     </main>

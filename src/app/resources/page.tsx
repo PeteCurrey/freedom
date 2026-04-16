@@ -7,6 +7,9 @@ import Image from "next/image";
 import { Search, BookOpen, Clock, BarChart } from "lucide-react";
 
 const guides = [
+  { slug: "conversion-cost-guide", title: "The Ultimate Guide to Van Conversion Costs", category: "Planning", time: "20 min", difficulty: "Beginner", image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1000" },
+  { slug: "first-steps", title: "Phase 1: Your First 8 Steps to a Mobile Home", category: "Engineering", time: "15 min", difficulty: "Beginner", image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1000" },
+  { slug: "dvla-reclassification", title: "DVLA Rules & Reclassification Guide", category: "Legal", time: "25 min", difficulty: "Intermediate", image: "https://images.unsplash.com/photo-1544621443-42468301beaf?q=80&w=1000" },
   { slug: "lithium-battery-guide", title: "Complete Guide to LiFePO4 Lithium Batteries", category: "Electrical", time: "15 min", difficulty: "Intermediate", image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1000" },
   { slug: "truma-combi-install", title: "Installing a Truma Combi: Step-by-Step", category: "Heating", time: "25 min", difficulty: "Advanced", image: "https://images.unsplash.com/photo-1590487988256-9ed24133863e?q=80&w=1000" },
   { slug: "sound-deadening-basics", title: "Sound Deadening vs Insulation: What You Need", category: "Insulation", time: "10 min", difficulty: "Beginner", image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1000" },

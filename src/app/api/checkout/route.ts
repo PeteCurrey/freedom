@@ -1,58 +1,86 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  apiVersion: '2024-12-18.acacia' as any, // Cast to any or the specific version supported by your Stripe typings
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+  apiVersion: '2024-12-18.acacia' as any,
 });
 
 const TIER_PRICES: Record<string, number> = {
-  starter: 2900, // £29.00 in pence
-  full: 7900,    // £79.00 in pence
-  master: 14900, // £149.00 in pence
+  starter: 2900, // £29.00
+  full: 7900,    // £79.00
+  master: 14900, // £149.00
 };
 
 export async function POST(req: Request) {
   try {
-    const { planId, tier } = await req.json();
+    const { cart, tier, planId, userId } = await req.json();
 
-    const price = TIER_PRICES[tier as keyof typeof TIER_PRICES];
-    if (!price) {
-        console.error("Invalid Tier:", tier);
-      return NextResponse.json({ error: "Invalid tier selected" }, { status: 400 });
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return NextResponse.json({ 
+        url: `${new URL(req.url).origin}/cart?error=no_stripe_key` 
+      });
     }
 
-    // Determine the base URL for success/cancel redirects
-    const origin = req.headers.get("origin") || new URL(req.url).origin;
+    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+
+    // Case 1: Handle Digital Blueprint Plans
+    if (tier && planId) {
+      lineItems.push({
+        price_data: {
+          currency: 'gbp',
+          product_data: {
+            name: `DIYM Build Blueprint - ${tier.toUpperCase()} TIER`,
+            description: `Professional engineering pack for Build ID: ${planId}`,
+          },
+          unit_amount: TIER_PRICES[tier.toLowerCase()] || 7900,
+        },
+        quantity: 1,
+      });
+    }
+
+    // Case 2: Handle Store Product Cart
+    if (cart && Array.isArray(cart)) {
+      cart.forEach((item: any) => {
+        lineItems.push({
+          price_data: {
+            currency: 'gbp',
+            product_data: {
+              name: `${item.brand} ${item.name}`,
+              description: `Component for build: ${item.slug}`,
+              images: item.image ? [item.image] : [],
+            },
+            unit_amount: item.price, // ensure this is in pence
+          },
+          quantity: item.quantity,
+        });
+      });
+    }
+
+    if (lineItems.length === 0) {
+      return NextResponse.json({ error: "No items in checkout" }, { status: 400 });
+    }
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card", "paypal", "link"],
-      line_items: [
-        {
-          price_data: {
-            currency: "gbp",
-            product_data: {
-              name: `DIY Motorhomes Blueprint - ${tier.toUpperCase()} Tier`,
-              description: `Professional technical blueprint for plan: ${planId}`,
-            },
-            unit_amount: price,
-          },
-          quantity: 1,
-        },
-      ],
-      mode: "payment",
-      success_url: `${origin}/planner/success?session_id={CHECKOUT_SESSION_ID}&plan_id=${planId}&tier=${tier}`,
-      cancel_url: `${origin}/planner`,
+      payment_method_types: ['card'],
+      shipping_address_collection: {
+        allowed_countries: ['GB'], // Focusing on UK builders as per requirements
+      },
+      line_items: lineItems,
+      mode: 'payment',
+      success_url: `${new URL(req.url).origin}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${new URL(req.url).origin}/cart`,
       metadata: {
-        planId,
-        tier,
+        userId: userId || 'guest',
+        planId: planId || '',
+        tier: tier || '',
+        isStoreOrder: cart ? 'true' : 'false',
       },
     });
 
     return NextResponse.json({ url: session.url });
-  } catch (error: Error | unknown) {
-    console.error("Checkout error:", error);
-    const errorMessage = error instanceof Error ? error.message : "Failed to create checkout session";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+
+  } catch (error: any) {
+    console.error('Stripe Session Error:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

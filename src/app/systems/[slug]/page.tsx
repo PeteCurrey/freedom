@@ -1,10 +1,6 @@
-import { createClient } from "@supabase/supabase-js";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { 
-  Zap, Thermometer, Droplets, Shield, Layers, Layout,
-  ChevronRight, AlertTriangle, CheckCircle2, ShoppingBag, ArrowRight
+  ChevronRight, AlertTriangle, CheckCircle2, ShoppingBag, ArrowRight, Zap
 } from "lucide-react";
+import { PowerCalculator } from "@/components/tools/PowerCalculator";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
@@ -138,6 +134,27 @@ export default async function SystemSlugPage({ params }: { params: { slug: strin
           </div>
         </div>
       </section>
+
+      {/* 2.5 POWER CALCULATOR (Conditional for Electrical) */}
+      {slug === 'electrical-solar' && (
+        <section className="py-32 border-b border-brand-border/30">
+          <div className="container mx-auto px-6">
+            <div className="max-w-4xl mb-16">
+               <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-brand-orange/10 border border-brand-orange/30 flex items-center justify-center">
+                     <Zap className="w-6 h-6 text-brand-orange" />
+                  </div>
+                  <h2 className="font-display text-4xl uppercase">Load Analysis & Power Budgeting</h2>
+               </div>
+               <p className="font-sans text-brand-grey text-lg">
+                  Before you select your battery bank or solar array, you must understand your daily energy consumption. 
+                  Use our pro-grade calculator to balance your mission profile.
+               </p>
+            </div>
+            <PowerCalculator />
+          </div>
+        </section>
+      )}
 
       {/* 3. COMMON MISTAKES */}
       <section className="py-32 bg-brand-carbon relative overflow-hidden">

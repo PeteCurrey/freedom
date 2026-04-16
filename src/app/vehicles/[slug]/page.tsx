@@ -8,149 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 import { HorizontalScroll } from "@/components/ui/HorizontalScroll";
 import { SpecCard } from "@/components/ui/SpecCard";
 import { ProductCard } from "@/components/store/ProductCard";
-import { Check, X, Ruler, ShieldCheck, ExternalLink } from "lucide-react";
-
-// Mock Data
-const vehicleData = {
-  "mercedes-sprinter": {
-    name: "MERCEDES-BENZ SPRINTER",
-    tagline: "Where Engineering Meets Capability.",
-    description: "The Mercedes-Benz Sprinter is the undisputed gold standard for off-grid campervan conversions. Its combination of structural integrity, 4x4 availability, and extensive aftermarket support makes it the premier choice for serious builders who refuse to compromise on quality or capability.",
-    heroImage: "/images/sprinter.png",
-    specs: [
-      { label: "Engine Options", value: "2.0L 4-Cyl CDI" },
-      { label: "Power Output", value: "114 - 190", unit: "HP" },
-      { label: "Drivetrain", value: "RWD / AWD" },
-      { label: "Transmission", value: "9G-TRONIC" },
-      { label: "GVWR", value: "3500 - 5000", unit: "KG" },
-    ],
-    configurations: [
-      { label: "144\" WB Standard", length: "5932mm", internalL: "3272mm", height: "High Roof", volume: "10.5m³" },
-      { label: "144\" WB High Roof", length: "5932mm", internalL: "3272mm", height: "High Roof", volume: "11.5m³" },
-      { label: "170\" WB High Roof", length: "6967mm", internalL: "4307mm", height: "High Roof", volume: "14.5m³" },
-      { label: "170\" EXT High Roof", length: "7367mm", internalL: "4707mm", height: "High Roof", volume: "15.5m³" },
-    ],
-    pros: ["Best-in-class reliability", "Superior 4x4 capability", "Massive aftermarket ecosystem", "High resale value"],
-    cons: ["Higher purchase price", "Expensive maintenance", "Narrower than Sevel vans", "Rust issues on older models"],
-    bestFor: "Off-grid adventurers with bigger budgets and taller individuals who want 4×4 capability.",
-    watchOutFor: "Internal width of ~178cm means you'll need flares for a transverse bed if you're over 5'10\".",
-    manufacturerUrl: "https://www.mercedes-benz.co.uk/vans/en/sprinter"
-  },
-  "vw-crafter": {
-    name: "VW CRAFTER",
-    tagline: "The Refined Precision Touring Foundation.",
-    description: "The second-generation VW Crafter is often cited as the most 'car-like' large van to drive. Its refined suspension and advanced driver assistance systems make it the preferred choice for those planning long-distance European tours where driver comfort is paramount.",
-    heroImage: "/images/vw-crafter.png",
-    specs: [
-      { label: "Engine Options", value: "2.0L TDI Eco" },
-      { label: "Power Output", value: "102 - 177", unit: "HP" },
-      { label: "Drivetrain", value: "FWD / RWD / 4MOTION" },
-      { label: "Transmission", value: "8-Speed Auto" },
-      { label: "GVWR", value: "3000 - 5500", unit: "KG" },
-    ],
-    configurations: [
-      { label: "Medium Wheelbase", length: "5986mm", internalL: "3450mm", height: "High Roof", volume: "9.9m³" },
-      { label: "Long Wheelbase", length: "6836mm", internalL: "4300mm", height: "High Roof", volume: "14.4m³" },
-      { label: "LWB Maxi", length: "7391mm", internalL: "4855mm", height: "Super High", volume: "16.1m³" },
-    ],
-    pros: ["Exceptional driving ergonomics", "Great 8-speed automatic gearbox", "Square load box for easier building", "Modern tech stack"],
-    cons: ["Complex electronics", "Fewer conversion parts than Sprinter", "DPF sensitivities", "RWD variants eat into payload"],
-    bestFor: "Long-range adventure touring and owners who prioristise car-like handling and modern interiors.",
-    watchOutFor: "AdBlue consumption and the LWB Maxi's significant rear overhang which can scrape on ferries.",
-    manufacturerUrl: "https://www.volkswagen-vans.co.uk/en/new-vehicles/crafter-panel-van.html"
-  },
-  "ford-transit": {
-    name: "FORD TRANSIT",
-    tagline: "The Versatile Workhorse for Every Builder.",
-    description: "The Ford Transit remains the most popular van in the UK for a reason. Its vast availability, relatively low maintenance costs, and the capable factory AWD option make it a fantastic middle-ground for builders who want capability without the 'sprinter tax'.",
-    heroImage: "/images/transit.png",
-    specs: [
-      { label: "Engine Options", value: "2.0L EcoBlue" },
-      { label: "Power Output", value: "105 - 185", unit: "HP" },
-      { label: "Drivetrain", value: "FWD / RWD / AWD" },
-      { label: "Transmission", value: "6-Speed / 10-Speed" },
-      { label: "GVWR", value: "2900 - 4700", unit: "KG" },
-    ],
-    configurations: [
-      { label: "L2 (Medium)", length: "5531mm", internalL: "3044mm", height: "H2 Medium", volume: "9.5m³" },
-      { label: "L3 (Long)", length: "5981mm", internalL: "3494mm", height: "H3 High", volume: "11.5m³" },
-      { label: "L4 (Jumbo)", length: "6704mm", internalL: "4217mm", height: "H3 High", volume: "15.1m³" },
-    ],
-    pros: ["Maintenance parts are available everywhere", "Huge cargo volume in 'Jumbo' L4H3", "Excellent FordPass connectivity", "Reliable AWD system"],
-    cons: ["Highest theft risk in its class", "Lower resale than VW/Merc", "Cab interior feels more 'workmanlike'", "Complexity of the 10-speed auto"],
-    bestFor: "Practical builders, those on a mid-range budget, and users who need the ultimate load volume of the L4 configuration.",
-    watchOutFor: "Security is the #1 priority for Transit owners. Deadlocks and alarms are essential from day one.",
-    manufacturerUrl: "https://www.ford.co.uk/vans-and-pickups/transit"
-  },
-  "man-tge": {
-    name: "MAN TGE",
-    tagline: "The Commercial-Grade Van with Premium Support.",
-    description: "Built on the same chassis as the VW Crafter, the MAN TGE distinguishes itself through its commercial-focused service network. If you're building a full-time tiny home, MAN's 24/7 truck-focused service centres are a game changer for maintenance and recovery.",
-    heroImage: "/images/man-tge.png",
-    specs: [
-      { label: "Engine Options", value: "2.0L Diesel" },
-      { label: "Power Output", value: "102 - 177", unit: "HP" },
-      { label: "Drivetrain", value: "FWD / RWD / AWD" },
-      { label: "Transmission", value: "8-Speed Auto / 6-Speed" },
-      { label: "GVWR", value: "3000 - 5500", unit: "KG" },
-    ],
-    configurations: [
-      { label: "Standard Wheelbase", length: "5986mm", internalL: "3450mm", height: "High Roof", volume: "9.9m³" },
-      { label: "Long Wheelbase", length: "6836mm", internalL: "4300mm", height: "High Roof", volume: "14.4m³" },
-    ],
-    pros: ["Truck-level service network (24/7)", "Superior mechanical warranty", "Identical to Crafter for parts", "Great build quality"],
-    cons: ["Fewer retail dealers than VW", "Slightly more industrial brand image", "Expensive options list", "Complex ADAS systems"],
-    bestFor: "Full-time vanlifers who cannot afford downtime and want the backing of a global truck network.",
-    watchOutFor: "The ADAS (safety) systems can be sensitive to exterior modifications like bull bars.",
-    manufacturerUrl: "https://www.van.man/gb/en/man-tge.html"
-  },
-  "fiat-ducato": {
-    name: "FIAT DUCATO",
-    tagline: "The Space-Maximiser for Creative Layouts.",
-    description: "The Ducato (and its siblings Boxer/Relay) is the widest van in its class. Because the body doesn't taper as much towards the roof, it is the only van where a bed can be fitted transversely (across the van) without structural flares, saving thousands of pounds in the build.",
-    heroImage: "/images/fiat-ducato.png",
-    specs: [
-      { label: "Engine Options", value: "2.2L MultiJet3" },
-      { label: "Power Output", value: "120 - 180", unit: "HP" },
-      { label: "Drivetrain", value: "FWD Only" },
-      { label: "Transmission", value: "9-Speed Auto / 6-Speed" },
-      { label: "GVWR", value: "3000 - 4250", unit: "KG" },
-    ],
-    configurations: [
-      { label: "L2H2 (MWB)", length: "5413mm", internalL: "3120mm", height: "H2 High", volume: "11.5m³" },
-      { label: "L3H2 (LWB)", length: "5998mm", internalL: "3705mm", height: "H2 High", volume: "13.0m³" },
-      { label: "L4H3 (XLWB)", length: "6363mm", internalL: "4070mm", height: "H3 Super", volume: "17.0m³" },
-    ],
-    pros: ["Widest internal loadspace (1.87m)", "Transverse bed layouts are easy", "Lightest chassis = highest payload", "Very economical engines"],
-    cons: ["Front-wheel drive only (no 4x4)", "Noisier to drive than Crafter/Merc", "Rust on paint (typical Fiat)", "Lower cab build quality"],
-    bestFor: "Maximum storage, transverse beds, and budget-conscious builders who need every gram of payload.",
-    watchOutFor: "The Fiat 9-speed 'Torque Converter' auto is brilliant, the older 'Comfort-Matic' is best avoided.",
-    manufacturerUrl: "https://www.fiatprofessional.com/uk/ducato/ducato-goods-transport"
-  },
-  "iveco-daily": {
-    name: "IVECO DAILY",
-    tagline: "The 7-Tonne Truck in an LCV Body.",
-    description: "The Iveco Daily is unique in having a C-section truck-style ladder frame instead of a unibody. This makes it the ultimate choice for heavy-duty builds reaching up to 7.2 tonnes, or for those who plan to tow heavy equipment behind their motorhome.",
-    heroImage: "/images/iveco-daily.png",
-    specs: [
-      { label: "Engine Options", value: "3.0L F1C Diesel" },
-      { label: "Power Output", value: "136 - 210", unit: "HP" },
-      { label: "Drivetrain", value: "RWD / Real 4X4" },
-      { label: "Transmission", value: "8-Speed Hi-Matic" },
-      { label: "GVWR", value: "3300 - 7200", unit: "KG" },
-    ],
-    configurations: [
-      { label: "V-Series (High)", length: "6100mm", internalL: "3540mm", height: "High Roof", volume: "12.0m³" },
-      { label: "XL-Series", length: "7270mm", internalL: "4680mm", height: "High Roof", volume: "17.2m³" },
-      { label: "Super XL", length: "7630mm", internalL: "5130mm", height: "Super High", volume: "19.6m³" },
-    ],
-    pros: ["Unmatched payload capacity", "Legendary 3.0L engine durability", "Best 4x4 system in the market", "Industrial-grade chassis"],
-    cons: ["Very hard ride when empty", "Highest fuel consumption", "Requires C1 licence over 3.5t", "Significant internal floor height"],
-    bestFor: "Ultimate overlanding, heavy luxury builds, and towing requirements that exceed 3 tonnes.",
-    watchOutFor: "Most Iveco Dailys are over 3.5t GVWR - check your driver's licence requirements before buying.",
-    manufacturerUrl: "https://www.iveco.com/uk/products/pages/new-daily-van.aspx"
-  },
-};
+import { vehicleData } from "@/lib/data/vehicles";
 
 export default function VehicleProfile() {
   const { slug } = useParams();
@@ -189,10 +47,16 @@ export default function VehicleProfile() {
                   Manufacturer <ExternalLink className="w-3 h-3" />
                 </a>
                 <Link 
-                  href={`/vehicles/${slug}/listings`}
-                  className="inline-flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-widest hover:text-brand-white transition-colors border-b border-brand-orange/20 pb-1"
+                  href={`/vehicles/${slug}/buying-guide`}
+                  className="inline-flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-widest hover:text-brand-white transition-colors border-b border-brand-orange/20 pb-1 italic font-bold"
                 >
-                  Marketplace <ExternalLink className="w-3 h-3" />
+                  Buying Guide <ExternalLink className="w-3 h-3" />
+                </Link>
+                <Link 
+                  href="/vehicles/compare"
+                  className="inline-flex items-center gap-2 font-mono text-[10px] text-brand-grey uppercase tracking-widest hover:text-brand-white transition-colors border-b border-brand-grey/20 pb-1 italic"
+                >
+                  Compare All <ExternalLink className="w-3 h-3" />
                 </Link>
               </div>
             </div>
@@ -319,7 +183,82 @@ export default function VehicleProfile() {
         </div>
       </section>
 
-      {/* Bottom Sticky Sidebar feel / CTA */}
+      {/* FIND YOUR VEHICLE — Affiliate Sourcing Section */}
+      <section className="py-24 bg-brand-carbon border-y border-brand-border/30">
+        <div className="container mx-auto px-6">
+          <div className="max-w-3xl mb-12">
+            <h2 className="font-display text-4xl uppercase mb-4">
+              FIND YOUR <span className="text-brand-orange">{vehicle.name.split(" ")[0]}</span>
+            </h2>
+            <p className="font-sans text-brand-grey">
+              Ready to source your base vehicle? We&apos;ve pre-linked the UK&apos;s best marketplaces with the right search terms.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* eBay */}
+            <a
+              href={(vehicle as any).ebaySearch || `https://www.ebay.co.uk/sch/i.html?_nkw=${encodeURIComponent(vehicle.name)}+panel+van`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group blueprint-border bg-brand-obsidian p-8 flex flex-col justify-between h-52 hover:bg-brand-orange/5 transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <div className="font-display text-xl tracking-tighter text-brand-white">
+                  <span className="text-[#E53238]">e</span><span className="text-[#0064D2]">B</span><span className="text-[#F5AF02]">a</span><span className="text-[#86B817]">y</span>{" "}
+                  <span className="text-brand-grey text-sm font-sans font-normal">Motors UK</span>
+                </div>
+                <ExternalLink className="w-4 h-4 text-brand-grey group-hover:text-brand-orange transition-colors" />
+              </div>
+              <div>
+                <h3 className="font-display text-lg uppercase mb-1">{vehicle.name} Panel Vans</h3>
+                <p className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Pre-filtered listings</p>
+              </div>
+              <span className="font-mono text-[9px] text-brand-orange uppercase font-bold">Search eBay →</span>
+            </a>
+
+            {/* AutoTrader */}
+            <a
+              href={(vehicle as any).autotraderSearch || "https://www.autotrader.co.uk/vans"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group blueprint-border bg-brand-obsidian p-8 flex flex-col justify-between h-52 hover:bg-brand-orange/5 transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <div className="font-mono text-[10px] text-brand-white uppercase tracking-widest">AutoTrader UK</div>
+                <ExternalLink className="w-4 h-4 text-brand-grey group-hover:text-brand-orange transition-colors" />
+              </div>
+              <div>
+                <h3 className="font-display text-lg uppercase mb-1">{vehicle.name} on AutoTrader</h3>
+                <p className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Verified dealership stock</p>
+              </div>
+              <span className="font-mono text-[9px] text-brand-orange uppercase font-bold">Search AutoTrader →</span>
+            </a>
+
+            {/* Facebook Marketplace */}
+            <a
+              href="https://www.facebook.com/marketplace/category/vehicles"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group blueprint-border bg-brand-obsidian p-8 flex flex-col justify-between h-52 hover:bg-brand-orange/5 transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <div className="font-mono text-[10px] text-[#1877F2] uppercase tracking-widest">Facebook Marketplace</div>
+                <ExternalLink className="w-4 h-4 text-brand-grey group-hover:text-brand-orange transition-colors" />
+              </div>
+              <div>
+                <h3 className="font-display text-lg uppercase mb-1">{vehicle.name} Private Sales</h3>
+                <p className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Private sellers nationwide</p>
+              </div>
+              <span className="font-mono text-[9px] text-brand-orange uppercase font-bold">Search Marketplace →</span>
+            </a>
+          </div>
+          <p className="font-mono text-[8px] text-brand-grey/50 uppercase tracking-widest mt-8">
+            We may earn a commission from purchases made through affiliate links. This doesn&apos;t affect our recommendations.
+          </p>
+        </div>
+      </section>
+
+      {/* Bottom CTA */}
       <section className="py-24 border-t border-brand-border">
         <div className="container mx-auto px-6">
           <div className="blueprint-border p-12 bg-brand-carbon flex flex-col lg:flex-row items-center justify-between gap-8">
@@ -341,6 +280,16 @@ export default function VehicleProfile() {
       </section>
 
       <Footer />
+      
+      {/* Sticky Bottom Source Bar (Optional but high conversion) */}
+      <div className="fixed bottom-0 inset-x-0 z-50 p-4 transform translate-y-full hover:translate-y-0 transition-transform duration-500 bg-brand-obsidian/90 backdrop-blur-xl border-t border-brand-orange/40 lg:hidden">
+         <div className="flex items-center justify-between gap-4">
+            <span className="font-display text-[10px] uppercase text-brand-white">Find a {slug}</span>
+            <Link href={`/vehicles/${slug}/listings`} className="flex-1 bg-brand-orange p-3 text-center font-display text-[10px] uppercase tracking-widest text-white">
+               Search Marketplaces →
+            </Link>
+         </div>
+      </div>
     </main>
   );
 }

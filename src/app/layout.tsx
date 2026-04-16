@@ -3,6 +3,7 @@ import { Syne, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { LenisProvider } from "@/components/layout/LenisProvider";
 import { GSAPInit } from "@/components/layout/GSAPInit";
+import { StructuredData, generateOrganizationSchema } from "@/components/seo/StructuredData";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -40,6 +41,7 @@ export default function RootLayout({
       <body
         className={`${syne.variable} ${dmSans.variable} ${jetbrainsMono.variable} font-sans bg-[#0A0A0A] text-[#F5F5F0] antialiased selection:bg-[#FF6B00] selection:text-white`}
       >
+        <StructuredData data={generateOrganizationSchema()} />
         <GSAPInit />
         <LenisProvider>
           {children}

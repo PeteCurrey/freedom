@@ -186,7 +186,7 @@ export default function VehiclesPage() {
                     <td className="py-6">{v.specs.W}</td>
                     <td className="py-6">{v.specs.H}</td>
                     <td className="py-6">{v.payload}</td>
-                    <td className="py-6 text-brand-grey">Luxury builds / Reliability</td>
+                    <td className="py-6 text-brand-grey">{v.bestFor}</td>
                   </tr>
                 ))}
               </tbody>

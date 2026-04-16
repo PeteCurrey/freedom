@@ -94,13 +94,13 @@ export default function Home() {
                   </p>
                 </div>
                 <div>
-                  <div className="font-display text-4xl text-brand-orange mb-2">
-                    <span className="stat-number">200</span>+
-                  </div>
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-brand-grey">
-                    Technical Guides
-                  </p>
-                </div>
+                   <div className="font-display text-2xl text-brand-orange mb-2 leading-tight">
+                     Expert
+                   </div>
+                   <p className="font-mono text-[10px] uppercase tracking-widest text-brand-grey">
+                     Technical Guides
+                   </p>
+                 </div>
               </div>
             </div>
             <div className="why-text-item relative aspect-square blueprint-border">
@@ -337,7 +337,7 @@ const featuredProducts = [
 
 const showcaseBuilds = [
   { title: "THE SUMMIT OVERLANDER", vehicle: "MERCEDES SPRINTER 170 4X4", image: "/images/community-showcase.png" },
-  { title: "ALPHINE NOMAD", vehicle: "VW CRAFTER LWB", image: "/images/interior-showcase.png" },
+  { title: "ALPINE NOMAD", vehicle: "VW CRAFTER LWB", image: "/images/interior-showcase.png" },
   { title: "DESERT WARRIOR", vehicle: "IVECO DAILY 4X4", image: "/images/hero-background.png" },
   { title: "ARCTIC EXPLORER", vehicle: "FORD TRANSIT AWD", image: "/images/systems-showcase.png" },
 ];

@@ -1,7 +1,8 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { ArrowLeft, SlidersHorizontal, ShoppingBag, ChevronRight } from "lucide-react";
+import { ShoppingBag, Filter, ArrowRight, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseAdmin = createClient(
@@ -10,141 +11,115 @@ const supabaseAdmin = createClient(
 );
 
 export default async function CategoryPage({ params }: { params: { category: string } }) {
-  const { category: categorySlug } = params;
+  const { category } = params;
 
   // 1. Fetch category details
-  const { data: category } = await supabaseAdmin
+  const { data: categoryData } = await supabaseAdmin
     .from('product_categories')
     .select('*')
-    .eq('slug', categorySlug)
+    .eq('slug', category)
     .single();
 
-  if (!category) {
+  // 2. Fetch products in category
+  const { data: products } = await supabaseAdmin
+    .from('products')
+    .select('*')
+    .eq('category_id', categoryData?.id)
+    .eq('is_active', true);
+
+  if (!categoryData) {
     return (
       <main className="bg-brand-obsidian min-h-screen flex flex-col items-center justify-center p-6 text-center">
         <h1 className="font-display text-4xl mb-4">Category Not Found</h1>
-        <Link href="/store" className="font-mono text-xs uppercase tracking-widest text-brand-orange">Return to Store Hub</Link>
+        <Link href="/store" className="blueprint-border px-10 py-5 font-display text-[10px] uppercase tracking-widest hover:bg-brand-orange transition-all">
+          Return to Store
+        </Link>
       </main>
     );
   }
 
-  // 2. Fetch products in this category
-  const { data: products } = await supabaseAdmin
-    .from('products')
-    .select('*')
-    .eq('category_id', category.id)
-    .eq('is_active', true);
-
   return (
-    <main className="bg-brand-obsidian min-h-screen flex flex-col">
-       <Navbar />
-       
-       {/* 1. CATEGORY HEADER */}
-       <header className="pt-48 pb-16 relative border-b border-brand-border/30">
-          <div className="container mx-auto px-6">
-             <div className="flex flex-col">
-                <div className="flex items-center gap-4 font-mono text-[10px] text-brand-grey uppercase mb-8 tracking-[0.3em]">
-                   <Link href="/store" className="hover:text-brand-orange transition-colors">Store</Link>
-                   <ChevronRight className="w-3 h-3" />
-                   <span className="text-brand-orange">{category.name}</span>
-                </div>
-                <h1 className="font-display text-6xl lg:text-8xl mb-6 uppercase tracking-tighter shadow-brand-orange/10 drop-shadow-2xl">
-                   {category.name}
-                </h1>
-                <p className="font-sans text-brand-grey text-lg max-w-2xl leading-relaxed">
-                   {category.description}
-                </p>
-             </div>
+    <main className="bg-brand-obsidian min-h-screen">
+      <Navbar />
+
+      <section className="pt-48 pb-16 relative">
+        <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="flex flex-col md:flex-row justify-between items-end gap-12">
+            <div className="max-w-2xl">
+              <div className="flex items-center gap-4 font-mono text-[10px] text-brand-orange uppercase mb-8 tracking-[0.3em]">
+                <Link href="/store" className="opacity-50 hover:opacity-100">Store</Link>
+                <ChevronRight className="w-3 h-3" />
+                <span className="opacity-100">{categoryData.name}</span>
+              </div>
+              <h1 className="font-display text-7xl lg:text-9xl mb-8 uppercase leading-none tracking-tighter">
+                {categoryData.name}
+              </h1>
+              <p className="font-sans text-brand-grey text-xl leading-relaxed">
+                {categoryData.description || `Curated engineering-grade components for your build's ${categoryData.name.toLowerCase()} systems.`}
+              </p>
+            </div>
+            <div className="flex gap-4 mb-2">
+               <div className="px-6 py-3 border border-brand-border bg-brand-carbon font-mono text-[10px] uppercase tracking-widest text-brand-white flex items-center gap-3">
+                  <Filter className="w-3 h-3 text-brand-orange" /> Filter Products
+               </div>
+            </div>
           </div>
-       </header>
+        </div>
+      </section>
 
-       {/* 2. PRODUCT GRID & FILTERS */}
-       <section className="flex-1 py-16">
-          <div className="container mx-auto px-6">
-             <div className="flex flex-col lg:flex-row gap-12">
-                
-                {/* Sidebar Filters (Desktop) */}
-                <aside className="lg:w-64 shrink-0 space-y-12 h-fit sticky top-32">
-                   <div>
-                      <h4 className="font-display text-[10px] uppercase tracking-widest text-brand-orange mb-6 border-b border-brand-border/30 pb-4">Filters</h4>
-                      <div className="space-y-4">
-                         {['In Stock Only', 'Featured Products', 'Blueprint Ready'].map(label => (
-                           <label key={label} className="flex items-center gap-3 cursor-pointer group">
-                              <div className="w-4 h-4 border border-brand-border bg-brand-carbon group-hover:border-brand-orange transition-colors" />
-                              <span className="font-mono text-[9px] text-brand-grey uppercase tracking-wider group-hover:text-white transition-colors">{label}</span>
-                           </label>
-                         ))}
-                      </div>
-                   </div>
-
-                   <div>
-                      <h4 className="font-display text-[10px] uppercase tracking-widest text-brand-orange mb-6 border-b border-brand-border/30 pb-4">Brands</h4>
-                      <div className="space-y-4">
-                         {['Victron Energy', 'Truma', 'Dometic', 'Dodo Mat'].map(label => (
-                           <label key={label} className="flex items-center gap-3 cursor-pointer group text-left">
-                              <div className="w-4 h-4 border border-brand-border bg-brand-carbon group-hover:border-brand-orange transition-colors" />
-                              <span className="font-mono text-[9px] text-brand-grey uppercase tracking-wider group-hover:text-white transition-colors">{label}</span>
-                           </label>
-                         ))}
-                      </div>
-                   </div>
-                </aside>
-
-                {/* Grid */}
-                <div className="flex-1">
-                   <div className="flex justify-between items-center mb-12 font-mono text-[10px] uppercase tracking-widest text-brand-grey">
-                      <span>Showing {products?.length || 0} Products</span>
-                      <button className="flex items-center gap-2 hover:text-brand-orange transition-colors">
-                         <SlidersHorizontal className="w-4 h-4" /> Sort: Featured
-                      </button>
-                   </div>
-
-                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                      {products?.map((product) => (
-                        <Link 
-                           key={product.id} 
-                           href={`/store/product/${product.slug}`}
-                           className="group blueprint-border bg-brand-carbon flex flex-col p-6 hover:bg-brand-graphite transition-all"
-                        >
-                           <div className="aspect-square bg-brand-obsidian blueprint-border mb-8 overflow-hidden relative">
-                              <div className="absolute inset-0 flex items-center justify-center text-brand-orange/20">
-                                 <ShoppingBag className="w-12 h-12" />
-                              </div>
-                              <div className="absolute top-4 left-4 font-mono text-[8px] text-brand-grey uppercase bg-brand-carbon px-2 py-1">
-                                 {product.brand}
-                              </div>
-                              <div className="absolute inset-0 bg-brand-orange/0 group-hover:bg-brand-orange/10 transition-colors duration-500" />
-                           </div>
-                           <div className="flex-1 flex flex-col">
-                              <h3 className="font-display text-lg uppercase mb-2 group-hover:text-brand-orange transition-colors truncate">
-                                 {product.name}
-                              </h3>
-                              <p className="font-sans text-brand-grey text-xs mb-8 line-clamp-2 leading-relaxed">
-                                 {product.short_description}
-                              </p>
-                              <div className="mt-auto pt-6 border-t border-brand-border/30 flex justify-between items-center">
-                                 <span className="font-display text-xl tracking-tighter">£{(product.price_gbp / 100).toLocaleString()}</span>
-                                 <div className="w-8 h-8 rounded-full border border-brand-border group-hover:border-brand-orange flex items-center justify-center transition-colors">
-                                    <ShoppingBag className="w-3 h-3 text-brand-orange" />
-                                 </div>
-                              </div>
-                           </div>
-                        </Link>
-                      ))}
-
-                      {(!products || products.length === 0) && (
-                        <div className="col-span-full py-32 text-center border border-dashed border-brand-border">
-                           <p className="font-mono text-brand-grey uppercase tracking-widest text-xs">No products currently listed for this category.</p>
-                        </div>
-                      )}
-                   </div>
-                </div>
-
-             </div>
+      <section className="py-24">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {products?.map((product) => (
+              <Link 
+                key={product.id} 
+                href={`/store/product/${product.slug}`}
+                className="group blueprint-border bg-brand-carbon flex flex-col p-6 hover:bg-brand-graphite transition-all relative overflow-hidden"
+              >
+                 <div className="aspect-square bg-brand-obsidian blueprint-border mb-8 overflow-hidden relative">
+                    <div className="absolute inset-0 flex items-center justify-center text-brand-orange/20">
+                       <ShoppingBag className="w-12 h-12" />
+                    </div>
+                    {product.image_url && (
+                        <Image 
+                          src={product.image_url} 
+                          alt={product.name} 
+                          fill 
+                          className="object-contain p-8 group-hover:scale-110 transition-transform duration-700" 
+                        />
+                    )}
+                    <div className="absolute top-4 left-4 font-mono text-[8px] text-brand-grey uppercase bg-brand-carbon px-2 py-1">
+                      {product.brand}
+                    </div>
+                 </div>
+                 <div className="flex-1 flex flex-col">
+                    <h3 className="font-display text-lg uppercase mb-2 group-hover:text-brand-orange transition-colors">
+                      {product.name}
+                    </h3>
+                    <p className="font-sans text-brand-grey text-xs mb-8 line-clamp-2">
+                      {product.short_description}
+                    </p>
+                    <div className="mt-auto pt-6 border-t border-brand-border/30 flex justify-between items-center">
+                       <span className="font-display text-xl">£{(product.price_gbp / 100).toLocaleString()}</span>
+                       <span className="font-mono text-[8px] text-brand-orange border border-brand-orange/30 px-3 py-2 flex items-center gap-2">
+                          VIEW / BUY <ArrowRight className="w-3 h-3" />
+                       </span>
+                    </div>
+                 </div>
+              </Link>
+            ))}
+            
+            {(!products || products.length === 0) && (
+              <div className="col-span-full py-32 text-center text-brand-grey font-mono text-xs uppercase tracking-widest border border-dashed border-brand-border/30">
+                No products currently listed in this category.
+              </div>
+            )}
           </div>
-       </section>
+        </div>
+      </section>
 
-       <Footer />
+      <Footer />
     </main>
   );
 }

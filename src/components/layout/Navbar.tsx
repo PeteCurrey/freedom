@@ -30,9 +30,11 @@ const navLinks: NavLink[] = [
       { name: "Mercedes Sprinter", href: "/vehicles/mercedes-sprinter", image: "/images/sprinter.png", tagline: "The Gold Standard" },
       { name: "Ford Transit", href: "/vehicles/ford-transit", image: "/images/transit.png", tagline: "The Practical Choice" },
       { name: "VW Crafter", href: "/vehicles/vw-crafter", image: "/images/hero-background.png", tagline: "Modern Touring" },
-      { name: "MAN TGE", href: "/vehicles/man-tge", image: "/images/interior-showcase.png", tagline: "Heavy Duty Build" },
-      { name: "Fiat Ducato", href: "/vehicles/fiat-ducato", image: "/images/community-showcase.png", tagline: "Maximum Width" },
-      { name: "Iveco Daily", href: "/vehicles/iveco-daily", image: "/images/systems-showcase.png", tagline: "Ultimate Payload" },
+      { name: "MAN TGE", href: "/vehicles/man-tge", image: "/images/man-tge.png", tagline: "Heavy Duty Build" },
+      { name: "Fiat Ducato", href: "/vehicles/fiat-ducato", image: "/images/fiat-ducato.png", tagline: "Maximum Width" },
+      { name: "Iveco Daily", href: "/vehicles/iveco-daily", image: "/images/iveco-daily.png", tagline: "Ultimate Payload" },
+      { name: "Search All Used Vans", href: "/find-a-van", image: "/images/hero-background.png", tagline: "Marketplace Aggregator" },
+      { name: "Compare All Chassis", href: "/vehicles/compare", image: "/images/sprinter.png", tagline: "Side-by-Side Analysis" },
     ]
   },
   { 
@@ -62,6 +64,18 @@ const navLinks: NavLink[] = [
     ]
   },
   { name: "Build Planner", href: "/planner" },
+  { name: "AI Advisor", href: "/advisor" },
+  { 
+    name: "Engineering", 
+    href: "/tools", 
+    mega: true,
+    items: [
+      { name: "Cable Sizing", href: "/tools/cable-calculator", tagline: "Amps, Voltage, Run", image: "/images/systems-showcase.png" },
+      { name: "Cost Estimator", href: "/advisor", tagline: "Project Budgeting", image: "/images/interior-showcase.png" },
+      { name: "Build Matcher", href: "/advisor", tagline: "Chassis Discovery", image: "/images/hero-background.png" },
+      { name: "Tech Standards", href: "/resources", tagline: "BS EN / RCD Rules", image: "/images/sprinter.png" },
+    ]
+  },
   { name: "Showcase", href: "/showcase" },
 ];
 
@@ -70,7 +84,20 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const [cartCount, setCartCount] = useState(0);
   const pathname = usePathname();
+
+  useEffect(() => {
+    const updateCartCount = () => {
+      const stored = localStorage.getItem("diym_cart");
+      const cart = stored ? JSON.parse(stored) : [];
+      const count = cart.reduce((acc: number, item: any) => acc + item.quantity, 0);
+      setCartCount(count);
+    };
+    updateCartCount();
+    window.addEventListener("cart-updated", updateCartCount);
+    return () => window.removeEventListener("cart-updated", updateCartCount);
+  }, []);
 
   const handleMouseEnter = (linkName: string) => {
     if (timeoutId) clearTimeout(timeoutId);
@@ -189,9 +216,11 @@ export function Navbar() {
           </Link>
           <Link href="/cart" className="relative hover:text-brand-orange transition-colors">
             <ShoppingCart className="w-5 h-5" />
-            <span className="absolute -top-2 -right-2 bg-brand-orange text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-              0
-            </span>
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-brand-orange text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                {cartCount}
+              </span>
+            )}
           </Link>
           <button
             className="lg:hidden hover:text-brand-orange transition-colors"
