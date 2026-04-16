@@ -11,6 +11,88 @@ export const metadata: Metadata = {
   description: "Explore real-world expedition builds from the Amplios community. Real specs, real technical precision.",
 };
 
+const FALLBACK_BUILDS = [
+  {
+    id: "fb-1",
+    slug: "highland-overlander",
+    title: "The Highland Overlander",
+    user_handle: "@AdventurePete",
+    vehicle_model: "Mercedes Sprinter 4x4",
+    chassis_type: "Mercedes Sprinter",
+    description: "A full-spec 4x4 expedition build designed for the Scottish Highlands. Features a full Victron Multiplus system and custom off-road fabrication.",
+    hero_image: "/images/sprinter.png",
+    year_completed: 2024,
+    is_community_pick: true,
+    rating: 5.0,
+    specs_summary: { "Solar": "400W", "Battery": "300Ah Li", "Heating": "Diesel" }
+  },
+  {
+    id: "fb-2",
+    slug: "scandi-ghost",
+    title: "Scandi Ghost",
+    user_handle: "@NorthernVans",
+    vehicle_model: "VW Crafter MWB",
+    chassis_type: "VW Crafter",
+    description: "Minimalist interior focus with emphasis on stealth and thermal efficiency. All birch-ply interior with hidden fasteners.",
+    hero_image: "/images/vw-crafter.png",
+    year_completed: 2023,
+    rating: 4.9,
+    specs_summary: { "Solar": "200W", "Battery": "200Ah Li", "Water": "60L" }
+  },
+  {
+    id: "fb-3",
+    slug: "pacific-explorer",
+    title: "Pacific Explorer",
+    user_handle: "@CoastalBuilds",
+    vehicle_model: "Ford Transit L3H3",
+    chassis_type: "Ford Transit",
+    description: "Built for long coastal tours with an integrated surf-rack and high-power induction cooking suite.",
+    hero_image: "/images/transit.png",
+    year_completed: 2024,
+    rating: 4.7,
+    specs_summary: { "Solar": "350W", "Battery": "400Ah Li", "Water": "85L" }
+  },
+  {
+    id: "fb-4",
+    slug: "alpine-studio",
+    title: "The Alpine Studio",
+    user_handle: "@MountainModern",
+    vehicle_model: "Fiat Ducato L4H3",
+    chassis_type: "Fiat Ducato",
+    description: "A luxury leisure build focused on comfort. Features a full wet-room and leather upholstery.",
+    hero_image: "/images/fiat-ducato.png",
+    year_completed: 2023,
+    rating: 4.8,
+    specs_summary: { "Solar": "180W", "Battery": "160Ah AGM", "Water": "90L" }
+  },
+  {
+    id: "fb-5",
+    slug: "desert-raider",
+    title: "Desert Raider 4x4",
+    user_handle: "@GlobalTrekker",
+    vehicle_model: "Iveco Daily 4x4",
+    chassis_type: "Iveco Daily",
+    description: "Heavy-duty global expedition vehicle with 14-day desert autonomy.",
+    hero_image: "/images/iveco-daily.png",
+    year_completed: 2024,
+    rating: 5.0,
+    specs_summary: { "Solar": "600W", "Battery": "600Ah Li", "Water": "180L" }
+  },
+  {
+    id: "fb-6",
+    slug: "nomad-command",
+    title: "Nomad Command Centre",
+    user_handle: "@DigitalDrifter",
+    vehicle_model: "MAN TGE LWB",
+    chassis_type: "VW Crafter",
+    description: "Mobile office for full-time nomads with Starlink and dual-workstation integration.",
+    hero_image: "/images/man-tge.png",
+    year_completed: 2024,
+    rating: 4.6,
+    specs_summary: { "Solar": "500W", "Battery": "400Ah Li", "Water": "40L" }
+  }
+];
+
 export default async function ShowcasePage() {
   let builds: any[] = [];
   
@@ -30,7 +112,8 @@ export default async function ShowcasePage() {
     console.error('Supabase connection failed during build:', err);
   }
 
-  const initialBuilds = builds;
+  // Use fallback if database is empty or connection fails
+  const initialBuilds = builds.length > 0 ? builds : FALLBACK_BUILDS;
 
   return (
     <main className="bg-brand-obsidian min-h-screen">
