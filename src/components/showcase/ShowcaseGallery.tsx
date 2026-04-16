@@ -17,6 +17,9 @@ interface Build {
   specs?: any;
   specs_summary?: any;
   year_completed?: number;
+  user_handle?: string;
+  is_community_pick?: boolean;
+  rating?: number;
 }
 
 interface ShowcaseGalleryProps {
@@ -66,7 +69,13 @@ export default function ShowcaseGallery({ initialBuilds }: ShowcaseGalleryProps)
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filtered.map((build) => (
-                <div key={build.id} className="group blueprint-border bg-brand-carbon overflow-hidden flex flex-col">
+                <div key={build.id} className="group blueprint-border bg-brand-carbon overflow-hidden flex flex-col relative">
+                  {build.is_community_pick && (
+                    <div className="absolute top-0 right-10 z-20 px-4 py-2 bg-brand-orange text-white font-display text-[8px] uppercase tracking-widest">
+                      Community Pick
+                    </div>
+                  )}
+                  
                   <div className="relative aspect-video overflow-hidden">
                     <Image
                       src={build.hero_image || "/images/community-showcase.png"}
@@ -83,8 +92,18 @@ export default function ShowcaseGallery({ initialBuilds }: ShowcaseGalleryProps)
                     </div>
                   </div>
                   <div className="p-10 flex flex-col flex-1">
-                    <h2 className="font-display text-3xl uppercase mb-2 group-hover:text-brand-orange transition-colors">{build.title}</h2>
-                    <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-6">{build.vehicle_model}</p>
+                    <div className="flex justify-between items-start mb-2">
+                       <h2 className="font-display text-3xl uppercase group-hover:text-brand-orange transition-colors">{build.title}</h2>
+                       <div className="font-mono text-[10px] text-brand-orange flex items-center gap-1">
+                          ★ <span className="text-white">{build.rating || "4.8"}</span>
+                       </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 mb-6">
+                       <div className="w-4 h-4 rounded-full bg-brand-orange/20 border border-brand-orange/40" />
+                       <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Submitted by {build.user_handle || "@AmpliosMember"}</span>
+                    </div>
+
                     <p className="font-sans text-brand-grey text-sm leading-relaxed mb-8">{build.description}</p>
                     
                     <div className="grid grid-cols-3 gap-4 mt-auto pt-8 border-t border-brand-border/30">
@@ -101,7 +120,7 @@ export default function ShowcaseGallery({ initialBuilds }: ShowcaseGalleryProps)
                          href={`/showcase/${build.slug || build.id}`} 
                          className="flex items-center gap-2 font-display text-[9px] uppercase tracking-[.3em] text-brand-orange hover:text-white transition-colors"
                         >
-                         Analysis Report <ChevronRight className="w-4 h-4" />
+                         Technical Audit <ChevronRight className="w-4 h-4" />
                        </Link>
                     </div>
                   </div>
@@ -111,6 +130,9 @@ export default function ShowcaseGallery({ initialBuilds }: ShowcaseGalleryProps)
           )}
         </div>
       </section>
+    </>
+  );
+}
     </>
   );
 }

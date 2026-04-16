@@ -46,10 +46,10 @@ export default async function ShowcasePage() {
                 // Community Archives
               </p>
               <h1 className="font-display text-7xl lg:text-9xl mb-8 uppercase leading-none tracking-tighter">
-                BUILT BY THE <span className="text-brand-orange">COMMUNITY</span>
+                COMMUNITY <span className="text-brand-orange">ARCHIVES</span>
               </h1>
               <p className="font-sans text-brand-grey text-xl leading-relaxed max-w-2xl italic">
-                A gallery of engineering excellence. Browse completed self-builds that adhere to the Amplios technical standard.
+                A living index of engineering excellence. Browse 500+ community-indexed builds and technical mission logs from across the globe.
               </p>
             </div>
             <div>
