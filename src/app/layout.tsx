@@ -23,11 +23,28 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DIY MOTORHOMES // Built for the road. Engineered for life.",
+  metadataBase: new URL('https://amplios.co.uk'),
+  title: {
+    template: "%s | Amplios",
+    default: "Amplios // Built for the road. Engineered for life."
+  },
   description: "The UK's definitive resource hub and online store for serious self-build motorhome and campervan conversions.",
   icons: {
     icon: "/icon.svg",
     apple: "/icon.svg",
+  },
+  openGraph: {
+    title: "Amplios",
+    description: "Built for the road. Engineered for life.",
+    url: 'https://amplios.co.uk',
+    siteName: 'Amplios',
+    locale: 'en_GB',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Amplios",
+    description: "Built for the road. Engineered for life.",
   },
 };
 

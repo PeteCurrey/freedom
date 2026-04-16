@@ -18,6 +18,31 @@ import {
   CircleDollarSign,
   ChevronRight
 } from "lucide-react";
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const { data: build } = await supabase
+    .from('showcase_builds')
+    .select('title, description, story, builder_name, hero_image')
+    .eq('slug', params.slug)
+    .single();
+
+  if (!build) {
+    return { title: 'Blueprint Not Found' };
+  }
+
+  const desc = build.description || build.story || `Explore this custom campervan blueprint by ${build.builder_name || "a community member"}.`;
+  
+  return {
+    title: `${build.title}`,
+    description: desc,
+    openGraph: {
+      title: `${build.title} | Amplios Showcase`,
+      description: desc,
+      images: build.hero_image ? [build.hero_image] : [],
+    },
+  };
+}
 
 export default async function BuildDetailPage({ params }: { params: { slug: string } }) {
   const { data: build, error } = await supabase

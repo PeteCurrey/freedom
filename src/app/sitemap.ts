@@ -3,7 +3,7 @@ import { vehicleData } from '@/lib/data/vehicles';
 import { supabase } from '@/lib/supabase';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://diymotorhomes.co.uk';
+  const baseUrl = 'https://amplios.co.uk';
 
   // Base pages
   const staticPages = [
@@ -59,7 +59,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic Product Pages
   const productPages = await getProductPages(baseUrl);
 
-  return [...staticPages, ...vehiclePages, ...resourcePages, ...productPages];
+  // Dynamic Showcase Pages
+  const showcasePages = await getShowcasePages(baseUrl);
+
+  return [...staticPages, ...vehiclePages, ...resourcePages, ...productPages, ...showcasePages];
 }
 
 async function getProductPages(baseUrl: string) {
@@ -77,6 +80,25 @@ async function getProductPages(baseUrl: string) {
     }));
   } catch (error) {
     console.error('Error fetching sitemap products:', error);
+    return [];
+  }
+}
+
+async function getShowcasePages(baseUrl: string) {
+  try {
+    const { data: builds } = await supabase
+      .from('showcase_builds')
+      .select('slug, updated_at')
+      .eq('status', 'approved');
+
+    return (builds || []).map((b) => ({
+      url: `${baseUrl}/showcase/${b.slug}`,
+      lastModified: new Date(b.updated_at || new Date()),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }));
+  } catch (error) {
+    console.error('Error fetching sitemap showcase builds:', error);
     return [];
   }
 }

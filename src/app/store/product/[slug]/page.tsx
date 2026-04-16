@@ -11,10 +11,35 @@ import { cn } from "@/lib/utils";
 import { AddToCartButton } from "@/components/store/AddToCartButton";
 import StickyProductBar from "@/components/store/StickyProductBar";
 
+import { Metadata } from "next";
+
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
   process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder_key'
 );
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const { slug } = params;
+  const { data: product } = await supabaseAdmin
+    .from('products')
+    .select('name, brand, short_description, image_url')
+    .eq('slug', slug)
+    .single();
+
+  if (!product) {
+    return { title: 'Product Not Found' };
+  }
+
+  return {
+    title: `${product.brand} ${product.name}`,
+    description: product.short_description || `Purchase the ${product.brand} ${product.name} component for your DIY Motorhome build.`,
+    openGraph: {
+      title: `${product.brand} ${product.name} | Amplios`,
+      description: product.short_description,
+      images: product.image_url ? [product.image_url] : [],
+    },
+  };
+}
 
 export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
   const { slug } = params;

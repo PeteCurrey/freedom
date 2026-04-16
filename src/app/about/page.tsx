@@ -146,7 +146,7 @@ export default function AboutPage() {
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
                   <Mail className="w-4 h-4 text-brand-orange" />
-                  <span className="font-mono text-[11px] text-brand-grey">hello@diymotorhomes.co.uk</span>
+                  <span className="font-mono text-[11px] text-brand-grey">hello@amplios.co.uk</span>
                 </div>
                 <div className="flex items-center gap-4">
                   <MapPin className="w-4 h-4 text-brand-orange" />

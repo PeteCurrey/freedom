@@ -52,13 +52,13 @@ export const BlueprintPDF = ({ data }: BlueprintPDFProps) => {
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ fontSize: 40, color: '#FF6B00', marginBottom: 20 }}>DIY MOTORHOMES</Text>
+          <Text style={{ fontSize: 40, color: '#FF6B00', marginBottom: 20 }}>AMPLIOS</Text>
           <Text style={styles.title}>BUILD BLUEPRINT PACK</Text>
           <Text style={[styles.text, { fontSize: 14 }]}>FOR: {vehicleName} {configId}</Text>
           <Text style={[styles.text, { marginTop: 40 }]}>Build ID: {buildId}</Text>
           <Text style={styles.text}>TIER: {tier.toUpperCase()}</Text>
         </View>
-        <View style={styles.footer}><Text>© 2026 DIY MOTORHOMES | ENGINEERED FOR LIFE</Text></View>
+        <View style={styles.footer}><Text>© 2026 AMPLIOS | ENGINEERED FOR LIFE</Text></View>
       </Page>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}><Text style={styles.logo}>DIYM</Text><Text style={{ fontSize: 10 }}>PROJECT OVERVIEW // SECTION 01</Text></View>

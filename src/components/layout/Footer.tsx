@@ -62,7 +62,7 @@ export function Footer() {
           {/* Brand Col */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block mb-6">
-              <span className="font-display text-2xl text-brand-white">DIY MOTORHOMES</span>
+              <span className="font-display text-2xl text-brand-white">AMPLIOS</span>
             </Link>
             <p className="font-sans text-brand-grey text-sm mb-8 max-w-sm leading-relaxed">
               Definitive resources and premium gear for serious self-build motorhome and campervan
@@ -130,7 +130,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between pt-12 border-t border-brand-border gap-6">
           <div className="flex flex-col gap-4">
             <p className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">
-              © {new Date().getFullYear()} DIY MOTORHOMES. Part of the Avorria family.
+              © {new Date().getFullYear()} Amplios. Part of the Avorria family.
             </p>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">

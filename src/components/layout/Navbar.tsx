@@ -142,7 +142,7 @@ export function Navbar() {
         {/* Logo */}
         <Link href="/" className="group flex flex-col">
           <span className="font-display text-2xl leading-none tracking-tighter text-brand-white">
-            DIY MOTORHOMES
+            AMPLIOS
           </span>
           <span className="font-mono text-[10px] tracking-[0.2em] text-brand-orange transition-opacity duration-300 group-hover:opacity-100">
             {/* // BUILT FOR THE ROAD */}
@@ -240,7 +240,7 @@ export function Navbar() {
       >
         <div className="p-8 flex flex-col h-full">
           <div className="flex justify-between items-center mb-16">
-            <span className="font-display text-xl">DIY MOTORHOMES</span>
+            <span className="font-display text-xl">AMPLIOS</span>
             <button onClick={() => setMobileMenuOpen(false)}>
               <X className="w-8 h-8" />
             </button>

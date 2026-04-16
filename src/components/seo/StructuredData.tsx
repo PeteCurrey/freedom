@@ -18,13 +18,13 @@ export function generateOrganizationSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "DIY Motorhomes",
-    "url": "https://diymotorhomes.co.uk",
-    "logo": "https://diymotorhomes.co.uk/icon.svg",
+    "name": "Amplios",
+    "url": "https://amplios.co.uk",
+    "logo": "https://amplios.co.uk/icon.svg",
     "sameAs": [
-      "https://facebook.com/diymotorhomes",
-      "https://instagram.com/diymotorhomes",
-      "https://youtube.com/diymotorhomes"
+      "https://facebook.com/ampliosuk",
+      "https://instagram.com/ampliosuk",
+      "https://youtube.com/ampliosuk"
     ],
     "description": "The UK's definitive resource hub for serious self-build motorhome and campervan conversions."
   };
@@ -50,10 +50,10 @@ export function generateArticleSchema(article: {
     },
     "publisher": {
       "@type": "Organization",
-      "name": "DIY Motorhomes",
+      "name": "Amplios",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://diymotorhomes.co.uk/icon.svg"
+        "url": "https://amplios.co.uk/icon.svg"
       }
     },
     "datePublished": article.datePublished,

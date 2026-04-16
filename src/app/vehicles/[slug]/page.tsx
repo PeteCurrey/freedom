@@ -1,6 +1,3 @@
-"use client";
-
-import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
@@ -10,9 +7,23 @@ import { SpecCard } from "@/components/ui/SpecCard";
 import { ExternalLink, Ruler, Check, X, ShieldCheck } from "lucide-react";
 import { ProductCard } from "@/components/store/ProductCard";
 import { vehicleData } from "@/lib/data/vehicles";
+import { Metadata } from "next";
 
-export default function VehicleProfile() {
-  const { slug } = useParams();
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const vehicle = vehicleData[params.slug as keyof typeof vehicleData] || vehicleData["mercedes-sprinter"];
+  return {
+    title: `${vehicle.name} Campervan Conversion Guide`,
+    description: vehicle.description,
+    openGraph: {
+      title: `${vehicle.name} | Amplios`,
+      description: vehicle.description,
+      images: [vehicle.heroImage],
+    },
+  };
+}
+
+export default function VehicleProfile({ params }: { params: { slug: string } }) {
+  const { slug } = params;
   const vehicle = vehicleData[slug as keyof typeof vehicleData] || vehicleData["mercedes-sprinter"];
 
   return (
