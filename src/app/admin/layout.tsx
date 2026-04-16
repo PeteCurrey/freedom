@@ -16,39 +16,54 @@ export default function AdminLayout({
   const pathname = usePathname();
 
   useEffect(() => {
-    async function checkAuth() {
-      const { data: { user }, error } = await supabase.auth.getUser();
-
-      if (error || !user) {
-        console.error("Unauthorized: No session found");
+    // 1. Initial Check
+    async function initAuth() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        processUser(session.user);
+      } else {
+        setLoading(false);
         router.push("/account/login");
+      }
+    }
+
+    // 2. Continuous Listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        processUser(session.user);
+      } else if (event === 'SIGNED_OUT') {
+        setAuthorized(false);
+        router.push("/account/login");
+      }
+    });
+
+    async function processUser(user: any) {
+      const SUPER_ADMIN = "pete@avorria.com";
+      
+      // ROOT OVERRIDE: Pete is always let in
+      if (user.email === SUPER_ADMIN) {
+        setAuthorized(true);
+        setLoading(false);
         return;
       }
 
-      // STRICT SUPER ADMIN CHECK
-      // Pete's specific email requirement as requested
-      const SUPER_ADMIN = "pete@avorria.com";
-      
-      if (user.email !== SUPER_ADMIN) {
-        // In a real environment, we would also check the admin_profiles table
-        // But for the hard launch, we enforce Pete's account.
-        const { data: profile } = await supabase
-          .from("admin_profiles")
-          .select("role")
-          .eq("id", user.id)
-          .single();
+      // SECONDARY CHECK: For other admins in the database
+      const { data: profile } = await supabase
+        .from("admin_profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
 
-        if (!profile || (profile.role !== 'admin' && profile.role !== 'super_admin')) {
-          router.push("/"); // Boot non-admins back to home
-          return;
-        }
+      if (profile && (profile.role === 'admin' || profile.role === 'super_admin')) {
+        setAuthorized(true);
+      } else {
+        router.push("/");
       }
-
-      setAuthorized(true);
       setLoading(false);
     }
 
-    checkAuth();
+    initAuth();
+    return () => subscription.unsubscribe();
   }, [router]);
 
   if (loading) {

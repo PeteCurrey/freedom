@@ -53,6 +53,11 @@ CREATE TABLE IF NOT EXISTS affiliate_management (
   created_at timestamptz DEFAULT now()
 );
 
+-- Ensure Pete curated as Super Admin
+INSERT INTO admin_profiles (email, role, full_name)
+VALUES ('pete@avorria.com', 'super_admin', 'Pete Currey')
+ON CONFLICT (email) DO NOTHING;
+
 -- Admin Integration Settings (Encrypted or just stored for now)
 CREATE TABLE IF NOT EXISTS admin_settings (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),

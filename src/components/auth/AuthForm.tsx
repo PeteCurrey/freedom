@@ -47,7 +47,13 @@ export function AuthForm({ mode }: AuthFormProps) {
           password,
         });
         if (error) throw error;
-        router.push("/account");
+        
+        // Deep Link Check: If Pete was trying to access /admin, send him back there
+        if (window.location.pathname.includes('/admin') || document.referrer.includes('/admin')) {
+          router.push("/admin/dashboard");
+        } else {
+          router.push("/account");
+        }
         router.refresh();
       }
     } catch (err: any) {
@@ -104,9 +110,16 @@ export function AuthForm({ mode }: AuthFormProps) {
             </div>
 
             {error && (
-              <div className="p-4 bg-red-500/10 border border-red-500/30 flex gap-3 items-start">
-                <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                <p className="font-mono text-[9px] text-red-500 uppercase leading-relaxed">{error}</p>
+              <div className="p-4 bg-red-500/10 border border-red-500/30 flex flex-col gap-3">
+                <div className="flex gap-3 items-start">
+                  <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                  <p className="font-mono text-[9px] text-red-500 uppercase leading-relaxed">{error}</p>
+                </div>
+                {error.toLowerCase().includes('invalid login credentials') && (
+                  <p className="font-mono text-[8px] text-brand-orange uppercase leading-relaxed border-t border-brand-orange/20 pt-2">
+                    Diagnostic: If this is your first time, please use the <Link href="/account/signup" className="underline font-bold">Signup</Link> tab to initialize your admin session.
+                  </p>
+                )}
               </div>
             )}
 
