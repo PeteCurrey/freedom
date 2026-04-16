@@ -233,7 +233,7 @@ export default function ArticleTemplate() {
       {/* Article Hero */}
       <section className="relative pt-48 pb-32 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image src={article.image} alt={v.title} fill className="object-cover grayscale opacity-20 blur-sm" />
+          <Image src={article.image} alt={article.title} fill className="object-cover grayscale opacity-20 blur-sm" />
           <div className="absolute inset-0 bg-gradient-to-t from-brand-obsidian via-brand-obsidian/80 to-transparent" />
         </div>
         

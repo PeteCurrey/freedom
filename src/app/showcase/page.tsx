@@ -12,18 +12,25 @@ export const metadata: Metadata = {
 };
 
 export default async function ShowcasePage() {
-  // Fetch published builds from Supabase
-  const { data: builds, error } = await supabase
-    .from('showcase_builds')
-    .select('*')
-    .eq('status', 'published')
-    .order('created_at', { ascending: false });
+  let builds: any[] = [];
+  
+  try {
+    const { data, error } = await supabase
+      .from('showcase_builds')
+      .select('*')
+      .eq('status', 'published')
+      .order('created_at', { ascending: false });
 
-  if (error) {
-    console.error('Error fetching builds:', error);
+    if (error) {
+      console.error('Error fetching builds:', error);
+    } else {
+      builds = data || [];
+    }
+  } catch (err) {
+    console.error('Supabase connection failed during build:', err);
   }
 
-  const initialBuilds = builds || [];
+  const initialBuilds = builds;
 
   return (
     <main className="bg-brand-obsidian min-h-screen">

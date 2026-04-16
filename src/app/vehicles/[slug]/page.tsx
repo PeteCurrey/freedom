@@ -7,6 +7,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { HorizontalScroll } from "@/components/ui/HorizontalScroll";
 import { SpecCard } from "@/components/ui/SpecCard";
+import { ExternalLink, Ruler, Check, X, ShieldCheck } from "lucide-react";
 import { ProductCard } from "@/components/store/ProductCard";
 import { vehicleData } from "@/lib/data/vehicles";
 

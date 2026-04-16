@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+    const lineItems: any[] = [];
 
     // Case 1: Handle Digital Blueprint Plans
     if (tier && planId) {

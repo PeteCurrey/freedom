@@ -1,9 +1,20 @@
-  ChevronRight, AlertTriangle, CheckCircle2, ShoppingBag, ArrowRight, Zap
+import { 
+  ChevronRight, 
+  AlertTriangle, 
+  CheckCircle2, 
+  ShoppingBag, 
+  ArrowRight, 
+  Zap,
+  Layers,
+  Shield
 } from "lucide-react";
 import { PowerCalculator } from "@/components/tools/PowerCalculator";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
+import { createClient } from "@supabase/supabase-js";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 
 // Initialize admin client to fetch content
 const supabaseAdmin = createClient(

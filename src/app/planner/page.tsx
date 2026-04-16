@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SVGSchematic, SystemTier } from "@/components/planner/SVGSchematic";
@@ -80,6 +80,11 @@ export default function BuildPlanner() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [savedPlanId, setSavedPlanId] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const [selections, setSelections] = useState({
     vehicleId: "sprinter",
     configId: "144\" WB",
@@ -531,30 +536,32 @@ export default function BuildPlanner() {
                     )}
 
                     <div className="pt-8 space-y-3">
-                      <PDFDownloadLink 
-                        document={
-                          <BlueprintPDF 
-                            data={{
-                              vehicleName: vehicle?.name || "Unknown Chassis",
-                              configId: selections.configId,
-                              buildId: "BUILD-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
-                              tier: "Free Preview",
-                              totalWeight: totals.weight,
-                              bom: [] // In a real app, populate from systemConfigs selections
-                            }} 
-                          />
-                        }
-                        fileName="DIYM-Build-Plan.pdf"
-                        className="w-full flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-brand-grey hover:text-brand-white p-4 border border-brand-border transition-all"
-                      >
-                         {/* @ts-ignore */}
-                        {({ loading }) => (
-                          <>
-                            <Download className="w-4 h-4" /> 
-                            {loading ? "Preparing PDF..." : "Export Summary (Free)"}
-                          </>
-                        )}
-                      </PDFDownloadLink>
+                      {mounted && (
+                        <PDFDownloadLink 
+                          document={
+                            <BlueprintPDF 
+                              data={{
+                                vehicleName: vehicle?.name || "Unknown Chassis",
+                                configId: selections.configId,
+                                buildId: "BUILD-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                                tier: "Free Preview",
+                                totalWeight: totals.weight,
+                                bom: [] // In a real app, populate from systemConfigs selections
+                              }} 
+                            />
+                          }
+                          fileName="DIYM-Build-Plan.pdf"
+                          className="w-full flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-brand-grey hover:text-brand-white p-4 border border-brand-border transition-all"
+                        >
+                           {/* @ts-ignore */}
+                          {({ loading }) => (
+                            <>
+                              <Download className="w-4 h-4" /> 
+                              {loading ? "Preparing PDF..." : "Export Summary (Free)"}
+                            </>
+                          )}
+                        </PDFDownloadLink>
+                      )}
                       
                       <button className="w-full flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-brand-white p-4 bg-brand-carbon border border-brand-border hover:border-brand-orange transition-all">
                         <Eye className="w-4 h-4" /> Blueprint Preview

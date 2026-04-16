@@ -1,7 +1,8 @@
+import { MetadataRoute } from 'next';
 import { vehicleData } from '@/lib/data/vehicles';
 import { supabase } from '@/lib/supabase';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://diymotorhomes.co.uk';
 
   // Base pages
