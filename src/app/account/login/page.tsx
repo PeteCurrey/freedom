@@ -4,8 +4,8 @@ import { Footer } from "@/components/layout/Footer";
 import { AuthForm } from "@/components/auth/AuthForm";
 
 export const metadata: Metadata = {
-  title: "Authorise Access | DIY Motorhomes",
-  description: "Log in to your builder account to access saved plans and purchase history.",
+  title: "Authorise Access | Amplios",
+  description: "Secure access to your Amplios build plans and technical documentation.",
 };
 
 export default function LoginPage() {

@@ -9,10 +9,10 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 const vehicles = [
-  { id: "sprinter", name: "Mercedes Sprinter", image: "/images/sprinter.png", ebayUrl: "https://www.ebay.co.uk/b/Mercedes-Benz-Sprinter-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/mercedes-benz/sprinter" },
-  { id: "crafter", name: "VW Crafter", image: "/images/hero-background.png", ebayUrl: "https://www.ebay.co.uk/b/Volkswagen-Crafter-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/volkswagen/crafter" },
-  { id: "transit", name: "Ford Transit", image: "/images/transit.png", ebayUrl: "https://www.ebay.co.uk/b/Ford-Transit-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/ford/transit" },
-  { id: "ducato", name: "Fiat Ducato", image: "/images/community-showcase.png", ebayUrl: "https://www.ebay.co.uk/b/Fiat-Ducato-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/fiat/ducato" },
+  { id: "mercedes-sprinter", name: "Mercedes Sprinter", image: "/images/sprinter.png", ebayUrl: "https://www.ebay.co.uk/b/Mercedes-Benz-Sprinter-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/mercedes-benz/sprinter" },
+  { id: "vw-crafter", name: "VW Crafter", image: "/images/hero-background.png", ebayUrl: "https://www.ebay.co.uk/b/Volkswagen-Crafter-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/volkswagen/crafter" },
+  { id: "ford-transit", name: "Ford Transit", image: "/images/transit.png", ebayUrl: "https://www.ebay.co.uk/b/Ford-Transit-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/ford/transit" },
+  { id: "fiat-ducato", name: "Fiat Ducato", image: "/images/community-showcase.png", ebayUrl: "https://www.ebay.co.uk/b/Fiat-Ducato-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/fiat/ducato" },
   { id: "man-tge", name: "MAN TGE", image: "/images/interior-showcase.png", ebayUrl: "https://www.ebay.co.uk/b/MAN-TGE-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/man/tge" },
   { id: "iveco-daily", name: "Iveco Daily", image: "/images/systems-showcase.png", ebayUrl: "https://www.ebay.co.uk/b/Iveco-Daily-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/iveco/daily" },
 ];

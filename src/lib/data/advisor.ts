@@ -77,6 +77,78 @@ export const BUILD_MATCH_QUESTIONS: QuizQuestion[] = [
         scores: { "iveco-daily": 5, "man-tge": 3, "mercedes-sprinter": 2 }
       }
     ]
+  },
+  {
+    id: "budget",
+    text: "What is your estimated build budget (excluding chassis)?",
+    options: [
+      { 
+        id: "entry", 
+        label: "Value Engineering (£5k - £15k)", 
+        desc: "Focusing on functional essentials and smart sourcing.",
+        scores: { "fiat-ducato": 5, "ford-transit": 4, "vw-crafter": 2 }
+      },
+      { 
+        id: "premium", 
+        label: "High Performance (£20k - £45k)", 
+        desc: "Professional integration, lithium power, and premium materials.",
+        scores: { "mercedes-sprinter": 4, "vw-crafter": 5, "man-tge": 5, "iveco-daily": 3 }
+      },
+      { 
+        id: "unlimited", 
+        label: "Expedition Grade (£50k+)", 
+        desc: "No compromise. Military-spec components and custom engineering.",
+        scores: { "iveco-daily": 5, "mercedes-sprinter": 5, "man-tge": 4 }
+      }
+    ]
+  },
+  {
+    id: "occupants",
+    text: "How many people will live in the vehicle?",
+    options: [
+      { 
+        id: "solo", 
+        label: "Solo Adventurer", 
+        desc: "Compact layouts and optimized storage for one.",
+        scores: { "vw-crafter": 3, "ford-transit": 5, "fiat-ducato": 4 }
+      },
+      { 
+        id: "couple", 
+        label: "Couples / Duo", 
+        desc: "The sweet spot for mid-to-long wheelbase platforms.",
+        scores: { "mercedes-sprinter": 5, "vw-crafter": 5, "fiat-ducato": 3 }
+      },
+      { 
+        id: "family", 
+        label: "Family / Group (3+)", 
+        desc: "Need for extra belted seats and high-payload chassis.",
+        scores: { "iveco-daily": 5, "mercedes-sprinter": 4, "man-tge": 3 }
+      }
+    ]
+  },
+  {
+    id: "terrain",
+    text: "What is your primary intended terrain?",
+    options: [
+      { 
+        id: "tarmac", 
+        label: "European Road-Tripping", 
+        desc: "Focus on fuel economy, quiet cab, and easy parking.",
+        scores: { "fiat-ducato": 5, "vw-crafter": 4, "ford-transit": 4 }
+      },
+      { 
+        id: "light-offroad", 
+        label: "Fire Roads & Wild Camps", 
+        desc: "Occasional rough tracks, requires decent ground clearance.",
+        scores: { "mercedes-sprinter": 4, "vw-crafter": 4, "man-tge": 5 }
+      },
+      { 
+        id: "extreme", 
+        label: "Extreme Overland", 
+        desc: "True off-grid independence. Requires ruggedized drivetrain.",
+        scores: { "iveco-daily": 5, "mercedes-sprinter": 5 }
+      }
+    ]
   }
 ];
 

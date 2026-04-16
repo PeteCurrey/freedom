@@ -6,8 +6,8 @@ import { ShieldCheck, Info, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Cable Sizing Calculator | DIY Motorhomes",
-  description: "Calculate required DC cable cross-sections and AWG sizes for your campervan electrical system to ensure safety and minimize voltage drop.",
+  title: "Cable Sizing Calculator | Amplios",
+  description: "Calculate optimal DC voltage drop and recommended cable cross-sections for your off-grid electrical system.",
 };
 
 export default function CableCalculatorPage() {

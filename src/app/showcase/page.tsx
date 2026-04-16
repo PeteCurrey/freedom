@@ -7,8 +7,8 @@ import { supabase } from "@/lib/supabase";
 import ShowcaseGallery from "@/components/showcase/ShowcaseGallery";
 
 export const metadata: Metadata = {
-  title: "Community Showcase | DIY Motorhomes",
-  description: "Explore real-world expedition builds from the DIY Motorhomes community. Real specs, real technical precision.",
+  title: "Community Showcase | Amplios",
+  description: "Explore real-world expedition builds from the Amplios community. Real specs, real technical precision.",
 };
 
 export default async function ShowcasePage() {
@@ -49,7 +49,7 @@ export default async function ShowcasePage() {
                 BUILT BY THE <span className="text-brand-orange">COMMUNITY</span>
               </h1>
               <p className="font-sans text-brand-grey text-xl leading-relaxed max-w-2xl italic">
-                A gallery of engineering excellence. Browse completed self-builds that adhere to the DIY Motorhomes technical standard.
+                A gallery of engineering excellence. Browse completed self-builds that adhere to the Amplios technical standard.
               </p>
             </div>
             <div>

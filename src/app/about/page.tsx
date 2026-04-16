@@ -5,8 +5,8 @@ import { ExternalLink, Mail, MapPin } from "lucide-react";
 import { ContactForm } from "@/components/about/ContactForm";
 
 export const metadata = {
-  title: "Our Story | DIY Motorhomes",
-  description: "DIY Motorhomes is the UK's definitive resource for serious self-build motorhome and campervan conversions. Engineering-first guides, no compromise.",
+  title: "Our Story | Amplios",
+  description: "Amplios is the UK's definitive resource for serious self-build motorhome and campervan conversions. Engineering-first guides, no compromise.",
 };
 
 export default function AboutPage() {
@@ -35,7 +35,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
             <div className="lg:col-span-7">
               <p className="font-sans text-brand-white text-2xl lg:text-3xl leading-relaxed mb-12">
-                DIY Motorhomes is the UK&apos;s definitive resource for serious self-build 
+                Amplios is the UK&apos;s definitive resource for serious self-build 
                 motorhome and campervan conversions.
               </p>
               <div className="space-y-8 font-sans text-brand-grey text-lg leading-relaxed">
@@ -113,7 +113,7 @@ export default function AboutPage() {
           <div className="max-w-4xl">
             <h2 className="font-display text-4xl uppercase mb-8">Part of the <span className="text-brand-orange">Avorria</span> Family</h2>
             <p className="font-sans text-brand-grey text-lg leading-relaxed mb-12">
-              DIY Motorhomes is built and maintained by{" "}
+              Amplios is built and maintained by{" "}
               <a href="https://avorria.com" target="_blank" rel="noopener noreferrer" className="text-brand-orange hover:text-brand-white transition-colors">
                 Avorria
               </a>

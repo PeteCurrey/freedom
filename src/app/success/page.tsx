@@ -5,8 +5,8 @@ import { CheckCircle2, Package, ArrowRight, Activity, Download } from "lucide-re
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Order Confirmed | DIY Motorhomes",
-  description: "Your build components and engineering plans have been successfully secured.",
+  title: "Order Confirmed | Amplios",
+  description: "Thank you for choosing Amplios. Your build plan and schematics are ready for download.",
 };
 
 export default function SuccessPage({ searchParams }: { searchParams: { session_id?: string } }) {

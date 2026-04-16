@@ -5,7 +5,7 @@ import { XCircle, ArrowLeft, ShoppingBag, HelpCircle } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Order Cancelled | DIY Motorhomes",
+  title: "Order Cancelled | Amplios",
   description: "Your transaction was cancelled. No charges were made to your account.",
 };
 

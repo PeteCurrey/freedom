@@ -1,11 +1,15 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SVGSchematic, SystemTier } from "@/components/planner/SVGSchematic";
 import { BlueprintPDF } from "@/components/blueprint/BlueprintPDF";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+const PDFDownloadLink = dynamic(
+  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+  { ssr: false }
+);
 import { cn } from "@/lib/utils";
 import { 
   Zap, Thermometer, Droplets, Weight, 
@@ -24,10 +28,10 @@ const steps = [
 ];
 
 const vehicleFoundations = [
-  { id: "sprinter", name: "Mercedes Sprinter", configs: ["144\" WB", "170\" WB", "170\" EXT"], baseWeight: 2200, payload: 1300, price: 0 },
-  { id: "crafter", name: "VW Crafter", configs: ["MWB", "LWB", "LWB Maxi"], baseWeight: 2150, payload: 1350, price: 0 },
-  { id: "ducato", name: "Fiat Ducato", configs: ["L2H2", "L3H2", "L4H3"], baseWeight: 1950, payload: 1550, price: 0 },
-  { id: "transit", name: "Ford Transit", configs: ["L2H2", "L3H3", "L4H3"], baseWeight: 1950, payload: 1550, price: 0 },
+  { id: "mercedes-sprinter", name: "Mercedes Sprinter", configs: ["144\" WB", "170\" WB", "170\" EXT"], baseWeight: 2200, payload: 1300, price: 0 },
+  { id: "vw-crafter", name: "VW Crafter", configs: ["MWB", "LWB", "LWB Maxi"], baseWeight: 2150, payload: 1350, price: 0 },
+  { id: "fiat-ducato", name: "Fiat Ducato", configs: ["L2H2", "L3H2", "L4H3"], baseWeight: 1950, payload: 1550, price: 0 },
+  { id: "ford-transit", name: "Ford Transit", configs: ["L2H2", "L3H3", "L4H3"], baseWeight: 1950, payload: 1550, price: 0 },
 ];
 
 const layoutTemplates = [
@@ -86,7 +90,7 @@ export default function BuildPlanner() {
     setMounted(true);
   }, []);
   const [selections, setSelections] = useState({
-    vehicleId: "sprinter",
+    vehicleId: "mercedes-sprinter",
     configId: "144\" WB",
     layoutId: "expedition",
     sleepingId: "fixed-rear",
@@ -550,7 +554,7 @@ export default function BuildPlanner() {
                               }} 
                             />
                           }
-                          fileName="DIYM-Build-Plan.pdf"
+                          fileName="Amplios-Build-Plan.pdf"
                           className="w-full flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-brand-grey hover:text-brand-white p-4 border border-brand-border transition-all"
                         >
                            {/* @ts-ignore */}

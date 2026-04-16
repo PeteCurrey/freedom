@@ -4,8 +4,8 @@ import { Footer } from "@/components/layout/Footer";
 import { AuthForm } from "@/components/auth/AuthForm";
 
 export const metadata: Metadata = {
-  title: "Create Builder Account | DIY Motorhomes",
-  description: "Join the community to save build plans, access premium blueprints, and track your engineering progress.",
+  title: "Create Builder Account | Amplios",
+  description: "Join the Amplios community to save build plans and access advanced engineering schematics.",
 };
 
 export default function SignupPage() {

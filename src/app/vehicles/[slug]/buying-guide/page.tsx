@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const brand = vehicle.name.split(" ")[0];
   
   return {
-    title: `${brand} Motorhome Buying Guide | DIY Motorhomes`,
+    title: `${brand} Motorhome Buying Guide | Amplios`,
     description: `The definitive 2026 guide to buying a ${vehicle.name} for campervan conversion. Includes price guides, mechanical checklists, and common rust points.`,
     openGraph: {
       title: `${brand} Conversion Buying Guide`,

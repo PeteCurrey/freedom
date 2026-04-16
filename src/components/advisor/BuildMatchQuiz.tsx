@@ -16,7 +16,8 @@ import {
   AlertCircle,
   BarChart,
   Cpu,
-  ArrowRight
+  ArrowRight,
+  ShoppingBag
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -29,15 +30,17 @@ export default function BuildMatchQuiz() {
   const [result, setResult] = useState<string | null>(null);
 
   const handleSelect = (questionId: string, optionId: string) => {
-    setAnswers(prev => ({ ...prev, [questionId]: optionId }));
+    const updatedAnswers = { ...answers, [questionId]: optionId };
+    setAnswers(updatedAnswers);
+
     if (step < BUILD_MATCH_QUESTIONS.length - 1) {
       setStep(step + 1);
     } else {
-      calculateResult();
+      calculateResult(updatedAnswers);
     }
   };
 
-  const calculateResult = () => {
+  const calculateResult = (finalAnswers: Record<string, string>) => {
     setIsAnalyzing(true);
     
     // Artificial delay for "Scanning" effect
@@ -45,7 +48,7 @@ export default function BuildMatchQuiz() {
       const scores: Record<string, number> = {};
 
       BUILD_MATCH_QUESTIONS.forEach(q => {
-        const selectedId = answers[q.id];
+        const selectedId = finalAnswers[q.id];
         const option = q.options.find(o => o.id === selectedId);
         if (option) {
           Object.entries(option.scores).forEach(([vSlug, score]) => {
@@ -107,6 +110,12 @@ export default function BuildMatchQuiz() {
                    className="bg-brand-orange text-white px-8 py-4 font-display text-[10px] uppercase tracking-widest hover:scale-105 transition-transform flex items-center gap-2"
                  >
                    View Full Schematic <ArrowRight className="w-4 h-4" />
+                 </Link>
+                 <Link 
+                   href={`/vehicles/${result}/listings`} 
+                   className="bg-brand-carbon border border-brand-orange text-brand-orange px-8 py-4 font-display text-[10px] uppercase tracking-widest hover:bg-brand-orange hover:text-white transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(255,107,0,0.1)]"
+                 >
+                   Browse Marketplace <ShoppingBag className="w-4 h-4" />
                  </Link>
                  <button 
                    onClick={reset}
@@ -171,7 +180,10 @@ export default function BuildMatchQuiz() {
               {BUILD_MATCH_QUESTIONS[step].text}
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className={cn(
+              "grid grid-cols-1 gap-6",
+              BUILD_MATCH_QUESTIONS[step].options.length === 3 ? "md:grid-cols-3" : "md:grid-cols-2"
+            )}>
                {BUILD_MATCH_QUESTIONS[step].options.map((opt) => (
                  <button
                    key={opt.id}

@@ -19,7 +19,7 @@ export async function POST(req: Request) {
       .from('build_plans')
       .insert({
         name: data.name || "Untitled Build",
-        vehicle_id: null, // Would normally map "sprinter" to a valid UUID
+        vehicle_id: null, // Would normally map "mercedes-sprinter" to a valid UUID
         configuration_id: data.configId,
         layout_id: data.layoutId,
         system_tiers: data.systems,

@@ -27,7 +27,7 @@ export default function LithiumGuide() {
                <div className="flex flex-wrap items-center gap-10 mt-12 py-8 border-y border-brand-border/30">
                   <div>
                      <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-widest mb-1">Author</span>
-                     <span className="block font-display text-sm uppercase">DIY Motorhomes Engineering</span>
+                     <span className="block font-display text-sm uppercase">Amplios Engineering</span>
                   </div>
                   <div>
                      <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-widest mb-1">Reading Time</span>

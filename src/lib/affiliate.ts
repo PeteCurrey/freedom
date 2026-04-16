@@ -1,5 +1,5 @@
 /**
- * Affiliate Utility - DIY Motorhomes
+ * Affiliate Utility - Amplios
  * 
  * Generates tracked referral URLs for the eBay Partner Network (EPN).
  */

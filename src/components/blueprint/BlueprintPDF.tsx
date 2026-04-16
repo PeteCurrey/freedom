@@ -61,7 +61,7 @@ export const BlueprintPDF = ({ data }: BlueprintPDFProps) => {
         <View style={styles.footer}><Text>© 2026 AMPLIOS | ENGINEERED FOR LIFE</Text></View>
       </Page>
       <Page size="A4" style={styles.page}>
-        <View style={styles.header}><Text style={styles.logo}>DIYM</Text><Text style={{ fontSize: 10 }}>PROJECT OVERVIEW // SECTION 01</Text></View>
+        <View style={styles.header}><Text style={styles.logo}>AMPLIOS</Text><Text style={{ fontSize: 10 }}>PROJECT OVERVIEW // SECTION 01</Text></View>
         <Text style={styles.sectionTitle}>Vehicle Specifications</Text>
         <View style={styles.table}>
           <View style={styles.tableRow}><Text style={styles.tableCol}>SPECIFICATION</Text><Text style={styles.tableCol}>VALUE</Text></View>
@@ -73,7 +73,7 @@ export const BlueprintPDF = ({ data }: BlueprintPDFProps) => {
       </Page>
       
       <Page size="A4" style={styles.page}>
-        <View style={styles.header}><Text style={styles.logo}>DIYM</Text><Text style={{ fontSize: 10 }}>BILL OF MATERIALS // SECTION 02</Text></View>
+        <View style={styles.header}><Text style={styles.logo}>AMPLIOS</Text><Text style={{ fontSize: 10 }}>BILL OF MATERIALS // SECTION 02</Text></View>
         <Text style={styles.sectionTitle}>Technical Components</Text>
         <View style={styles.table}>
           <View style={styles.tableRow}>

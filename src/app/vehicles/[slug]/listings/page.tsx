@@ -119,7 +119,7 @@ export default function MarketplacePage() {
                   <div>
                     <h4 className="font-display text-sm mb-2">Technical Disclaimer</h4>
                     <p className="font-sans text-brand-grey text-xs leading-relaxed max-w-2xl">
-                      DIY Motorhomes may receive a small commission from sales generated through the links on this 
+                      Amplios may receive a small commission from sales generated through the links on this 
                       page. This helps fund our technical research and free build guides. All listings are 
                       third-party; always perform an HPI check before purchasing.
                     </p>

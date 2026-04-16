@@ -7,7 +7,7 @@ import ConsultancyLeadBox from "@/components/advisor/ConsultancyLeadBox";
 import { BrainCircuit, Cpu, ShieldCheck, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "AI Build Advisor | DIY Motorhomes",
+  title: "AI Build Advisor",
   description: "Use our engineering-led Match Engine and Cost Estimator to plan the perfect motorhome conversion foundations.",
 };
 
