@@ -3,7 +3,16 @@ import { supabase } from '@/lib/supabase';
 
 export async function POST(req: Request) {
   try {
-    const { title, vehicle_model, chassis_type, description, specs, userId, email } = await req.json();
+    const { 
+      title, 
+      vehicle_model, 
+      chassis_type, 
+      description, 
+      specs, 
+      hero_image,
+      year_completed,
+      userId 
+    } = await req.json();
 
     if (!title || !vehicle_model || !chassis_type) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -19,9 +28,11 @@ export async function POST(req: Request) {
         vehicle_model,
         chassis_type,
         description,
-        specs,
+        specs_summary: specs,
+        hero_image,
+        year_completed: year_completed || new Date().getFullYear(),
         user_id: userId || null,
-        status: 'review' // Default to review for moderation
+        status: 'review'
       })
       .select()
       .single();

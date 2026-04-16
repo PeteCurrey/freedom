@@ -2,43 +2,43 @@
 
 -- 1. Insert Product Categories
 INSERT INTO public.product_categories (id, slug, name, description, sort_order) VALUES
-  ('cat-11111111-1111-1111-1111-111111111111', 'electrical', 'Electrical Systems', 'Hardware for power generation, storage, and distribution.', 1),
-  ('cat-22222222-2222-2222-2222-222222222222', 'heating-climate', 'Heating & Climate', 'Air conditioning, diesel heaters, and climatic control.', 2),
-  ('cat-33333333-3333-3333-3333-333333333333', 'plumbing', 'Plumbing & Water', 'Fresh water, grey water, and internal plumbing components.', 3),
-  ('cat-44444444-4444-4444-4444-444444444444', 'insulation', 'Insulation & Sound', 'Sound deadening, thermal barriers, and moisture control.', 4),
-  ('cat-55555555-5555-5555-5555-555555555555', 'gas-lpg', 'Gas & LPG', 'Tanks, regulators, and gas-safe installation components.', 5),
-  ('cat-66666666-6666-6666-6666-666666666666', 'ventilation', 'Ventilation', 'Roof fans, mushroom vents, and air extraction.', 6)
+  ('11111111-1111-1111-1111-111111111111', 'electrical', 'Electrical Systems', 'Hardware for power generation, storage, and distribution.', 1),
+  ('22222222-2222-2222-2222-222222222222', 'heating-climate', 'Heating & Climate', 'Air conditioning, diesel heaters, and climatic control.', 2),
+  ('33333333-3333-3333-3333-333333333333', 'plumbing', 'Plumbing & Water', 'Fresh water, grey water, and internal plumbing components.', 3),
+  ('44444444-4444-4444-4444-444444444444', 'insulation', 'Insulation & Sound', 'Sound deadening, thermal barriers, and moisture control.', 4),
+  ('55555555-5555-5555-5555-555555555555', 'gas-lpg', 'Gas & LPG', 'Tanks, regulators, and gas-safe installation components.', 5),
+  ('66666666-6666-6666-6666-666666666666', 'ventilation', 'Ventilation', 'Roof fans, mushroom vents, and air extraction.', 6)
 ON CONFLICT (slug) DO NOTHING;
 
 -- 2. Insert Products
 INSERT INTO public.products (id, slug, name, brand, sku, description, short_description, price_gbp, category_id, stock_quantity, is_active) VALUES
   -- Electrical (Victron Energy)
-  (uuid_generate_v4(), 'victron-multiplus-ii-12-3000-120-32', 'MultiPlus-II 12/3000/120-32', 'Victron Energy', 'PMP122305010', 'A combined inverter and charger in one elegant package.', '3000VA Inverter/Charger', 125000, 'cat-11111111-1111-1111-1111-111111111111', 10, true),
-  (uuid_generate_v4(), 'victron-cerbo-gx', 'Cerbo GX', 'Victron Energy', 'BPP900450100', 'The communication-centre of your installation.', 'System Monitoring Hub', 29000, 'cat-11111111-1111-1111-1111-111111111111', 15, true),
-  (uuid_generate_v4(), 'victron-smartsolar-mppt-100-30', 'SmartSolar MPPT 100/30', 'Victron Energy', 'SCC110030210', 'A solar charger gathers energy from your solar panels.', '30A Solar Charge Controller', 19500, 'cat-11111111-1111-1111-1111-111111111111', 20, true),
-  (uuid_generate_v4(), 'victron-orion-tr-smart-12-12-30', 'Orion-Tr Smart DC-DC 30A', 'Victron Energy', 'ORI121236140', 'Professional DC to DC adaptive 3-stage charger.', '30A DC-DC Charger', 21000, 'cat-11111111-1111-1111-1111-111111111111', 12, true),
-  (uuid_generate_v4(), 'victron-smart-lithium-12-8v-330ah', 'LiFePO4 12,8V/330Ah Smart', 'Victron Energy', 'BAT512132410', 'Lithium iron phosphate (LiFePO4) battery.', '330Ah Lithium Battery', 185000, 'cat-11111111-1111-1111-1111-111111111111', 5, true),
-  (uuid_generate_v4(), 'victron-lynx-distributor', 'Lynx Distributor', 'Victron Energy', 'LYN060102000', 'A modular DC busbar with locations for four fuses.', 'Modular DC Busbar', 16500, 'cat-11111111-1111-1111-1111-111111111111', 25, true),
-  (uuid_generate_v4(), 'victron-smartshunt-500a', 'SmartShunt 500A', 'Victron Energy', 'SHU050150050', 'An all-in-one battery monitor, only without a display.', '500A Battery Monitor', 12500, 'cat-11111111-1111-1111-1111-111111111111', 30, true),
+  (uuid_generate_v4(), 'victron-multiplus-ii-12-3000-120-32', 'MultiPlus-II 12/3000/120-32', 'Victron Energy', 'PMP122305010', 'A combined inverter and charger in one elegant package.', '3000VA Inverter/Charger', 125000, '11111111-1111-1111-1111-111111111111', 10, true),
+  (uuid_generate_v4(), 'victron-cerbo-gx', 'Cerbo GX', 'Victron Energy', 'BPP900450100', 'The communication-centre of your installation.', 'System Monitoring Hub', 29000, '11111111-1111-1111-1111-111111111111', 15, true),
+  (uuid_generate_v4(), 'victron-smartsolar-mppt-100-30', 'SmartSolar MPPT 100/30', 'Victron Energy', 'SCC110030210', 'A solar charger gathers energy from your solar panels.', '30A Solar Charge Controller', 19500, '11111111-1111-1111-1111-111111111111', 20, true),
+  (uuid_generate_v4(), 'victron-orion-tr-smart-12-12-30', 'Orion-Tr Smart DC-DC 30A', 'Victron Energy', 'ORI121236140', 'Professional DC to DC adaptive 3-stage charger.', '30A DC-DC Charger', 21000, '11111111-1111-1111-1111-111111111111', 12, true),
+  (uuid_generate_v4(), 'victron-smart-lithium-12-8v-330ah', 'LiFePO4 12,8V/330Ah Smart', 'Victron Energy', 'BAT512132410', 'Lithium iron phosphate (LiFePO4) battery.', '330Ah Lithium Battery', 185000, '11111111-1111-1111-1111-111111111111', 5, true),
+  (uuid_generate_v4(), 'victron-lynx-distributor', 'Lynx Distributor', 'Victron Energy', 'LYN060102000', 'A modular DC busbar with locations for four fuses.', 'Modular DC Busbar', 16500, '11111111-1111-1111-1111-111111111111', 25, true),
+  (uuid_generate_v4(), 'victron-smartshunt-500a', 'SmartShunt 500A', 'Victron Energy', 'SHU050150050', 'An all-in-one battery monitor, only without a display.', '500A Battery Monitor', 12500, '11111111-1111-1111-1111-111111111111', 30, true),
   
   -- Climate (Truma / Webasto / MaxxAir)
-  (uuid_generate_v4(), 'truma-combi-d4-e', 'Combi D4 E', 'Truma', '33512-01', 'Diesel heater with integrated electric elements.', 'Diesel/Electric Heater', 235000, 'cat-22222222-2222-2222-2222-222222222222', 8, true),
-  (uuid_generate_v4(), 'truma-aventa-comfort', 'Aventa Comfort', 'Truma', '44091-51', 'Roof-mounted air conditioning system.', 'Roof Air Conditioner', 215000, 'cat-22222222-2222-2222-2222-222222222222', 4, true),
-  (uuid_generate_v4(), 'webasto-air-top-2000-stc', 'Air Top 2000 STC', 'Webasto', 'W9032156A', 'The simple and cost-effective solution.', 'Diesel Air Heater', 95000, 'cat-22222222-2222-2222-2222-222222222222', 12, true),
-  (uuid_generate_v4(), 'maxxair-maxxfan-deluxe', 'MaxxFan Deluxe', 'MaxxAir', '00-07500K', 'A complete campervan ventilation system.', 'Roof Fan with Remote', 34500, 'cat-66666666-6666-6666-6666-666666666666', 40, true),
+  (uuid_generate_v4(), 'truma-combi-d4-e', 'Combi D4 E', 'Truma', '33512-01', 'Diesel heater with integrated electric elements.', 'Diesel/Electric Heater', 235000, '22222222-2222-2222-2222-222222222222', 8, true),
+  (uuid_generate_v4(), 'truma-aventa-comfort', 'Aventa Comfort', 'Truma', '44091-51', 'Roof-mounted air conditioning system.', 'Roof Air Conditioner', 215000, '22222222-2222-2222-2222-222222222222', 4, true),
+  (uuid_generate_v4(), 'webasto-air-top-2000-stc', 'Air Top 2000 STC', 'Webasto', 'W9032156A', 'The simple and cost-effective solution.', 'Diesel Air Heater', 95000, '22222222-2222-2222-2222-222222222222', 12, true),
+  (uuid_generate_v4(), 'maxxair-maxxfan-deluxe', 'MaxxFan Deluxe', 'MaxxAir', '00-07500K', 'A complete campervan ventilation system.', 'Roof Fan with Remote', 34500, '66666666-6666-6666-6666-666666666666', 40, true),
   
   -- Plumbing (Whale / Dometic)
-  (uuid_generate_v4(), 'whale-expansions-bottle-2l', 'Whale Accumulator Tank 2L', 'Whale', 'AK1319', 'Reduces pump cycling and creates smoother flow.', '2L Accumulator Tank', 4500, 'cat-33333333-3333-3333-3333-333333333333', 50, true),
-  (uuid_generate_v4(), 'whale-watermaster-pump', 'Whale Watermaster High Flow', 'Whale', 'FW0814', 'Pressure stabilized water pump.', '12V Pressure Pump', 9500, 'cat-33333333-3333-3333-3333-333333333333', 25, true),
-  (uuid_generate_v4(), 'dometic-s4-window-900x450', 'S4 Hinged Window 900x450', 'Dometic', '9104116011', 'Complete window system for motorhomes.', 'Insulated Double Glazed Window', 44500, 'cat-66666666-6666-6666-6666-666666666666', 15, true),
-  (uuid_generate_v4(), 'thetford-c223cs-toilet', 'Cassette Toilet C223-CS', 'Thetford', '5070006', 'High quality swivel toilet with ceramic bowl.', 'Electric Cassette Toilet', 49500, 'cat-33333333-3333-3333-3333-333333333333', 6, true),
+  (uuid_generate_v4(), 'whale-expansions-bottle-2l', 'Whale Accumulator Tank 2L', 'Whale', 'AK1319', 'Reduces pump cycling and creates smoother flow.', '2L Accumulator Tank', 4500, '33333333-3333-3333-3333-333333333333', 50, true),
+  (uuid_generate_v4(), 'whale-watermaster-pump', 'Whale Watermaster High Flow', 'Whale', 'FW0814', 'Pressure stabilized water pump.', '12V Pressure Pump', 9500, '33333333-3333-3333-3333-333333333333', 25, true),
+  (uuid_generate_v4(), 'dometic-s4-window-900x450', 'S4 Hinged Window 900x450', 'Dometic', '9104116011', 'Complete window system for motorhomes.', 'Insulated Double Glazed Window', 44500, '66666666-6666-6666-6666-666666666666', 15, true),
+  (uuid_generate_v4(), 'thetford-c223cs-toilet', 'Cassette Toilet C223-CS', 'Thetford', '5070006', 'High quality swivel toilet with ceramic bowl.', 'Electric Cassette Toilet', 49500, '33333333-3333-3333-3333-333333333333', 6, true),
 
   -- Insulation (Dodo Mat)
-  (uuid_generate_v4(), 'dodo-mat-deadn-hex', 'Dodo Mat DEADN Hex', 'Dodo Mat', 'DODO-DEADN-HEX', 'Sound deadening vibration damper.', 'Butyl Sound Deadening', 6500, 'cat-44444444-4444-4444-4444-444444444444', 100, true),
-  (uuid_generate_v4(), 'dodo-thermo-liner-extreme', 'Thermo Liner Extreme', 'Dodo Mat', 'DODO-TLE-10', 'High performance thermal insulation.', '10mm Thermal Liner', 8500, 'cat-44444444-4444-4444-4444-444444444444', 80, true),
+  (uuid_generate_v4(), 'dodo-mat-deadn-hex', 'Dodo Mat DEADN Hex', 'Dodo Mat', 'DODO-DEADN-HEX', 'Sound deadening vibration damper.', 'Butyl Sound Deadening', 6500, '44444444-4444-4444-4444-444444444444', 100, true),
+  (uuid_generate_v4(), 'dodo-thermo-liner-extreme', 'Thermo Liner Extreme', 'Dodo Mat', 'DODO-TLE-10', 'High performance thermal insulation.', '10mm Thermal Liner', 8500, '44444444-4444-4444-4444-444444444444', 80, true),
   
   -- Gas
-  (uuid_generate_v4(), 'gaslow-11kg-refillable-tank', 'Gaslow R67 11kg Cylinder', 'Gaslow', '01-1650', 'Direct refillable LPG cylinder.', 'Refillable Gas Bottle', 18500, 'cat-55555555-5555-5555-5555-555555555555', 20, true)
+  (uuid_generate_v4(), 'gaslow-11kg-refillable-tank', 'Gaslow R67 11kg Cylinder', 'Gaslow', '01-1650', 'Direct refillable LPG cylinder.', 'Refillable Gas Bottle', 18500, '55555555-5555-5555-5555-555555555555', 20, true)
 ON CONFLICT (slug) DO NOTHING;
 
 -- 3. Insert Build Systems

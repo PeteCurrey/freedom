@@ -8,13 +8,15 @@ import { ChevronRight } from "lucide-react";
 
 interface Build {
   id: string;
+  slug?: string;
   title: string;
   vehicle_model: string;
   chassis_type: string;
   description: string;
-  hero_image: string;
-  specs: any;
-  year_completed: number;
+  hero_image?: string;
+  specs?: any;
+  specs_summary?: any;
+  year_completed?: number;
 }
 
 interface ShowcaseGalleryProps {
@@ -86,7 +88,7 @@ export default function ShowcaseGallery({ initialBuilds }: ShowcaseGalleryProps)
                     <p className="font-sans text-brand-grey text-sm leading-relaxed mb-8">{build.description}</p>
                     
                     <div className="grid grid-cols-3 gap-4 mt-auto pt-8 border-t border-brand-border/30">
-                      {Object.entries(build.specs || {}).map(([key, val]) => (
+                      {Object.entries(build.specs_summary || build.specs || {}).map(([key, val]) => (
                         <div key={key}>
                           <p className="font-mono text-[7px] text-brand-grey uppercase tracking-widest mb-1">{key}</p>
                           <p className="font-mono text-[9px] text-brand-white">{String(val)}</p>
@@ -96,7 +98,7 @@ export default function ShowcaseGallery({ initialBuilds }: ShowcaseGalleryProps)
 
                     <div className="mt-8 flex justify-end">
                        <Link 
-                         href={`/showcase/${build.id}`} 
+                         href={`/showcase/${build.slug || build.id}`} 
                          className="flex items-center gap-2 font-display text-[9px] uppercase tracking-[.3em] text-brand-orange hover:text-white transition-colors"
                         >
                          Analysis Report <ChevronRight className="w-4 h-4" />

@@ -21,11 +21,16 @@ export default function SubmitBuildPage() {
   const [formData, setFormData] = useState({
     title: "",
     vehicle_model: "",
+    builder_name: "",
+    location: "",
     chassis_type: "Mercedes Sprinter",
+    hero_image: "",
     description: "",
     electrical: "",
     heating: "",
-    water: ""
+    water: "",
+    build_duration: "",
+    budget_range: "£20k - £40k"
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -48,7 +53,9 @@ export default function SubmitBuildPage() {
           specs: {
             electrical: formData.electrical,
             heating: formData.heating,
-            water: formData.water
+            water: formData.water,
+            duration: formData.build_duration,
+            budget: formData.budget_range
           }
         })
       });
@@ -141,6 +148,29 @@ export default function SubmitBuildPage() {
                       </div>
                    </div>
 
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-2">
+                         <label className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Builder Name / Instagram</label>
+                         <input 
+                           type="text" required
+                           value={formData.builder_name}
+                           onChange={e => setFormData({...formData, builder_name: e.target.value})}
+                           placeholder="@freedom_builder"
+                           className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:outline-none focus:border-brand-orange transition-colors"
+                         />
+                      </div>
+                      <div className="space-y-2">
+                         <label className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Deployment Location (e.g. Scottish Highlands)</label>
+                         <input 
+                           type="text" required
+                           value={formData.location}
+                           onChange={e => setFormData({...formData, location: e.target.value})}
+                           placeholder="UK / EU / Global..."
+                           className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:outline-none focus:border-brand-orange transition-colors"
+                         />
+                      </div>
+                   </div>
+
                    <div className="space-y-4">
                       <label className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Primary Chassis Category</label>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -157,6 +187,20 @@ export default function SubmitBuildPage() {
                              {c}
                            </button>
                          ))}
+                      </div>
+                   </div>
+
+                   <div className="space-y-2">
+                      <label className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Primary Hero Image URL</label>
+                      <div className="relative">
+                        <Camera className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-grey" />
+                        <input 
+                          type="url" required
+                          value={formData.hero_image}
+                          onChange={e => setFormData({...formData, hero_image: e.target.value})}
+                          placeholder="https://..."
+                          className="w-full bg-brand-obsidian border border-brand-border p-4 pl-12 font-mono text-xs text-brand-white focus:outline-none focus:border-brand-orange transition-colors"
+                        />
                       </div>
                    </div>
                 </div>
@@ -176,7 +220,7 @@ export default function SubmitBuildPage() {
                            value={formData.electrical}
                            onChange={e => setFormData({...formData, electrical: e.target.value})}
                            placeholder="e.g. 400Ah Lithium..."
-                           className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:outline-none"
+                           className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:outline-none border-brand-orange/20"
                          />
                       </div>
                       <div className="space-y-2">
@@ -186,7 +230,7 @@ export default function SubmitBuildPage() {
                            value={formData.heating}
                            onChange={e => setFormData({...formData, heating: e.target.value})}
                            placeholder="e.g. Truma Combi..."
-                           className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:outline-none"
+                           className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:outline-none border-brand-orange/20"
                          />
                       </div>
                       <div className="space-y-2">
@@ -196,8 +240,34 @@ export default function SubmitBuildPage() {
                            value={formData.water}
                            onChange={e => setFormData({...formData, water: e.target.value})}
                            placeholder="e.g. 100L underslung..."
+                           className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:outline-none border-brand-orange/20"
+                         />
+                      </div>
+                   </div>
+
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-2">
+                         <label className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Build Duration</label>
+                         <input 
+                           type="text" required
+                           value={formData.build_duration}
+                           onChange={e => setFormData({...formData, build_duration: e.target.value})}
+                           placeholder="e.g. 14 Months"
                            className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:outline-none"
                          />
+                      </div>
+                      <div className="space-y-2">
+                         <label className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Estimated Budget Range</label>
+                         <select 
+                           value={formData.budget_range}
+                           onChange={e => setFormData({...formData, budget_range: e.target.value})}
+                           className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:outline-none appearance-none cursor-pointer"
+                         >
+                            <option>£10k - £20k</option>
+                            <option>£20k - £40k</option>
+                            <option>£40k - £70k</option>
+                            <option>£70k+</option>
+                         </select>
                       </div>
                    </div>
 

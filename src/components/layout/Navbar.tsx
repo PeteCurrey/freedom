@@ -29,10 +29,10 @@ const navLinks: NavLink[] = [
     items: [
       { name: "Mercedes Sprinter", href: "/vehicles/mercedes-sprinter", image: "/images/sprinter.png", tagline: "The Gold Standard" },
       { name: "Ford Transit", href: "/vehicles/ford-transit", image: "/images/transit.png", tagline: "The Practical Choice" },
-      { name: "VW Crafter", href: "/vehicles/vw-crafter", image: "/images/hero-background.png", tagline: "Modern Touring" },
-      { name: "MAN TGE", href: "/vehicles/man-tge", image: "/images/man-tge.png", tagline: "Heavy Duty Build" },
-      { name: "Fiat Ducato", href: "/vehicles/fiat-ducato", image: "/images/fiat-ducato.png", tagline: "Maximum Width" },
-      { name: "Iveco Daily", href: "/vehicles/iveco-daily", image: "/images/iveco-daily.png", tagline: "Ultimate Payload" },
+      { name: "VW Crafter", href: "/vehicles/vw-crafter", image: "/images/vw-crafter-hero.png", tagline: "Modern Touring" },
+      { name: "MAN TGE", href: "/vehicles/man-tge", image: "/images/man-tge-hero.png", tagline: "Heavy Duty Build" },
+      { name: "Fiat Ducato", href: "/vehicles/fiat-ducato", image: "/images/fiat-ducato-hero.png", tagline: "Maximum Width" },
+      { name: "Iveco Daily", href: "/vehicles/iveco-daily", image: "/images/iveco-daily-hero.png", tagline: "Ultimate Payload" },
       { name: "Search All Used Vans", href: "/find-a-van", image: "/images/hero-background.png", tagline: "Marketplace Aggregator" },
       { name: "Compare All Chassis", href: "/vehicles/compare", image: "/images/sprinter.png", tagline: "Side-by-Side Analysis" },
     ]
@@ -42,11 +42,11 @@ const navLinks: NavLink[] = [
     href: "/systems", 
     mega: true,
     items: [
-      { name: "Electrical & Solar", href: "/systems/electrical-solar", tagline: "Power Your Independence", image: "/images/systems-showcase.png" },
-      { name: "Heating & Hot Water", href: "/systems/heating-hot-water", tagline: "Climate Control", image: "/images/interior-showcase.png" },
+      { name: "Electrical & Solar", href: "/systems/electrical-solar", tagline: "Power Your Independence", image: "/images/electrical-technical.png" },
+      { name: "Heating & Hot Water", href: "/systems/heating-hot-water", tagline: "Climate Control", image: "/images/systems-showcase.png" },
       { name: "Water & Plumbing", href: "/systems/water-plumbing", tagline: "Flowing Without Constraints", image: "/images/hero-background.png" },
-      { name: "Insulation & Vent", href: "/systems/insulation-ventilation", tagline: "The Foundation", image: "/images/sprinter.png" },
-      { name: "Gas & LPG", href: "/systems/gas-lpg", tagline: "Fueling the Adventure", image: "/images/transit.png" },
+      { name: "Insulation & Vent", href: "/systems/insulation-ventilation", tagline: "The Foundation", image: "/images/transit.png" },
+      { name: "Gas & LPG", href: "/systems/gas-lpg", tagline: "Fueling the Adventure", image: "/images/man-tge-hero.png" },
       { name: "Interior & Furniture", href: "/systems/interior-furniture", tagline: "Design the Core", image: "/images/interior-showcase.png" },
     ]
   },
