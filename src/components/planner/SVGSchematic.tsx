@@ -16,8 +16,8 @@ export const SVGSchematic: React.FC<SchematicProps> = ({ system, tier, vehicleWi
 
   // Basic Viewbox for a 1:20 scale representation
   // Van is roughly 6m x 2m -> mapped to 600x200 SVG units
-  const viewWidth = vehicleLength / 10;
-  const viewHeight = vehicleWidth / 10;
+  const viewWidth = Math.max(100, (vehicleLength || 6000) / 10);
+  const viewHeight = Math.max(50, (vehicleWidth || 1800) / 10);
 
   return (
     <svg 

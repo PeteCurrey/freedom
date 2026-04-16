@@ -5,9 +5,8 @@ import dynamic from "next/dynamic";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SVGSchematic, SystemTier } from "@/components/planner/SVGSchematic";
-import { BlueprintPDF } from "@/components/blueprint/BlueprintPDF";
-const PDFDownloadLink = dynamic(
-  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+const PDFExportPortal = dynamic(
+  () => import("@/components/planner/PDFExportPortal"),
   { ssr: false }
 );
 import { cn } from "@/lib/utils";
@@ -81,14 +80,12 @@ const systemConfigs = {
 // --- COMPONENT ---
 
 export default function BuildPlanner() {
+  const [mounted, setMounted] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [savedPlanId, setSavedPlanId] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const [clientBuildId, setClientBuildId] = useState("");
+  
   const [selections, setSelections] = useState({
     vehicleId: "mercedes-sprinter",
     configId: "144\" WB",
@@ -110,6 +107,12 @@ export default function BuildPlanner() {
       ]
     }
   });
+
+  useEffect(() => {
+    setMounted(true);
+    // Generate stable build ID only on client to prevent hydration mismatch
+    setClientBuildId("BUILD-" + Math.random().toString(36).substring(2, 9).toUpperCase());
+  }, []);
 
   // Derived Values
   const totals = useMemo(() => {
@@ -149,8 +152,8 @@ export default function BuildPlanner() {
   }, [selections.systems, selections.sleepingId, selections.vehicleId, selections.layoutId]);
 
   const vehicle = vehicleFoundations.find(v => v.id === selections.vehicleId);
-  const payloadLimit = vehicle?.payload || 0;
-  const payloadUsagePercent = (totals.weight / payloadLimit) * 100;
+  const payloadLimit = vehicle?.payload || 3500; // Default to standard 3.5t if undefined
+  const payloadUsagePercent = Math.min(1000, (totals.weight / payloadLimit) * 100); // Guard against divide-by-zero or extreme values
 
   const nextStep = () => setCurrentStep((s) => Math.min(s + 1, steps.length - 1));
   const prevStep = () => setCurrentStep((s) => Math.max(s - 1, 0));
@@ -541,30 +544,16 @@ export default function BuildPlanner() {
 
                     <div className="pt-8 space-y-3">
                       {mounted && (
-                        <PDFDownloadLink 
-                          document={
-                            <BlueprintPDF 
-                              data={{
-                                vehicleName: vehicle?.name || "Unknown Chassis",
-                                configId: selections.configId,
-                                buildId: "BUILD-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
-                                tier: "Free Preview",
-                                totalWeight: totals.weight,
-                                bom: [] // In a real app, populate from systemConfigs selections
-                              }} 
-                            />
-                          }
-                          fileName="Amplios-Build-Plan.pdf"
-                          className="w-full flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-brand-grey hover:text-brand-white p-4 border border-brand-border transition-all"
-                        >
-                           {/* @ts-ignore */}
-                          {({ loading }) => (
-                            <>
-                              <Download className="w-4 h-4" /> 
-                              {loading ? "Preparing PDF..." : "Export Summary (Free)"}
-                            </>
-                          )}
-                        </PDFDownloadLink>
+                        <PDFExportPortal 
+                          data={{
+                            vehicleName: vehicle?.name || "Unknown Chassis",
+                            configId: selections.configId,
+                            buildId: clientBuildId || "PENDING",
+                            tier: "Free Preview",
+                            totalWeight: totals.weight,
+                            bom: [] 
+                          }} 
+                        />
                       )}
                       
                       <button className="w-full flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-brand-white p-4 bg-brand-carbon border border-brand-border hover:border-brand-orange transition-all">
