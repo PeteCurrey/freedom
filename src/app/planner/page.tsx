@@ -542,24 +542,21 @@ export default function BuildPlanner() {
                       </div>
                     )}
 
-                    <div className="pt-8 space-y-3">
-                      {mounted && (
-                        <PDFExportPortal 
-                          data={{
-                            vehicleName: vehicle?.name || "Unknown Chassis",
-                            configId: selections.configId,
-                            buildId: clientBuildId || "PENDING",
-                            tier: "Free Preview",
-                            totalWeight: totals.weight,
-                            bom: [] 
-                          }} 
-                        />
+                      {/* PDF Export only visible on final step to prevent page load crashes */}
+                      {mounted && currentStep === 10 && (
+                        <div className="pt-4 border-t border-brand-orange/30">
+                          <PDFExportPortal 
+                            data={{
+                              vehicleName: vehicle?.name || "Unknown Chassis",
+                              configId: selections.configId,
+                              buildId: clientBuildId || "PENDING",
+                              tier: "Free Preview",
+                              totalWeight: totals.weight || 0,
+                              bom: [] 
+                            }} 
+                          />
+                        </div>
                       )}
-                      
-                      <button className="w-full flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-brand-white p-4 bg-brand-carbon border border-brand-border hover:border-brand-orange transition-all">
-                        <Eye className="w-4 h-4" /> Blueprint Preview
-                      </button>
-                    </div>
                   </div>
               </div>
             </div>

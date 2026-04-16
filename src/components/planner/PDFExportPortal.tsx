@@ -17,6 +17,12 @@ interface PDFExportPortalProps {
 }
 
 const PDFExportPortal: React.FC<PDFExportPortalProps> = ({ data }) => {
+  const [ready, setReady] = React.useState(false);
+
+  React.useEffect(() => {
+    setReady(true);
+  }, []);
+
   const safeData = {
     ...data,
     vehicleName: data.vehicleName || "Unknown Chassis",
@@ -26,6 +32,8 @@ const PDFExportPortal: React.FC<PDFExportPortalProps> = ({ data }) => {
     totalWeight: data.totalWeight || 0,
     bom: data.bom || []
   };
+
+  if (!ready) return null;
 
   return (
     <PDFDownloadLink 
