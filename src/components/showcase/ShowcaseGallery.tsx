@@ -133,6 +133,3 @@ export default function ShowcaseGallery({ initialBuilds }: ShowcaseGalleryProps)
     </>
   );
 }
-    </>
-  );
-}
