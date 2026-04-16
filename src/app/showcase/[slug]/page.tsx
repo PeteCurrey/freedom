@@ -20,12 +20,17 @@ import {
 } from "lucide-react";
 import { Metadata } from "next";
 
+import { FALLBACK_BUILDS } from "@/lib/data/showcase";
+
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const { data: build } = await supabase
+  const { data: dbBuild } = await supabase
     .from('showcase_builds')
     .select('title, description, story, builder_name, hero_image')
     .eq('slug', params.slug)
     .single();
+
+  const fallbackBuild = FALLBACK_BUILDS.find(b => b.slug === params.slug);
+  const build = dbBuild || fallbackBuild;
 
   if (!build) {
     return { title: 'Blueprint Not Found' };
@@ -45,13 +50,16 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function BuildDetailPage({ params }: { params: { slug: string } }) {
-  const { data: build, error } = await supabase
+  const { data: dbBuild } = await supabase
     .from('showcase_builds')
     .select('*')
     .eq('slug', params.slug)
     .single();
 
-  if (error || !build) {
+  const fallbackBuild = FALLBACK_BUILDS.find(b => b.slug === params.slug);
+  const build = dbBuild || fallbackBuild;
+
+  if (!build) {
     notFound();
   }
 
