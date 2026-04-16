@@ -79,9 +79,9 @@ export default function AdminLayout({
   if (!authorized) return null;
 
   return (
-    <div className="flex min-h-screen bg-brand-obsidian">
+    <div className="flex bg-brand-obsidian h-screen overflow-hidden">
       <AdminSidebar />
-      <main className="flex-1 overflow-x-hidden pt-6">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden pt-6 custom-scrollbar">
         {children}
       </main>
     </div>
