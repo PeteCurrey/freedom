@@ -47,9 +47,13 @@ export function AdminSidebar() {
       {/* Sidebar Header */}
       <div className="p-6 flex items-center justify-between border-b border-brand-border">
         {!isCollapsed && (
-          <Link href="/" className="flex flex-col">
-            <span className="font-display text-xl leading-none tracking-tighter text-brand-white">AMPLIOS</span>
-            <span className="font-mono text-[8px] text-brand-orange uppercase tracking-widest mt-1">Command Centre</span>
+          <Link href="/" className="flex flex-col items-start">
+            <span className="font-display text-xl leading-none tracking-[0.655em] text-brand-white mr-[-0.655em]">
+              AMPLIOS<span className="text-brand-orange">.</span>
+            </span>
+            <span className="font-mono text-[8px] text-brand-orange uppercase tracking-[0.11em] mt-1 transition-opacity duration-300">
+              BUILT FOR THE ROAD
+            </span>
           </Link>
         )}
         <button 

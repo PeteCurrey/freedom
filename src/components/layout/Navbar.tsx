@@ -177,12 +177,11 @@ export function Navbar() {
       <PromotionBanner />
       <div className="container mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="group flex flex-col">
-          <span className="font-display text-2xl leading-none tracking-[0.43em] text-brand-white mr-[-0.43em]">
+        <Link href="/" className="group flex flex-col items-start">
+          <span className="font-display text-2xl leading-none tracking-[0.655em] text-brand-white mr-[-0.655em]">
             AMPLIOS<span className="text-brand-orange">.</span>
           </span>
-          <span className="font-mono text-[10px] tracking-[0.2em] text-brand-orange transition-opacity duration-300 group-hover:opacity-100">
-            {/* // BUILT FOR THE ROAD */}
+          <span className="font-mono text-[10px] tracking-[0.11em] text-brand-orange transition-opacity duration-300 group-hover:opacity-100">
             BUILT FOR THE ROAD
           </span>
         </Link>
@@ -277,7 +276,7 @@ export function Navbar() {
       >
         <div className="p-8 flex flex-col h-full">
           <div className="flex justify-between items-center mb-16">
-            <span className="font-display text-2xl tracking-[0.43em] text-brand-white mr-[-0.43em]">
+            <span className="font-display text-2xl tracking-[0.655em] text-brand-white mr-[-0.655em]">
               AMPLIOS<span className="text-brand-orange">.</span>
             </span>
             <button onClick={() => setMobileMenuOpen(false)}>
