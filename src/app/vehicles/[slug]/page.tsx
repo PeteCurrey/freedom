@@ -9,8 +9,9 @@ import { ProductCard } from "@/components/store/ProductCard";
 import { vehicleData } from "@/lib/data/vehicles";
 import { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const vehicle = vehicleData[params.slug as keyof typeof vehicleData] || vehicleData["mercedes-sprinter"];
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const vehicle = vehicleData[slug as keyof typeof vehicleData] || vehicleData["mercedes-sprinter"];
   return {
     title: `${vehicle.name} Campervan Conversion Guide`,
     description: vehicle.description,
@@ -22,8 +23,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default function VehicleProfile({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function VehicleProfile({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const vehicle = vehicleData[slug as keyof typeof vehicleData] || vehicleData["mercedes-sprinter"];
 
   return (

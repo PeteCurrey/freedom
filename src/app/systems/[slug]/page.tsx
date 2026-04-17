@@ -22,8 +22,8 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder_key'
 );
 
-export default async function SystemSlugPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function SystemSlugPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
 
   // 1. Fetch system data from build_systems
   const { data: system, error } = await supabaseAdmin

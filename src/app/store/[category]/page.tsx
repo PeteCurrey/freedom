@@ -10,8 +10,8 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder_key'
 );
 
-export default async function CategoryPage({ params }: { params: { category: string } }) {
-  const { category } = params;
+export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
+  const { category } = await params;
 
   // 1. Fetch category details
   const { data: categoryData } = await supabaseAdmin

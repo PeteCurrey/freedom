@@ -22,14 +22,15 @@ import { Metadata } from "next";
 
 import { FALLBACK_BUILDS } from "@/lib/data/showcase";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
   const { data: dbBuild } = await supabase
     .from('showcase_builds')
     .select('title, description, story, builder_name, hero_image')
-    .eq('slug', params.slug)
+    .eq('slug', slug)
     .single();
 
-  const fallbackBuild = FALLBACK_BUILDS.find(b => b.slug === params.slug);
+  const fallbackBuild = FALLBACK_BUILDS.find(b => b.slug === slug);
   const build = dbBuild || fallbackBuild;
 
   if (!build) {
@@ -49,14 +50,15 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function BuildDetailPage({ params }: { params: { slug: string } }) {
+export default async function BuildDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const { data: dbBuild } = await supabase
     .from('showcase_builds')
     .select('*')
-    .eq('slug', params.slug)
+    .eq('slug', slug)
     .single();
 
-  const fallbackBuild = FALLBACK_BUILDS.find(b => b.slug === params.slug);
+  const fallbackBuild = FALLBACK_BUILDS.find(b => b.slug === slug);
   const build = dbBuild || fallbackBuild;
 
   if (!build) {

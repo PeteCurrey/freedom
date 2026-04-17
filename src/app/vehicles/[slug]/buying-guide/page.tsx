@@ -2,8 +2,9 @@ import { Metadata } from "next";
 import { vehicleData } from "@/lib/data/vehicles";
 import BuyingGuideClient from "./BuyingGuideClient";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const vehicle = vehicleData[params.slug] || vehicleData["mercedes-sprinter"];
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const vehicle = vehicleData[slug] || vehicleData["mercedes-sprinter"];
   const brand = vehicle.name.split(" ")[0];
   
   return {
@@ -17,8 +18,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default function BuyingGuide({ params }: { params: { slug: string } }) {
-  return <BuyingGuideClient slug={params.slug} />;
+export default async function BuyingGuide({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  return <BuyingGuideClient slug={slug} />;
 }
 
 // Price Bracket Type
