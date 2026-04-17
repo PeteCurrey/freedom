@@ -1,9 +1,7 @@
 "use client";
 
 import React from 'react';
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { BlueprintPDF } from "@/components/blueprint/BlueprintPDF";
-import { Download } from "lucide-react";
+import { Download, Lock } from "lucide-react";
 
 interface PDFExportPortalProps {
   data: {
@@ -17,38 +15,16 @@ interface PDFExportPortalProps {
 }
 
 const PDFExportPortal: React.FC<PDFExportPortalProps> = ({ data }) => {
-  const [ready, setReady] = React.useState(false);
-
-  React.useEffect(() => {
-    setReady(true);
-  }, []);
-
-  const safeData = {
-    ...data,
-    vehicleName: data.vehicleName || "Unknown Chassis",
-    configId: data.configId || "Standard",
-    buildId: data.buildId || "PENDING",
-    tier: data.tier || "Standard",
-    totalWeight: data.totalWeight || 0,
-    bom: data.bom || []
-  };
-
-  if (!ready) return null;
-
   return (
-    <PDFDownloadLink 
-      document={<BlueprintPDF data={safeData} />}
-      fileName="Amplios-Build-Plan.pdf"
-      className="w-full flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-brand-grey hover:text-brand-white p-4 border border-brand-border transition-all"
-    >
-      {/* @ts-ignore */}
-      {({ loading }) => (
-        <>
-          <Download className="w-4 h-4" /> 
-          {loading ? "Preparing PDF..." : "Export Summary (Free)"}
-        </>
-      )}
-    </PDFDownloadLink>
+    <div className="w-full flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-brand-grey p-4 border border-brand-border/50 bg-brand-obsidian/50">
+      <div className="flex items-center gap-2 text-brand-orange/70">
+         <Lock className="w-4 h-4" /> 
+         <span>Preview Locked</span>
+      </div>
+      <div>
+         Save plan to generate PDF
+      </div>
+    </div>
   );
 };
 
