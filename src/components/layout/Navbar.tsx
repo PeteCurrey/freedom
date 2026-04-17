@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Search, User, ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
+import { supabase } from "@/lib/supabase";
 
 interface NavSubItem {
   name: string;
@@ -84,6 +85,7 @@ const navLinks: NavLink[] = [
 ];
 
 export function Navbar() {
+  const [links, setLinks] = useState<NavLink[]>(navLinks);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
@@ -114,6 +116,35 @@ export function Navbar() {
     }, 150);
     setTimeoutId(id);
   };
+
+  useEffect(() => {
+    async function fetchStoreCategories() {
+      const { data } = await supabase
+        .from('product_categories')
+        .select('*')
+        .order('name');
+        
+      if (data && data.length > 0) {
+        setLinks(currentLinks => {
+          const newLinks = [...currentLinks];
+          const storeIndex = newLinks.findIndex(l => l.name === 'Store');
+          if (storeIndex !== -1) {
+            newLinks[storeIndex] = {
+              ...newLinks[storeIndex],
+              items: data.map(cat => ({
+                name: cat.name,
+                href: `/store/${cat.slug}`,
+                tagline: (cat.description && cat.description.length > 25) ? cat.description.substring(0, 25) + "..." : (cat.description || "Engineering Component"),
+                image: "/images/hero-background.png" 
+              }))
+            };
+          }
+          return newLinks;
+        });
+      }
+    }
+    fetchStoreCategories();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -156,7 +187,7 @@ export function Navbar() {
 
         {/* Primary Nav (Desktop) */}
         <div className="hidden lg:flex items-center space-x-8 h-full">
-          {navLinks.map((link) => (
+          {links.map((link) => (
             <div 
               key={link.name}
               className="h-full flex items-center"
@@ -251,7 +282,7 @@ export function Navbar() {
           </div>
 
           <div className="flex flex-col space-y-8">
-            {navLinks.map((link) => (
+            {links.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}

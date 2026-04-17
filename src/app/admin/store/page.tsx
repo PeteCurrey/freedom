@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import Link from "next/link";
 import { 
   ShoppingBag, 
   Plus, 
@@ -45,9 +46,14 @@ export default function StoreManagerPage() {
           </h1>
         </div>
         
-        <button className="px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2">
-           <Plus size={14} /> Add New SKU
-        </button>
+        <div className="flex gap-4">
+          <Link href="/admin/store/categories" className="px-8 py-4 border border-brand-orange text-brand-orange font-mono text-[10px] uppercase tracking-widest hover:bg-brand-orange hover:text-white transition-all flex items-center gap-2">
+             Manage Categories
+          </Link>
+          <Link href="/admin/store/products/new" className="px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2">
+             <Plus size={14} /> Add New SKU
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-12">
@@ -125,7 +131,7 @@ export default function StoreManagerPage() {
                    </td>
                    <td className="p-6 text-right">
                       <div className="flex justify-end gap-3 text-brand-grey">
-                         <button className="hover:text-brand-orange transition-colors"><Edit size={16} /></button>
+                         <Link href={`/admin/store/products/${p.slug}`} className="hover:text-brand-orange transition-colors"><Edit size={16} /></Link>
                          <button className="hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
                       </div>
                    </td>
