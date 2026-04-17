@@ -67,15 +67,16 @@ export default function SuppliersManagerPage() {
                   <th className="p-6">Supplier Name</th>
                   <th className="p-6">Status / Type</th>
                   <th className="p-6">Categories</th>
+                  <th className="p-6">Performance</th>
                   <th className="p-6 text-right">Actions</th>
                </tr>
             </thead>
             <tbody className="divide-y divide-brand-border/50">
                {loading ? (
-                  <tr><td colSpan={4} className="p-12 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">Loading network nodes...</td></tr>
+                  <tr><td colSpan={5} className="p-12 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">Loading network nodes...</td></tr>
                ) : suppliers.length === 0 ? (
                   <tr>
-                     <td colSpan={4} className="p-12 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">
+                     <td colSpan={5} className="p-12 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">
                         No suppliers mapped. Run the database migration and add suppliers.
                      </td>
                   </tr>
@@ -85,7 +86,7 @@ export default function SuppliersManagerPage() {
                         <td className="p-6">
                            <span className="block font-display text-xl uppercase tracking-wider">{s.name}</span>
                            {s.website && (
-                             <a href={s.website.startsWith('http') ? s.website : `https://${s.website}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 font-sans text-xs text-brand-orange hover:underline mt-1">
+                             <a href={`/api/affiliate/redirect?type=supplier&id=${s.id}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 font-sans text-xs text-brand-orange hover:underline mt-1">
                                <Globe size={10} /> {s.website} <ExternalLink size={10} />
                              </a>
                            )}
@@ -102,6 +103,19 @@ export default function SuppliersManagerPage() {
                                     {cat}
                                  </span>
                               ))}
+                           </div>
+                        </td>
+                        <td className="p-6">
+                           <div className="flex items-center gap-4">
+                              <div className="text-left">
+                                 <span className="block font-display text-lg text-brand-orange">{s.lead_count || 0}</span>
+                                 <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-widest">Supplier Leads</span>
+                              </div>
+                              {s.last_lead_at && (
+                                 <span className="font-mono text-[8px] text-brand-grey uppercase ml-2 border-l border-brand-border/50 pl-4">
+                                    Last: {new Date(s.last_lead_at).toLocaleDateString()}
+                                 </span>
+                              )}
                            </div>
                         </td>
                         <td className="p-6 text-right">

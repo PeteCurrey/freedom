@@ -68,15 +68,16 @@ export default function AffiliatesManagerPage() {
                   <th className="p-6">Network / Tracking ID</th>
                   <th className="p-6">Base URL</th>
                   <th className="p-6">Commission</th>
+                  <th className="p-6">Performance</th>
                   <th className="p-6 text-right">Actions</th>
                </tr>
             </thead>
             <tbody className="divide-y divide-brand-border/50">
                {loading ? (
-                  <tr><td colSpan={5} className="p-12 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">Scanning network nodes...</td></tr>
+                  <tr><td colSpan={6} className="p-12 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">Scanning network nodes...</td></tr>
                ) : affiliates.length === 0 ? (
                   <tr>
-                     <td colSpan={5} className="p-12 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">
+                     <td colSpan={6} className="p-12 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">
                         No affiliate programs registered.
                      </td>
                   </tr>
@@ -102,6 +103,22 @@ export default function AffiliatesManagerPage() {
                               <DollarSign className="w-4 h-4 text-brand-orange" />
                               {a.commission_rate || 'Var'}
                            </span>
+                        </td>
+                        <td className="p-6">
+                           <div className="flex items-center gap-4">
+                              <div className="text-left">
+                                 <span className="block font-display text-lg text-brand-orange">{a.click_count || 0}</span>
+                                 <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-widest">Outbound Clicks</span>
+                              </div>
+                              {a.last_click_at && (
+                                 <div className="h-8 w-px bg-brand-border/50 mx-2" />
+                              )}
+                              {a.last_click_at && (
+                                 <span className="font-mono text-[8px] text-brand-grey uppercase">
+                                    Last: {new Date(a.last_click_at).toLocaleDateString()}
+                                 </span>
+                              )}
+                           </div>
                         </td>
                         <td className="p-6 text-right">
                            <div className="flex justify-end gap-3 text-brand-grey">

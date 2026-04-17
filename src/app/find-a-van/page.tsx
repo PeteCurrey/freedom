@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Search, ExternalLink, ShieldCheck, MapPin, Gauge, Calendar } from "lucide-react";
@@ -112,7 +112,7 @@ export default function FindAVan() {
                        marketplaceLinks.map((link) => (
                          <a 
                           key={link.id}
-                          href={link.affiliate_url}
+                          href={`/api/affiliate/redirect?type=marketplace&id=${link.id}`}
                           target="_blank" 
                           rel="noopener noreferrer"
                           className="group p-8 blueprint-border bg-brand-obsidian hover:bg-brand-orange/5 transition-all flex flex-col justify-between min-h-[220px]"

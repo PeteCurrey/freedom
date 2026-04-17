@@ -30,14 +30,29 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return { title: 'Product Not Found' };
   }
 
+  const title = `${product.brand} ${product.name} | Off-Grid Components | Amplios`;
+  const description = product.short_description || `High-performance ${product.brand} component for off-grid power, heating, and water systems in DIY motorhomes.`;
+  const image = product.image_url || 'https://amplios.co.uk/images/og-store.png';
+
   return {
-    title: `${product.brand} ${product.name}`,
-    description: product.short_description || `Purchase the ${product.brand} ${product.name} component for your DIY Motorhome build.`,
+    title,
+    description,
     openGraph: {
-      title: `${product.brand} ${product.name} | Amplios`,
-      description: product.short_description,
-      images: product.image_url ? [product.image_url] : [],
+      title,
+      description,
+      images: [{ url: image }],
+      type: 'website',
+      siteName: 'Amplios',
     },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image],
+    },
+    alternates: {
+      canonical: `https://amplios.co.uk/store/product/${slug}`,
+    }
   };
 }
 
