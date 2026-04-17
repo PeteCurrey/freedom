@@ -209,32 +209,32 @@ INSERT INTO showcase_builds (slug, title, user_handle, vehicle_model, chassis_ty
 VALUES 
 (
   'highland-overlander', 'The Highland Overlander', '@AdventurePete', 'Mercedes Sprinter 4x4', 'Mercedes Sprinter',
-  'Full-spec expedition build for the Highlands.', '/images/sprinter.png',
+  'Full-spec expedition build for the Highlands.', '/images/bespoke-sprinter.png',
   '{"Solar": "400W", "Battery": "300Ah Li"}', 2024, true, 5.0
 ),
 (
   'scandi-ghost', 'Scandi Ghost', '@NorthernVans', 'VW Crafter MWB', 'VW Crafter',
-  'Minimalist interior focus.', '/images/vw-crafter.png',
+  'Minimalist interior focus.', '/images/bespoke-crafter.png',
   '{"Solar": "200W", "Battery": "200Ah Li"}', 2023, false, 4.9
 ),
 (
   'pacific-explorer', 'Pacific Explorer', '@CoastalBuilds', 'Ford Transit L3H3', 'Ford Transit',
-  'Built for long coastal tours.', '/images/transit.png',
+  'Built for long coastal tours.', '/images/bespoke-transit.png',
   '{"Solar": "350W", "Battery": "400Ah Li"}', 2024, false, 4.7
 ),
 (
   'alpine-studio', 'The Alpine Studio', '@MountainModern', 'Fiat Ducato L4H3', 'Fiat Ducato',
-  'Luxury leisure build.', '/images/fiat-ducato.png',
+  'Luxury leisure build.', '/images/bespoke-fiat.png',
   '{"Solar": "180W", "Battery": "160Ah AGM"}', 2023, false, 4.8
 ),
 (
   'desert-raider', 'Desert Raider 4x4', '@GlobalTrekker', 'Iveco Daily 4x4', 'Iveco Daily',
-  'Heavy-duty global expedition vehicle.', '/images/iveco-daily.png',
+  'Heavy-duty global expedition vehicle.', '/images/bespoke-iveco.png',
   '{"Solar": "600W", "Battery": "600Ah Li"}', 2024, false, 5.0
 ),
 (
   'nomad-command', 'Nomad Command Centre', '@DigitalDrifter', 'MAN TGE LWB', 'VW Crafter',
-  'Mobile office for full-time nomads.', '/images/man-tge.png',
+  'Mobile office for full-time nomads.', '/images/bespoke-man.png',
   '{"Solar": "500W", "Battery": "400Ah Li"}', 2024, false, 4.6
 )
 ON CONFLICT (slug) DO NOTHING;
