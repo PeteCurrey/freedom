@@ -15,6 +15,7 @@ import {
   CheckCircle2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default function MarketingHubPage() {
   const [activeTab, setActiveTab] = useState<"affiliates" | "promotions">("affiliates");
