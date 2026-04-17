@@ -27,6 +27,8 @@ const getFallbackLinks = (slug: string, vehicleName: string) => {
     "mercedes-sprinter": "https://sovrn.co/8jnot3i",
     "man-tge": "https://sovrn.co/11auwij",
     "fiat-ducato": "https://sovrn.co/12rriq1",
+    "peugeot-boxer": "https://www.autotrader.co.uk/vans/used-vans/peugeot/boxer",
+    "citroen-relay": "https://www.autotrader.co.uk/vans/used-vans/citroen/relay",
   };
 
   const vanTraderUrl = affLinks[slug] || `https://www.autotrader.co.uk/vans/used-vans/${slug.replace('-', '/')}`;

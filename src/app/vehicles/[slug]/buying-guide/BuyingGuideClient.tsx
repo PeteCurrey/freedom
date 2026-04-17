@@ -51,6 +51,8 @@ const getPriceBrackets = (slug: string): PriceBracket[] => {
         { years: "2022+", mileage: "Under 40k", price: "£25,000 - £35,000" },
       ];
     case "fiat-ducato":
+    case "peugeot-boxer":
+    case "citroen-relay":
       return [
         { years: "2015-2018", mileage: "70k - 100k", price: "£8,000 - £14,000" },
         { years: "2019-2021", mileage: "30k - 70k", price: "£15,000 - £22,000" },
@@ -89,6 +91,8 @@ const getVehicleSpecificChecks = (slug: string) => {
         { title: "Injector Health", desc: "Especially on 2.2 TDCi models; listen for uneven idling." },
       ];
     case "fiat-ducato":
+    case "peugeot-boxer":
+    case "citroen-relay":
       return [
         { title: "3rd/4th Gear Crunch", desc: "Common on older manuals. Ensure smooth shifts during test drive." },
         { title: "Timing Belt & Water Pump", desc: "Must be done together. Check service stamps." },

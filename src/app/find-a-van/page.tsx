@@ -10,14 +10,13 @@ import { cn } from "@/lib/utils";
 
 import { supabase } from "@/lib/supabase";
 
-const vehicles = [
-  { id: "mercedes-sprinter", name: "Mercedes Sprinter", image: "/images/sprinter.png" },
-  { id: "vw-crafter", name: "VW Crafter", image: "/images/hero-background.png" },
-  { id: "ford-transit", name: "Ford Transit", image: "/images/transit.png" },
-  { id: "fiat-ducato", name: "Fiat Ducato", image: "/images/community-showcase.png" },
-  { id: "man-tge", name: "MAN TGE", image: "/images/interior-showcase.png" },
-  { id: "iveco-daily", name: "Iveco Daily", image: "/images/systems-showcase.png" },
-];
+import { vehicleData } from "@/lib/data/vehicles";
+
+const vehicles = Object.entries(vehicleData).map(([id, data]) => ({
+  id,
+  name: data.name,
+  image: data.heroImage
+}));
 
 export default function FindAVan() {
   const [selectedVehicle, setSelectedVehicle] = useState(vehicles[0]);

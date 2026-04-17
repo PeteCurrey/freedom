@@ -288,12 +288,14 @@ function SystemCard({ system }: { system: System }) {
 }
 
 const vehicles = [
-  { name: "MERCEDES SPRINTER", slug: "mercedes-sprinter", specs: "L3H3 — 170\" WB — High Roof", image: "/images/sprinter.png" },
-  { name: "VW CRAFTER", slug: "vw-crafter", specs: "LWB — High Roof — 4Motion", image: "/images/vw-crafter.png" },
-  { name: "MAN TGE", slug: "man-tge", specs: "LWB — Lion's Cap Cab", image: "/images/man-tge.png" },
-  { name: "FORD TRANSIT", slug: "ford-transit", specs: "L4H3 — AWD — Jumbo", image: "/images/transit.png" },
-  { name: "FIAT DUCATO", slug: "fiat-ducato", specs: "L4H3 — Maxi — 180 MultiJet", image: "/images/fiat-ducato.png" },
-  { name: "IVECO DAILY", slug: "iveco-daily", specs: "7-Tonne — 4100L — Hi-Matic", image: "/images/iveco-daily.png" },
+  { name: "MERCEDES SPRINTER", slug: "mercedes-sprinter", specs: "L3H3 — 170\" WB — High Roof", image: "/images/bespoke-sprinter.png" },
+  { name: "VW CRAFTER", slug: "vw-crafter", specs: "LWB — High Roof — 4Motion", image: "/images/bespoke-crafter.png" },
+  { name: "MAN TGE", slug: "man-tge", specs: "LWB — Lion's Cap Cab", image: "/images/bespoke-man.png" },
+  { name: "FORD TRANSIT", slug: "ford-transit", specs: "L4H3 — AWD — Jumbo", image: "/images/bespoke-transit.png" },
+  { name: "FIAT DUCATO", slug: "fiat-ducato", specs: "L4H3 — Maxi — 180 MultiJet", image: "/images/bespoke-fiat.png" },
+  { name: "PEUGEOT BOXER", slug: "peugeot-boxer", specs: "L3H2 — BlueHDi — LWB", image: "/images/bespoke-boxer.png" },
+  { name: "CITROEN RELAY", slug: "citroen-relay", specs: "L2H2 — Enterprise — MWB", image: "/images/bespoke-relay.png" },
+  { name: "IVECO DAILY", slug: "iveco-daily", specs: "7-Tonne — 4100L — Hi-Matic", image: "/images/bespoke-iveco.png" },
 ];
 
 const systems = [

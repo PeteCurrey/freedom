@@ -16,7 +16,8 @@ export interface VehicleData {
   name: string;
   tagline: string;
   description: string;
-  heroImage: string;
+  heroImage: string;      // Premium Motorhome Lifestyle Image
+  schematicImage: string; // Technical Blueprint / Schematic Image
   specs: VehicleSpec[];
   configurations: VehicleConfig[];
   pros: string[];
@@ -35,7 +36,8 @@ export const vehicleData: Record<string, VehicleData> = {
     name: "MERCEDES-BENZ SPRINTER",
     tagline: "Where Engineering Meets Capability.",
     description: "The Mercedes-Benz Sprinter is the undisputed gold standard for off-grid campervan conversions. Its combination of structural integrity, 4x4 availability, and extensive aftermarket support makes it the premier choice for serious builders who refuse to compromise on quality or capability.",
-    heroImage: "/images/sprinter.png",
+    heroImage: "/images/bespoke-sprinter.png",
+    schematicImage: "/images/sprinter-schematic.png",
     specs: [
       { label: "Engine Options", value: "2.0L 4-Cyl CDI" },
       { label: "Power Output", value: "114 - 190", unit: "HP" },
@@ -63,7 +65,8 @@ export const vehicleData: Record<string, VehicleData> = {
     name: "VW CRAFTER",
     tagline: "The Refined Precision Touring Foundation.",
     description: "The second-generation VW Crafter is often cited as the most 'car-like' large van to drive. Its refined suspension and advanced driver assistance systems make it the preferred choice for those planning long-distance European tours where driver comfort is paramount.",
-    heroImage: "/images/vw-crafter.png",
+    heroImage: "/images/bespoke-crafter.png",
+    schematicImage: "/images/vw-crafter.png",
     specs: [
       { label: "Engine Options", value: "2.0L TDI Eco" },
       { label: "Power Output", value: "102 - 177", unit: "HP" },
@@ -90,7 +93,8 @@ export const vehicleData: Record<string, VehicleData> = {
     name: "FORD TRANSIT",
     tagline: "The Versatile Workhorse for Every Builder.",
     description: "The Ford Transit remains the most popular van in the UK for a reason. Its vast availability, relatively low maintenance costs, and the capable factory AWD option make it a fantastic middle-ground for builders who want capability without the 'sprinter tax'.",
-    heroImage: "/images/transit.png",
+    heroImage: "/images/bespoke-transit.png",
+    schematicImage: "/images/transit-schematic.png",
     specs: [
       { label: "Engine Options", value: "2.0L EcoBlue" },
       { label: "Power Output", value: "105 - 185", unit: "HP" },
@@ -117,7 +121,8 @@ export const vehicleData: Record<string, VehicleData> = {
     name: "MAN TGE",
     tagline: "The Commercial-Grade Van with Premium Support.",
     description: "Built on the same chassis as the VW Crafter, the MAN TGE distinguishes itself through its commercial-focused service network. If you're building a full-time tiny home, MAN's 24/7 truck-focused service centres are a game changer for maintenance and recovery.",
-    heroImage: "/images/man-tge.png",
+    heroImage: "/images/bespoke-man.png",
+    schematicImage: "/images/man-tge.png",
     specs: [
       { label: "Engine Options", value: "2.0L Diesel" },
       { label: "Power Output", value: "102 - 177", unit: "HP" },
@@ -143,7 +148,8 @@ export const vehicleData: Record<string, VehicleData> = {
     name: "FIAT DUCATO",
     tagline: "The Space-Maximiser for Creative Layouts.",
     description: "The Ducato (and its siblings Boxer/Relay) is the widest van in its class. Because the body doesn't taper as much towards the roof, it is the only van where a bed can be fitted transversely (across the van) without structural flares, saving thousands of pounds in the build.",
-    heroImage: "/images/fiat-ducato.png",
+    heroImage: "/images/bespoke-fiat.png",
+    schematicImage: "/images/fiat-ducato.png",
     specs: [
       { label: "Engine Options", value: "2.2L MultiJet3" },
       { label: "Power Output", value: "120 - 180", unit: "HP" },
@@ -166,11 +172,68 @@ export const vehicleData: Record<string, VehicleData> = {
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
     internalWidth: "1.87m",
   },
+  "peugeot-boxer": {
+    name: "PEUGEOT BOXER",
+    tagline: "The Reliable Utility Foundation.",
+    description: "Sharing the same legendary 'wide-body' chassis as the Ducato, the Peugeot Boxer is a favorite among UK fleets. Its BlueHDi engines are known for their efficiency, and its square cargo area is a dream for modular furniture installations.",
+    heroImage: "/images/bespoke-boxer.png",
+    schematicImage: "/images/peugeot-boxer-schematic.png",
+    specs: [
+      { label: "Engine Options", value: "2.2L BlueHDi" },
+      { label: "Power Output", value: "120 - 165", unit: "HP" },
+      { label: "Drivetrain", value: "FWD Only" },
+      { label: "Transmission", value: "6-Speed Manual" },
+      { label: "GVWR", value: "3000 - 4005", unit: "KG" },
+    ],
+    configurations: [
+      { label: "L2H2 (MWB)", length: "5413mm", internalL: "3120mm", height: "H2 High", volume: "11.5m³" },
+      { label: "L3H2 (LWB)", length: "5998mm", internalL: "3705mm", height: "H2 High", volume: "13.0m³" },
+      { label: "L4H2 (XLWB)", length: "6363mm", internalL: "4070mm", height: "H2 High", volume: "15.0m³" },
+    ],
+    pros: ["Class-leading internal width", "Excellent fuel economy", "Simple mechanicals for easy repair", "High availability in the UK"],
+    cons: ["Manual only (for most models)", "Noisy at motorway speeds", "Basic interior technology", "Limited 4x4 options"],
+    bestFor: "Owners who want the benefits of a Sevel wide-body on a more industrial-focused fleet brand.",
+    watchOutFor: "Timing belt changes are critical on the 2.2L engines. Every 50k miles is the enthusiast recommendation.",
+    manufacturerUrl: "https://www.peugeot.co.uk/models/boxer.html",
+    ebaySearch: "https://www.ebay.co.uk/sch/i.html?_nkw=peugeot+boxer+panel+van+lwb",
+    autotraderSearch: "https://www.autotrader.co.uk/van-search?make=Peugeot&model=Boxer",
+    fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
+    internalWidth: "1.87m",
+  },
+  "citroen-relay": {
+    name: "CITROEN RELAY",
+    tagline: "The Practical Professional Choice.",
+    description: "The Citroen Relay completes the Sevel trio, offering the same 1.87m internal width that makes transverse beds a breeze. It is often the most competitively priced of the three, making it the savvy choice for builders focused on ROI.",
+    heroImage: "/images/bespoke-relay.png",
+    schematicImage: "/images/citroen-relay-schematic.png",
+    specs: [
+      { label: "Engine Options", value: "2.2L BlueHDi" },
+      { label: "Power Output", value: "120 - 165", unit: "HP" },
+      { label: "Drivetrain", value: "FWD Only" },
+      { label: "Transmission", value: "6-Speed Manual" },
+      { label: "GVWR", value: "3000 - 4000", unit: "KG" },
+    ],
+    configurations: [
+      { label: "L1H1 (SWB)", length: "4963mm", internalL: "2670mm", height: "H1 Low", volume: "8.0m³" },
+      { label: "L2H2 (MWB)", length: "5413mm", internalL: "3120mm", height: "H2 High", volume: "11.5m³" },
+      { label: "L3H2 (LWB)", length: "5998mm", internalL: "3705mm", height: "H2 High", volume: "13.0m³" },
+    ],
+    pros: ["Superior width-to-length ratio", "Lightest in class (higher payload)", "Affordable parts and service", "Huge network of specialist breakers"],
+    cons: ["Low ground clearance", "Interior feels dated", "Poor standard soundproofing", "Soft paint prone to stone chips"],
+    bestFor: "Budget-conscious self-builders who prioritise internal volume and payload over luxury features.",
+    watchOutFor: "Check the central 'U-bolt' on the rear leaf springs; they can loosen and cause noise on older models.",
+    manufacturerUrl: "https://www.citroen.co.uk/models/relay.html",
+    ebaySearch: "https://www.ebay.co.uk/sch/i.html?_nkw=citroen+relay+panel+van+lwb",
+    autotraderSearch: "https://www.autotrader.co.uk/van-search?make=Citroen&model=Relay",
+    fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
+    internalWidth: "1.87m",
+  },
   "iveco-daily": {
     name: "IVECO DAILY",
     tagline: "The 7-Tonne Truck in an LCV Body.",
     description: "The Iveco Daily is unique in having a C-section truck-style ladder frame instead of a unibody. This makes it the ultimate choice for heavy-duty builds reaching up to 7.2 tonnes, or for those who plan to tow heavy equipment behind their motorhome.",
-    heroImage: "/images/iveco-daily.png",
+    heroImage: "/images/bespoke-iveco.png",
+    schematicImage: "/images/iveco-daily.png",
     specs: [
       { label: "Engine Options", value: "3.0L F1C Diesel" },
       { label: "Power Output", value: "136 - 210", unit: "HP" },

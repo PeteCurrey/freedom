@@ -35,7 +35,7 @@ export default async function VehicleProfile({ params }: { params: Promise<{ slu
       <section className="relative h-[80vh] w-full flex items-end">
         <div className="absolute inset-0">
           <Image 
-            src={vehicle.heroImage} 
+            src={vehicle.schematicImage} 
             alt={vehicle.name} 
             fill 
             className="object-cover grayscale opacity-60" 

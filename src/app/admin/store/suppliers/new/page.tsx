@@ -12,9 +12,15 @@ export default function NewSupplierPage() {
   const [supplier, setSupplier] = useState({
     name: "",
     website: "",
-    trade_account: false,
+    status: "potential",
     notes: "",
-    categories: [] as string[]
+    categories: [] as string[],
+    contact_name: "",
+    contact_email: "",
+    contact_phone: "",
+    account_number: "",
+    order_minimum: 0,
+    lead_time_days: 14
   });
 
   const availableCategories = ['electrical', 'solar', 'heating', 'water', 'plumbing', 'insulation', 'gas', 'ventilation', 'interiors', 'hardware'];
@@ -44,9 +50,16 @@ export default function NewSupplierPage() {
     const { error } = await supabase.from('suppliers').insert([{
       name: supplier.name,
       website: formattedWebsite,
-      trade_account: supplier.trade_account,
+      status: supplier.status,
+      trade_account: supplier.status === 'active_trade',
       notes: supplier.notes,
-      categories: supplier.categories
+      categories: supplier.categories,
+      contact_name: supplier.contact_name,
+      contact_email: supplier.contact_email,
+      contact_phone: supplier.contact_phone,
+      account_number: supplier.account_number,
+      order_minimum: supplier.order_minimum,
+      lead_time_days: supplier.lead_time_days
     }]);
 
     setSaving(false);
@@ -79,7 +92,23 @@ export default function NewSupplierPage() {
               />
             </div>
             <div>
-              <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-2">Company Website</label>
+              <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-2">Account Status</label>
+              <select 
+                value={supplier.status}
+                onChange={(e) => setSupplier({ ...supplier, status: e.target.value })}
+                className="w-full bg-brand-carbon border border-brand-border p-4 font-mono text-[10px] uppercase tracking-widest text-white focus:border-brand-orange outline-none"
+              >
+                <option value="potential">Potential Supplier</option>
+                <option value="applied">Application Pending</option>
+                <option value="active_trade">Account Active</option>
+                <option value="on_hold">Account On Hold</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-2">Main Website</label>
               <input 
                 type="text" 
                 value={supplier.website}
@@ -88,18 +117,48 @@ export default function NewSupplierPage() {
                 placeholder="energy-solutions.co.uk"
               />
             </div>
+             <div>
+              <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-2">Acc Number (Optional)</label>
+              <input 
+                type="text" 
+                value={supplier.account_number}
+                onChange={(e) => setSupplier({ ...supplier, account_number: e.target.value })}
+                className="w-full bg-brand-carbon border border-brand-border p-4 font-mono text-xs text-white focus:border-brand-orange outline-none"
+                placeholder="ACC-XXXXX"
+              />
+            </div>
           </div>
 
-          <div>
-             <label className="flex items-center gap-3 cursor-pointer">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-brand-border/30">
+             <div>
+                <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-2">Contact Name</label>
                 <input 
-                  type="checkbox" 
-                  checked={supplier.trade_account}
-                  onChange={(e) => setSupplier({...supplier, trade_account: e.target.checked})}
-                  className="w-5 h-5 accent-brand-orange bg-brand-carbon border-brand-border"
+                  type="text" 
+                  value={supplier.contact_name}
+                  onChange={(e) => setSupplier({ ...supplier, contact_name: e.target.value })}
+                  className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
                 />
-                <span className="font-mono text-xs uppercase tracking-widest">Active Trade Account Connected</span>
-             </label>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-2">Email</label>
+                  <input 
+                    type="email" 
+                    value={supplier.contact_email}
+                    onChange={(e) => setSupplier({ ...supplier, contact_email: e.target.value })}
+                    className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-2">Phone</label>
+                  <input 
+                    type="text" 
+                    value={supplier.contact_phone}
+                    onChange={(e) => setSupplier({ ...supplier, contact_phone: e.target.value })}
+                    className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                  />
+                </div>
+              </div>
           </div>
 
           <div>
@@ -113,7 +172,7 @@ export default function NewSupplierPage() {
           </div>
 
           <div>
-            <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-4">Category Focus Areas</label>
+            <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-4">Initial Category Focus</label>
             <div className="flex flex-wrap gap-3">
               {availableCategories.map(cat => (
                 <button

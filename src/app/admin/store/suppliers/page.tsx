@@ -72,30 +72,40 @@ export default function SuppliersManagerPage() {
                </tr>
             </thead>
             <tbody className="divide-y divide-brand-border/50">
-               {loading ? (
+                {loading ? (
                   <tr><td colSpan={5} className="p-12 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">Loading network nodes...</td></tr>
-               ) : suppliers.length === 0 ? (
+                ) : suppliers.length === 0 ? (
                   <tr>
-                     <td colSpan={5} className="p-12 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">
-                        No suppliers mapped. Run the database migration and add suppliers.
-                     </td>
+                    <td colSpan={5} className="p-12 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">
+                      No suppliers mapped. Run the database migration and add suppliers.
+                    </td>
                   </tr>
-               ) : (
+                ) : (
                   suppliers.map(s => (
-                     <tr key={s.id} className="group hover:bg-brand-obsidian/50 transition-colors">
-                        <td className="p-6">
-                           <span className="block font-display text-xl uppercase tracking-wider">{s.name}</span>
-                           {s.website && (
-                             <a href={`/api/affiliate/redirect?type=supplier&id=${s.id}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 font-sans text-xs text-brand-orange hover:underline mt-1">
-                               <Globe size={10} /> {s.website} <ExternalLink size={10} />
-                             </a>
-                           )}
-                        </td>
-                        <td className="p-6">
-                           <span className={`px-3 py-1 font-mono text-[9px] uppercase tracking-widest ${s.trade_account ? 'bg-green-500/10 text-green-500 border border-green-500/30' : 'bg-brand-grey/10 text-brand-grey border border-brand-grey/30'}`}>
-                              {s.trade_account ? 'Trade Account Active' : 'Retail / standard'}
-                           </span>
-                        </td>
+                    <tr key={s.id} className="group hover:bg-brand-obsidian/50 transition-colors">
+                      <td className="p-6">
+                        <span className="block font-display text-xl uppercase tracking-wider">{s.name}</span>
+                        {s.website && (
+                          <a href={s.website} target="_blank" rel="noreferrer" className="flex items-center gap-1 font-sans text-xs text-brand-orange hover:underline mt-1">
+                            <Globe size={10} /> {s.website.replace('https://', '').replace('http://', '')} <ExternalLink size={10} />
+                          </a>
+                        )}
+                      </td>
+                      <td className="p-6 text-[10px] text-brand-grey">
+                        <div className="flex flex-col gap-2">
+                          <span className={cn(
+                            "px-3 py-1 font-mono text-[9px] uppercase tracking-widest w-fit border",
+                            s.status === 'active_trade' ? "bg-green-500/10 text-green-500 border-green-500/30" :
+                            s.status === 'applied' ? "bg-brand-orange/10 text-brand-orange border-brand-orange/30" :
+                            s.status === 'on_hold' ? "bg-red-500/10 text-red-500 border-red-500/30" :
+                            "bg-brand-grey/10 text-brand-grey border-brand-grey/30"
+                          )}>
+                            {s.status === 'active_trade' ? 'Account Active' : 
+                             s.status === 'applied' ? 'Application Pending' :
+                             s.status === 'on_hold' ? 'Account On Hold' : 'Potential Supplier'}
+                          </span>
+                        </div>
+                      </td>
                         <td className="p-6">
                            <div className="flex flex-wrap gap-2">
                               {(s.categories || []).map((cat: string) => (
