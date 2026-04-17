@@ -1,13 +1,13 @@
-"use client";
-
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { generateEbaySearchUrl } from "@/lib/affiliate";
-import { ExternalLink, ShieldCheck, Gauge, Calendar, MapPin } from "lucide-react";
+import { ExternalLink, ShieldCheck, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
 // Vehicle Metadata to ensure we have the right display name
 const vehicleMap: Record<string, string> = {
@@ -22,7 +22,25 @@ const vehicleMap: Record<string, string> = {
 export default function MarketplacePage() {
   const { slug } = useParams();
   const vehicleName = vehicleMap[slug as string] || "Base";
+  const [marketplaceLinks, setMarketplaceLinks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const ebayUrl = generateEbaySearchUrl({ vehicleName });
+
+  useEffect(() => {
+    async function fetchLinks() {
+      const { data } = await supabase
+        .from('vehicle_marketplaces')
+        .select('*')
+        .eq('vehicle_id', slug)
+        .eq('is_active', true)
+        .order('created_at', { ascending: true });
+      
+      setMarketplaceLinks(data || []);
+      setLoading(false);
+    }
+    fetchLinks();
+  }, [slug]);
 
   return (
     <main className="bg-brand-obsidian min-h-screen">
@@ -44,8 +62,8 @@ export default function MarketplacePage() {
                 THE <span className="text-brand-orange">MARKETPLACE</span>
               </h1>
               <p className="font-sans text-brand-grey text-lg lg:text-xl max-w-xl">
-                Sourcing the perfect {vehicleName} foundation. Below are live search results and 
-                vetted sourcing channels.
+                Sourcing the perfect {vehicleName} foundation. Below are specialized tracking routes and 
+                investigated sourcing channels.
               </p>
             </div>
             <a 
@@ -88,28 +106,32 @@ export default function MarketplacePage() {
             {/* Listings Bridge */}
             <div className="lg:col-span-3">
               <div className="flex items-center justify-between mb-12">
-                <h2 className="font-display text-xl">RECOMMENDED SEARCH CHANNELS</h2>
+                <h2 className="font-display text-xl uppercase tracking-widest">{vehicleName} <span className="text-brand-orange">Search Pipes</span></h2>
                 <div className="h-px flex-1 bg-brand-border mx-8 hidden md:block" />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* eBay Channel Card */}
-                <ListingChannelCard 
-                  title="eBay Motors UK"
-                  description={`Direct auctions and classifieds for ${vehicleName}s. Best for finding private sales and unique specifications.`}
-                  url={ebayUrl}
-                  logo="/images/systems-showcase.png"
-                  badge="Affiliate Partner"
-                />
-                
-                {/* VanTrader Channel Card (Mock) */}
-                <ListingChannelCard 
-                  title="VanTrader Classifieds"
-                  description="Professional dealer network. Best for low-mileage, newer models with VAT-deductible pricing."
-                  url={`https://www.autotrader.co.uk/vans/used-vans/${(slug as string || "").replace('-', '/')}`}
-                  logo="/images/hero-background.png"
-                  badge="Verified Source"
-                />
+                {marketplaceLinks.length > 0 ? (
+                  marketplaceLinks.map((link) => (
+                    <ListingChannelCard 
+                      key={link.id}
+                      title={link.marketplace_name}
+                      description={`Direct conduit to ${link.marketplace_name} results for ${vehicleName} chassis. Includes pre-applied trade filters.`}
+                      url={`/api/affiliate/redirect?type=marketplace&id=${link.id}`}
+                      logo={link.icon_type === 'ebay' ? "/images/systems-showcase.png" : "/images/hero-background.png"}
+                      badge="Affiliate Partner"
+                    />
+                  ))
+                ) : !loading ? (
+                   <div className="col-span-full p-12 text-center bg-brand-obsidian border border-brand-border/50">
+                    <Search className="w-8 h-8 text-brand-grey mx-auto mb-4" />
+                    <p className="font-mono text-xs uppercase tracking-widest text-brand-grey">No approved marketplace conduits configured for this chassis.</p>
+                  </div>
+                ) : (
+                  <div className="col-span-full py-20 text-center font-mono text-xs uppercase tracking-[0.3em] text-brand-grey animate-pulse">
+                    Scanning Network Nodes...
+                  </div>
+                )}
               </div>
 
               {/* Technical Notice */}
@@ -135,6 +157,7 @@ export default function MarketplacePage() {
     </main>
   );
 }
+
 
 function ListingChannelCard({ title, description, url, logo, badge }: any) {
   return (
