@@ -5,11 +5,20 @@ import Link from "next/link";
 import gsap from "gsap";
 import { MoveDown } from "lucide-react";
 
-export function HeroSection() {
+interface HeroSectionProps {
+  title?: string;
+  subtitle?: string;
+  backgroundImage?: string;
+}
+
+export function HeroSection({ title, subtitle, backgroundImage }: HeroSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
+
+  const displayTitle = title || "BUILD YOUR WORLD";
+  const displaySubtitle = subtitle || "The UK's premier resource for serious off-grid motorhome builds. Guides. Gear. Community. Engineering.";
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -17,7 +26,8 @@ export function HeroSection() {
 
       // Heading staggered letters reveal
       if (headingRef.current) {
-        const chars = headingRef.current.innerText.split("");
+        const text = headingRef.current.innerText;
+        const chars = text.split("");
         headingRef.current.innerHTML = chars
           .map((char) => `<span class="inline-block translate-y-[100%] opacity-0">${char === " " ? "&nbsp;" : char}</span>`)
           .join("");
@@ -50,7 +60,7 @@ export function HeroSection() {
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [displayTitle]); // Re-run animation if title changes
 
   return (
     <section
@@ -60,7 +70,7 @@ export function HeroSection() {
       {/* Background Video / Overlay */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/images/hero-background.png"
+          src={backgroundImage || "/images/hero-background.png"}
           alt="Luxury off-grid adventure motorhome at dusk"
           className="h-full w-full object-cover grayscale-[0.2]"
         />
@@ -72,17 +82,17 @@ export function HeroSection() {
       <div className="container relative z-10 px-6 text-center">
         <h1
           ref={headingRef}
+          key={displayTitle} // Force re-mount for animation loop if title changes
           className="font-display text-[9vw] lg:text-[7vw] leading-[0.8] tracking-tighter text-brand-white mb-8 whitespace-nowrap"
         >
-          BUILD YOUR WORLD
+          {displayTitle}
         </h1>
         
         <p
           ref={subRef}
           className="font-sans text-brand-grey text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed"
         >
-          The UK&apos;s premier resource for serious off-grid motorhome builds. 
-          <span className="text-brand-white block mt-2">Guides. Gear. Community. Engineering.</span>
+          {displaySubtitle}
         </p>
 
         <div ref={ctaRef} className="flex flex-col sm:flex-row items-center justify-center gap-6">
