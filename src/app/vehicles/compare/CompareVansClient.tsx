@@ -88,10 +88,14 @@ export default function CompareVansClient() {
         </div>
       </section>
 
-      {/* Comparison Table */}
       <section className="py-24">
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-[150px_repeat(auto-fit,minmax(250px,1fr))] border-t border-brand-border overflow-x-auto">
+          <div 
+            className="grid border-t border-brand-border overflow-x-auto"
+            style={{ 
+              gridTemplateColumns: `150px repeat(${selectedSlugs.length}, minmax(300px, 1fr))` 
+            }}
+          >
             {/* Header Row: Images & Names */}
             <div className="p-8 border-b border-r border-brand-border bg-brand-carbon/20 flex items-end">
               <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest italic">Matrix</span>
@@ -115,13 +119,13 @@ export default function CompareVansClient() {
             <div className="p-8 border-b border-r border-brand-border flex items-center bg-brand-carbon/20">
               <span className="font-display text-[10px] uppercase text-brand-orange italic">Internal Width</span>
             </div>
-            {selectedSlugs.map((slug) => (
-              <div key={slug} className="p-8 border-b border-brand-border text-center">
+            {selectedData.map((v) => (
+              <div key={v.slug} className="p-8 border-b border-brand-border text-center">
                 <span className="font-sans text-xl">
-                  {slug === "fiat-ducato" ? "1.87m" : "1.78m - 1.80m"}
+                  {v.internalWidth}
                 </span>
                 <p className="font-mono text-[9px] text-brand-grey mt-2 uppercase">
-                  {slug === "fiat-ducato" ? "Transverse Bed Ready" : "Requires Flares"}
+                  {parseFloat(v.internalWidth) >= 1.85 ? "Transverse Bed Ready" : "Requires Flares"}
                 </p>
               </div>
             ))}

@@ -27,6 +27,7 @@ export interface VehicleData {
   ebaySearch: string;
   autotraderSearch: string;
   fbSearch: string;
+  internalWidth: string;
 }
 
 export const vehicleData: Record<string, VehicleData> = {
@@ -56,6 +57,7 @@ export const vehicleData: Record<string, VehicleData> = {
     ebaySearch: "https://www.ebay.co.uk/sch/i.html?_nkw=mercedes+sprinter+panel+van+lwb",
     autotraderSearch: "https://www.autotrader.co.uk/van-search?make=Mercedes-Benz&model=Sprinter",
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
+    internalWidth: "1.78m",
   },
   "vw-crafter": {
     name: "VW CRAFTER",
@@ -82,6 +84,7 @@ export const vehicleData: Record<string, VehicleData> = {
     ebaySearch: "https://www.ebay.co.uk/sch/i.html?_nkw=vw+crafter+panel+van+lwb",
     autotraderSearch: "https://www.autotrader.co.uk/van-search?make=Volkswagen&model=Crafter",
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
+    internalWidth: "1.80m",
   },
   "ford-transit": {
     name: "FORD TRANSIT",
@@ -108,6 +111,7 @@ export const vehicleData: Record<string, VehicleData> = {
     ebaySearch: "https://www.ebay.co.uk/sch/i.html?_nkw=ford+transit+panel+van+lwb+h3",
     autotraderSearch: "https://www.autotrader.co.uk/van-search?make=Ford&model=Transit",
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
+    internalWidth: "1.78m",
   },
   "man-tge": {
     name: "MAN TGE",
@@ -133,6 +137,7 @@ export const vehicleData: Record<string, VehicleData> = {
     ebaySearch: "https://www.ebay.co.uk/sch/i.html?_nkw=man+tge+panel+van",
     autotraderSearch: "https://www.autotrader.co.uk/van-search?make=MAN&model=TGE",
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
+    internalWidth: "1.80m",
   },
   "fiat-ducato": {
     name: "FIAT DUCATO",
@@ -159,6 +164,7 @@ export const vehicleData: Record<string, VehicleData> = {
     ebaySearch: "https://www.ebay.co.uk/sch/i.html?_nkw=fiat+ducato+panel+van+lwb",
     autotraderSearch: "https://www.autotrader.co.uk/van-search?make=Fiat&model=Ducato",
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
+    internalWidth: "1.87m",
   },
   "iveco-daily": {
     name: "IVECO DAILY",
@@ -185,5 +191,6 @@ export const vehicleData: Record<string, VehicleData> = {
     ebaySearch: "https://www.ebay.co.uk/sch/i.html?_nkw=iveco+daily+panel+van+lwb",
     autotraderSearch: "https://www.autotrader.co.uk/van-search?make=Iveco&model=Daily",
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
+    internalWidth: "1.74m",
   },
 };
