@@ -24,6 +24,8 @@ const menuItems = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Leads", href: "/admin/leads", icon: MessageSquare },
   { name: "SEO Hub", href: "/admin/seo", icon: Search },
+  { name: "Affiliate Network", href: "/admin/affiliates", icon: Database },
+  { name: "Used Marketplaces", href: "/admin/marketing/marketplaces", icon: Monitor },
   { name: "Store Manager", href: "/admin/store", icon: ShoppingBag },
   { name: "Content / CMS", href: "/admin/cms", icon: Monitor },
   { name: "User Admin", href: "/admin/users", icon: Users },
