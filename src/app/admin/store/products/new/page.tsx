@@ -18,6 +18,7 @@ import {
 export default function NewProductPage() {
   const router = useRouter();
   const [categories, setCategories] = useState<any[]>([]);
+  const [suppliers, setSuppliers] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
   const [product, setProduct] = useState({
     name: "",
@@ -28,6 +29,7 @@ export default function NewProductPage() {
     stock_quantity: 0,
     weight_kg: 0,
     category_id: "",
+    supplier_id: "",
     short_description: "",
     full_description: "",
     image_url: "",
@@ -35,14 +37,16 @@ export default function NewProductPage() {
   });
 
   useEffect(() => {
-    async function fetchCategories() {
-      const { data } = await supabase.from('product_categories').select('*').order('name');
-      setCategories(data || []);
-      if (data && data.length > 0) {
-        setProduct((prev) => ({ ...prev, category_id: data[0].id }));
+    async function fetchData() {
+      const { data: cats } = await supabase.from('product_categories').select('*').order('name');
+      const { data: sups } = await supabase.from('suppliers').select('*').order('name');
+      setCategories(cats || []);
+      setSuppliers(sups || []);
+      if (cats && cats.length > 0) {
+        setProduct((prev) => ({ ...prev, category_id: cats[0].id }));
       }
     }
-    fetchCategories();
+    fetchData();
   }, []);
 
   const handleSave = async () => {
@@ -149,17 +153,32 @@ export default function NewProductPage() {
                 </div>
              </div>
              
-             <div>
-                <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-2">Category Assignment</label>
-                <select 
-                  value={product.category_id}
-                  onChange={(e) => setProduct({ ...product, category_id: e.target.value })}
-                  className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
-                >
-                   {categories.map((cat) => (
-                     <option key={cat.id} value={cat.id}>{cat.name}</option>
-                   ))}
-                </select>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                   <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-2">Category Assignment</label>
+                   <select 
+                     value={product.category_id}
+                     onChange={(e) => setProduct({ ...product, category_id: e.target.value })}
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                   >
+                      {categories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))}
+                   </select>
+                </div>
+                <div>
+                   <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-2">Primary Supplier</label>
+                   <select 
+                     value={product.supplier_id}
+                     onChange={(e) => setProduct({ ...product, supplier_id: e.target.value })}
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                   >
+                      <option value="">No Supplier Mapping</option>
+                      {suppliers.map((sup) => (
+                        <option key={sup.id} value={sup.id}>{sup.name}</option>
+                      ))}
+                   </select>
+                </div>
              </div>
            </div>
 

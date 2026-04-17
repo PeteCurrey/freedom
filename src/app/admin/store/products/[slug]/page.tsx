@@ -22,6 +22,7 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
   const { slug } = use(params);
   
   const [categories, setCategories] = useState<any[]>([]);
+  const [suppliers, setSuppliers] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState<any>({
@@ -42,15 +43,18 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
 
   useEffect(() => {
     async function fetchData() {
-      // 1. Fetch Categories
+      // 1. Fetch Categories & Suppliers
       const { data: catData } = await supabase.from('product_categories').select('*').order('name');
+      const { data: supData } = await supabase.from('suppliers').select('*').order('name');
       setCategories(catData || []);
+      setSuppliers(supData || []);
 
       // 2. Fetch Product
       const { data: prodData } = await supabase.from('products').select('*').eq('slug', slug).single();
       if (prodData) {
         setProduct({
           ...prodData,
+          supplier_id: prodData.supplier_id || "",
           price_gbp: prodData.price_gbp / 100 // Convert pence back to gbp for editing
         });
       }
@@ -180,17 +184,32 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
                 </div>
              </div>
              
-             <div>
-                <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-2">Category Assignment</label>
-                <select 
-                  value={product.category_id}
-                  onChange={(e) => setProduct({ ...product, category_id: e.target.value })}
-                  className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
-                >
-                   {categories.map((cat) => (
-                     <option key={cat.id} value={cat.id}>{cat.name}</option>
-                   ))}
-                </select>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                   <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-2">Category Assignment</label>
+                   <select 
+                     value={product.category_id}
+                     onChange={(e) => setProduct({ ...product, category_id: e.target.value })}
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                   >
+                      {categories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))}
+                   </select>
+                </div>
+                <div>
+                   <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-2">Primary Supplier</label>
+                   <select 
+                     value={product.supplier_id}
+                     onChange={(e) => setProduct({ ...product, supplier_id: e.target.value })}
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                   >
+                      <option value="">No Supplier Mapping</option>
+                      {suppliers.map((sup) => (
+                        <option key={sup.id} value={sup.id}>{sup.name}</option>
+                      ))}
+                   </select>
+                </div>
              </div>
            </div>
 
