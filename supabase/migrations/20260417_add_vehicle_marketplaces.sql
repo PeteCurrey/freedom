@@ -39,12 +39,14 @@ INSERT INTO public.vehicle_marketplaces (vehicle_id, marketplace_name, affiliate
 -- 4. Fiat Ducato
 INSERT INTO public.vehicle_marketplaces (vehicle_id, marketplace_name, affiliate_url, icon_type) VALUES
 ('fiat-ducato', 'eBay Motors UK', 'https://www.ebay.co.uk/b/Fiat-Ducato-Vans/177063?mkcid=1&mkrid=711-53200-19255-0&siteid=3&campid=5339063718&customid=market-hub&mkevt=1', 'ebay'),
-('fiat-ducato', 'AutoTrader Vans', 'https://www.autotrader.co.uk/vans/used-vans/fiat/ducato', 'autotrader');
+('fiat-ducato', 'AutoTrader Vans', 'https://www.autotrader.co.uk/vans/used-vans/fiat/ducato', 'autotrader'),
+('fiat-ducato', 'Van Trader', 'https://sovrn.co/12rriq1', 'vantrader');
 
 -- 5. MAN TGE
 INSERT INTO public.vehicle_marketplaces (vehicle_id, marketplace_name, affiliate_url, icon_type) VALUES
 ('man-tge', 'eBay Motors UK', 'https://www.ebay.co.uk/b/MAN-TGE-Vans/177063?mkcid=1&mkrid=711-53200-19255-0&siteid=3&campid=5339063718&customid=market-hub&mkevt=1', 'ebay'),
-('man-tge', 'AutoTrader Vans', 'https://www.autotrader.co.uk/vans/used-vans/man/tge', 'autotrader');
+('man-tge', 'AutoTrader Vans', 'https://www.autotrader.co.uk/vans/used-vans/man/tge', 'autotrader'),
+('man-tge', 'Van Trader', 'https://sovrn.co/11auwij', 'vantrader');
 
 -- 6. Iveco Daily
 INSERT INTO public.vehicle_marketplaces (vehicle_id, marketplace_name, affiliate_url, icon_type) VALUES
