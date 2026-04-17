@@ -12,7 +12,8 @@ import {
   Copy,
   BarChart3,
   CreditCard,
-  CheckCircle2
+  CheckCircle2,
+  Trash2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
