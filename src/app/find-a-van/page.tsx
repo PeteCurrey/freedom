@@ -8,17 +8,34 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
+import { supabase } from "@/lib/supabase";
+
 const vehicles = [
-  { id: "mercedes-sprinter", name: "Mercedes Sprinter", image: "/images/sprinter.png", ebayUrl: "https://www.ebay.co.uk/b/Mercedes-Benz-Sprinter-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/mercedes-benz/sprinter" },
-  { id: "vw-crafter", name: "VW Crafter", image: "/images/hero-background.png", ebayUrl: "https://www.ebay.co.uk/b/Volkswagen-Crafter-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/volkswagen/crafter" },
-  { id: "ford-transit", name: "Ford Transit", image: "/images/transit.png", ebayUrl: "https://www.ebay.co.uk/b/Ford-Transit-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/ford/transit" },
-  { id: "fiat-ducato", name: "Fiat Ducato", image: "/images/community-showcase.png", ebayUrl: "https://www.ebay.co.uk/b/Fiat-Ducato-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/fiat/ducato" },
-  { id: "man-tge", name: "MAN TGE", image: "/images/interior-showcase.png", ebayUrl: "https://www.ebay.co.uk/b/MAN-TGE-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/man/tge" },
-  { id: "iveco-daily", name: "Iveco Daily", image: "/images/systems-showcase.png", ebayUrl: "https://www.ebay.co.uk/b/Iveco-Daily-Vans/177063", autotraderUrl: "https://www.autotrader.co.uk/vans/used-vans/iveco/daily" },
+  { id: "mercedes-sprinter", name: "Mercedes Sprinter", image: "/images/sprinter.png" },
+  { id: "vw-crafter", name: "VW Crafter", image: "/images/hero-background.png" },
+  { id: "ford-transit", name: "Ford Transit", image: "/images/transit.png" },
+  { id: "fiat-ducato", name: "Fiat Ducato", image: "/images/community-showcase.png" },
+  { id: "man-tge", name: "MAN TGE", image: "/images/interior-showcase.png" },
+  { id: "iveco-daily", name: "Iveco Daily", image: "/images/systems-showcase.png" },
 ];
 
 export default function FindAVan() {
   const [selectedVehicle, setSelectedVehicle] = useState(vehicles[0]);
+  const [marketplaceLinks, setMarketplaceLinks] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function fetchLinks() {
+      const { data } = await supabase
+        .from('vehicle_marketplaces')
+        .select('*')
+        .eq('vehicle_id', selectedVehicle.id)
+        .eq('is_active', true)
+        .order('created_at', { ascending: true });
+      
+      setMarketplaceLinks(data || []);
+    }
+    fetchLinks();
+  }, [selectedVehicle.id]);
 
   return (
     <main className="bg-brand-obsidian min-h-screen">
@@ -91,51 +108,40 @@ export default function FindAVan() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                     {/* eBay Card */}
-                     <a 
-                      href={`${selectedVehicle.ebayUrl}?mkcid=1&mkrid=711-53200-19255-0&siteid=3&campid=${process.env.NEXT_PUBLIC_EBAY_CAMPID || '5339063718'}&customid=market-hub&mkevt=1`}
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="group p-8 blueprint-border bg-brand-obsidian hover:bg-brand-orange/5 transition-all flex flex-col justify-between h-64"
-                     >
-                        <div className="flex justify-between items-start">
-                           <div className="w-12 h-12 bg-white/10 flex items-center justify-center p-2">
-                              <Image src="https://upload.wikimedia.org/wikipedia/commons/1/1b/EBay_logo.svg" alt="eBay" width={40} height={20} />
-                           </div>
-                           <ExternalLink className="w-4 h-4 text-brand-grey group-hover:text-brand-orange" />
-                        </div>
-                        <div className="mt-8">
-                           <h3 className="font-display text-xl mb-2">EBAY MOTORS UK</h3>
-                           <p className="font-sans text-brand-grey text-[10px] uppercase tracking-widest">Verified Used Panels Vans</p>
-                        </div>
-                        <div className="mt-auto pt-6 border-t border-brand-border/30 flex justify-between items-center">
-                           <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Affiliate link</span>
-                           <span className="font-mono text-[9px] text-brand-orange uppercase font-bold">Search Now →</span>
-                        </div>
-                     </a>
-
-                     {/* AutoTrader Card */}
-                     <a 
-                      href={selectedVehicle.autotraderUrl}
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="group p-8 blueprint-border bg-brand-obsidian hover:bg-brand-orange/5 transition-all flex flex-col justify-between h-64"
-                     >
-                        <div className="flex justify-between items-start">
-                           <div className="w-12 h-12 bg-white/10 flex items-center justify-center p-2">
-                              <span className="font-display text-[10px] text-white">AUTOTRADER</span>
-                           </div>
-                           <ExternalLink className="w-4 h-4 text-brand-grey group-hover:text-brand-orange" />
-                        </div>
-                        <div className="mt-8">
-                           <h3 className="font-display text-xl mb-2">AUTOTRADER VANS</h3>
-                           <p className="font-sans text-brand-grey text-[10px] uppercase tracking-widest">Professional Dealership Sourcing</p>
-                        </div>
-                        <div className="mt-auto pt-6 border-t border-brand-border/30 flex justify-between items-center">
-                           <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Partnership Link</span>
-                           <span className="font-mono text-[9px] text-brand-orange uppercase font-bold">Search Now →</span>
-                        </div>
-                     </a>
+                     {marketplaceLinks.length > 0 ? (
+                       marketplaceLinks.map((link) => (
+                         <a 
+                          key={link.id}
+                          href={link.affiliate_url}
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="group p-8 blueprint-border bg-brand-obsidian hover:bg-brand-orange/5 transition-all flex flex-col justify-between min-h-[220px]"
+                         >
+                            <div className="flex justify-between items-start">
+                               <div className="h-12 bg-brand-carbon flex items-center justify-center px-4 py-2 border border-brand-border">
+                                  {link.icon_type === 'ebay' && <span className="font-display text-xs text-white">eBAY UK</span>}
+                                  {link.icon_type === 'autotrader' && <span className="font-display text-xs text-white">AUTOTRADER</span>}
+                                  {link.icon_type === 'vantrader' && <span className="font-display text-xs text-white">VAN TRADER</span>}
+                                  {link.icon_type === 'external' && <ExternalLink className="w-4 h-4 text-brand-orange" />}
+                               </div>
+                               <ExternalLink className="w-5 h-5 text-brand-grey group-hover:text-brand-orange transition-colors" />
+                            </div>
+                            <div className="mt-8">
+                               <h3 className="font-display text-2xl mb-2">{link.marketplace_name}</h3>
+                               <p className="font-sans text-brand-grey text-[10px] uppercase tracking-widest">Verified Supplier Network</p>
+                            </div>
+                            <div className="mt-auto pt-6 border-t border-brand-border/30 flex justify-between items-center">
+                               <span className="font-mono text-[8px] text-brand-grey/50 uppercase tracking-widest">Tracking Active</span>
+                               <span className="font-mono text-[9px] text-brand-orange uppercase tracking-widest font-bold group-hover:translate-x-1 transition-transform">Search Inventory →</span>
+                            </div>
+                         </a>
+                       ))
+                     ) : (
+                       <div className="col-span-full p-12 text-center bg-brand-obsidian border border-brand-border/50">
+                         <Search className="w-8 h-8 text-brand-grey mx-auto mb-4" />
+                         <p className="font-mono text-xs uppercase tracking-widest text-brand-grey">No approved marketplace conduits configured for this chassis.</p>
+                       </div>
+                     )}
                   </div>
 
                   <div className="mt-12 bg-brand-obsidian/30 p-8 border border-brand-border/30">
