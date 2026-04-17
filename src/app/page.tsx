@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import gsap from "gsap";
+import { supabase } from "@/lib/supabase";
 import { HeroSection } from "@/components/home/HeroSection";
 import { HorizontalScroll } from "@/components/ui/HorizontalScroll";
 import { ProductCard } from "@/components/store/ProductCard";
@@ -30,6 +31,20 @@ interface System {
 
 export default function Home() {
   const whyRef = useRef<HTMLDivElement>(null);
+  const [cmsConfig, setCmsConfig] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchCms() {
+      const { data } = await supabase
+        .from('site_config')
+        .select('value')
+        .eq('key', 'page_home')
+        .single();
+      
+      if (data) setCmsConfig(data.value);
+    }
+    fetchCms();
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -64,7 +79,11 @@ export default function Home() {
   return (
     <main className="bg-brand-obsidian">
       <Navbar />
-      <HeroSection />
+      <HeroSection 
+        title={cmsConfig?.hero?.title} 
+        subtitle={cmsConfig?.hero?.subtitle} 
+        backgroundImage={cmsConfig?.hero?.image} 
+      />
 
       {/* Section 2 — Why We Exist */}
       <section ref={whyRef} className="py-32 relative overflow-hidden">
@@ -72,16 +91,14 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
             <div className="space-y-12">
               <h2 className="why-text-item font-display text-5xl lg:text-7xl leading-none">
-                THIS ISN&apos;T <span className="text-brand-orange">VANLIFE</span>
+                {cmsConfig?.why?.title_part || "THIS ISN'T"} <span className="text-brand-orange">{cmsConfig?.why?.title_orange || "VANLIFE"}</span>
               </h2>
               <div className="why-text-item space-y-6">
                 <p className="font-sans text-brand-grey text-lg lg:text-xl leading-relaxed">
-                  Forget the Instagram filter. We&apos;re here for the builds that run induction hobs
-                  off lithium, heat through Alpine winters, and carry you 100,000 miles without
-                  breaking a sweat.
+                  {cmsConfig?.why?.p1 || "Forget the Instagram filter. We're here for the builds that run induction hobs off lithium, heat through Alpine winters, and carry you 100,000 miles without breaking a sweat."}
                 </p>
                 <p className="font-sans text-brand-white text-lg lg:text-xl leading-relaxed">
-                  This is engineering. This is craft. This is freedom — done properly.
+                  {cmsConfig?.why?.p2 || "This is engineering. This is craft. This is freedom — done properly."}
                 </p>
               </div>
               <div className="why-text-item stats-container grid grid-cols-2 gap-12 pt-12 border-t border-brand-border">
@@ -97,7 +114,7 @@ export default function Home() {
                    <div className="font-display text-2xl text-brand-orange mb-2 leading-tight">
                      Expert
                    </div>
-                   <p className="font-mono text-[10px] uppercase tracking-widest text-brand-grey">
+                   <p className="font-mono text-[10px] uppercase tracking-widest text-brand-grey" >
                      Technical Guides
                    </p>
                  </div>
@@ -142,7 +159,6 @@ export default function Home() {
               href="/systems" 
               className="font-mono text-xs uppercase tracking-[0.2em] text-brand-orange border-b border-brand-orange/30 pb-2 hover:border-brand-orange transition-all"
             >
-              {/* // Explore All Systems */}
               Explore All Systems
             </Link>
           </div>

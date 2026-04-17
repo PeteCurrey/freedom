@@ -7,6 +7,7 @@ import { Search, User, ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
 import { supabase } from "@/lib/supabase";
+import { PromotionBanner } from "./PromotionBanner";
 
 interface NavSubItem {
   name: string;
@@ -50,8 +51,8 @@ const navLinks: NavLink[] = [
       { name: "Gas & LPG", href: "/systems/gas-lpg", tagline: "Fueling the Adventure", image: "/images/gas-lpg-technical.png" },
       { name: "Lighting Systems", href: "/systems/lighting", tagline: "Illuminate Your Adventure", image: "/images/hero-background.png" },
       { name: "Air Conditioning", href: "/systems/air-conditioning", tagline: "Ultimate Climate Control", image: "/images/heating-system-technical.png" },
-      { name: "Wheels & Tyres", href: "/systems/wheels-tyres", tagline: "The Foundation of Grip", image: "/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/wheels_tyres_technical_1776372604319.png" },
-      { name: "Exterior Equipment", href: "/systems/exterior-equipment", tagline: "Racks, Ladders, Awnings", image: "/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/exterior_equipment_technical_1776372589339.png" },
+      { name: "Wheels & Tyres", href: "/systems/wheels-tyres", tagline: "The Foundation of Grip", image: "/images/wheels-tyres-technical.png" },
+      { name: "Exterior Equipment", href: "/systems/exterior-equipment", tagline: "Racks, Ladders, Awnings", image: "/images/exterior-equipment-technical.png" },
       { name: "Interior & Furniture", href: "/systems/interior-furniture", tagline: "Design the Core", image: "/images/interior-showcase.png" },
     ]
   },
@@ -173,6 +174,7 @@ export function Navbar() {
           : "bg-transparent border-transparent py-8"
       )}
     >
+      <PromotionBanner />
       <div className="container mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="group flex flex-col">

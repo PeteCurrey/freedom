@@ -4,6 +4,7 @@ import "./globals.css";
 import { LenisProvider } from "@/components/layout/LenisProvider";
 import { GSAPInit } from "@/components/layout/GSAPInit";
 import { StructuredData, generateOrganizationSchema } from "@/components/seo/StructuredData";
+import { PromotionBanner } from "@/components/layout/PromotionBanner";
 
 const syne = Syne({
   subsets: ["latin"],

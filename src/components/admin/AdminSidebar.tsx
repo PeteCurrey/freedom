@@ -23,6 +23,7 @@ import { useState } from "react";
 const menuItems = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Leads", href: "/admin/leads", icon: MessageSquare },
+  { name: "Amplios Journal", href: "/admin/journal", icon: FileText },
   { name: "SEO Hub", href: "/admin/seo", icon: Search },
   { name: "Affiliate Network", href: "/admin/affiliates", icon: Database },
   { name: "Used Marketplaces", href: "/admin/marketing/marketplaces", icon: Monitor },

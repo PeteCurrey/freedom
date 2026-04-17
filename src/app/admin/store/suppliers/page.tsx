@@ -12,6 +12,7 @@ import {
   Globe,
   ExternalLink
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function SuppliersManagerPage() {
   const [suppliers, setSuppliers] = useState<any[]>([]);

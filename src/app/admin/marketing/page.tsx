@@ -16,129 +16,196 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function AffiliatesManagerPage() {
+export default function MarketingHubPage() {
+  const [activeTab, setActiveTab] = useState<"affiliates" | "promotions">("affiliates");
   const [links, setLinks] = useState<any[]>([]);
+  const [promotions, setPromotions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulated fetch of affiliate links
-    setLinks([
-      { id: 1, name: "Amazon Solar Panels", url: "https://amzn.to/3xyz", clicks: 1240, conv: "4.2%", revenue: 84.50, status: 'active' },
-      { id: 2, name: "Victron Multiplus Blue", url: "https://kit.co/freedom/victron", clicks: 890, conv: "2.1%", revenue: 156.00, status: 'active' },
-      { id: 3, name: "Jackery Explorer 1000", url: "https://jackery.com/freedom", clicks: 450, conv: "1.8%", revenue: 210.00, status: 'active' },
-    ]);
-    setLoading(false);
+    async function fetchData() {
+      // Fetch Affiliates (Mock for now)
+      setLinks([
+        { id: 1, name: "Amazon Solar Panels", url: "https://amzn.to/3xyz", clicks: 1240, conv: "4.2%", revenue: 84.50, status: 'active' },
+        { id: 2, name: "Victron Multiplus Blue", url: "https://kit.co/freedom/victron", clicks: 890, conv: "2.1%", revenue: 156.00, status: 'active' },
+      ]);
+
+      // Fetch Promotions
+      const { data: promoData } = await supabase
+        .from('site_promotions')
+        .select('*')
+        .order('priority', { ascending: false });
+      
+      setPromotions(promoData || []);
+      setLoading(false);
+    }
+    fetchData();
   }, []);
 
+  const togglePromotionStatus = async (id: string, currentStatus: string) => {
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    const { error } = await supabase
+      .from('site_promotions')
+      .update({ status: newStatus })
+      .eq('id', id);
+    
+    if (!error) {
+      setPromotions(promotions.map(p => p.id === id ? { ...p, status: newStatus } : p));
+    }
+  };
+
+  if (loading) return null;
+
   return (
-    <div className="p-8">
+    <div className="p-8 pb-32">
       {/* Header */}
       <div className="mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
         <div>
           <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[.4em] mb-4">
-            <LinkIcon size={12} /> Affiliate Node: marketing.delta
+            <TrendingUp size={12} /> Marketing Hub: marketing.delta
           </div>
           <h1 className="font-display text-5xl uppercase tracking-tighter text-white">
-            Link <span className="text-brand-orange">Authority</span>
+            Demand <span className="text-brand-orange">Generation</span>
           </h1>
         </div>
         
-        <button className="px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2">
-           <Plus size={14} /> New Tracking ID
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-         <div className="blueprint-border p-8 bg-brand-carbon">
-            <div className="flex justify-between items-start mb-6">
-               <div className="p-3 bg-brand-obsidian border border-brand-border text-brand-orange">
-                  <BarChart3 size={20} />
-               </div>
-               <span className="font-mono text-[9px] text-green-500 uppercase">+12.4% vs last mo</span>
-            </div>
-            <span className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-1">Total Affiliate Reach</span>
-            <span className="block font-display text-3xl text-white">2.6k Clicks</span>
-         </div>
-
-         <div className="blueprint-border p-8 bg-brand-carbon border-l-4 border-brand-orange">
-            <div className="flex justify-between items-start mb-6">
-               <div className="p-3 bg-brand-obsidian border border-brand-border text-brand-orange">
-                  <CreditCard size={20} />
-               </div>
-            </div>
-            <span className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-1">Est. Commission (MTD)</span>
-            <span className="block font-display text-3xl text-white">£450.50</span>
-         </div>
-
-         <div className="blueprint-border p-8 bg-brand-carbon">
-            <div className="flex justify-between items-start mb-6">
-               <div className="p-3 bg-brand-obsidian border border-brand-border text-brand-orange">
-                  <TrendingUp size={20} />
-               </div>
-            </div>
-            <span className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-1">Conversion Node</span>
-            <span className="block font-display text-3xl text-white">2.8% AVG</span>
-         </div>
-      </div>
-
-      <div className="blueprint-border bg-brand-carbon overflow-hidden">
-        <div className="p-6 bg-brand-obsidian border-b border-brand-border flex justify-between items-center">
-           <h3 className="font-display text-sm uppercase tracking-widest">Active Tracking Engines</h3>
-           <div className="flex gap-4">
-              <div className="relative">
-                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-grey" size={14} />
-                 <input 
-                   type="text" 
-                   placeholder="Filter links..."
-                   className="bg-brand-carbon border border-brand-border pl-10 pr-4 py-2 font-mono text-[10px] uppercase text-white outline-none focus:border-brand-orange"
-                 />
-              </div>
-           </div>
+        <div className="flex bg-brand-carbon border border-brand-border p-1">
+           <button 
+             onClick={() => setActiveTab("affiliates")}
+             className={cn(
+               "px-6 py-2 font-mono text-[10px] uppercase tracking-widest transition-all",
+               activeTab === "affiliates" ? "bg-brand-orange text-white" : "text-brand-grey hover:text-white"
+             )}
+           >
+             Affiliate Network
+           </button>
+           <button 
+             onClick={() => setActiveTab("promotions")}
+             className={cn(
+               "px-6 py-2 font-mono text-[10px] uppercase tracking-widest transition-all",
+               activeTab === "promotions" ? "bg-brand-orange text-white" : "text-brand-grey hover:text-white"
+             )}
+           >
+             Global Promotions
+           </button>
         </div>
-        <table className="w-full text-left">
-           <thead>
-              <tr className="bg-brand-obsidian border-b border-brand-border font-mono text-[10px] uppercase tracking-widest text-brand-grey">
-                 <th className="p-6">Partner / Campaign</th>
-                 <th className="p-6">Clicks</th>
-                 <th className="p-6">Conversion</th>
-                 <th className="p-6">Revenue</th>
-                 <th className="p-6 text-right">Actions</th>
-              </tr>
-           </thead>
-           <tbody className="font-sans text-xs">
-              {links.map((link) => (
-                <tr key={link.id} className="border-b border-brand-border/50 hover:bg-brand-obsidian transition-colors group">
-                   <td className="p-6">
-                      <div className="flex items-center gap-4">
-                         <div className="w-10 h-10 bg-brand-obsidian border border-brand-border flex items-center justify-center text-brand-grey group-hover:text-brand-orange transition-all">
-                            <LinkIcon size={18} />
-                         </div>
-                         <div>
-                            <span className="block font-display text-sm uppercase text-white">{link.name}</span>
-                            <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-widest truncate max-w-[200px]">{link.url}</span>
-                         </div>
-                      </div>
-                   </td>
-                   <td className="p-6">
-                      <span className="font-mono text-xs text-white">{link.clicks.toLocaleString()}</span>
-                   </td>
-                   <td className="p-6">
-                      <span className="font-mono text-xs text-green-500">{link.conv}</span>
-                   </td>
-                   <td className="p-6">
-                      <span className="font-display text-lg text-white">£{link.revenue.toFixed(2)}</span>
-                   </td>
-                   <td className="p-6 text-right">
-                      <div className="flex justify-end gap-3">
-                         <button className="p-2 border border-brand-border hover:border-brand-orange text-brand-grey hover:text-brand-orange transition-all"><Copy size={14} /></button>
-                         <button className="p-2 border border-brand-border hover:border-brand-orange text-brand-grey hover:text-brand-orange transition-all"><ExternalLink size={14} /></button>
-                      </div>
-                   </td>
-                </tr>
-              ))}
-           </tbody>
-        </table>
       </div>
+
+      {activeTab === "affiliates" ? (
+         <>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+               <div className="blueprint-border p-8 bg-brand-carbon">
+                  <div className="flex justify-between items-start mb-6">
+                     <div className="p-3 bg-brand-obsidian border border-brand-border text-brand-orange">
+                        <BarChart3 size={20} />
+                     </div>
+                     <span className="font-mono text-[9px] text-green-500 uppercase">+12.4%</span>
+                  </div>
+                  <span className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-1">Affiliate Clicks</span>
+                  <span className="block font-display text-3xl text-white">2.6k</span>
+               </div>
+               <div className="blueprint-border p-8 bg-brand-carbon border-l-4 border-brand-orange">
+                  <div className="flex justify-between items-start mb-6">
+                     <div className="p-3 bg-brand-obsidian border border-brand-border text-brand-orange">
+                        <CreditCard size={20} />
+                     </div>
+                  </div>
+                  <span className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-1">Est. Revenue</span>
+                  <span className="block font-display text-3xl text-white">£450.50</span>
+               </div>
+            </div>
+
+            <div className="blueprint-border bg-brand-carbon overflow-hidden">
+               <div className="p-6 bg-brand-obsidian border-b border-brand-border flex justify-between items-center">
+                  <h3 className="font-display text-sm uppercase tracking-widest text-white">Active Tracking Engines</h3>
+               </div>
+               <table className="w-full text-left">
+                  <thead>
+                     <tr className="bg-brand-obsidian border-b border-brand-border font-mono text-[10px] uppercase tracking-widest text-brand-grey">
+                        <th className="p-6">Partner</th>
+                        <th className="p-6">Clicks</th>
+                        <th className="p-6">Revenue</th>
+                        <th className="p-6 text-right">Actions</th>
+                     </tr>
+                  </thead>
+                  <tbody className="font-sans text-xs">
+                     {links.map((link) => (
+                        <tr key={link.id} className="border-b border-brand-border/50 hover:bg-brand-obsidian transition-colors">
+                           <td className="p-6">
+                              <span className="block font-display text-sm uppercase text-white">{link.name}</span>
+                              <span className="block font-mono text-[8px] text-brand-grey uppercase truncate">{link.url}</span>
+                           </td>
+                           <td className="p-6 font-mono text-white">{link.clicks}</td>
+                           <td className="p-6 font-display text-lg text-white">£{link.revenue.toFixed(2)}</td>
+                           <td className="p-6 text-right">
+                              <button className="p-2 border border-brand-border text-brand-grey hover:text-brand-orange"><Copy size={14} /></button>
+                           </td>
+                        </tr>
+                     ))}
+                  </tbody>
+               </table>
+            </div>
+         </>
+      ) : (
+         <div className="space-y-8">
+            <div className="flex justify-between items-center bg-brand-carbon border border-brand-border p-8 blueprint-border relative">
+               <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
+               <div className="relative z-10">
+                  <h3 className="font-display text-2xl uppercase tracking-tighter text-white">Banner Control Center</h3>
+                  <p className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">Deploy site-wide announcements and sales.</p>
+               </div>
+               <Link 
+                 href="/admin/marketing/promotions/new"
+                 className="relative z-10 px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all"
+               >
+                  Create New Promotion
+               </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+               {promotions.map((promo) => (
+                 <div key={promo.id} className={cn(
+                   "blueprint-border p-8 bg-brand-carbon relative transition-all group",
+                   promo.status === 'active' ? "border-brand-orange" : "opacity-60 grayscale"
+                 )}>
+                    <div className="flex justify-between items-start mb-6">
+                       <span className="px-2 py-1 bg-brand-obsidian border border-brand-border font-mono text-[8px] uppercase tracking-[.2em] text-brand-grey italic">
+                          Type: {promo.banner_type}
+                       </span>
+                       <button 
+                         onClick={() => togglePromotionStatus(promo.id, promo.status)}
+                         className={cn(
+                           "w-12 h-6 rounded-full border border-brand-border relative transition-colors p-1",
+                           promo.status === 'active' ? "bg-brand-orange border-brand-orange" : "bg-brand-obsidian"
+                         )}
+                       >
+                          <div className={cn(
+                            "w-4 h-4 bg-white rounded-full transition-transform",
+                            promo.status === 'active' ? "translate-x-6" : "translate-x-0"
+                          )} />
+                       </button>
+                    </div>
+                    
+                    <h4 className="font-display text-xl uppercase tracking-tight text-white mb-2">{promo.title}</h4>
+                    <p className="font-sans text-xs text-brand-grey mb-6 leading-relaxed line-clamp-2">{promo.content}</p>
+                    
+                    <div className="flex justify-between items-center pt-6 border-t border-brand-border/50">
+                       <span className="font-mono text-[10px] text-brand-grey">Priority: {promo.priority}</span>
+                       <div className="flex gap-4">
+                          <button className="text-brand-grey hover:text-white transition-colors"><CheckCircle2 size={16} /></button>
+                          <button className="text-brand-grey hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
+                       </div>
+                    </div>
+                 </div>
+               ))}
+               {promotions.length === 0 && (
+                 <div className="col-span-2 p-20 border border-dashed border-brand-border text-center">
+                    <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest opacity-30">No active promotions deployed in this sector.</span>
+                 </div>
+               )}
+            </div>
+         </div>
+      )}
     </div>
   );
 }
