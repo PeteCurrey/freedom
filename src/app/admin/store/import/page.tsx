@@ -59,16 +59,30 @@ export default function StoreImportPage() {
     const guess = { sku: "", name: "", price: "", brand: "" };
     rawHeaders.forEach(h => {
       const hl = h.toLowerCase();
-      if (hl.includes("sku") || hl.includes("code")) guess.sku = h;
-      else if (hl.includes("name") || hl.includes("title")) guess.name = h;
-      else if (hl.includes("price") || hl.includes("cost") || hl.includes("gbp")) guess.price = h;
-      else if (hl.includes("brand") || hl.includes("make")) guess.brand = h;
+      if (hl.includes("sku") || hl.includes("code") || hl.includes("part no") || hl.includes("ref")) guess.sku = h;
+      else if (hl.includes("name") || hl.includes("title") || hl.includes("description")) guess.name = h;
+      else if (hl.includes("price") || hl.includes("cost") || hl.includes("gbp") || hl.includes("net") || hl.includes("trade")) guess.price = h;
+      else if (hl.includes("brand") || hl.includes("make") || hl.includes("manufacturer")) guess.brand = h;
     });
     setMapping(guess);
 
     const rows = lines.slice(1).map(line => {
-      // Very basic split that respects quotes loosely
-      const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+      // Improved CSV split that handles quoted commas
+      const values = [];
+      let current = "";
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') inQuotes = !inQuotes;
+        else if (char === ',' && !inQuotes) {
+          values.push(current.trim());
+          current = "";
+        } else {
+          current += char;
+        }
+      }
+      values.push(current.trim());
+
       const obj: any = {};
       rawHeaders.forEach((h, i) => {
         obj[h] = values[i] ? values[i].replace(/^"|"$/g, '').trim() : "";
