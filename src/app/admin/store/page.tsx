@@ -47,6 +47,9 @@ export default function StoreManagerPage() {
         </div>
         
         <div className="flex gap-4">
+          <Link href="/admin/store/import" className="px-6 py-4 bg-brand-carbon text-brand-orange border border-brand-orange/30 font-mono text-[10px] uppercase tracking-widest hover:border-brand-orange transition-all flex items-center gap-2">
+             Mass CSV Import
+          </Link>
           <Link href="/admin/store/categories" className="px-8 py-4 border border-brand-orange text-brand-orange font-mono text-[10px] uppercase tracking-widest hover:bg-brand-orange hover:text-white transition-all flex items-center gap-2">
              Manage Categories
           </Link>
