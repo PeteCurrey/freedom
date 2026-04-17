@@ -177,13 +177,13 @@ export function Navbar() {
       <PromotionBanner />
       <div className="container mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="group flex flex-col items-start">
-          <span className="font-display text-2xl leading-none tracking-[0.655em] text-brand-white mr-[-0.655em]">
-            AMPLIOS<span className="text-brand-orange">.</span>
-          </span>
-          <span className="font-mono text-[10px] tracking-[0.11em] text-brand-orange transition-opacity duration-300 group-hover:opacity-100">
-            BUILT FOR THE ROAD
-          </span>
+        <Link href="/" className="group flex flex-col items-start w-fit">
+            <span className="font-display text-4xl leading-none text-white tracking-[0.08em] flex items-end">
+              AMPLIOS<span className="text-brand-orange leading-[0.5] mb-1">.</span>
+            </span>
+            <span className="font-mono text-[10px] text-brand-grey tracking-[0.52em] uppercase whitespace-nowrap -mr-[0.52em]">
+              Built for the road
+            </span>
         </Link>
 
         {/* Primary Nav (Desktop) */}
@@ -276,9 +276,14 @@ export function Navbar() {
       >
         <div className="p-8 flex flex-col h-full">
           <div className="flex justify-between items-center mb-16">
-            <span className="font-display text-2xl tracking-[0.655em] text-brand-white mr-[-0.655em]">
-              AMPLIOS<span className="text-brand-orange">.</span>
-            </span>
+            <div className="flex flex-col items-start">
+              <span className="font-display text-2xl tracking-[0.08em] text-brand-white">
+                AMPLIOS<span className="text-brand-orange">.</span>
+              </span>
+              <span className="font-mono text-[8px] tracking-[0.52em] text-brand-grey uppercase -mr-[0.52em]">
+                Built for the road
+              </span>
+            </div>
             <button onClick={() => setMobileMenuOpen(false)}>
               <X className="w-8 h-8" />
             </button>

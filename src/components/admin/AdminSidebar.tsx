@@ -48,11 +48,11 @@ export function AdminSidebar() {
       <div className="p-6 flex items-center justify-between border-b border-brand-border">
         {!isCollapsed && (
           <Link href="/" className="flex flex-col items-start">
-            <span className="font-display text-xl leading-none tracking-[0.655em] text-brand-white mr-[-0.655em]">
-              AMPLIOS<span className="text-brand-orange">.</span>
+            <span className="font-display text-xl leading-none text-white tracking-[0.08em] flex items-end">
+              AMPLIOS<span className="text-brand-orange leading-[0.5] mb-1">.</span>
             </span>
-            <span className="font-mono text-[8px] text-brand-orange uppercase tracking-[0.11em] mt-1 transition-opacity duration-300">
-              BUILT FOR THE ROAD
+            <span className="font-mono text-[8px] text-brand-grey tracking-[0.52em] uppercase whitespace-nowrap mt-1 -mr-[0.52em]">
+              Built for the road
             </span>
           </Link>
         )}
