@@ -68,7 +68,7 @@ export default function StoreImportPage() {
 
     const rows = lines.slice(1).map(line => {
       // Improved CSV split that handles quoted commas
-      const values = [];
+      const values: string[] = [];
       let current = "";
       let inQuotes = false;
       for (let i = 0; i < line.length; i++) {
