@@ -39,6 +39,8 @@ export default async function StoreHub() {
       allCategories.push(expCat as any);
     }
   });
+
+  return (
     <main className="bg-brand-obsidian min-h-screen">
       <Navbar />
       
