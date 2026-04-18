@@ -196,77 +196,98 @@ export default async function VehicleProfile({ params }: { params: Promise<{ slu
         </div>
       </section>
 
-      {/* FIND YOUR VEHICLE — Affiliate Sourcing Section */}
+      {/* FIND YOUR VEHICLE — Dynamic Affiliate Sourcing Section */}
       <section className="py-24 bg-brand-carbon border-y border-brand-border/30">
         <div className="container mx-auto px-6">
-          <div className="max-w-3xl mb-12">
-            <h2 className="font-display text-4xl uppercase mb-4">
-              FIND YOUR <span className="text-brand-orange">{vehicle.name.split(" ")[0]}</span>
-            </h2>
-            <p className="font-sans text-brand-grey">
-              Ready to source your base vehicle? We&apos;ve pre-linked the UK&apos;s best marketplaces with the right search terms.
-            </p>
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 mb-16">
+            <div className="max-w-3xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-orange/10 border border-brand-orange/30 mb-6">
+                <span className="w-1.5 h-1.5 bg-brand-orange rounded-full animate-pulse" />
+                <span className="font-mono text-[8px] text-brand-orange uppercase tracking-widest leading-none">Marketplace Network // Active</span>
+              </div>
+              <h2 className="font-display text-4xl uppercase mb-4">
+                FIND YOUR <span className="text-brand-orange">{vehicle.name.split(" ")[0]}</span>
+              </h2>
+              <p className="font-sans text-brand-grey text-lg italic">
+                Ready to source your base vehicle? Our technical registry links directly to vetted marketplaces with pre-filtered search parameters.
+              </p>
+            </div>
+            <div className="font-mono text-[9px] text-brand-grey uppercase tracking-[0.3em] pb-2 border-b border-brand-border">
+              Managed Registry Node: {slug.toUpperCase()} // MARK-01
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* eBay */}
-            <a
-              href={(vehicle as any).ebaySearch || `https://www.ebay.co.uk/sch/i.html?_nkw=${encodeURIComponent(vehicle.name)}+panel+van`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group blueprint-border bg-brand-obsidian p-8 flex flex-col justify-between h-52 hover:bg-brand-orange/5 transition-all"
-            >
-              <div className="flex items-center justify-between">
-                <div className="font-display text-xl tracking-tighter text-brand-white">
-                  <span className="text-[#E53238]">e</span><span className="text-[#0064D2]">B</span><span className="text-[#F5AF02]">a</span><span className="text-[#86B817]">y</span>{" "}
-                  <span className="text-brand-grey text-sm font-sans font-normal">Motors UK</span>
-                </div>
-                <ExternalLink className="w-4 h-4 text-brand-grey group-hover:text-brand-orange transition-colors" />
-              </div>
-              <div>
-                <h3 className="font-display text-lg uppercase mb-1">{vehicle.name} Panel Vans</h3>
-                <p className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Pre-filtered listings</p>
-              </div>
-              <span className="font-mono text-[9px] text-brand-orange uppercase font-bold">Search eBay →</span>
-            </a>
 
-            {/* AutoTrader */}
-            <a
-              href={(vehicle as any).autotraderSearch || "https://www.autotrader.co.uk/vans"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group blueprint-border bg-brand-obsidian p-8 flex flex-col justify-between h-52 hover:bg-brand-orange/5 transition-all"
-            >
-              <div className="flex items-center justify-between">
-                <div className="font-mono text-[10px] text-brand-white uppercase tracking-widest">AutoTrader UK</div>
-                <ExternalLink className="w-4 h-4 text-brand-grey group-hover:text-brand-orange transition-colors" />
-              </div>
-              <div>
-                <h3 className="font-display text-lg uppercase mb-1">{vehicle.name} on AutoTrader</h3>
-                <p className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Verified dealership stock</p>
-              </div>
-              <span className="font-mono text-[9px] text-brand-orange uppercase font-bold">Search AutoTrader →</span>
-            </a>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {marketplaceLinks && marketplaceLinks.length > 0 ? (
+              marketplaceLinks.map((link) => (
+                <a
+                  key={link.id}
+                  href={`/api/affiliate/redirect?type=marketplace&id=${link.id}`}
+                  className="group blueprint-border bg-brand-obsidian p-10 flex flex-col justify-between h-64 hover:bg-brand-orange/5 transition-all duration-500"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="font-display text-2xl tracking-tighter text-brand-white">
+                      {link.marketplace_name}
+                    </div>
+                    <ExternalLink className="w-5 h-5 text-brand-grey group-hover:text-brand-orange transition-all" />
+                  </div>
+                  
+                  <div className="py-6 border-y border-brand-border/30 my-6">
+                    <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-2">Technical Pathway</p>
+                    <h3 className="font-display text-sm uppercase text-brand-white group-hover:text-brand-orange transition-colors">
+                      {vehicle.name} {link.marketplace_name.includes('eBay') ? 'Panel' : ''} Listings
+                    </h3>
+                  </div>
 
-            {/* Facebook Marketplace */}
-            <a
-              href="https://www.facebook.com/marketplace/category/vehicles"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group blueprint-border bg-brand-obsidian p-8 flex flex-col justify-between h-52 hover:bg-brand-orange/5 transition-all"
-            >
-              <div className="flex items-center justify-between">
-                <div className="font-mono text-[10px] text-[#1877F2] uppercase tracking-widest">Facebook Marketplace</div>
-                <ExternalLink className="w-4 h-4 text-brand-grey group-hover:text-brand-orange transition-colors" />
-              </div>
-              <div>
-                <h3 className="font-display text-lg uppercase mb-1">{vehicle.name} Private Sales</h3>
-                <p className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Private sellers nationwide</p>
-              </div>
-              <span className="font-mono text-[9px] text-brand-orange uppercase font-bold">Search Marketplace →</span>
-            </a>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[10px] text-brand-orange uppercase font-bold tracking-widest group-hover:translate-x-2 transition-transform">
+                      Initialize Search →
+                    </span>
+                    <div className="flex items-center gap-2 font-mono text-[7px] text-brand-grey uppercase opacity-40">
+                      <ShieldCheck className="w-3 h-3" />
+                      Affiliate Signal Active
+                    </div>
+                  </div>
+                </a>
+              ))
+            ) : (
+              /* High-Fidelity Technical Fallback */
+              [
+                { name: 'eBay Motors UK', url: `https://www.ebay.co.uk/sch/i.html?_nkw=${encodeURIComponent(vehicle.name)}+panel+van`, type: 'ebay' },
+                { name: 'AutoTrader Vans', url: 'https://www.autotrader.co.uk/vans', type: 'autotrader' },
+                { name: 'Facebook Marketplace', url: 'https://www.facebook.com/marketplace/category/vehicles', type: 'fb' }
+              ].map((fallback, i) => (
+                <a
+                  key={i}
+                  href={fallback.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group blueprint-border bg-brand-obsidian/40 p-10 flex flex-col justify-between h-64 hover:bg-brand-orange/5 transition-all"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="font-display text-2xl tracking-tighter text-brand-grey group-hover:text-brand-white transition-colors">
+                      {fallback.name}
+                    </div>
+                    <ExternalLink className="w-5 h-5 text-brand-grey group-hover:text-brand-orange transition-all" />
+                  </div>
+                  
+                  <div className="py-6 border-y border-brand-border/10 my-6">
+                    <p className="font-mono text-[9px] text-brand-grey/50 uppercase tracking-widest mb-2 italic">Standard Node (Unlogged)</p>
+                    <h3 className="font-display text-sm uppercase text-brand-grey/70 group-hover:text-brand-orange transition-colors">
+                      Search all {vehicle.name}s
+                    </h3>
+                  </div>
+
+                  <span className="font-mono text-[10px] text-brand-orange uppercase font-bold tracking-widest">
+                    External Route →
+                  </span>
+                </a>
+              ))
+            )}
           </div>
-          <p className="font-mono text-[8px] text-brand-grey/50 uppercase tracking-widest mt-8">
-            We may earn a commission from purchases made through affiliate links. This doesn&apos;t affect our recommendations.
+          <p className="font-mono text-[8px] text-brand-grey/50 uppercase tracking-widest mt-12 max-w-2xl leading-relaxed">
+            Technical Notice: Amplios is an engineering-first platform. To fund our free build guides and research, we may earn 
+            a commission from purchases made through these vetted search conduits. This does not affect our data or recommendations.
           </p>
         </div>
       </section>
