@@ -8,6 +8,7 @@ import { ExternalLink, Ruler, Check, X, ShieldCheck } from "lucide-react";
 import { ProductCard } from "@/components/store/ProductCard";
 import { vehicleData } from "@/lib/data/vehicles";
 import { Metadata } from "next";
+import { supabase } from "@/lib/supabase";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -26,6 +27,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function VehicleProfile({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const vehicle = vehicleData[slug as keyof typeof vehicleData] || vehicleData["mercedes-sprinter"];
+
+  // Fetch marketplaces for this specific vehicle
+  const { data: marketplaceLinks } = await supabase
+    .from('vehicle_marketplaces')
+    .select('*')
+    .eq('vehicle_id', slug)
+    .eq('is_active', true)
+    .order('created_at', { ascending: true });
 
   return (
     <main className="bg-brand-obsidian">
