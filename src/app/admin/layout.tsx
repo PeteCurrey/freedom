@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { cn } from "@/lib/utils";
 
 export default function AdminLayout({
   children,
