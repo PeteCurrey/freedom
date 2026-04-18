@@ -16,14 +16,14 @@ const INITIAL_NODES: WeightNode[] = [
   { id: "2", name: "Driver", weight: 80, category: "person" },
 ];
 
-const PRESETS = [
+const PRESETS: { name: string; weight: number; category: WeightNode["category"] }[] = [
   { name: "Fresh Water (100L)", weight: 100, category: "fluid" },
   { name: "Diesel (Full Tank)", weight: 65, category: "fluid" },
   { name: "Kitchen Galley (Plywood)", weight: 45, category: "build" },
   { name: "Lithium Battery (100Ah)", weight: 12, category: "component" },
   { name: "Solar Panel (400W)", weight: 22, category: "component" },
   { name: "MaxxFan Deluxe", weight: 6, category: "component" },
-] as const;
+];
 
 export default function PayloadCalculator() {
   const [nodes, setNodes] = useState<WeightNode[]>(INITIAL_NODES);
@@ -33,7 +33,7 @@ export default function PayloadCalculator() {
   const percentage = Math.min((totalWeight / gvm) * 100, 100);
   const isOver = totalWeight > gvm;
 
-  const addNode = (preset?: typeof PRESETS[number]) => {
+  const addNode = (preset?: { name: string; weight: number; category: WeightNode["category"] }) => {
     const newNode: WeightNode = {
       id: Math.random().toString(36).substr(2, 9),
       name: preset?.name || "New Node",
