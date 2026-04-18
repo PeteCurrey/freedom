@@ -19,7 +19,7 @@ const tools = [
     slug: "payload-calculator",
     description: "Real-time mass estimation for water, fuel, batteries, and furniture to ensure compliance with vehicle GVM.",
     icon: Weight,
-    status: "planned",
+    status: "active",
     image: "/images/tech-water.png",
     tagline: "Weight Registry // GVM Limits"
   },
@@ -28,7 +28,7 @@ const tools = [
     slug: "cost-estimator",
     description: "Deep-dive budget forecasting based on component selection tiers from the official Amplios hardware registry.",
     icon: PoundSterling,
-    status: "planned",
+    status: "active",
     image: "/images/tech-interior.png",
     tagline: "Financial Hub // Project Budget"
   },
@@ -37,7 +37,7 @@ const tools = [
     slug: "compliance-checker",
     description: "Step-by-step verification of gas, electrical, and structural standards for DVLA reclassification.",
     icon: ClipboardCheck,
-    status: "planned",
+    status: "active",
     image: "/images/store-hero.png",
     tagline: "Legal Node // RCD / UKCA"
   }

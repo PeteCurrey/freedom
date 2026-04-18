@@ -21,6 +21,23 @@
   --ease-expo-out: cubic-bezier(0.19, 1, 0.22, 1);
 }
 
+/* Admin Light Mode Overrides */
+.admin-light {
+  --color-brand-obsidian: #F8F9FA;
+  --color-brand-carbon: #FFFFFF;
+  --color-brand-graphite: #E9ECEF;
+  --color-brand-white: #0A0A0A;
+  --color-brand-grey: #495057;
+  --color-brand-border: #DEE2E6;
+  --color-brand-surface: #FFFFFF;
+}
+
+.admin-light .blueprint-grid {
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}
+
 @layer base {
   * {
     @apply border-brand-border;

@@ -12,8 +12,20 @@ export default function AdminLayout({
 }) {
   const [authorized, setAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isLightMode, setIsLightMode] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("admin_theme");
+    if (savedTheme === "light") setIsLightMode(true);
+  }, []);
+
+  const toggleTheme = () => {
+    const newMode = !isLightMode;
+    setIsLightMode(newMode);
+    localStorage.setItem("admin_theme", newMode ? "light" : "dark");
+  };
 
   useEffect(() => {
     // 1. Initial Check
@@ -79,9 +91,12 @@ export default function AdminLayout({
   if (!authorized) return null;
 
   return (
-    <div className="flex bg-brand-obsidian h-screen overflow-hidden">
-      <AdminSidebar />
-      <main className="flex-1 overflow-y-auto overflow-x-hidden pt-6 custom-scrollbar">
+    <div className={cn(
+      "flex h-screen overflow-hidden transition-colors duration-300",
+      isLightMode ? "admin-light bg-brand-obsidian" : "bg-brand-obsidian"
+    )}>
+      <AdminSidebar isLightMode={isLightMode} onToggleTheme={toggleTheme} />
+      <main className="flex-1 overflow-y-auto overflow-x-hidden pt-6 custom-scrollbar text-brand-white">
         {children}
       </main>
     </div>

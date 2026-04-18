@@ -16,7 +16,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Database,
-  FileText
+  FileText,
+  Sun,
+  Moon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -35,7 +37,12 @@ const menuItems = [
   { name: "My Profile", href: "/admin/profile", icon: UserCircle },
 ];
 
-export function AdminSidebar() {
+interface AdminSidebarProps {
+  isLightMode: boolean;
+  onToggleTheme: () => void;
+}
+
+export function AdminSidebar({ isLightMode, onToggleTheme }: AdminSidebarProps) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -98,7 +105,18 @@ export function AdminSidebar() {
       </nav>
 
       {/* Sidebar Footer */}
-      <div className="p-4 border-t border-brand-border">
+      <div className="p-4 border-t border-brand-border space-y-2">
+        <button 
+          onClick={onToggleTheme}
+          className={cn(
+            "flex items-center gap-4 p-3 w-full text-brand-grey hover:text-brand-orange transition-colors group",
+            isCollapsed && "justify-center"
+          )}
+        >
+          {isLightMode ? <Moon size={20} className="shrink-0" /> : <Sun size={20} className="shrink-0" />}
+          {!isCollapsed && <span className="font-mono text-[10px] uppercase tracking-widest">{isLightMode ? "Dark Mode" : "Light Mode"}</span>}
+        </button>
+
         <button className={cn(
           "flex items-center gap-4 p-3 w-full text-brand-grey hover:text-red-500 transition-colors group",
           isCollapsed && "justify-center"
