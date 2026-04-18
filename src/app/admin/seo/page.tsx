@@ -54,7 +54,7 @@ export default function SEOHubPage() {
           <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4">
             <Search size={12} /> Search Engine Hub: seo.delta
           </div>
-          <h1 className="font-display text-5xl uppercase tracking-tighter text-white">
+          <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
             SEO <span className="text-brand-orange">Strategist</span>
           </h1>
         </div>
@@ -62,7 +62,7 @@ export default function SEOHubPage() {
         <div className="flex gap-4">
            <Link 
              href="/admin/seo/generator"
-             className="px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2"
+             className="px-8 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2"
            >
              <Plus size={14} /> Generate Content
            </Link>
@@ -99,7 +99,7 @@ export default function SEOHubPage() {
               </span>
             </div>
             <span className="block font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-1">{stat.label}</span>
-            <span className="block font-display text-3xl text-white">{stat.value}</span>
+            <span className="block font-display text-3xl text-brand-white">{stat.value}</span>
           </div>
         ))}
       </div>
@@ -131,7 +131,7 @@ export default function SEOHubPage() {
                      { phrase: "fiat ducato interior furniture", vol: "900", kd: "28", opp: "Critical" },
                    ].map((k, i) => (
                      <tr key={i} className="border-b border-brand-border/50 hover:bg-brand-obsidian transition-colors">
-                        <td className="p-4 font-display text-[11px] uppercase text-white">{k.phrase}</td>
+                        <td className="p-4 font-display text-[11px] uppercase text-brand-white">{k.phrase}</td>
                         <td className="p-4 font-mono text-brand-grey">{k.vol}</td>
                         <td className="p-4 font-mono text-brand-grey">{k.kd}</td>
                         <td className="p-4">
@@ -160,7 +160,7 @@ export default function SEOHubPage() {
                  <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
                        <Globe2 size={16} className="text-brand-grey" />
-                       <span className="font-display text-lg uppercase text-white">{c.site}</span>
+                       <span className="font-display text-lg uppercase text-brand-white">{c.site}</span>
                     </div>
                     <div className={cn(
                       "w-2 h-2 rounded-full",
@@ -175,7 +175,7 @@ export default function SEOHubPage() {
                           <div className="flex-1 h-1 bg-brand-carbon border border-brand-border overflow-hidden">
                              <div className="h-full bg-brand-orange" style={{ width: `${c.authority}%` }} />
                           </div>
-                          <span className="font-mono text-[10px] text-white">{c.authority}</span>
+                          <span className="font-mono text-[10px] text-brand-white">{c.authority}</span>
                        </div>
                     </div>
                     <div>

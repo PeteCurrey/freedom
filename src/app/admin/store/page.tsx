@@ -41,7 +41,7 @@ export default function StoreManagerPage() {
           <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4">
             <ShoppingBag size={12} /> Commercial Node: store.gamma
           </div>
-          <h1 className="font-display text-5xl uppercase tracking-tighter text-white">
+          <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
             Product <span className="text-brand-orange">Catalogue</span>
           </h1>
         </div>
@@ -50,10 +50,10 @@ export default function StoreManagerPage() {
           <Link href="/admin/store/import" className="px-6 py-4 bg-brand-carbon text-brand-orange border border-brand-orange/30 font-mono text-[10px] uppercase tracking-widest hover:border-brand-orange transition-all flex items-center gap-2">
              Mass CSV Import
           </Link>
-          <Link href="/admin/store/categories" className="px-8 py-4 border border-brand-orange text-brand-orange font-mono text-[10px] uppercase tracking-widest hover:bg-brand-orange hover:text-white transition-all flex items-center gap-2">
+          <Link href="/admin/store/categories" className="px-8 py-4 border border-brand-orange text-brand-orange font-mono text-[10px] uppercase tracking-widest hover:bg-brand-orange hover:text-brand-white transition-all flex items-center gap-2">
              Manage Categories
           </Link>
-          <Link href="/admin/store/products/new" className="px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2">
+          <Link href="/admin/store/products/new" className="px-8 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2">
              <Plus size={14} /> Add New SKU
           </Link>
         </div>
@@ -73,7 +73,7 @@ export default function StoreManagerPage() {
                  </div>
               </div>
               <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-widest mb-1">{stat.label}</span>
-              <span className="block font-display text-2xl text-white">{stat.value}</span>
+              <span className="block font-display text-2xl text-brand-white">{stat.value}</span>
            </div>
          ))}
       </div>
@@ -85,11 +85,11 @@ export default function StoreManagerPage() {
               <input 
                 type="text" 
                 placeholder="Search catalog by name, SKU, or category..."
-                className="w-full bg-brand-carbon border border-brand-border pl-12 pr-4 py-3 font-mono text-[10px] uppercase text-white outline-none focus:border-brand-orange"
+                className="w-full bg-brand-carbon border border-brand-border pl-12 pr-4 py-3 font-mono text-[10px] uppercase text-brand-white outline-none focus:border-brand-orange"
               />
            </div>
            <div className="flex gap-4">
-              <button className="flex items-center gap-2 px-4 py-2 border border-brand-border font-mono text-[10px] uppercase tracking-widest text-brand-grey hover:text-white">
+              <button className="flex items-center gap-2 px-4 py-2 border border-brand-border font-mono text-[10px] uppercase tracking-widest text-brand-grey hover:text-brand-white">
                  Export CSV <ChevronDown size={14} />
               </button>
            </div>
@@ -113,7 +113,7 @@ export default function StoreManagerPage() {
                             <img src={p.image_url || "/images/systems-showcase.png"} className="w-full h-full object-cover" />
                          </div>
                          <div>
-                            <span className="block font-display text-sm uppercase text-white">{p.name}</span>
+                            <span className="block font-display text-sm uppercase text-brand-white">{p.name}</span>
                             <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-widest">{p.brand} // {p.slug}</span>
                          </div>
                       </div>
@@ -124,7 +124,7 @@ export default function StoreManagerPage() {
                       </span>
                    </td>
                    <td className="p-6">
-                      <span className="font-display text-lg text-white">£{(p.price_gbp / 100).toLocaleString()}</span>
+                      <span className="font-display text-lg text-brand-white">£{(p.price_gbp / 100).toLocaleString()}</span>
                    </td>
                    <td className="p-6">
                       <div className="flex items-center gap-2">

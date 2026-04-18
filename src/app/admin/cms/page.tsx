@@ -82,7 +82,7 @@ export default function CMSPage() {
           <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[.4em] mb-4">
             <Monitor size={12} /> Content Node: cms.main
           </div>
-          <h1 className="font-display text-5xl uppercase tracking-tighter text-white">
+          <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
             Content <span className="text-brand-orange">Management</span>
           </h1>
         </div>
@@ -90,7 +90,7 @@ export default function CMSPage() {
         <button 
           onClick={handleSave}
           disabled={saving}
-          className="px-12 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2"
+          className="px-12 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2"
         >
           {saving ? <RefreshCw size={14} className="animate-spin" /> : <Save size={14} />} 
           {saving ? "Deploying..." : "Sync Page Strategy"}
@@ -109,7 +109,7 @@ export default function CMSPage() {
                       onClick={() => setSelectedPage(p.id)}
                       className={cn(
                         "w-full p-4 text-left border transition-all",
-                        selectedPage === p.id ? "bg-brand-carbon border-brand-orange text-white" : "bg-brand-obsidian border-brand-border text-brand-grey hover:border-brand-grey"
+                        selectedPage === p.id ? "bg-brand-carbon border-brand-orange text-brand-white" : "bg-brand-obsidian border-brand-border text-brand-grey hover:border-brand-grey"
                       )}
                     >
                        <span className="font-display text-sm uppercase tracking-tight">{p.name}</span>
@@ -127,7 +127,7 @@ export default function CMSPage() {
                       onClick={() => setActiveSection(s.id)}
                       className={cn(
                         "w-full p-4 flex items-center gap-4 border transition-all",
-                        activeSection === s.id ? "bg-brand-orange text-white border-brand-orange shadow-lg shadow-brand-orange/20" : "bg-brand-obsidian border-brand-border text-brand-grey hover:text-white"
+                        activeSection === s.id ? "bg-brand-orange text-brand-white border-brand-orange shadow-lg shadow-brand-orange/20" : "bg-brand-obsidian border-brand-border text-brand-grey hover:text-brand-white"
                       )}
                     >
                        <s.icon size={16} />
@@ -146,7 +146,7 @@ export default function CMSPage() {
               <div className="relative z-10 w-full">
                  {activeSection === 'hero' && (
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2">
-                       <h2 className="font-display text-2xl uppercase tracking-tighter text-white border-b border-brand-border pb-6 mb-8">
+                       <h2 className="font-display text-2xl uppercase tracking-tighter text-brand-white border-b border-brand-border pb-6 mb-8">
                           Hero Banner <span className="text-brand-orange">Protocol</span>
                        </h2>
                        
@@ -157,7 +157,7 @@ export default function CMSPage() {
                                 <textarea 
                                   value={config.hero?.title}
                                   onChange={(e) => setConfig({ ...config, hero: { ...config.hero, title: e.target.value }})}
-                                  className="w-full bg-brand-obsidian border border-brand-border p-4 font-display text-xl text-white outline-none focus:border-brand-orange h-32"
+                                  className="w-full bg-brand-obsidian border border-brand-border p-4 font-display text-xl text-brand-white outline-none focus:border-brand-orange h-32"
                                 />
                              </div>
                              <div className="space-y-3">
@@ -187,7 +187,7 @@ export default function CMSPage() {
 
                  {activeSection === 'why' && (
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2">
-                       <h2 className="font-display text-2xl uppercase tracking-tighter text-white border-b border-brand-border pb-6 mb-8">
+                       <h2 className="font-display text-2xl uppercase tracking-tighter text-brand-white border-b border-brand-border pb-6 mb-8">
                           Why We <span className="text-brand-orange">Exist</span> Section
                        </h2>
                        
@@ -199,7 +199,7 @@ export default function CMSPage() {
                                   type="text" 
                                   value={config.why?.title_part}
                                   onChange={(e) => setConfig({ ...config, why: { ...config.why, title_part: e.target.value }})}
-                                  className="w-full bg-brand-obsidian border border-brand-border p-4 font-display text-sm text-white outline-none focus:border-brand-orange"
+                                  className="w-full bg-brand-obsidian border border-brand-border p-4 font-display text-sm text-brand-white outline-none focus:border-brand-orange"
                                 />
                              </div>
                              <div className="space-y-3">

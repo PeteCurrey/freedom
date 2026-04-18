@@ -51,7 +51,7 @@ export default function ProfilePage() {
         <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4">
           <UserCircle size={12} /> Identity Node: user.alpha
         </div>
-        <h1 className="font-display text-5xl uppercase tracking-tighter text-white">
+        <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
           My <span className="text-brand-orange">Profile</span>
         </h1>
       </div>
@@ -71,10 +71,10 @@ export default function ProfilePage() {
                     )}
                   </div>
                   <div className="absolute inset-0 bg-brand-orange/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Camera size={24} className="text-white" />
+                    <Camera size={24} className="text-brand-white" />
                   </div>
                 </div>
-                <h3 className="font-display text-2xl uppercase text-white mb-2">{profile?.full_name || user?.email?.split('@')[0]}</h3>
+                <h3 className="font-display text-2xl uppercase text-brand-white mb-2">{profile?.full_name || user?.email?.split('@')[0]}</h3>
                 <span className="px-3 py-1 bg-brand-orange/10 border border-brand-orange text-brand-orange font-mono text-[9px] uppercase tracking-widest">
                   {profile?.role || 'Super Admin'}
                 </span>
@@ -86,21 +86,21 @@ export default function ProfilePage() {
                 <Mail size={16} className="text-brand-grey" />
                 <div className="flex flex-col">
                    <span className="font-mono text-[8px] text-brand-grey uppercase">Email Address</span>
-                   <span className="font-mono text-[10px] text-white">{user?.email}</span>
+                   <span className="font-mono text-[10px] text-brand-white">{user?.email}</span>
                 </div>
               </div>
               <div className="flex items-center gap-4 p-4 bg-brand-carbon border border-brand-border">
                 <Shield size={16} className="text-brand-grey" />
                 <div className="flex flex-col">
                    <span className="font-mono text-[8px] text-brand-grey uppercase">Account Level</span>
-                   <span className="font-mono text-[10px] text-white uppercase">{profile?.role || 'Root Access'}</span>
+                   <span className="font-mono text-[10px] text-brand-white uppercase">{profile?.role || 'Root Access'}</span>
                 </div>
               </div>
               <div className="flex items-center gap-4 p-4 bg-brand-carbon border border-brand-border">
                 <Calendar size={16} className="text-brand-grey" />
                 <div className="flex flex-col">
                    <span className="font-mono text-[8px] text-brand-grey uppercase">Identity Verified</span>
-                   <span className="font-mono text-[10px] text-white underline">{new Date(user?.created_at).toLocaleDateString()}</span>
+                   <span className="font-mono text-[10px] text-brand-white underline">{new Date(user?.created_at).toLocaleDateString()}</span>
                 </div>
               </div>
            </div>
@@ -117,7 +117,7 @@ export default function ProfilePage() {
                   <input 
                     type="text" 
                     defaultValue={profile?.full_name}
-                    className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-white focus:border-brand-orange outline-none"
+                    className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:border-brand-orange outline-none"
                     placeholder="Enter full name"
                   />
                 </div>
@@ -136,14 +136,14 @@ export default function ProfilePage() {
                 <button 
                   type="submit" 
                   disabled={saving}
-                  className="px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all inline-flex items-center gap-2"
+                  className="px-8 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all inline-flex items-center gap-2"
                 >
                   {saving ? "Processing..." : <><Save size={14} /> Commit Changes</>}
                 </button>
               </div>
 
               <div className="pt-8 border-t border-brand-border">
-                <h3 className="flex items-center gap-3 font-display text-lg uppercase tracking-tighter text-white mb-6">
+                <h3 className="flex items-center gap-3 font-display text-lg uppercase tracking-tighter text-brand-white mb-6">
                   <Key size={18} className="text-brand-orange" /> Authentication Security
                 </h3>
                 <div className="flex flex-col md:flex-row gap-6 justify-between items-center">

@@ -51,7 +51,7 @@ export default function LandingPageBuilder() {
         <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4">
           <Globe size={12} /> Search Engine Node: landing.builder
         </div>
-        <h1 className="font-display text-5xl uppercase tracking-tighter text-white">
+        <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
           SEO Page <span className="text-brand-orange">Architect</span>
         </h1>
       </div>
@@ -70,7 +70,7 @@ export default function LandingPageBuilder() {
                      value={topic}
                      onChange={(e) => setTopic(e.target.value)}
                      placeholder="e.g. Winter Vanliving Guide"
-                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-white focus:border-brand-orange outline-none"
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:border-brand-orange outline-none"
                    />
                 </div>
 
@@ -81,7 +81,7 @@ export default function LandingPageBuilder() {
                      value={location}
                      onChange={(e) => setLocation(e.target.value)}
                      placeholder="e.g. United Kingdom"
-                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-white focus:border-brand-orange outline-none"
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:border-brand-orange outline-none"
                    />
                 </div>
 
@@ -89,7 +89,7 @@ export default function LandingPageBuilder() {
                   <button 
                     onClick={handleGenerate}
                     disabled={isGenerating || !topic}
-                    className="w-full py-5 bg-brand-orange text-white font-display text-sm uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                    className="w-full py-5 bg-brand-orange text-brand-white font-display text-sm uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                   >
                     {isGenerating ? (
                       <>
@@ -130,11 +130,11 @@ export default function LandingPageBuilder() {
               {pages.map((p) => (
                 <div key={p.id} className="blueprint-border p-6 bg-brand-carbon flex flex-col md:flex-row justify-between items-center gap-6 group hover:border-brand-orange transition-all">
                   <div className="flex gap-4 items-center">
-                    <div className="w-12 h-12 flex items-center justify-center bg-brand-obsidian border border-brand-border group-hover:bg-brand-orange group-hover:text-white transition-all text-brand-orange">
+                    <div className="w-12 h-12 flex items-center justify-center bg-brand-obsidian border border-brand-border group-hover:bg-brand-orange group-hover:text-brand-white transition-all text-brand-orange">
                       <Layout size={24} />
                     </div>
                     <div>
-                      <h3 className="font-display text-lg uppercase text-white">{p.title}</h3>
+                      <h3 className="font-display text-lg uppercase text-brand-white">{p.title}</h3>
                       <div className="flex items-center gap-3">
                          <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Slug: /{p.slug}</span>
                          <span className="w-1 h-1 rounded-full bg-brand-orange" />

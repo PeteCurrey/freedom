@@ -81,14 +81,14 @@ export default function SuppliersManagerPage() {
   };
 
   return (
-    <div className="p-8 pb-32 min-h-screen bg-brand-obsidian text-white">
+    <div className="p-8 pb-32 min-h-screen bg-brand-obsidian text-brand-white">
       {/* Header */}
       <div className="mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
         <div>
-          <Link href="/admin/store" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4 hover:text-white transition-colors">
+          <Link href="/admin/store" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4 hover:text-brand-white transition-colors">
             <ArrowLeft size={12} /> Back to Store Manager
           </Link>
-          <h1 className="font-display text-5xl uppercase tracking-tighter text-white flex items-center gap-4">
+          <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white flex items-center gap-4">
             <Truck className="w-10 h-10 text-brand-orange" />
             Supplier <span className="text-brand-orange">Network</span>
           </h1>
@@ -101,7 +101,7 @@ export default function SuppliersManagerPage() {
           <button onClick={handleSeed} className="px-8 py-4 border border-brand-border text-brand-grey font-mono text-[10px] uppercase tracking-widest hover:border-brand-orange hover:text-brand-orange transition-all">
             Sync Registry Defaults
           </button>
-          <Link href="/admin/store/suppliers/new" className="px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2">
+          <Link href="/admin/store/suppliers/new" className="px-8 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2">
              <Plus size={14} /> Add Supplier
           </Link>
         </div>
@@ -159,7 +159,7 @@ export default function SuppliersManagerPage() {
                             <span className="font-mono text-[8px] text-brand-grey uppercase italic">No portfolio data</span>
                           ) : (
                             s.brands_handled.map((brand: string) => (
-                              <span key={brand} className="font-mono text-[8px] text-white/50 uppercase tracking-widest bg-brand-obsidian/40 px-2 py-0.5 border border-brand-border/20">
+                              <span key={brand} className="font-mono text-[8px] text-brand-white/50 uppercase tracking-widest bg-brand-obsidian/40 px-2 py-0.5 border border-brand-border/20">
                                 {brand}
                               </span>
                             ))

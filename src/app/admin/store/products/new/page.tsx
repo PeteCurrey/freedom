@@ -78,17 +78,17 @@ export default function NewProductPage() {
       {/* Header */}
       <div className="mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
         <div>
-          <Link href="/admin/store" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4 hover:text-white transition-colors">
+          <Link href="/admin/store" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4 hover:text-brand-white transition-colors">
             <ArrowLeft size={12} /> Back to Store Manager
           </Link>
-          <h1 className="font-display text-5xl uppercase tracking-tighter text-white">
+          <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
             Create New <span className="text-brand-orange">SKU</span>
           </h1>
         </div>
         <button 
           onClick={handleSave}
           disabled={saving}
-          className="px-10 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2 disabled:opacity-50"
+          className="px-10 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2 disabled:opacity-50"
         >
           {saving ? <RefreshCw size={14} className="animate-spin" /> : <Save size={14} />} 
           {saving ? "Saving..." : "Deploy Product"}
@@ -101,7 +101,7 @@ export default function NewProductPage() {
            <div className="blueprint-border bg-brand-carbon p-8">
              <div className="flex items-center gap-3 mb-8 border-b border-brand-border pb-4">
                <Tag className="text-brand-orange" size={20} />
-               <h2 className="font-display text-xl uppercase tracking-widest text-white">Core Identity</h2>
+               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Core Identity</h2>
              </div>
              
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -115,7 +115,7 @@ export default function NewProductPage() {
                        const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
                        setProduct({ ...product, name, slug });
                      }}
-                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none"
                      placeholder="e.g. Victron MultiPlus 3000VA"
                    />
                 </div>
@@ -137,7 +137,7 @@ export default function NewProductPage() {
                      type="text" 
                      value={product.brand}
                      onChange={(e) => setProduct({ ...product, brand: e.target.value })}
-                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none"
                      placeholder="e.g. Victron Energy"
                    />
                 </div>
@@ -147,7 +147,7 @@ export default function NewProductPage() {
                      type="text" 
                      value={product.sku}
                      onChange={(e) => setProduct({ ...product, sku: e.target.value })}
-                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-sm text-white focus:border-brand-orange outline-none"
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-sm text-brand-white focus:border-brand-orange outline-none"
                      placeholder="e.g. VIC-MP-3000"
                    />
                 </div>
@@ -159,7 +159,7 @@ export default function NewProductPage() {
                    <select 
                      value={product.category_id}
                      onChange={(e) => setProduct({ ...product, category_id: e.target.value })}
-                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none"
                    >
                       {categories.map((cat) => (
                         <option key={cat.id} value={cat.id}>{cat.name}</option>
@@ -171,7 +171,7 @@ export default function NewProductPage() {
                    <select 
                      value={product.supplier_id}
                      onChange={(e) => setProduct({ ...product, supplier_id: e.target.value })}
-                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none"
                    >
                       <option value="">No Supplier Mapping</option>
                       {suppliers.map((sup) => (
@@ -185,7 +185,7 @@ export default function NewProductPage() {
            <div className="blueprint-border bg-brand-carbon p-8">
              <div className="flex items-center gap-3 mb-8 border-b border-brand-border pb-4">
                <AlignLeft className="text-brand-orange" size={20} />
-               <h2 className="font-display text-xl uppercase tracking-widest text-white">Marketing Content</h2>
+               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Marketing Content</h2>
              </div>
              <div className="space-y-6">
                 <div>
@@ -193,7 +193,7 @@ export default function NewProductPage() {
                    <textarea 
                      value={product.short_description}
                      onChange={(e) => setProduct({ ...product, short_description: e.target.value })}
-                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none min-h-[80px]"
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none min-h-[80px]"
                    />
                 </div>
                 <div>
@@ -213,7 +213,7 @@ export default function NewProductPage() {
            <div className="blueprint-border bg-brand-carbon p-8 top-32 sticky">
              <div className="flex items-center gap-3 mb-8 border-b border-brand-border pb-4">
                <DollarSign className="text-brand-orange" size={20} />
-               <h2 className="font-display text-xl uppercase tracking-widest text-white">Logistics</h2>
+               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Logistics</h2>
              </div>
              
              <div className="space-y-6 mb-8">
@@ -225,7 +225,7 @@ export default function NewProductPage() {
                         type="number" 
                         value={product.price_gbp}
                         onChange={(e) => setProduct({ ...product, price_gbp: Number(e.target.value) })}
-                        className="w-full bg-brand-obsidian border border-brand-border py-4 pl-10 pr-4 font-display text-xl text-white focus:border-brand-orange outline-none"
+                        className="w-full bg-brand-obsidian border border-brand-border py-4 pl-10 pr-4 font-display text-xl text-brand-white focus:border-brand-orange outline-none"
                       />
                    </div>
                 </div>
@@ -235,7 +235,7 @@ export default function NewProductPage() {
                      type="number" 
                      value={product.stock_quantity}
                      onChange={(e) => setProduct({ ...product, stock_quantity: Number(e.target.value) })}
-                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-sm text-white focus:border-brand-orange outline-none"
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-sm text-brand-white focus:border-brand-orange outline-none"
                    />
                 </div>
                 <div>
@@ -245,14 +245,14 @@ export default function NewProductPage() {
                      step="0.1"
                      value={product.weight_kg}
                      onChange={(e) => setProduct({ ...product, weight_kg: Number(e.target.value) })}
-                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-sm text-white focus:border-brand-orange outline-none"
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-sm text-brand-white focus:border-brand-orange outline-none"
                    />
                 </div>
              </div>
 
              <div className="flex items-center gap-3 mb-8 border-b border-brand-border pb-4 pt-4">
                <ImageIcon className="text-brand-orange" size={20} />
-               <h2 className="font-display text-xl uppercase tracking-widest text-white">Media Asset</h2>
+               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Media Asset</h2>
              </div>
 
              <div className="space-y-4">
@@ -277,7 +277,7 @@ export default function NewProductPage() {
              
              <div className="flex items-center gap-3 mb-8 border-b border-brand-border pb-4 pt-8">
                <Settings className="text-brand-orange" size={20} />
-               <h2 className="font-display text-xl uppercase tracking-widest text-white">Status</h2>
+               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Status</h2>
              </div>
              
              <label className="flex items-center gap-4 cursor-pointer">
@@ -287,7 +287,7 @@ export default function NewProductPage() {
                   onChange={(e) => setProduct({ ...product, is_active: e.target.checked })}
                   className="w-4 h-4 accent-brand-orange"
                 />
-                <span className="font-mono text-xs uppercase tracking-widest text-white">Active (Visible in Store)</span>
+                <span className="font-mono text-xs uppercase tracking-widest text-brand-white">Active (Visible in Store)</span>
              </label>
 
            </div>

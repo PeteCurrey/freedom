@@ -173,9 +173,9 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
   if (loading) return <div className="p-12 text-brand-grey font-mono text-[10px] uppercase">Loading...</div>;
 
   return (
-    <div className="p-8 pb-32 min-h-screen bg-brand-obsidian text-white">
+    <div className="p-8 pb-32 min-h-screen bg-brand-obsidian text-brand-white">
       <div className="max-w-6xl mx-auto">
-        <Link href="/admin/store/suppliers" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-8 hover:text-white transition-colors">
+        <Link href="/admin/store/suppliers" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-8 hover:text-brand-white transition-colors">
           <ArrowLeft size={12} /> Back to Network
         </Link>
         
@@ -187,7 +187,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
           <button 
             onClick={handleSave}
             disabled={saving}
-            className="px-12 py-5 bg-brand-orange text-white font-mono text-[12px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-3"
+            className="px-12 py-5 bg-brand-orange text-brand-white font-mono text-[12px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-3"
           >
              {saving ? "Saving..." : <><Save size={16} /> Save Changes</>}
           </button>
@@ -210,7 +210,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                   "px-8 py-4 font-mono text-[10px] uppercase tracking-widest border-b-2 transition-all flex items-center gap-2",
                   activeTab === tab.id 
                     ? "border-brand-orange text-brand-orange bg-brand-orange/5" 
-                    : "border-transparent text-brand-grey hover:text-white hover:border-brand-border"
+                    : "border-transparent text-brand-grey hover:text-brand-white hover:border-brand-border"
                 )}
               >
                 <Icon size={14} />
@@ -233,7 +233,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                       type="text" 
                       value={supplier.name}
                       onChange={(e) => setSupplier({ ...supplier, name: e.target.value })}
-                      className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                      className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none"
                     />
                   </div>
                   <div>
@@ -241,7 +241,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                     <select 
                       value={supplier.status}
                       onChange={(e) => setSupplier({ ...supplier, status: e.target.value })}
-                      className="w-full bg-brand-carbon border border-brand-border p-4 font-mono text-[10px] uppercase tracking-widest text-white focus:border-brand-orange outline-none"
+                      className="w-full bg-brand-carbon border border-brand-border p-4 font-mono text-[10px] uppercase tracking-widest text-brand-white focus:border-brand-orange outline-none"
                     >
                       <option value="potential">Potential Supplier</option>
                       <option value="applied">Application Pending</option>
@@ -254,7 +254,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                     <textarea 
                       value={supplier.notes}
                       onChange={(e) => setSupplier({ ...supplier, notes: e.target.value })}
-                      className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-white h-48 focus:border-brand-orange outline-none"
+                      className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-brand-white h-48 focus:border-brand-orange outline-none"
                       placeholder="Contacts, order thresholds, discounts..."
                     />
                   </div>
@@ -269,7 +269,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                         type="text" 
                         value={supplier.website}
                         onChange={(e) => setSupplier({ ...supplier, website: e.target.value })}
-                        className="w-full bg-brand-carbon border border-brand-border pl-12 pr-4 py-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                        className="w-full bg-brand-carbon border border-brand-border pl-12 pr-4 py-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none"
                       />
                     </div>
                   </div>
@@ -283,7 +283,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                           className={cn(
                             "px-4 py-2 font-mono text-[9px] uppercase tracking-widest border transition-all",
                             supplier.categories.includes(cat)
-                              ? "bg-brand-orange border-brand-orange text-white" 
+                              ? "bg-brand-orange border-brand-orange text-brand-white" 
                               : "border-brand-border text-brand-grey hover:border-brand-grey"
                           )}
                         >
@@ -303,11 +303,11 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                           onChange={(e) => setNewBrand(e.target.value)}
                           onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addBrand())}
                           placeholder="e.g. RIB Seats"
-                          className="flex-1 bg-brand-carbon border border-brand-border p-3 font-sans text-xs text-white focus:border-brand-orange outline-none"
+                          className="flex-1 bg-brand-carbon border border-brand-border p-3 font-sans text-xs text-brand-white focus:border-brand-orange outline-none"
                         />
                         <button 
                           onClick={addBrand}
-                          className="px-6 py-3 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all"
+                          className="px-6 py-3 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all"
                         >
                           Add
                         </button>
@@ -319,7 +319,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                           supplier.brands_handled.map(brand => (
                             <span 
                               key={brand} 
-                              className="group flex items-center gap-2 px-3 py-1 bg-brand-carbon border border-brand-border/50 font-mono text-[9px] text-white uppercase tracking-widest"
+                              className="group flex items-center gap-2 px-3 py-1 bg-brand-carbon border border-brand-border/50 font-mono text-[9px] text-brand-white uppercase tracking-widest"
                             >
                               {brand}
                               <button onClick={() => removeBrand(brand)} className="text-brand-grey hover:text-red-500 transition-colors">
@@ -348,7 +348,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                         type="text" 
                         value={supplier.contact_name}
                         onChange={(e) => setSupplier({ ...supplier, contact_name: e.target.value })}
-                        className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                        className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -360,7 +360,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                             type="email" 
                             value={supplier.contact_email}
                             onChange={(e) => setSupplier({ ...supplier, contact_email: e.target.value })}
-                            className="w-full bg-brand-carbon border border-brand-border pl-12 pr-4 py-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                            className="w-full bg-brand-carbon border border-brand-border pl-12 pr-4 py-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none"
                           />
                         </div>
                       </div>
@@ -372,7 +372,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                             type="text" 
                             value={supplier.contact_phone}
                             onChange={(e) => setSupplier({ ...supplier, contact_phone: e.target.value })}
-                            className="w-full bg-brand-carbon border border-brand-border pl-12 pr-4 py-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                            className="w-full bg-brand-carbon border border-brand-border pl-12 pr-4 py-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none"
                           />
                         </div>
                       </div>
@@ -387,7 +387,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                         type="text" 
                         value={supplier.account_number}
                         onChange={(e) => setSupplier({ ...supplier, account_number: e.target.value })}
-                        className="w-full bg-brand-carbon border border-brand-border p-4 font-mono text-sm text-white focus:border-brand-orange outline-none"
+                        className="w-full bg-brand-carbon border border-brand-border p-4 font-mono text-sm text-brand-white focus:border-brand-orange outline-none"
                         placeholder="ACC-XXXXX"
                       />
                     </div>
@@ -398,7 +398,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                           type="number" 
                           value={supplier.order_minimum}
                           onChange={(e) => setSupplier({ ...supplier, order_minimum: parseFloat(e.target.value) })}
-                          className="w-full bg-brand-carbon border border-brand-border p-4 font-mono text-sm text-white focus:border-brand-orange outline-none"
+                          className="w-full bg-brand-carbon border border-brand-border p-4 font-mono text-sm text-brand-white focus:border-brand-orange outline-none"
                         />
                       </div>
                       <div>
@@ -407,7 +407,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                           type="number" 
                           value={supplier.lead_time_days}
                           onChange={(e) => setSupplier({ ...supplier, lead_time_days: parseInt(e.target.value) })}
-                          className="w-full bg-brand-carbon border border-brand-border p-4 font-mono text-sm text-white focus:border-brand-orange outline-none"
+                          className="w-full bg-brand-carbon border border-brand-border p-4 font-mono text-sm text-brand-white focus:border-brand-orange outline-none"
                         />
                       </div>
                     </div>
@@ -430,7 +430,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                       type="text" 
                       value={newDoc.label}
                       onChange={(e) => setNewDoc({ ...newDoc, label: e.target.value })}
-                      className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-xs text-white focus:border-brand-orange outline-none"
+                      className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-xs text-brand-white focus:border-brand-orange outline-none"
                       placeholder="e.g. 2024 Trade Catalog"
                     />
                   </div>
@@ -440,7 +440,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                       type="text" 
                       value={newDoc.url}
                       onChange={(e) => setNewDoc({ ...newDoc, url: e.target.value })}
-                      className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-xs text-white focus:border-brand-orange outline-none"
+                      className="w-full bg-brand-obsidian border border-brand-border p-4 font-sans text-xs text-brand-white focus:border-brand-orange outline-none"
                       placeholder="https://drive.google.com/..."
                     />
                   </div>
@@ -449,7 +449,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                     <select 
                       value={newDoc.type}
                       onChange={(e) => setNewDoc({ ...newDoc, type: e.target.value })}
-                      className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-[9px] uppercase tracking-widest text-white focus:border-brand-orange outline-none"
+                      className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-[9px] uppercase tracking-widest text-brand-white focus:border-brand-orange outline-none"
                     >
                       <option value="catalog">Product Catalog</option>
                       <option value="price_list">Price List</option>
@@ -460,7 +460,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                 </div>
                 <button 
                   onClick={handleAddDocument}
-                  className="mt-6 px-10 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2"
+                  className="mt-6 px-10 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2"
                 >
                   <Plus size={14} /> Register Document
                 </button>

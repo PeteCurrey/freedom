@@ -98,12 +98,12 @@ export default function AdminDashboardPage() {
         ].map((stat, i) => (
           <div key={i} className="blueprint-border p-6 bg-brand-carbon/50 group hover:border-brand-orange transition-all">
             <div className="flex justify-between items-start mb-4">
-              <div className={cn("p-2 bg-brand-obsidian border border-brand-border group-hover:bg-brand-orange transition-all", stat.color, "group-hover:text-white")}>
+              <div className={cn("p-2 bg-brand-obsidian border border-brand-border group-hover:bg-brand-orange transition-all", stat.color, "group-hover:text-brand-white")}>
                 <stat.icon size={18} />
               </div>
             </div>
             <span className="block font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-1">{stat.label}</span>
-            <span className="block font-display text-3xl text-white">{stat.value}</span>
+            <span className="block font-display text-3xl text-brand-white">{stat.value}</span>
           </div>
         ))}
       </div>
@@ -113,7 +113,7 @@ export default function AdminDashboardPage() {
          {operationHubs.map((hub, idx) => (
            <div key={idx} className="space-y-6">
               <div className="border-l-2 border-brand-orange pl-4 py-1">
-                 <h2 className="font-display text-xl uppercase tracking-widest text-white leading-none">{hub.title}</h2>
+                 <h2 className="font-display text-xl uppercase tracking-widest text-brand-white leading-none">{hub.title}</h2>
                  <p className="font-mono text-[9px] text-brand-grey uppercase mt-1">{hub.description}</p>
               </div>
               
@@ -126,7 +126,7 @@ export default function AdminDashboardPage() {
                     >
                        <div className="flex items-center gap-4">
                           <link.icon className={cn("w-5 h-5", link.color)} />
-                          <span className="font-mono text-[10px] uppercase tracking-widest text-brand-grey group-hover:text-white transition-colors">{link.name}</span>
+                          <span className="font-mono text-[10px] uppercase tracking-widest text-brand-grey group-hover:text-brand-white transition-colors">{link.name}</span>
                        </div>
                        <ArrowUpRight size={14} className="text-brand-grey group-hover:text-brand-orange transition-colors" />
                     </Link>
@@ -145,7 +145,7 @@ export default function AdminDashboardPage() {
               <p className="font-sans text-xs text-brand-grey mb-8 max-w-sm">Synchronize wholesale catalogs from suppliers like <span className="text-brand-orange">Energy Solutions</span> directly into your storefront.</p>
               <Link 
                 href="/admin/store/import" 
-                className="px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all inline-flex items-center gap-2"
+                className="px-8 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all inline-flex items-center gap-2"
               >
                  <Layers size={14} /> Open Importer Hub
               </Link>
@@ -169,7 +169,7 @@ export default function AdminDashboardPage() {
                      <CheckCircle size={14} />
                    </div>
                    <div>
-                     <span className="block font-mono text-[10px] uppercase tracking-widest text-white">{o.tier} Blueprint Node</span>
+                     <span className="block font-mono text-[10px] uppercase tracking-widest text-brand-white">{o.tier} Blueprint Node</span>
                      <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-tight">Timestamp: {new Date(o.created_at).toLocaleString()}</span>
                    </div>
                  </div>

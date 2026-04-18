@@ -91,21 +91,21 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
   if (loading) return null;
 
   return (
-    <div className="p-8 pb-32 bg-brand-obsidian min-h-screen text-white">
+    <div className="p-8 pb-32 bg-brand-obsidian min-h-screen text-brand-white">
       <div className="max-w-6xl mx-auto">
         {/* Top Navigation */}
         <div className="flex justify-between items-center mb-12">
-          <Link href="/admin/journal" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] hover:text-white transition-colors">
+          <Link href="/admin/journal" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] hover:text-brand-white transition-colors">
             <ArrowLeft size={12} /> Return to Hub
           </Link>
           <div className="flex gap-4">
-             <button className="flex items-center gap-2 px-6 py-2 border border-brand-border font-mono text-[10px] uppercase tracking-widest text-brand-grey hover:border-white hover:text-white transition-all">
+             <button className="flex items-center gap-2 px-6 py-2 border border-brand-border font-mono text-[10px] uppercase tracking-widest text-brand-grey hover:border-white hover:text-brand-white transition-all">
                 <Eye size={14} /> Preview
              </button>
              <button 
                onClick={handleSave}
                disabled={saving}
-               className="flex items-center gap-2 px-8 py-2 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all"
+               className="flex items-center gap-2 px-8 py-2 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all"
              >
                 {saving ? "Deploying..." : <><Save size={14} /> Sync Node</>}
              </button>
@@ -167,7 +167,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                       <select 
                         value={post.status}
                         onChange={(e) => setPost({ ...post, status: e.target.value })}
-                        className="w-full bg-brand-obsidian border border-brand-border p-3 font-mono text-[10px] uppercase text-white outline-none focus:border-brand-orange"
+                        className="w-full bg-brand-obsidian border border-brand-border p-3 font-mono text-[10px] uppercase text-brand-white outline-none focus:border-brand-orange"
                       >
                          <option value="draft">Draft Protocol</option>
                          <option value="published">Active Deployment</option>
@@ -181,7 +181,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                         type="text" 
                         value={post.category}
                         onChange={(e) => setPost({ ...post, category: e.target.value })}
-                        className="w-full bg-brand-obsidian border border-brand-border p-3 font-mono text-[10px] uppercase text-white outline-none focus:border-brand-orange"
+                        className="w-full bg-brand-obsidian border border-brand-border p-3 font-mono text-[10px] uppercase text-brand-white outline-none focus:border-brand-orange"
                       />
                    </div>
 
@@ -198,7 +198,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                            type="number" 
                            value={post.reading_time_minutes}
                            onChange={(e) => setPost({ ...post, reading_time_minutes: parseInt(e.target.value) })}
-                           className="w-full bg-brand-obsidian border border-brand-border p-3 font-mono text-[10px] uppercase text-white outline-none focus:border-brand-orange"
+                           className="w-full bg-brand-obsidian border border-brand-border p-3 font-mono text-[10px] uppercase text-brand-white outline-none focus:border-brand-orange"
                          />
                       </div>
                    </div>

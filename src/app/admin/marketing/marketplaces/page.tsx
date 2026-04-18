@@ -87,9 +87,9 @@ export default function MarketplaceLinksManager() {
   };
 
   return (
-    <div className="p-8 pb-32 min-h-screen bg-brand-obsidian text-white">
+    <div className="p-8 pb-32 min-h-screen bg-brand-obsidian text-brand-white">
       <div className="max-w-5xl mx-auto">
-        <Link href="/admin/dashboard" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-8 hover:text-white transition-colors">
+        <Link href="/admin/dashboard" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-8 hover:text-brand-white transition-colors">
           <ArrowLeft size={12} /> Back to Hub
         </Link>
         
@@ -110,7 +110,7 @@ export default function MarketplaceLinksManager() {
                   onClick={() => setSelectedVehicle(v.id)}
                   className={`w-full p-4 border text-left font-display text-sm uppercase tracking-widest transition-all ${
                     selectedVehicle === v.id 
-                      ? "bg-brand-orange/10 border-brand-orange text-white" 
+                      ? "bg-brand-orange/10 border-brand-orange text-brand-white" 
                       : "bg-brand-carbon border-brand-border text-brand-grey hover:border-brand-orange/50"
                   }`}
                 >
@@ -131,7 +131,7 @@ export default function MarketplaceLinksManager() {
                           value={newMarketplace.name}
                           onChange={e => setNewMarketplace({...newMarketplace, name: e.target.value})}
                           placeholder="e.g. eBay Motors UK"
-                          className="w-full bg-brand-obsidian p-3 font-sans text-sm outline-none focus:border-brand-orange border border-brand-border text-white"
+                          className="w-full bg-brand-obsidian p-3 font-sans text-sm outline-none focus:border-brand-orange border border-brand-border text-brand-white"
                         />
                         <select 
                           value={newMarketplace.icon}
@@ -148,7 +148,7 @@ export default function MarketplaceLinksManager() {
                         <select 
                           value={newMarketplace.affiliate_id}
                           onChange={e => setNewMarketplace({...newMarketplace, affiliate_id: e.target.value})}
-                          className="w-full bg-brand-obsidian p-3 font-sans text-sm outline-none focus:border-brand-orange border border-brand-border text-white appearance-none"
+                          className="w-full bg-brand-obsidian p-3 font-sans text-sm outline-none focus:border-brand-orange border border-brand-border text-brand-white appearance-none"
                         >
                            <option value="">No Global Partner Link</option>
                            {affiliates.map(a => (
@@ -160,7 +160,7 @@ export default function MarketplaceLinksManager() {
                           value={newMarketplace.listing_label}
                           onChange={e => setNewMarketplace({...newMarketplace, listing_label: e.target.value})}
                           placeholder="Button Label: VIEW ON EBAY"
-                          className="w-full bg-brand-obsidian p-3 font-sans text-sm outline-none focus:border-brand-orange border border-brand-border text-white"
+                          className="w-full bg-brand-obsidian p-3 font-sans text-sm outline-none focus:border-brand-orange border border-brand-border text-brand-white"
                         />
                      </div>
                   </div>
@@ -169,11 +169,11 @@ export default function MarketplaceLinksManager() {
                     value={newMarketplace.url}
                     onChange={e => setNewMarketplace({...newMarketplace, url: e.target.value})}
                     placeholder="Affiliate URL or Listing ID (if linked to partner)"
-                    className="w-full bg-brand-obsidian p-3 font-mono text-xs outline-none focus:border-brand-orange border border-brand-border text-white mb-4"
+                    className="w-full bg-brand-obsidian p-3 font-mono text-xs outline-none focus:border-brand-orange border border-brand-border text-brand-white mb-4"
                   />
                   <button 
                    onClick={handleAddLink}
-                   className="w-full py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange flex items-center justify-center gap-2 transition-all"
+                   className="w-full py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange flex items-center justify-center gap-2 transition-all"
                   >
                      <Plus size={14} /> Inject Routing Node
                   </button>

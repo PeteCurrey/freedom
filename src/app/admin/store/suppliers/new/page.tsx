@@ -71,9 +71,9 @@ export default function NewSupplierPage() {
   };
 
   return (
-    <div className="p-8 pb-32 min-h-screen bg-brand-obsidian text-white">
+    <div className="p-8 pb-32 min-h-screen bg-brand-obsidian text-brand-white">
       <div className="max-w-4xl mx-auto">
-        <Link href="/admin/store/suppliers" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-8 hover:text-white transition-colors">
+        <Link href="/admin/store/suppliers" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-8 hover:text-brand-white transition-colors">
           <ArrowLeft size={12} /> Back to Network
         </Link>
         
@@ -87,7 +87,7 @@ export default function NewSupplierPage() {
                 type="text" 
                 value={supplier.name}
                 onChange={(e) => setSupplier({ ...supplier, name: e.target.value })}
-                className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none"
                 placeholder="e.g. Energy Solutions"
               />
             </div>
@@ -96,7 +96,7 @@ export default function NewSupplierPage() {
               <select 
                 value={supplier.status}
                 onChange={(e) => setSupplier({ ...supplier, status: e.target.value })}
-                className="w-full bg-brand-carbon border border-brand-border p-4 font-mono text-[10px] uppercase tracking-widest text-white focus:border-brand-orange outline-none"
+                className="w-full bg-brand-carbon border border-brand-border p-4 font-mono text-[10px] uppercase tracking-widest text-brand-white focus:border-brand-orange outline-none"
               >
                 <option value="potential">Potential Supplier</option>
                 <option value="applied">Application Pending</option>
@@ -113,7 +113,7 @@ export default function NewSupplierPage() {
                 type="text" 
                 value={supplier.website}
                 onChange={(e) => setSupplier({ ...supplier, website: e.target.value })}
-                className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none"
                 placeholder="energy-solutions.co.uk"
               />
             </div>
@@ -123,7 +123,7 @@ export default function NewSupplierPage() {
                 type="text" 
                 value={supplier.account_number}
                 onChange={(e) => setSupplier({ ...supplier, account_number: e.target.value })}
-                className="w-full bg-brand-carbon border border-brand-border p-4 font-mono text-xs text-white focus:border-brand-orange outline-none"
+                className="w-full bg-brand-carbon border border-brand-border p-4 font-mono text-xs text-brand-white focus:border-brand-orange outline-none"
                 placeholder="ACC-XXXXX"
               />
             </div>
@@ -136,7 +136,7 @@ export default function NewSupplierPage() {
                   type="text" 
                   value={supplier.contact_name}
                   onChange={(e) => setSupplier({ ...supplier, contact_name: e.target.value })}
-                  className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                  className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -146,7 +146,7 @@ export default function NewSupplierPage() {
                     type="email" 
                     value={supplier.contact_email}
                     onChange={(e) => setSupplier({ ...supplier, contact_email: e.target.value })}
-                    className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                    className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none"
                   />
                 </div>
                 <div>
@@ -155,7 +155,7 @@ export default function NewSupplierPage() {
                     type="text" 
                     value={supplier.contact_phone}
                     onChange={(e) => setSupplier({ ...supplier, contact_phone: e.target.value })}
-                    className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-white focus:border-brand-orange outline-none"
+                    className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-brand-white focus:border-brand-orange outline-none"
                   />
                 </div>
               </div>
@@ -166,7 +166,7 @@ export default function NewSupplierPage() {
             <textarea 
               value={supplier.notes}
               onChange={(e) => setSupplier({ ...supplier, notes: e.target.value })}
-              className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-white h-32 focus:border-brand-orange outline-none"
+              className="w-full bg-brand-carbon border border-brand-border p-4 font-sans text-sm text-brand-white h-32 focus:border-brand-orange outline-none"
               placeholder="Contacts, order thresholds, discounts..."
             />
           </div>
@@ -180,7 +180,7 @@ export default function NewSupplierPage() {
                   onClick={() => toggleCategory(cat)}
                   className={`px-4 py-2 font-mono text-[10px] uppercase tracking-widest border transition-colors ${
                     supplier.categories.includes(cat)
-                      ? 'bg-brand-orange text-white border-brand-orange'
+                      ? 'bg-brand-orange text-brand-white border-brand-orange'
                       : 'bg-brand-carbon text-brand-grey border-brand-border hover:border-brand-orange/50'
                   }`}
                 >
@@ -195,7 +195,7 @@ export default function NewSupplierPage() {
           <button 
            onClick={handleSave}
            disabled={saving}
-           className="w-full md:w-auto px-12 py-5 bg-brand-orange text-white font-mono text-[12px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-3"
+           className="w-full md:w-auto px-12 py-5 bg-brand-orange text-brand-white font-mono text-[12px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-3"
           >
              {saving ? "Registering..." : <><Save size={16} /> Save Supplier</>}
           </button>

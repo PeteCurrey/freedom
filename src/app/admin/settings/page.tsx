@@ -51,7 +51,7 @@ export default function SettingsPage() {
         <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4">
           <Settings size={12} /> System Node: settings.omega
         </div>
-        <h1 className="font-display text-5xl uppercase tracking-tighter text-white">
+        <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
           API <span className="text-brand-orange">Integrations</span>
         </h1>
       </div>
@@ -80,14 +80,14 @@ export default function SettingsPage() {
                       defaultValue={getSetting('anthropic')}
                       id="anthropic-key"
                       placeholder="sk-ant-..."
-                      className="flex-1 bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-white focus:border-brand-orange outline-none"
+                      className="flex-1 bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:border-brand-orange outline-none"
                     />
                     <button 
                       onClick={() => {
                         const val = (document.getElementById('anthropic-key') as HTMLInputElement).value;
                         handleSave('anthropic', val);
                       }}
-                      className="px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2"
+                      className="px-8 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2"
                     >
                       {saving === 'anthropic' ? "Saving..." : <><Save size={14} /> Commit</>}
                     </button>
@@ -114,7 +114,7 @@ export default function SettingsPage() {
                    type="password"
                    defaultValue={getSetting('dataforseo')}
                    id="dataforseo-key"
-                   className="flex-1 bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-white focus:border-brand-orange outline-none"
+                   className="flex-1 bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:border-brand-orange outline-none"
                  />
                  <button 
                     onClick={() => {
@@ -147,7 +147,7 @@ export default function SettingsPage() {
                    type="text"
                    defaultValue={getSetting('google_cloud')}
                    id="google-key"
-                   className="flex-1 bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-white focus:border-brand-orange outline-none"
+                   className="flex-1 bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:border-brand-orange outline-none"
                  />
                  <button 
                     onClick={() => {
@@ -168,7 +168,7 @@ export default function SettingsPage() {
            <div className="p-8 border border-white/5 bg-brand-obsidian/50">
               <div className="flex items-center gap-3 mb-6">
                 <Shield className="text-brand-orange" size={20} />
-                <h3 className="font-display text-lg uppercase tracking-tighter text-white">Security Protocol</h3>
+                <h3 className="font-display text-lg uppercase tracking-tighter text-brand-white">Security Protocol</h3>
               </div>
               <p className="font-sans text-xs text-brand-grey leading-relaxed mb-8">
                 All API keys are stored in the <span className="text-brand-orange font-mono">admin_settings</span> table. 

@@ -157,9 +157,9 @@ export default function StoreImportPage() {
   };
 
   return (
-    <div className="p-8 pb-32 min-h-screen bg-brand-obsidian text-white">
+    <div className="p-8 pb-32 min-h-screen bg-brand-obsidian text-brand-white">
       <div className="max-w-6xl mx-auto">
-        <Link href="/admin/store" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-8 hover:text-white transition-colors">
+        <Link href="/admin/store" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-8 hover:text-brand-white transition-colors">
           <ArrowLeft size={12} /> Back to Store
         </Link>
         <h1 className="font-display text-5xl uppercase tracking-tighter mb-4 flex items-center gap-4">
@@ -207,7 +207,7 @@ export default function StoreImportPage() {
                  <p className="font-sans text-brand-grey text-xs">Must be a standard comma-separated CSV file mapping one product per row.</p>
                  
                  <input type="file" accept=".csv" ref={fileInputRef} onChange={handleFileUpload} className="hidden" />
-                 <button onClick={() => fileInputRef.current?.click()} className="w-full py-3 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-2">
+                 <button onClick={() => fileInputRef.current?.click()} className="w-full py-3 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-2">
                     <Upload size={14} /> Select CSV File
                  </button>
               </div>
@@ -267,13 +267,13 @@ export default function StoreImportPage() {
                              <tbody>
                                 {parsedData.slice(0, 5).map((row, i) => (
                                    <tr key={i} className="border-b border-brand-border/20">
-                                      <td className="py-3 pr-4 truncate max-w-[200px] text-white">
+                                      <td className="py-3 pr-4 truncate max-w-[200px] text-brand-white">
                                          {mapping.name ? row[mapping.name] : '...'}
                                       </td>
                                       <td className="py-3 pr-4 text-brand-orange font-mono">
                                          {mapping.sku ? row[mapping.sku] : '...'}
                                       </td>
-                                      <td className="py-3 text-white">
+                                      <td className="py-3 text-brand-white">
                                          {mapping.price ? `£${row[mapping.price]}` : '...'}
                                       </td>
                                    </tr>
@@ -304,7 +304,7 @@ export default function StoreImportPage() {
                        ) : (
                           <button 
                             onClick={executeImport}
-                            className="w-full py-4 bg-brand-orange text-white font-mono text-xs uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all"
+                            className="w-full py-4 bg-brand-orange text-brand-white font-mono text-xs uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all"
                           >
                              Commit to Database
                           </button>

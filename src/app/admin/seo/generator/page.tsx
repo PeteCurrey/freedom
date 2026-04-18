@@ -59,7 +59,7 @@ export default function ContentGeneratorPage() {
         <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4">
           <Sparkles size={12} /> AI Content Node: generator.gamma
         </div>
-        <h1 className="font-display text-5xl uppercase tracking-tighter text-white">
+        <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
           Content <span className="text-brand-orange">Engine</span>
         </h1>
       </div>
@@ -84,7 +84,7 @@ export default function ContentGeneratorPage() {
                         onClick={() => setType(t.id as any)}
                         className={cn(
                           "flex flex-col items-center gap-3 p-4 border transition-all",
-                          type === t.id ? "bg-brand-orange border-brand-orange text-white" : "bg-brand-obsidian border-brand-border text-brand-grey hover:border-brand-grey"
+                          type === t.id ? "bg-brand-orange border-brand-orange text-brand-white" : "bg-brand-obsidian border-brand-border text-brand-grey hover:border-brand-grey"
                         )}
                       >
                         <t.icon size={20} />
@@ -101,7 +101,7 @@ export default function ContentGeneratorPage() {
                      value={topic}
                      onChange={(e) => setTopic(e.target.value)}
                      placeholder="e.g. Mercedes Sprinter Solar Installation"
-                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-white focus:border-brand-orange outline-none"
+                     className="w-full bg-brand-obsidian border border-brand-border p-4 font-mono text-xs text-brand-white focus:border-brand-orange outline-none"
                    />
                 </div>
 
@@ -109,7 +109,7 @@ export default function ContentGeneratorPage() {
                   <button 
                     onClick={handleGenerate}
                     disabled={isGenerating || !topic}
-                    className="w-full py-5 bg-brand-orange text-white font-display text-sm uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full py-5 bg-brand-orange text-brand-white font-display text-sm uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isGenerating ? (
                       <>
@@ -156,13 +156,13 @@ export default function ContentGeneratorPage() {
                  <div className="flex justify-between items-center mb-8 border-b border-brand-border pb-6">
                     <h3 className="font-display text-xl uppercase tracking-tighter text-brand-orange">Technical Draft</h3>
                     <div className="flex gap-4">
-                       <button className="text-brand-grey hover:text-white transition-colors"><Save size={18} /></button>
+                       <button className="text-brand-grey hover:text-brand-white transition-colors"><Save size={18} /></button>
                        <button 
                         onClick={handleQueue}
                         disabled={queued}
                         className={cn(
                           "px-4 py-1 font-mono text-[9px] uppercase tracking-widest border transition-all",
-                          queued ? "bg-green-500 border-green-500 text-white" : "border-brand-orange text-brand-orange hover:bg-brand-orange hover:text-white"
+                          queued ? "bg-green-500 border-green-500 text-brand-white" : "border-brand-orange text-brand-orange hover:bg-brand-orange hover:text-brand-white"
                         )}
                        >
                          {queued ? "Queued for Review" : "Queue for Publishing"}

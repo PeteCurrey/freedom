@@ -66,7 +66,7 @@ export default function LeadsPage() {
           <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4">
             <MessageSquare size={12} /> Intelligence Node: leads.crm
           </div>
-          <h1 className="font-display text-5xl uppercase tracking-tighter text-white">
+          <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
             Lead <span className="text-brand-orange">Pipeline</span>
           </h1>
         </div>
@@ -76,7 +76,7 @@ export default function LeadsPage() {
              onClick={() => setView("list")}
              className={cn(
                "px-6 py-2 font-mono text-[10px] uppercase tracking-widest transition-all",
-               view === "list" ? "bg-brand-orange text-white" : "text-brand-grey hover:text-white"
+               view === "list" ? "bg-brand-orange text-brand-white" : "text-brand-grey hover:text-brand-white"
              )}
            >
              Table View
@@ -85,7 +85,7 @@ export default function LeadsPage() {
              onClick={() => setView("pipeline")}
              className={cn(
                "px-6 py-2 font-mono text-[10px] uppercase tracking-widest transition-all",
-               view === "pipeline" ? "bg-brand-orange text-white" : "text-brand-grey hover:text-white"
+               view === "pipeline" ? "bg-brand-orange text-brand-white" : "text-brand-grey hover:text-brand-white"
              )}
            >
              CRM Pipeline
@@ -110,7 +110,7 @@ export default function LeadsPage() {
       </div>
 
       {view === "list" ? (
-        <div className="blueprint-border bg-brand-carbon overflow-hidden text-white">
+        <div className="blueprint-border bg-brand-carbon overflow-hidden text-brand-white">
           <table className="w-full text-left">
             <thead>
                 <tr className="bg-brand-obsidian border-b border-brand-border font-mono text-[10px] uppercase tracking-widest text-brand-grey">
@@ -130,12 +130,12 @@ export default function LeadsPage() {
                             "w-2 h-2 rounded-full",
                             lead.type === 'advisor' ? "bg-blue-500" : "bg-brand-orange"
                           )} />
-                          <span className="font-display text-[11px] uppercase text-white">{lead.type} Capture</span>
+                          <span className="font-display text-[11px] uppercase text-brand-white">{lead.type} Capture</span>
                         </div>
                         <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">{new Date(lead.created_at).toLocaleString()}</span>
                     </td>
                     <td className="p-6">
-                        <div className="flex items-center gap-2 text-white mb-1">
+                        <div className="flex items-center gap-2 text-brand-white mb-1">
                           <Mail size={12} className="text-brand-orange" />
                           <span className="font-medium">{lead.email}</span>
                         </div>
@@ -171,7 +171,7 @@ export default function LeadsPage() {
            {pipelineStages.map((stage) => (
              <div key={stage.id} className="space-y-6">
                 <div className="flex items-center justify-between border-b border-brand-border pb-4">
-                   <h3 className="font-display text-sm uppercase tracking-widest text-white">{stage.name}</h3>
+                   <h3 className="font-display text-sm uppercase tracking-widest text-brand-white">{stage.name}</h3>
                    <span className="font-mono text-[10px] text-brand-grey">{leads.filter(l => (l.pipeline_status || 'new') === stage.id).length}</span>
                 </div>
                 
@@ -187,7 +187,7 @@ export default function LeadsPage() {
                            <span className={cn("w-1 h-3", stage.color)} />
                            <span className="font-mono text-[8px] text-brand-grey uppercase">{new Date(lead.created_at).toLocaleDateString()}</span>
                         </div>
-                        <p className="font-display text-xs text-white mb-2 uppercase break-all">{lead.email.split('@')[0]}</p>
+                        <p className="font-display text-xs text-brand-white mb-2 uppercase break-all">{lead.email.split('@')[0]}</p>
                         <div className="flex items-center gap-2 text-brand-grey mb-4">
                            <Mail size={10} />
                            <span className="font-mono text-[8px] truncate">{lead.email}</span>
@@ -215,14 +215,14 @@ export default function LeadsPage() {
         <div className="fixed inset-y-0 right-0 w-full max-w-xl bg-brand-carbon border-l border-brand-border z-[100] p-12 shadow-2xl overflow-y-auto">
            <button 
              onClick={() => setActiveLead(null)}
-             className="absolute top-8 right-8 text-brand-grey hover:text-white"
+             className="absolute top-8 right-8 text-brand-grey hover:text-brand-white"
            >
              Close Protocol
            </button>
            
            <div className="mb-12">
               <span className="font-mono text-[10px] text-brand-orange uppercase tracking-widest mb-2 block">Tactical Dossier</span>
-              <h2 className="font-display text-4xl uppercase text-white break-all mb-2">{activeLead.email}</h2>
+              <h2 className="font-display text-4xl uppercase text-brand-white break-all mb-2">{activeLead.email}</h2>
               <span className="font-mono text-[10px] text-brand-grey uppercase tracking-[0.3em]">ID: {activeLead.id.substring(0, 12)}</span>
            </div>
 

@@ -66,7 +66,7 @@ export default function MarketingHubPage() {
           <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[.4em] mb-4">
             <TrendingUp size={12} /> Marketing Hub: marketing.delta
           </div>
-          <h1 className="font-display text-5xl uppercase tracking-tighter text-white">
+          <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
             Demand <span className="text-brand-orange">Generation</span>
           </h1>
         </div>
@@ -76,7 +76,7 @@ export default function MarketingHubPage() {
              onClick={() => setActiveTab("affiliates")}
              className={cn(
                "px-6 py-2 font-mono text-[10px] uppercase tracking-widest transition-all",
-               activeTab === "affiliates" ? "bg-brand-orange text-white" : "text-brand-grey hover:text-white"
+               activeTab === "affiliates" ? "bg-brand-orange text-brand-white" : "text-brand-grey hover:text-brand-white"
              )}
            >
              Affiliate Network
@@ -85,7 +85,7 @@ export default function MarketingHubPage() {
              onClick={() => setActiveTab("promotions")}
              className={cn(
                "px-6 py-2 font-mono text-[10px] uppercase tracking-widest transition-all",
-               activeTab === "promotions" ? "bg-brand-orange text-white" : "text-brand-grey hover:text-white"
+               activeTab === "promotions" ? "bg-brand-orange text-brand-white" : "text-brand-grey hover:text-brand-white"
              )}
            >
              Global Promotions
@@ -104,7 +104,7 @@ export default function MarketingHubPage() {
                      <span className="font-mono text-[9px] text-green-500 uppercase">+12.4%</span>
                   </div>
                   <span className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-1">Affiliate Clicks</span>
-                  <span className="block font-display text-3xl text-white">2.6k</span>
+                  <span className="block font-display text-3xl text-brand-white">2.6k</span>
                </div>
                <div className="blueprint-border p-8 bg-brand-carbon border-l-4 border-brand-orange">
                   <div className="flex justify-between items-start mb-6">
@@ -113,13 +113,13 @@ export default function MarketingHubPage() {
                      </div>
                   </div>
                   <span className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-1">Est. Revenue</span>
-                  <span className="block font-display text-3xl text-white">£450.50</span>
+                  <span className="block font-display text-3xl text-brand-white">£450.50</span>
                </div>
             </div>
 
             <div className="blueprint-border bg-brand-carbon overflow-hidden">
                <div className="p-6 bg-brand-obsidian border-b border-brand-border flex justify-between items-center">
-                  <h3 className="font-display text-sm uppercase tracking-widest text-white">Active Tracking Engines</h3>
+                  <h3 className="font-display text-sm uppercase tracking-widest text-brand-white">Active Tracking Engines</h3>
                </div>
                <table className="w-full text-left">
                   <thead>
@@ -134,11 +134,11 @@ export default function MarketingHubPage() {
                      {links.map((link) => (
                         <tr key={link.id} className="border-b border-brand-border/50 hover:bg-brand-obsidian transition-colors">
                            <td className="p-6">
-                              <span className="block font-display text-sm uppercase text-white">{link.name}</span>
+                              <span className="block font-display text-sm uppercase text-brand-white">{link.name}</span>
                               <span className="block font-mono text-[8px] text-brand-grey uppercase truncate">{link.url}</span>
                            </td>
-                           <td className="p-6 font-mono text-white">{link.clicks}</td>
-                           <td className="p-6 font-display text-lg text-white">£{link.revenue.toFixed(2)}</td>
+                           <td className="p-6 font-mono text-brand-white">{link.clicks}</td>
+                           <td className="p-6 font-display text-lg text-brand-white">£{link.revenue.toFixed(2)}</td>
                            <td className="p-6 text-right">
                               <button className="p-2 border border-brand-border text-brand-grey hover:text-brand-orange"><Copy size={14} /></button>
                            </td>
@@ -153,12 +153,12 @@ export default function MarketingHubPage() {
             <div className="flex justify-between items-center bg-brand-carbon border border-brand-border p-8 blueprint-border relative">
                <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
                <div className="relative z-10">
-                  <h3 className="font-display text-2xl uppercase tracking-tighter text-white">Banner Control Center</h3>
+                  <h3 className="font-display text-2xl uppercase tracking-tighter text-brand-white">Banner Control Center</h3>
                   <p className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">Deploy site-wide announcements and sales.</p>
                </div>
                <Link 
                  href="/admin/marketing/promotions/new"
-                 className="relative z-10 px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all"
+                 className="relative z-10 px-8 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all"
                >
                   Create New Promotion
                </Link>
@@ -188,13 +188,13 @@ export default function MarketingHubPage() {
                        </button>
                     </div>
                     
-                    <h4 className="font-display text-xl uppercase tracking-tight text-white mb-2">{promo.title}</h4>
+                    <h4 className="font-display text-xl uppercase tracking-tight text-brand-white mb-2">{promo.title}</h4>
                     <p className="font-sans text-xs text-brand-grey mb-6 leading-relaxed line-clamp-2">{promo.content}</p>
                     
                     <div className="flex justify-between items-center pt-6 border-t border-brand-border/50">
                        <span className="font-mono text-[10px] text-brand-grey">Priority: {promo.priority}</span>
                        <div className="flex gap-4">
-                          <button className="text-brand-grey hover:text-white transition-colors"><CheckCircle2 size={16} /></button>
+                          <button className="text-brand-grey hover:text-brand-white transition-colors"><CheckCircle2 size={16} /></button>
                           <button className="text-brand-grey hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
                        </div>
                     </div>

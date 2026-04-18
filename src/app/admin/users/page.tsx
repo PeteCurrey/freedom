@@ -39,12 +39,12 @@ export default function UserManagementPage() {
           <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4">
             <Users size={12} /> System Node: users.admin
           </div>
-          <h1 className="font-display text-5xl uppercase tracking-tighter text-white">
+          <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
             User <span className="text-brand-orange">Management</span>
           </h1>
         </div>
         
-        <button className="px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2">
+        <button className="px-8 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2">
            <UserPlus size={14} /> Invite New Admin
         </button>
       </div>
@@ -69,13 +69,13 @@ export default function UserManagementPage() {
                             <Users size={18} />
                          </div>
                          <div>
-                            <span className="block font-display text-sm uppercase text-white">{user.full_name || "New Admin"}</span>
+                            <span className="block font-display text-sm uppercase text-brand-white">{user.full_name || "New Admin"}</span>
                             <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-widest">Employee Tier 1</span>
                          </div>
                       </div>
                    </td>
                    <td className="p-6">
-                      <div className="flex items-center gap-2 text-white">
+                      <div className="flex items-center gap-2 text-brand-white">
                         <Mail size={12} className="text-brand-orange" />
                         <span className="font-medium">{user.email}</span>
                       </div>
@@ -119,12 +119,12 @@ export default function UserManagementPage() {
                           <Users size={18} />
                         </div>
                         <div>
-                          <span className="block font-display text-sm uppercase text-white">Pete Currey</span>
+                          <span className="block font-display text-sm uppercase text-brand-white">Pete Currey</span>
                           <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-widest">Super Admin</span>
                         </div>
                     </div>
                   </td>
-                  <td className="p-6"><span className="font-medium text-white">pete@avorria.com</span></td>
+                  <td className="p-6"><span className="font-medium text-brand-white">pete@avorria.com</span></td>
                   <td className="p-6 text-brand-orange font-mono text-[9px] uppercase tracking-widest font-bold">SUPER_ADMIN</td>
                   <td className="p-6 text-brand-grey font-mono text-[9px] uppercase">ACTIVE SYSTEM ROOT</td>
                   <td className="p-6 text-right"><CheckCircle2 className="text-green-500 inline" size={16} /></td>

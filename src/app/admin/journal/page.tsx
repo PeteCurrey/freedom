@@ -59,7 +59,7 @@ export default function JournalAdminPage() {
           <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4">
             <FileText size={12} /> Editorial Hub: journal.alpha
           </div>
-          <h1 className="font-display text-5xl uppercase tracking-tighter text-white">
+          <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
             Amplios <span className="text-brand-orange">Journal</span>
           </h1>
         </div>
@@ -67,7 +67,7 @@ export default function JournalAdminPage() {
         <div className="flex gap-4">
            <Link 
              href="/admin/journal/new"
-             className="px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2"
+             className="px-8 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2"
            >
              <Plus size={14} /> New Article
            </Link>
@@ -80,7 +80,7 @@ export default function JournalAdminPage() {
           { label: "Published", count: posts.filter(p => p.status === 'published').length, icon: CheckCircle2, color: "text-green-500" },
           { label: "Drafts", count: posts.filter(p => p.status === 'draft').length, icon: FileEdit, color: "text-brand-orange" },
           { label: "Archived", count: posts.filter(p => p.status === 'archived').length, icon: Archive, color: "text-brand-grey" },
-          { label: "Total Articles", count: posts.length, icon: FileText, color: "text-white" },
+          { label: "Total Articles", count: posts.length, icon: FileText, color: "text-brand-white" },
         ].map((stat, i) => (
           <div key={i} className="blueprint-border p-4 bg-brand-carbon flex items-center justify-between">
             <div>
@@ -100,7 +100,7 @@ export default function JournalAdminPage() {
              onClick={() => setFilter(st)}
              className={cn(
                "px-4 py-2 font-mono text-[10px] uppercase tracking-widest border transition-all whitespace-nowrap",
-               filter === st ? "bg-brand-orange border-brand-orange text-white" : "border-brand-border text-brand-grey hover:border-brand-grey"
+               filter === st ? "bg-brand-orange border-brand-orange text-brand-white" : "border-brand-border text-brand-grey hover:border-brand-grey"
              )}
            >
              {st}
@@ -125,12 +125,12 @@ export default function JournalAdminPage() {
                 <tr key={post.id} className="border-b border-brand-border/50 hover:bg-brand-obsidian transition-colors group">
                    <td className="p-6">
                       <div className="flex flex-col">
-                        <span className="font-display text-sm uppercase text-white mb-1 group-hover:text-brand-orange transition-colors">{post.title}</span>
+                        <span className="font-display text-sm uppercase text-brand-white mb-1 group-hover:text-brand-orange transition-colors">{post.title}</span>
                         <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest italic">{post.slug}</span>
                       </div>
                    </td>
                    <td className="p-6">
-                      <div className="flex items-center gap-2 text-white mb-1">
+                      <div className="flex items-center gap-2 text-brand-white mb-1">
                         <User size={12} className="text-brand-orange" />
                         <span className="font-medium">{post.author_name}</span>
                       </div>
@@ -157,7 +157,7 @@ export default function JournalAdminPage() {
                    <td className="p-6 text-right">
                       <div className="flex justify-end gap-3 text-brand-grey opacity-0 group-hover:opacity-100 transition-opacity">
                          <Link href={`/journal/${post.slug}`} target="_blank" className="hover:text-brand-orange transition-colors"><Eye size={16} /></Link>
-                         <Link href={`/admin/journal/${post.id}`} className="hover:text-white transition-colors"><Edit3 size={16} /></Link>
+                         <Link href={`/admin/journal/${post.id}`} className="hover:text-brand-white transition-colors"><Edit3 size={16} /></Link>
                          <button 
                            onClick={() => deletePost(post.id)}
                            className="hover:text-red-500 transition-colors"

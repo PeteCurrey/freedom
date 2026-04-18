@@ -37,14 +37,14 @@ export default function AffiliatesManagerPage() {
   }
 
   return (
-    <div className="p-8 pb-32 min-h-screen bg-brand-obsidian text-white">
+    <div className="p-8 pb-32 min-h-screen bg-brand-obsidian text-brand-white">
       {/* Header */}
       <div className="mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
         <div>
-          <Link href="/admin/dashboard" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4 hover:text-white transition-colors">
+          <Link href="/admin/dashboard" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4 hover:text-brand-white transition-colors">
             <ArrowLeft size={12} /> Back to Hub
           </Link>
-          <h1 className="font-display text-5xl uppercase tracking-tighter text-white flex items-center gap-4">
+          <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white flex items-center gap-4">
             <LinkIcon className="w-10 h-10 text-brand-orange" />
             Affiliate <span className="text-brand-orange">Network</span>
           </h1>
@@ -54,7 +54,7 @@ export default function AffiliatesManagerPage() {
         </div>
         
         <div className="flex gap-4">
-          <button className="px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2">
+          <button className="px-8 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2">
              <Plus size={14} /> Add Partner
           </button>
         </div>
