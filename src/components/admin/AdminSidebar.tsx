@@ -18,7 +18,8 @@ import {
   Database,
   FileText,
   Sun,
-  Moon
+  Moon,
+  Truck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -30,6 +31,7 @@ const menuItems = [
   { name: "SEO Hub", href: "/admin/seo", icon: Search },
   { name: "Affiliate Network", href: "/admin/affiliates", icon: Database },
   { name: "Used Marketplaces", href: "/admin/marketing/marketplaces", icon: Monitor },
+  { name: "Supplier Network", href: "/admin/store/suppliers", icon: Truck },
   { name: "Store Manager", href: "/admin/store", icon: ShoppingBag },
   { name: "Content / CMS", href: "/admin/cms", icon: Monitor },
   { name: "User Admin", href: "/admin/users", icon: Users },

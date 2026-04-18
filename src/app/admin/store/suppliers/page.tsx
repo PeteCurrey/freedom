@@ -37,6 +37,37 @@ export default function SuppliersManagerPage() {
     fetchSuppliers();
   };
 
+  const handleSeed = async () => {
+    setLoading(true);
+    const presetSuppliers = [
+      { name: 'Kiravans', website: 'https://www.kiravans.co.uk', trade_account: true, status: 'active_trade', categories: ['interiors', 'hardware', 'electrical'], brands_handled: ['RIB', 'Webasto', 'Dometic', 'Kiravans'], notes: 'Major UK supplier for seats, windows, and general conversion hardware.' },
+      { name: 'Clearcut Conversions', website: 'https://www.clearcutconversions.com', trade_account: true, status: 'applied', categories: ['interiors', 'hardware', 'water'], brands_handled: ['Vohringer', 'Dometic', 'Thetford'], notes: 'Specialists in CNC furniture and rock and roll beds.' },
+      { name: 'Rayne Automotive', website: 'https://www.rayneautomotive.co.uk', trade_account: true, status: 'active_trade', categories: ['electrical'], brands_handled: ['Victron', 'Rayne'], notes: 'High-quality loom manufacturers and electrical systems.' },
+      { name: 'Victron Energy', website: 'https://www.victronenergy.com', trade_account: false, status: 'potential', categories: ['electrical'], brands_handled: ['Victron'], notes: 'Global leaders in off-grid power systems.' },
+      { name: 'Dometic UK', website: 'https://www.dometic.com', trade_account: false, status: 'potential', categories: ['climate', 'water', 'interiors'], brands_handled: ['Dometic'], notes: 'Primary manufacturer for fridges, AC, and windows.' },
+      { name: 'Truma UK', website: 'https://www.truma.com', trade_account: false, status: 'potential', categories: ['heating', 'water'], brands_handled: ['Truma'], notes: 'Specialists in combi heaters and gas systems.' },
+      { name: 'Webasto', website: 'https://www.webasto.com', trade_account: false, status: 'potential', categories: ['heating', 'climate'], brands_handled: ['Webasto'], notes: 'Air and water heating specialists.' },
+      { name: 'MaxxAir', website: 'https://www.airxcel.com', trade_account: false, status: 'potential', categories: ['ventilation'], brands_handled: ['MaxxAir'], notes: 'Ventilation and roof fan specialists.' },
+      { name: 'Whale Pumps', website: 'https://www.whalepumps.com', trade_account: false, status: 'potential', categories: ['water', 'plumbing'], brands_handled: ['Whale'], notes: 'Water system and high-flow pump specialists.' },
+      { name: 'Thetford Europe', website: 'https://www.thetford-europe.com', trade_account: false, status: 'potential', categories: ['plumbing', 'interiors'], brands_handled: ['Thetford'], notes: 'Sanitation and cooking appliance leaders.' },
+      { name: 'Dodo Mat', website: 'https://www.dodomat.com', trade_account: true, status: 'active_trade', categories: ['insulation'], brands_handled: ['Dodo Mat'], notes: 'Sound deadening and thermal insulation specialists.' },
+      { name: 'Gaslow', website: 'https://www.gaslowdirect.com', trade_account: true, status: 'active_trade', categories: ['gas'], brands_handled: ['Gaslow'], notes: 'Refillable LPG system specialists.' },
+      { name: 'Jackson Leisure', website: 'https://www.jacksonsleisure.com', trade_account: true, status: 'applied', categories: ['general', 'appliance'], brands_handled: ['Dometic', 'Thetford', 'Fiamma'], notes: 'Major distributor for caravan and motorhome parts.' },
+      { name: 'Rainbow Conversions', website: 'https://www.rainbow-conversions.co.uk', trade_account: true, status: 'potential', categories: ['general', 'furniture'], brands_handled: ['SCA', 'RIB'], notes: 'One of the UK largest conversion equipment suppliers.' },
+      { name: 'Transporter HQ', website: 'https://www.transporterhq.co.uk', trade_account: true, status: 'active_trade', categories: ['exterior', 'hardware'], brands_handled: ['THQ', 'Bilstein'], notes: 'VW Transporter specialist hardware and styling.' },
+      { name: 'Megavanmats', website: 'https://www.megavanmats.com', trade_account: true, status: 'active_trade', categories: ['interiors', 'insulation'], brands_handled: ['Megavanmats', 'Trimberry'], notes: 'Leading supplier for lining carpets and adhesives.' }
+    ];
+
+    for (let s of presetSuppliers) {
+      const { data } = await supabase.from('suppliers').select('id').eq('name', s.name).single();
+      if (!data) {
+        await supabase.from('suppliers').insert([s]);
+      }
+    }
+    
+    fetchSuppliers();
+  };
+
   return (
     <div className="p-8 pb-32 min-h-screen bg-brand-obsidian text-white">
       {/* Header */}
@@ -55,6 +86,9 @@ export default function SuppliersManagerPage() {
         </div>
         
         <div className="flex gap-4">
+          <button onClick={handleSeed} className="px-8 py-4 border border-brand-border text-brand-grey font-mono text-[10px] uppercase tracking-widest hover:border-brand-orange hover:text-brand-orange transition-all">
+            Sync Registry Defaults
+          </button>
           <Link href="/admin/store/suppliers/new" className="px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2">
              <Plus size={14} /> Add Supplier
           </Link>
