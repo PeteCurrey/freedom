@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Tag, ChevronRight, ShieldCheck, Loader2 } from "lucide-react";
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ArrowLeft, Tag, ChevronRight, ShieldCheck, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 interface CartItem {
