@@ -83,7 +83,7 @@ export default function MarketplaceLinksManager() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this marketplace link?")) return;
     await supabase.from('vehicle_marketplaces').delete().eq('id', id);
-    fetchLinks();
+    fetchData();
   };
 
   return (
