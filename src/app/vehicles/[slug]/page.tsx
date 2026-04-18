@@ -308,8 +308,48 @@ export default async function VehicleProfile({ params }: { params: Promise<{ slu
 }
 
 const featuredProducts = [
-  { id: "1", name: "Sprinter-Specific MaxxAir Vent Kit", brand: "MAXXAIR", price: 34500, image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1000", category: "Ventilation" },
-  { id: "2", name: "Victron Sprinter Electrical Bundle", brand: "VICTRON", price: 425000, image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1000", category: "Electrical" },
-  { id: "3", name: "Custom Sprinter Floor Plate", brand: "DIYM", price: 125000, image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=1000", category: "Interior" },
-  { id: "4", name: "Dometic S4 Window - Sprinter L3", brand: "DOMETIC", price: 45900, image: "https://images.unsplash.com/photo-1544621443-42468301beaf?q=80&w=1000", category: "Windows" },
+  { 
+    id: "1", 
+    name: "Sprinter-Specific MaxxAir Vent Kit", 
+    brand: "MAXXAIR", 
+    price: 34500, 
+    image: "/images/insulation-technical.png", 
+    slug: "sprinter-maxxair-kit",
+    specLine: "LWB-Optimized | 12V High Flow",
+    badge: "Official Fitment",
+    systemTier: "adventure"
+  },
+  { 
+    id: "2", 
+    name: "Victron Sprinter Electrical Bundle", 
+    brand: "VICTRON ENERGY", 
+    price: 425000, 
+    image: "/images/electrical-system-technical.png", 
+    slug: "sprinter-victron-bundle",
+    specLine: "3000VA Inverter | 400Ah Lithium",
+    badge: "Engineering Pick",
+    systemTier: "off-grid"
+  },
+  { 
+    id: "3", 
+    name: "Custom Sprinter Floor Plate", 
+    brand: "DIYM", 
+    price: 125000, 
+    image: "/images/interior-showcase.png", 
+    slug: "sprinter-floor-plate",
+    specLine: "12mm Birch Ply | CNC Precision",
+    badge: "Bespoke",
+    systemTier: "craft"
+  },
+  { 
+    id: "4", 
+    name: "Dometic S4 Window - Sprinter L3", 
+    brand: "DOMETIC", 
+    price: 45900, 
+    image: "/images/exterior-equipment-technical.png", 
+    slug: "dometic-s4-sprinter",
+    specLine: "900x500mm | Double Glazed",
+    badge: "New Registry Node",
+    systemTier: "road-prepared"
+  },
 ];
