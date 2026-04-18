@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, User, ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
+import { Search, User, ShoppingCart, Menu, X, ChevronDown, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
 import { supabase } from "@/lib/supabase";
