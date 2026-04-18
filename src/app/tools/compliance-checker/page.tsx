@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import ComplianceAudit from "@/components/tools/ComplianceAudit";
-import { ClipboardCheck, Info, ArrowLeft, Terminal, ShieldAlert } from "lucide-react";
+import { ClipboardCheck, Info, ArrowLeft, Terminal, ShieldAlert, FileText } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
