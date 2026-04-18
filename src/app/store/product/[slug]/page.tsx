@@ -3,7 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { 
   ShoppingCart, ShieldCheck, Truck, RefreshCw, 
   ChevronRight, ArrowLeft, Star, Info, FileText, Layout,
-  Share2, Heart, Plus
+  Share2, Heart, Plus, Terminal
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -336,5 +336,4 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       <Footer />
     </main>
   );
-}
 }
