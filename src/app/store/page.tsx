@@ -5,6 +5,7 @@ import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { StoreSearch } from "@/components/store/StoreSearch";
 import { RecentlyViewed } from "@/components/store/RecentlyViewed";
+import Image from "next/image";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
@@ -120,54 +121,74 @@ export default async function StoreHub() {
            </div>
 
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-brand-border">
-              {categories?.map((cat) => (
-                <div 
-                  key={cat.id} 
-                  className="bg-brand-carbon group relative overflow-hidden flex flex-col min-h-[400px]"
-                >
-                  <div className="p-12 relative z-10 flex flex-col h-full">
-                     <div className="mb-20 flex justify-between items-start">
-                        <span className="font-mono text-[10px] text-brand-orange tracking-widest uppercase">SYS // {cat.slug}</span>
-                        <div className="w-10 h-10 border border-brand-border flex items-center justify-center opacity-30 group-hover:opacity-100 group-hover:border-brand-orange group-hover:rotate-45 transition-all duration-500">
-                          <ArrowRight className="w-4 h-4 text-brand-orange -rotate-45" />
-                        </div>
-                     </div>
-                     
-                     <div className="mt-auto">
-                        <h3 className="font-display text-4xl uppercase mb-4 leading-none">{cat.name}</h3>
-                        <p className="font-sans text-brand-grey text-sm mb-8 line-clamp-2 max-w-[280px]">
-                           {cat.description || "Technical grade components for professional off-grid conversions."}
-                        </p>
-                        
-                        {/* Subcategory quick links */}
-                        <div className="flex flex-wrap gap-x-4 gap-y-2 mb-8">
-                           {cat.subcategories?.slice(0, 3).map((sub: any) => (
-                             <Link 
-                                key={sub.slug} 
-                                href={`/store/${cat.slug}?sub=${sub.slug}`}
-                                className="font-mono text-[9px] text-brand-grey hover:text-brand-orange transition-colors uppercase tracking-widest flex items-center gap-1"
-                             >
-                               <span className="text-brand-orange/40">{">"}</span> {sub.name}
-                             </Link>
-                           ))}
-                        </div>
+               {categories?.map((cat) => {
+                 // Mapping generated images to categories
+                 const imageMap: Record<string, string> = {
+                   'power-systems': '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/cat_electrical_power_systems_1776505608980.png',
+                   'climate-control': '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/cat_heating_climate_control_1776505630980.png',
+                   'water-plumbing': '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/cat_water_plumbing_systems_1776505649499.png',
+                   'insulation-build': '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/cat_insulation_ventilation_build_1776505666892.png',
+                   'gas-lpg': '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/cat_gas_lpg_systems_1776505691366.png',
+                   'interior-hardware': '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/cat_interior_hardware_furniture_1776505705046.png'
+                 };
+                 
+                 const bgImage = imageMap[cat.slug] || '/images/hero-background.png';
 
-                        <Link 
-                          href={`/store/${cat.slug}`}
-                          className="font-display text-[10px] uppercase tracking-widest text-white border-b border-brand-orange pb-1 hover:text-brand-orange transition-colors"
-                        >
-                          Enter Registry →
-                        </Link>
+                 return (
+                   <div 
+                     key={cat.id} 
+                     className="bg-brand-carbon group relative overflow-hidden flex flex-col min-h-[450px]"
+                   >
+                     {/* Background Image Layer */}
+                     <div className="absolute inset-0 z-0 overflow-hidden">
+                       <Image 
+                         src={bgImage}
+                         alt={cat.name}
+                         fill
+                         className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110 opacity-40 group-hover:opacity-60"
+                       />
+                       <div className="absolute inset-0 bg-gradient-to-t from-brand-obsidian via-brand-obsidian/60 to-transparent" />
                      </div>
-                  </div>
-                  
-                  {/* Backdrop decoration */}
-                  <div className="absolute top-1/2 right-0 -translate-y-1/2 font-display text-[20rem] text-white/[0.02] pointer-events-none translate-x-1/2 group-hover:text-brand-orange/[0.05] transition-colors duration-700">
-                    {cat.name.charAt(0)}
-                  </div>
-                </div>
-              ))}
-           </div>
+
+                     <div className="p-12 relative z-10 flex flex-col h-full">
+                        <div className="mb-20 flex justify-between items-start">
+                           <span className="font-mono text-[10px] text-brand-orange tracking-widest uppercase bg-brand-obsidian/50 px-2 py-1 backdrop-blur-sm">SYS // {cat.slug}</span>
+                           <div className="w-10 h-10 border border-brand-border bg-brand-obsidian/50 backdrop-blur-sm flex items-center justify-center opacity-30 group-hover:opacity-100 group-hover:border-brand-orange group-hover:rotate-45 transition-all duration-500">
+                             <ArrowRight className="w-4 h-4 text-brand-orange -rotate-45" />
+                           </div>
+                        </div>
+                        
+                        <div className="mt-auto">
+                           <h3 className="font-display text-4xl uppercase mb-4 leading-none">{cat.name}</h3>
+                           <p className="font-sans text-brand-grey text-sm mb-8 line-clamp-2 max-w-[280px]">
+                              {cat.description || "Technical grade components for professional off-grid conversions."}
+                           </p>
+                           
+                           {/* Subcategory quick links */}
+                           <div className="flex flex-wrap gap-x-4 gap-y-2 mb-8">
+                              {cat.subcategories?.slice(0, 3).map((sub: any) => (
+                                <Link 
+                                   key={sub.slug} 
+                                   href={`/store/${cat.slug}?sub=${sub.slug}`}
+                                   className="font-mono text-[9px] text-brand-grey hover:text-brand-orange transition-colors uppercase tracking-widest flex items-center gap-1"
+                                >
+                                  <span className="text-brand-orange/40">{">"}</span> {sub.name}
+                                </Link>
+                              ))}
+                           </div>
+   
+                           <Link 
+                             href={`/store/${cat.slug}`}
+                             className="inline-block font-display text-[10px] uppercase tracking-widest text-white border-b border-brand-orange pb-2 hover:text-brand-orange transition-colors"
+                           >
+                             Enter Registry →
+                           </Link>
+                        </div>
+                     </div>
+                   </div>
+                 );
+               })}
+            </div>
         </div>
       </section>
 
@@ -196,15 +217,32 @@ export default async function StoreHub() {
               </div>
               
               <div className="grid grid-cols-2 gap-4">
-                 {[1, 2, 3, 4].map(i => (
-                   <div key={i} className="aspect-square bg-brand-obsidian blueprint-border p-6 flex flex-col justify-between group cursor-help">
-                      <div className="font-mono text-[8px] text-brand-grey uppercase">Kit Spec // 0{i}</div>
-                      <div className="w-12 h-12 bg-brand-orange/5 border border-brand-orange/20 flex items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity">
-                        <Terminal className="text-brand-orange w-5 h-5" />
-                      </div>
-                      <div className="flex justify-between items-end">
-                        <span className="font-display text-xs uppercase opacity-40 group-hover:opacity-100">Bundle Savings</span>
-                        <span className="font-mono text-xs text-brand-orange">27%</span>
+                 {[
+                   { name: 'Essential Off-Grid', img: '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/kit_essential_offgrid_bundle_1776505721992.png', savings: '12%' },
+                   { name: 'Expedition Extreme', img: '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/kit_expedition_extreme_bundle_1776505738197.png', savings: '18%' },
+                   { name: 'Luxury Living', img: '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/kit_luxury_living_bundle_1776505764537.png', savings: '15%' },
+                   { name: 'Base Foundation', img: '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/kit_base_foundation_bundle_1776505780135.png', savings: '22%' }
+                 ].map((kit, i) => (
+                   <div key={i} className="relative aspect-square bg-brand-obsidian blueprint-border overflow-hidden group cursor-pointer">
+                      <Image 
+                        src={kit.img}
+                        alt={kit.name}
+                        fill
+                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-40 group-hover:opacity-80 group-hover:scale-105"
+                      />
+                      {/* Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-brand-obsidian via-transparent to-transparent opacity-80" />
+                      
+                      <div className="absolute inset-0 p-6 flex flex-col justify-between z-10">
+                        <div className="font-mono text-[8px] text-brand-grey uppercase tracking-widest bg-brand-obsidian/50 self-start px-2 py-1 backdrop-blur-sm">Kit Registry // 0{i+1}</div>
+                        
+                        <div className="mt-auto">
+                          <h3 className="font-display text-sm uppercase mb-2 group-hover:text-brand-orange transition-colors">{kit.name}</h3>
+                          <div className="flex justify-between items-end">
+                            <span className="font-mono text-[9px] uppercase text-brand-grey">Save Up To</span>
+                            <span className="font-mono text-sm text-brand-orange font-bold">{kit.savings}</span>
+                          </div>
+                        </div>
                       </div>
                    </div>
                  ))}
