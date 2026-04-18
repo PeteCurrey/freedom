@@ -23,7 +23,7 @@ const PRESETS = [
   { name: "Lithium Battery (100Ah)", weight: 12, category: "component" },
   { name: "Solar Panel (400W)", weight: 22, category: "component" },
   { name: "MaxxFan Deluxe", weight: 6, category: "component" },
-];
+] as const;
 
 export default function PayloadCalculator() {
   const [nodes, setNodes] = useState<WeightNode[]>(INITIAL_NODES);
