@@ -27,17 +27,16 @@ export default function SuppliersManagerPage() {
       .from('suppliers')
       .select('*')
       .order('name');
-    setSuppliers(data || []);
-    setLoading(false);
+      
+    if (!data || data.length === 0) {
+      await autoSeed();
+    } else {
+      setSuppliers(data || []);
+      setLoading(false);
+    }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this supplier? Products linked to this supplier will lose their mapping.")) return;
-    await supabase.from('suppliers').delete().eq('id', id);
-    fetchSuppliers();
-  };
-
-  const handleSeed = async () => {
+  const autoSeed = async () => {
     setLoading(true);
     const presetSuppliers = [
       { name: 'Kiravans', website: 'https://www.kiravans.co.uk', trade_account: true, status: 'active_trade', categories: ['interiors', 'hardware', 'electrical'], brands_handled: ['RIB', 'Webasto', 'Dometic', 'Kiravans'], notes: 'Major UK supplier for seats, windows, and general conversion hardware.' },
@@ -65,7 +64,20 @@ export default function SuppliersManagerPage() {
       }
     }
     
+    // Fetch newly seeded data
+    const { data: newData } = await supabase.from('suppliers').select('*').order('name');
+    setSuppliers(newData || []);
+    setLoading(false);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this supplier? Products linked to this supplier will lose their mapping.")) return;
+    await supabase.from('suppliers').delete().eq('id', id);
     fetchSuppliers();
+  };
+
+  const handleSeed = async () => {
+    await autoSeed();
   };
 
   return (
