@@ -57,7 +57,7 @@ export function AdminSidebar({ isLightMode, onToggleTheme }: AdminSidebarProps) 
       <div className="p-6 flex items-center justify-between border-b border-brand-border">
         {!isCollapsed && (
           <Link href="/" className="flex flex-col items-start">
-            <span className="font-display text-xl leading-none text-white tracking-[0.08em] flex items-end">
+            <span className="font-display text-xl leading-none text-brand-white tracking-[0.08em] flex items-end">
               AMPLIOS<span className="text-brand-orange leading-[0.5] mb-1">.</span>
             </span>
             <span className="font-mono text-[8px] text-brand-grey tracking-[0.52em] uppercase whitespace-nowrap mt-1 -mr-[0.52em]">

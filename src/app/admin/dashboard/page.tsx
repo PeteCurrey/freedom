@@ -83,7 +83,7 @@ export default function AdminDashboardPage() {
         <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4">
           <Shield size={12} /> System Status: Online.Secure
         </div>
-        <h1 className="font-display text-5xl uppercase tracking-tighter text-white">
+        <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
           Command <span className="text-brand-orange">Centre</span>
         </h1>
       </div>
@@ -141,7 +141,7 @@ export default function AdminDashboardPage() {
         <div className="blueprint-border p-8 bg-brand-carbon relative overflow-hidden group">
            <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
            <div className="relative z-10">
-              <h3 className="font-display text-2xl uppercase tracking-tighter text-white mb-2">Mass Product Sync</h3>
+              <h3 className="font-display text-2xl uppercase tracking-tighter text-brand-white mb-2">Mass Product Sync</h3>
               <p className="font-sans text-xs text-brand-grey mb-8 max-w-sm">Synchronize wholesale catalogs from suppliers like <span className="text-brand-orange">Energy Solutions</span> directly into your storefront.</p>
               <Link 
                 href="/admin/store/import" 
