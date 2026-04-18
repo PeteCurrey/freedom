@@ -23,6 +23,7 @@ interface Product {
   badge?: string;
   system_tier?: string;
   subcategory?: string;
+  is_editor_pick?: boolean;
 }
 
 interface CategoryContentProps {
