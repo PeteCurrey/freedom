@@ -329,9 +329,11 @@ const featuredProducts = [
     name: "Victron MultiPlus 12/3000/120-16", 
     brand: "VICTRON ENERGY", 
     price: 124500, 
-    image: "/images/systems-showcase.png", 
-    category: "Electrical", 
-    specs: { "Voltage": "12V", "Inverter": "3000VA", "Charger": "120A" } as Record<string, string> 
+    image: "/images/electrical-system-technical.png", 
+    slug: "victron-multiplus-3000",
+    specLine: "12V | 3000VA | 120A",
+    badge: "Bestseller",
+    systemTier: "off-grid"
   },
   { 
     id: "2", 
@@ -339,17 +341,21 @@ const featuredProducts = [
     brand: "DOMETIC", 
     price: 89900, 
     image: "/images/interior-showcase.png", 
-    category: "Appliances", 
-    specs: { "Capacity": "55L", "Power": "12/24V", "Weight": "21kg" } as Record<string, string>
+    slug: "dometic-cfx3-55im",
+    specLine: "55L | 12/24V | WiFi Control",
+    badge: "Elite Gear",
+    systemTier: "adventure"
   },
   { 
     id: "3", 
     name: "Truma Combi 4E Kit", 
     brand: "TRUMA", 
     price: 185000, 
-    image: "/images/hero-background.png", 
-    category: "Heating", 
-    specs: { "Output": "4kW", "Input": "Gas/230V", "Vessel": "10L" } as Record<string, string>
+    image: "/images/heating-system-technical.png", 
+    slug: "truma-combi-4e-kit",
+    specLine: "4kW | Gas/230V | 10L Vessel",
+    badge: "Build Essential",
+    systemTier: "expedition"
   },
 ];
 
