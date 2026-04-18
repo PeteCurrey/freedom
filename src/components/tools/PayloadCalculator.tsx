@@ -33,7 +33,7 @@ export default function PayloadCalculator() {
   const percentage = Math.min((totalWeight / gvm) * 100, 100);
   const isOver = totalWeight > gvm;
 
-  const addNode = (preset?: typeof PRESETS[0]) => {
+  const addNode = (preset?: typeof PRESETS[number]) => {
     const newNode: WeightNode = {
       id: Math.random().toString(36).substr(2, 9),
       name: preset?.name || "New Node",
