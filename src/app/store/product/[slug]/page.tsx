@@ -63,20 +63,32 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     );
   }
 
-  // 2. Fetch related products
-  const { data: related } = await supabaseAdmin
-    .from('products')
-    .select('*')
-    .eq('subcategory', product.subcategory)
-    .neq('id', product.id)
-    .limit(4);
+  // 2. Fetch related products (explicitly related or by subcategory)
+  let related: any[] = [];
+  if (product.related_product_ids && product.related_product_ids.length > 0) {
+    const { data: explicitRelated } = await supabaseAdmin
+      .from('products')
+      .select('*')
+      .in('id', product.related_product_ids);
+    related = explicitRelated || [];
+  }
+
+  if (related.length < 4) {
+    const { data: categoryRelated } = await supabaseAdmin
+      .from('products')
+      .select('*')
+      .eq('subcategory', product.subcategory)
+      .neq('id', product.id)
+      .limit(4 - related.length);
+    if (categoryRelated) related = [...related, ...categoryRelated];
+  }
 
   // 3. Fetch kits this product is part of
   const { data: partOfKits } = await supabaseAdmin
     .from('products')
     .select('*')
-    .eq('type', 'kit')
-    .contains('component_list', [product.slug])
+    .eq('subcategory', 'kits')
+    .contains('related_product_ids', [product.id])
     .limit(2);
 
   const priceExVat = product.price_gbp / 1.2;
@@ -158,9 +170,22 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   </div>
                 </div>
 
-                <p className="font-sans text-brand-grey text-lg leading-relaxed mb-12">
+                <p className="font-sans text-brand-grey text-lg leading-relaxed mb-6">
                   {product.short_description || "High-performance component verified for professional building standards."}
                 </p>
+
+                {/* Job 8: System Badge */}
+                {product.system_tier && (
+                  <div className="mb-12 flex items-center gap-4 p-4 border border-brand-orange/30 bg-brand-orange/5">
+                    <div className="w-8 h-8 rounded-full bg-brand-orange/20 flex items-center justify-center border border-brand-orange/40">
+                      <ShieldCheck className="w-4 h-4 text-brand-orange" />
+                    </div>
+                    <div>
+                      <span className="block font-mono text-[8px] text-brand-orange uppercase tracking-[0.2em] mb-0.5">Engineered Deployment</span>
+                      <span className="block font-display text-xs uppercase tracking-widest text-white">Recommended for {product.system_tier.replace(/-/g, ' ')} architecture</span>
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex flex-col gap-4">
                   <AddToCartButton product={{

@@ -44,6 +44,32 @@ export function ProductCard({
       })
     : null;
 
+  const addToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const stored = localStorage.getItem("diym_cart");
+    let cart = stored ? JSON.parse(stored) : [];
+    
+    const existingIndex = cart.findIndex((item: any) => item.id === id);
+    if (existingIndex !== -1) {
+      cart[existingIndex].quantity += 1;
+    } else {
+      cart.push({
+        id,
+        name,
+        brand,
+        price,
+        image,
+        slug,
+        quantity: 1
+      });
+    }
+    
+    localStorage.setItem("diym_cart", JSON.stringify(cart));
+    window.dispatchEvent(new Event("cart-updated"));
+  };
+
   return (
     <div
       className={cn(
@@ -56,7 +82,7 @@ export function ProductCard({
         <div className="absolute top-4 left-4 z-20">
           <span className={cn(
             "font-mono text-[8px] uppercase tracking-widest px-2 py-1",
-            badge === "Bestseller" || badge === "Most Popular" ? "bg-brand-orange text-white" :
+            badge === "Bestseller" || badge === "Most Popular" || badge === "Editor's Pick" ? "bg-brand-orange text-white" :
             badge === "New" ? "bg-green-600 text-white" :
             badge === "Kit" ? "bg-blue-600 text-white" :
             "bg-brand-obsidian text-brand-grey border border-brand-border"
@@ -118,7 +144,10 @@ export function ProductCard({
             </span>
           </div>
           
-          <button className="bg-brand-orange hover:bg-white text-white hover:text-brand-obsidian p-2 transition-all group/btn">
+          <button 
+            onClick={addToCart}
+            className="bg-brand-orange hover:bg-white text-white hover:text-brand-obsidian p-2 transition-all group/btn"
+          >
             <Plus className="w-4 h-4 transition-transform group-hover/btn:rotate-90" />
           </button>
         </div>

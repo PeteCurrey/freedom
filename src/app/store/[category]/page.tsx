@@ -38,12 +38,16 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
     .eq('is_active', true)
     .order('sort_priority', { ascending: false });
 
+  // 3. Find Editor's Pick for this category
+  const editorsPick = products?.find(p => p.is_editor_pick);
+
   return (
     <main className="bg-brand-obsidian min-h-screen">
       <Navbar />
       <CategoryContent 
         category={categoryData} 
         initialProducts={products || []} 
+        editorsPick={editorsPick}
       />
       <Footer />
     </main>
