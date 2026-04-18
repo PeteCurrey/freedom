@@ -36,6 +36,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
     trade_account: false,
     notes: "",
     categories: [] as string[],
+    brands_handled: [] as string[],
     contact_name: "",
     contact_email: "",
     contact_phone: "",
@@ -47,8 +48,9 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
   const [documents, setDocuments] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [newDoc, setNewDoc] = useState({ label: "", url: "", type: "catalog" });
+  const [newBrand, setNewBrand] = useState("");
 
-  const availableCategories = ['electrical', 'solar', 'heating', 'water', 'plumbing', 'insulation', 'gas', 'ventilation', 'interiors', 'hardware'];
+  const availableCategories = ['electrical', 'solar', 'heating', 'water', 'plumbing', 'insulation', 'gas', 'ventilation', 'interiors', 'hardware', 'exterior', 'lifestyle'];
 
   useEffect(() => {
     async function fetchData() {
@@ -63,6 +65,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
           trade_account: s.trade_account || false,
           notes: s.notes || "",
           categories: s.categories || [],
+          brands_handled: s.brands_handled || [],
           contact_name: s.contact_name || "",
           contact_email: s.contact_email || "",
           contact_phone: s.contact_phone || "",
@@ -91,6 +94,22 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
       categories: prev.categories.includes(cat) 
         ? prev.categories.filter(c => c !== cat)
         : [...prev.categories, cat]
+    }));
+  };
+
+  const addBrand = () => {
+    if (!newBrand || supplier.brands_handled.includes(newBrand)) return;
+    setSupplier(prev => ({
+      ...prev,
+      brands_handled: [...prev.brands_handled, newBrand]
+    }));
+    setNewBrand("");
+  };
+
+  const removeBrand = (brand: string) => {
+    setSupplier(prev => ({
+      ...prev,
+      brands_handled: prev.brands_handled.filter(b => b !== brand)
     }));
   };
 
@@ -134,6 +153,7 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
       trade_account: supplier.status === 'active_trade',
       notes: supplier.notes,
       categories: supplier.categories,
+      brands_handled: supplier.brands_handled,
       contact_name: supplier.contact_name,
       contact_email: supplier.contact_email,
       contact_phone: supplier.contact_phone,
@@ -270,6 +290,45 @@ export default function EditSupplierPage({ params }: { params: Promise<{ id: str
                           {cat}
                         </button>
                       ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-4 italic text-brand-orange">Brand Portfolio</label>
+                    <div className="blueprint-border p-6 bg-brand-obsidian/50 space-y-4">
+                      <div className="flex gap-2">
+                        <input 
+                          type="text" 
+                          value={newBrand}
+                          onChange={(e) => setNewBrand(e.target.value)}
+                          onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addBrand())}
+                          placeholder="e.g. RIB Seats"
+                          className="flex-1 bg-brand-carbon border border-brand-border p-3 font-sans text-xs text-white focus:border-brand-orange outline-none"
+                        />
+                        <button 
+                          onClick={addBrand}
+                          className="px-6 py-3 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all"
+                        >
+                          Add
+                        </button>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {supplier.brands_handled.length === 0 ? (
+                          <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest italic">No brands associated.</span>
+                        ) : (
+                          supplier.brands_handled.map(brand => (
+                            <span 
+                              key={brand} 
+                              className="group flex items-center gap-2 px-3 py-1 bg-brand-carbon border border-brand-border/50 font-mono text-[9px] text-white uppercase tracking-widest"
+                            >
+                              {brand}
+                              <button onClick={() => removeBrand(brand)} className="text-brand-grey hover:text-red-500 transition-colors">
+                                <Trash2 size={10} />
+                              </button>
+                            </span>
+                          ))
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
