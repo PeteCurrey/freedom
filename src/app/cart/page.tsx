@@ -109,184 +109,210 @@ export default function CartPage() {
 
       <section className="pt-48 pb-32">
         <div className="container mx-auto px-6">
-          {/* Header */}
-          <div className="mb-16">
-            <p className="font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4">// Your Build Cart</p>
-            <h1 className="font-display text-6xl uppercase">
-              YOUR <span className="text-brand-orange">CART</span>
+          {/* Editorial Header */}
+          <div className="mb-20">
+            <div className="flex items-center gap-4 font-mono text-[10px] text-brand-orange uppercase mb-6 tracking-[0.3em]">
+               <div className="w-2 h-2 bg-brand-orange animate-pulse" /> Registry Buffer // {cartItems.length} Nodes
+            </div>
+            <h1 className="font-display text-7xl lg:text-9xl uppercase leading-[0.8] tracking-tighter">
+              BUILDING <br />
+              <span className="text-brand-orange">REGISTRY</span>
             </h1>
           </div>
 
           {cartItems.length === 0 ? (
             /* Empty State */
-            <div className="py-32 text-center blueprint-border bg-brand-carbon max-w-2xl mx-auto">
+            <div className="py-48 text-center bg-brand-carbon blueprint-border relative overflow-hidden max-w-4xl mx-auto">
               <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
-              <ShoppingBag className="w-16 h-16 text-brand-grey mx-auto mb-8 opacity-30" />
-              <h2 className="font-display text-3xl uppercase mb-4">Your Cart is Empty</h2>
-              <p className="font-sans text-brand-grey mb-12">
-                You haven&apos;t added any components yet. Browse the store to find the right gear for your build.
+              <ShoppingBag className="w-20 h-20 text-brand-grey mx-auto mb-8 opacity-20" />
+              <h2 className="font-display text-4xl uppercase mb-6">Buffer Empty</h2>
+              <p className="font-sans text-brand-grey text-lg mb-12 max-w-md mx-auto">
+                Your build registry is currently empty. Initialize your system by adding hardware components from the store.
               </p>
               <Link
                 href="/store"
-                className="inline-flex items-center gap-3 bg-brand-orange px-10 py-5 font-display text-xs uppercase tracking-widest text-white hover:bg-white hover:text-brand-orange transition-all"
+                className="inline-flex items-center gap-4 bg-brand-orange px-12 py-5 font-display text-xs uppercase tracking-[0.2em] text-white hover:bg-white hover:text-brand-obsidian transition-all shadow-[0_0_40px_rgba(255,107,0,0.2)]"
               >
-                Browse the Store <ArrowRight className="w-4 h-4" />
+                Enter Store <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-              {/* Line Items */}
-              <div className="lg:col-span-8 space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+              {/* Registry Line Items */}
+              <div className="lg:col-span-8 space-y-6">
+                <div className="flex items-center justify-between font-mono text-[10px] text-brand-grey uppercase tracking-widest border-b border-brand-border pb-4 mb-4">
+                   <span>Component Description</span>
+                   <div className="flex gap-12 pr-16">
+                      <span>Quantity</span>
+                      <span>Node Total</span>
+                   </div>
+                </div>
+
                 {cartItems.map((item) => (
-                  <div key={item.id} className="blueprint-border bg-brand-carbon p-6 flex gap-6 items-center">
-                    {/* Thumbnail */}
-                    <div className="w-20 h-20 bg-brand-obsidian blueprint-border flex items-center justify-center shrink-0 overflow-hidden relative">
+                  <div key={item.id} className="group relative bg-brand-carbon blueprint-border p-8 flex flex-col md:flex-row gap-8 items-center transition-all hover:bg-brand-graphite">
+                    {/* Thumbnail Node */}
+                    <div className="w-24 h-24 bg-brand-obsidian blueprint-border flex items-center justify-center shrink-0 overflow-hidden relative p-4">
                       {item.image ? (
-                        <Image src={item.image} alt={item.name} fill className="object-contain p-2" />
+                        <img src={item.image} alt={item.name} className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500" />
                       ) : (
-                        <ShoppingBag className="w-6 h-6 text-brand-grey/30" />
+                        <ShoppingBag className="w-8 h-8 text-brand-grey/20" />
                       )}
                     </div>
 
-                    {/* Details */}
+                    {/* Meta Data */}
                     <div className="flex-1 min-w-0">
-                      <p className="font-mono text-[8px] text-brand-orange uppercase tracking-widest mb-1">{item.brand}</p>
-                      <h3 className="font-display text-lg uppercase truncate">{item.name}</h3>
-                      <p className="font-mono text-[10px] text-brand-grey uppercase mt-1">
-                        £{(item.price / 100).toLocaleString()} each
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="font-mono text-[8px] text-brand-orange uppercase tracking-widest px-2 py-0.5 border border-brand-orange/30">{item.brand}</span>
+                        <span className="font-mono text-[8px] text-brand-grey uppercase">ID: {item.id.substring(0, 8)}</span>
+                      </div>
+                      <h3 className="font-display text-xl uppercase truncate group-hover:text-brand-orange transition-colors mb-2">{item.name}</h3>
+                      <p className="font-mono text-[10px] text-brand-grey uppercase italic">
+                         Registry Rate: £{(item.price / 100).toLocaleString()} <span className="text-[8px] opacity-50">inc. VAT</span>
                       </p>
                     </div>
 
-                    {/* Quantity */}
-                    <div className="flex items-center gap-3 shrink-0">
-                      <button
-                        onClick={() => updateQuantity(item.id, -1)}
-                        className="w-8 h-8 border border-brand-border flex items-center justify-center hover:border-brand-orange transition-colors"
+                    {/* Operational Controls */}
+                    <div className="flex items-center gap-12 shrink-0">
+                       <div className="flex items-center border border-brand-border h-12">
+                          <button
+                            onClick={() => updateQuantity(item.id, -1)}
+                            className="w-10 h-full flex items-center justify-center hover:bg-brand-obsidian text-brand-grey hover:text-white transition-all"
+                          >
+                            <Minus size={12} />
+                          </button>
+                          <div className="w-12 h-full flex items-center justify-center font-display text-base border-x border-brand-border">
+                            {item.quantity}
+                          </div>
+                          <button
+                            onClick={() => updateQuantity(item.id, 1)}
+                            className="w-10 h-full flex items-center justify-center hover:bg-brand-obsidian text-brand-grey hover:text-white transition-all"
+                          >
+                            <Plus size={12} />
+                          </button>
+                       </div>
+
+                       <div className="w-28 text-right">
+                          <span className="font-display text-2xl">£{((item.price * item.quantity) / 100).toLocaleString()}</span>
+                       </div>
+
+                       <button
+                        onClick={() => removeItem(item.id)}
+                        className="text-brand-grey hover:text-brand-orange transition-colors p-2"
                       >
-                        <Minus className="w-3 h-3" />
-                      </button>
-                      <span className="font-mono text-sm w-6 text-center">{item.quantity}</span>
-                      <button
-                        onClick={() => updateQuantity(item.id, 1)}
-                        className="w-8 h-8 border border-brand-border flex items-center justify-center hover:border-brand-orange transition-colors"
-                      >
-                        <Plus className="w-3 h-3" />
+                        <Trash2 size={16} />
                       </button>
                     </div>
 
-                    {/* Line Total */}
-                    <div className="shrink-0 w-24 text-right">
-                      <span className="font-display text-xl">£{((item.price * item.quantity) / 100).toLocaleString()}</span>
-                    </div>
-
-                    {/* Remove */}
-                    <button
-                      onClick={() => removeItem(item.id)}
-                      className="shrink-0 text-brand-grey hover:text-red-500 transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    {/* Hover corner accents */}
+                    <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-orange/0 group-hover:border-brand-orange/100 transition-all" />
+                    <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-orange/0 group-hover:border-brand-orange/100 transition-all" />
                   </div>
                 ))}
 
-                <div className="pt-4">
+                <div className="pt-8">
                   <Link
                     href="/store"
-                    className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-brand-grey hover:text-brand-white transition-colors"
+                    className="group inline-flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.3em] text-brand-grey hover:text-white transition-all"
                   >
-                    <ArrowRight className="w-3 h-3 rotate-180" /> Continue Shopping
+                    <ArrowLeft className="w-3 h-3 group-hover:-translate-x-2 transition-transform" /> Re-enter Catalog Registry
                   </Link>
                 </div>
               </div>
 
-              {/* Order Summary */}
+              {/* Commission Summary */}
               <div className="lg:col-span-4">
-                <div className="blueprint-border bg-brand-carbon p-8 sticky top-32 space-y-8">
-                  <h2 className="font-display text-xl uppercase">Order Summary</h2>
+                <div className="bg-brand-carbon blueprint-border p-10 sticky top-32 space-y-10">
+                  <div className="flex items-center gap-4 mb-2">
+                     <div className="w-10 h-10 bg-brand-orange/10 flex items-center justify-center">
+                        <Tag className="text-brand-orange w-5 h-5" />
+                     </div>
+                     <h2 className="font-display text-2xl uppercase italic">COMMISSION</h2>
+                  </div>
 
-                  {/* Promo Code */}
-                  <div className="space-y-3">
-                    <label className="font-mono text-[9px] text-brand-grey uppercase tracking-widest block">
-                      Promo Code
+                  {/* Promo Input Node */}
+                  <div className="space-y-4">
+                    <label className="font-mono text-[9px] text-brand-grey uppercase tracking-widest block opacity-50">
+                      Input Registry Token (Promo)
                     </label>
-                    <div className="flex gap-2">
+                    <div className="flex gap-px bg-brand-border">
                       <input
                         type="text"
                         value={promoCode}
                         onChange={(e) => { setPromoCode(e.target.value); setPromoError(""); }}
                         placeholder="DIYM10"
-                        className="flex-1 bg-brand-obsidian border border-brand-border p-3 font-mono text-xs text-brand-white focus:outline-none focus:border-brand-orange transition-colors"
+                        className="flex-1 bg-brand-obsidian p-4 font-mono text-xs text-brand-white focus:outline-none placeholder:text-brand-grey/30"
                       />
                       <button
                         onClick={applyPromo}
-                        className="px-4 bg-brand-obsidian border border-brand-border font-mono text-[9px] uppercase hover:border-brand-orange transition-colors"
+                        className="px-6 bg-brand-obsidian text-brand-orange hover:bg-brand-orange hover:text-white transition-all font-mono text-[10px] uppercase"
                       >
-                        <Tag className="w-3 h-3" />
+                        Apply
                       </button>
                     </div>
-                    {promoApplied && (
-                      <p className="font-mono text-[9px] text-green-500 uppercase">✓ 10% discount applied</p>
-                    )}
-                    {promoError && (
-                      <p className="font-mono text-[9px] text-red-500 uppercase">{promoError}</p>
-                    )}
+                    {promoApplied && <p className="font-mono text-[8px] text-green-500 uppercase tracking-widest animate-pulse">✓ Token accepted: 10% Reduction active</p>}
+                    {promoError && <p className="font-mono text-[10px] text-red-500 uppercase">{promoError}</p>}
                   </div>
 
-                  {/* Totals */}
-                  <div className="space-y-4 pt-4 border-t border-brand-border/30">
-                    <div className="flex justify-between font-mono text-[10px] uppercase">
-                      <span className="text-brand-grey">Subtotal</span>
+                  {/* Ledger Breakdown */}
+                  <div className="space-y-5 pt-8 border-t border-brand-border">
+                    <div className="flex justify-between font-mono text-[11px] uppercase tracking-widest">
+                      <span className="text-brand-grey italic">Subtotal ledger</span>
                       <span>£{(subtotal / 100).toLocaleString()}</span>
                     </div>
                     {promoApplied && (
-                      <div className="flex justify-between font-mono text-[10px] uppercase text-green-500">
-                        <span>Discount (10%)</span>
+                      <div className="flex justify-between font-mono text-[11px] uppercase tracking-widest text-green-500">
+                        <span className="italic">Token rebate</span>
                         <span>-£{(discount / 100).toLocaleString()}</span>
                       </div>
                     )}
-                    <div className="flex justify-between font-mono text-[10px] uppercase text-brand-grey">
-                      <span>VAT (20%)</span>
+                    <div className="flex justify-between font-mono text-[11px] uppercase tracking-widest text-brand-grey">
+                      <span className="italic">Taxation (VAT 20%)</span>
                       <span>£{(vat / 100).toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between font-display text-2xl pt-4 border-t border-brand-border/30">
-                      <span>Total</span>
-                      <span className="text-brand-orange">£{(total / 100).toLocaleString()}</span>
+                    
+                    <div className="pt-8 border-t-2 border-brand-orange/30">
+                       <div className="flex justify-between items-baseline mb-2">
+                          <span className="font-display text-4xl uppercase">Balance</span>
+                          <span className="font-display text-5xl text-brand-orange">£{(total / 100).toLocaleString()}</span>
+                       </div>
+                       <div className="font-mono text-[10px] text-brand-grey uppercase tracking-widest text-right">
+                          Estimated Freight: Included
+                       </div>
                     </div>
                   </div>
 
-                  {user ? (
-                    <button 
-                      onClick={handleCheckout}
-                      disabled={loading}
-                      className="w-full py-5 bg-brand-orange text-white font-display text-xs uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-3 disabled:opacity-50"
-                    >
-                      {loading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>Proceed to Checkout <ChevronRight className="w-4 h-4" /></>
-                      )}
-                    </button>
-                  ) : (
-                    <Link 
-                      href="/account/login?redirect=/cart"
-                      className="w-full py-5 border border-brand-orange text-brand-orange font-display text-xs uppercase tracking-widest hover:bg-brand-orange hover:text-white transition-all flex items-center justify-center gap-3"
-                    >
-                      Login to Checkout <ChevronRight className="w-4 h-4" />
-                    </Link>
-                  )}
+                  {/* Operational Controls */}
+                  <div className="space-y-4 pt-8">
+                    {user ? (
+                      <button 
+                        onClick={handleCheckout}
+                        disabled={loading}
+                        className="w-full py-6 bg-brand-orange text-white font-display text-xs uppercase tracking-[0.2em] hover:bg-white hover:text-brand-obsidian transition-all flex items-center justify-center gap-4 disabled:opacity-50 relative group overflow-hidden"
+                      >
+                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none" />
+                        {loading ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <>Initialize Checkout Registry <ChevronRight className="w-4 h-4" /></>
+                        )}
+                      </button>
+                    ) : (
+                      <Link 
+                        href="/account/login?redirect=/cart"
+                        className="w-full py-6 border border-brand-orange text-brand-orange font-display text-xs uppercase tracking-[0.2em] hover:bg-brand-orange hover:text-white transition-all flex items-center justify-center gap-4"
+                      >
+                        Authorize Node to Checkout <ChevronRight className="w-4 h-4" />
+                      </Link>
+                    )}
+                  </div>
 
-                  <div className="pt-6 border-t border-brand-border/30 space-y-4">
-                     <div className="flex items-center gap-3 grayscale opacity-60">
-                        <div className="w-8 h-8 blueprint-border flex items-center justify-center">
-                           <ShieldCheck className="w-4 h-4 text-brand-orange" />
-                        </div>
-                        <p className="font-mono text-[8px] text-brand-grey uppercase tracking-tighter italic">Secured by Stripe SSL Encryption</p>
-                     </div>
-                     <div className="flex items-center gap-3 grayscale opacity-60">
-                        <div className="w-8 h-8 blueprint-border flex items-center justify-center">
-                           <Tag className="w-4 h-4 text-brand-orange" />
-                        </div>
-                        <p className="font-mono text-[8px] text-brand-grey uppercase tracking-tighter italic">Verified Component Engineering</p>
+                  {/* Engineering Verification */}
+                  <div className="pt-10 space-y-6">
+                     <div className="flex items-start gap-4 p-4 bg-brand-obsidian/50 border-l border-brand-orange/30">
+                        <ShieldCheck className="w-5 h-5 text-brand-orange shrink-0" />
+                        <p className="font-mono text-[9px] text-brand-grey uppercase leading-relaxed tracking-tighter">
+                          All hardware nodes are verified for off-grid compliance and electrical safety standards.
+                        </p>
                      </div>
                   </div>
                 </div>

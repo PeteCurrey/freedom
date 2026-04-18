@@ -122,8 +122,8 @@ export function Navbar() {
     async function fetchStoreCategories() {
       const { data } = await supabase
         .from('product_categories')
-        .select('*')
-        .order('name');
+        .select('name, slug, subcategories')
+        .order('sort_order', { ascending: true });
         
       if (data && data.length > 0) {
         setLinks(currentLinks => {
@@ -135,7 +135,9 @@ export function Navbar() {
               items: data.map(cat => ({
                 name: cat.name,
                 href: `/store/${cat.slug}`,
-                tagline: (cat.description && cat.description.length > 25) ? cat.description.substring(0, 25) + "..." : (cat.description || "Engineering Component"),
+                tagline: Array.isArray(cat.subcategories) 
+                  ? cat.subcategories.slice(0, 3).map((s: any) => s.name).join(' · ')
+                  : "Engineering Component",
                 image: "/images/hero-background.png" 
               }))
             };

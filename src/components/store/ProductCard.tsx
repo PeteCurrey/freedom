@@ -10,9 +10,12 @@ interface ProductCardProps {
   name: string;
   brand: string;
   price: number;
+  compareAtPrice?: number;
   image: string;
-  category: string;
-  specs?: Record<string, string | number | undefined>;
+  slug: string;
+  specLine?: string;
+  badge?: string;
+  systemTier?: string;
   className?: string;
 }
 
@@ -21,85 +24,109 @@ export function ProductCard({
   name,
   brand,
   price,
+  compareAtPrice,
   image,
-  specs,
+  slug,
+  specLine,
+  badge,
+  systemTier,
   className,
 }: ProductCardProps) {
-  // Defensive price check to prevent logic crashes
-  const safePrice = typeof price === 'number' ? price : 0;
-  
-  const formattedPrice = (safePrice / 100).toLocaleString("en-GB", {
+  const formattedPrice = (price / 100).toLocaleString("en-GB", {
     style: "currency",
     currency: "GBP",
   });
 
+  const formattedComparePrice = compareAtPrice 
+    ? (compareAtPrice / 100).toLocaleString("en-GB", {
+        style: "currency",
+        currency: "GBP",
+      })
+    : null;
+
   return (
     <div
       className={cn(
-        "group relative bg-brand-surface border border-brand-border overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-orange/10",
+        "group relative bg-brand-carbon blueprint-border transition-all duration-300 hover:bg-brand-graphite",
         className
       )}
     >
-      {/* Blueprint Grid Overlay */}
-      <div className="absolute inset-0 blueprint-grid opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none" />
+      {/* Badge Overlay */}
+      {badge && (
+        <div className="absolute top-4 left-4 z-20">
+          <span className={cn(
+            "font-mono text-[8px] uppercase tracking-widest px-2 py-1",
+            badge === "Bestseller" || badge === "Most Popular" ? "bg-brand-orange text-white" :
+            badge === "New" ? "bg-green-600 text-white" :
+            badge === "Kit" ? "bg-blue-600 text-white" :
+            "bg-brand-obsidian text-brand-grey border border-brand-border"
+          )}>
+            {badge}
+          </span>
+        </div>
+      )}
 
       {/* Image Container */}
-      <div className="relative aspect-square overflow-hidden bg-brand-obsidian">
+      <Link href={`/store/product/${slug}`} className="block relative aspect-square overflow-hidden bg-brand-obsidian p-8">
         <Image
-          src={image}
+          src={image || "/images/hero-background.png"}
           alt={name}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          className="object-contain transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100"
         />
-        <div className="absolute inset-0 bg-brand-obsidian/0 group-hover:bg-brand-obsidian/40 transition-colors duration-500" />
         
-        {/* Quick View Specs */}
-        {specs && (
-          <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-brand-obsidian/80 backdrop-blur-md border-t border-brand-border">
-            <div className="grid grid-cols-2 gap-2">
-              {Object.entries(specs).slice(0, 4).map(([key, value]) => (
-                <div key={key} className="flex flex-col">
-                  <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">
-                    {key}
-                  </span>
-                  <span className="font-mono text-[10px] text-brand-white uppercase truncate">
-                    {value}
-                  </span>
-                </div>
-              ))}
-            </div>
+        {/* Tier Tag Overlay (Bottom Left) */}
+        {systemTier && (
+          <div className="absolute bottom-4 left-4 z-10">
+            <span className="font-mono text-[8px] text-brand-grey bg-brand-obsidian/80 px-2 py-1 uppercase tracking-tighter border border-brand-border/30">
+              {systemTier.replace(/-/g, ' ')}
+            </span>
           </div>
         )}
-      </div>
+      </Link>
 
       {/* Content */}
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-2">
-          <span className="font-mono text-[10px] text-brand-orange uppercase tracking-[0.2em]">
+      <div className="p-5 border-t border-brand-border">
+        <div className="mb-1">
+          <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">
             {brand}
           </span>
-          <span className="font-mono text-xs text-brand-white font-bold">{formattedPrice}</span>
         </div>
         
-        <h3 className="font-display text-sm uppercase leading-snug mb-4 h-10 line-clamp-2">
-          <Link href={`/store/product/${id}`} className="hover:text-brand-orange transition-colors">
+        <h3 className="font-display text-sm uppercase leading-tight mb-2 group-hover:text-brand-orange transition-colors line-clamp-2 min-h-10">
+          <Link href={`/store/product/${slug}`}>
             {name}
           </Link>
         </h3>
 
-        <div className="flex items-center gap-3">
-          <button className="flex-1 bg-brand-obsidian border border-brand-border hover:border-brand-orange hover:bg-brand-orange text-brand-white text-[10px] font-display uppercase tracking-widest py-3 transition-all duration-300 flex items-center justify-center gap-2">
-            <Plus className="w-3 h-3" /> Add to Cart
-          </button>
-          <button className="w-12 h-11 bg-brand-graphite border border-brand-border flex items-center justify-center text-brand-white hover:text-brand-orange hover:border-brand-orange transition-all">
-            <ShoppingCart className="w-4 h-4" />
+        {/* Technical Spec Line (JetBrains Mono) */}
+        {specLine && (
+          <p className="font-mono text-[10px] text-brand-grey mb-4 truncate italic">
+            {specLine}
+          </p>
+        )}
+
+        <div className="flex justify-between items-end">
+          <div className="flex flex-col">
+            {formattedComparePrice && (
+              <span className="font-mono text-[10px] text-brand-grey line-through">
+                {formattedComparePrice}
+              </span>
+            )}
+            <span className="font-display font-medium text-lg leading-none">
+              {formattedPrice}
+            </span>
+          </div>
+          
+          <button className="bg-brand-orange hover:bg-white text-white hover:text-brand-obsidian p-2 transition-all group/btn">
+            <Plus className="w-4 h-4 transition-transform group-hover/btn:rotate-90" />
           </button>
         </div>
       </div>
 
-      {/* Blueprint corners on hover */}
-      <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-orange opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-orange opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      {/* Hover corner accents */}
+      <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-orange/0 group-hover:border-brand-orange/100 transition-all duration-300" />
+      <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-orange/0 group-hover:border-brand-orange/100 transition-all duration-300" />
     </div>
   );
 }
