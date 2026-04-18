@@ -30,22 +30,44 @@ export default async function StoreHub() {
       <Navbar />
       
       {/* 1. CINEMATIC HERO */}
-      <section className="relative pt-64 pb-32 overflow-hidden">
-        <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-brand-orange/5 to-transparent pointer-events-none" />
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image Layer */}
+        <div className="absolute inset-0 z-0">
+          <Image 
+            src="/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/luxury_iveco_snow_canada_1776505225083.png" 
+            alt="Expedition Background" 
+            fill 
+            className="object-cover grayscale-[0.3] brightness-[0.4]"
+            priority
+          />
+          {/* Depth Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-obsidian via-transparent to-brand-obsidian opacity-80" />
+          <div className="absolute inset-0 bg-radial-gradient from-transparent to-brand-obsidian/80" />
+          <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
+        </div>
         
-        <div className="container mx-auto px-6 relative z-10 text-center">
+        <div className="container mx-auto px-6 relative z-10 text-center pt-24">
           <div className="max-w-5xl mx-auto">
-            <h1 className="font-display text-8xl lg:text-[12rem] mb-6 uppercase leading-[0.85] tracking-tighter">
+             <div className="inline-flex items-center gap-3 px-4 py-2 bg-brand-orange/10 border border-brand-orange/30 backdrop-blur-md mb-8">
+                <span className="w-1.5 h-1.5 bg-brand-orange rounded-full animate-pulse" />
+                <span className="font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em]">Hardware Node Registry // Global Access</span>
+             </div>
+            <h1 className="font-display text-8xl lg:text-[12rem] mb-8 uppercase leading-[0.8] tracking-tighter text-white drop-shadow-2xl">
               GEAR FOR <br />
               <span className="text-brand-orange">SERIOUS</span> BUILDS
             </h1>
             <p className="font-sans text-brand-grey text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-16 px-4">
-              Professional-grade components tested in the field and used in our official blueprints. No compromises.
+              Professional-grade components tested in the field and used in our official blueprints. No compromises on the road to freedom.
             </p>
             
             <StoreSearch className="mb-24 scale-110" />
           </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-50">
+           <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest leading-none">Initialize Scroll</span>
+           <div className="w-px h-12 bg-gradient-to-b from-brand-orange to-transparent" />
         </div>
       </section>
 
