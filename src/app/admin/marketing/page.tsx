@@ -119,7 +119,9 @@ export default function MarketingHubPage() {
 
             <div className="blueprint-border bg-brand-carbon overflow-hidden">
                <div className="p-6 bg-brand-obsidian border-b border-brand-border flex justify-between items-center">
-                  <h3 className="font-display text-sm uppercase tracking-widest text-brand-white">Active Tracking Engines</h3>
+                  <h3 className="font-display text-sm uppercase tracking-widest text-brand-white">
+                     Active <span className="text-brand-orange">Tracking Engines</span>
+                  </h3>
                </div>
                <table className="w-full text-left">
                   <thead>
@@ -153,7 +155,9 @@ export default function MarketingHubPage() {
             <div className="flex justify-between items-center bg-brand-carbon border border-brand-border p-8 blueprint-border relative">
                <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
                <div className="relative z-10">
-                  <h3 className="font-display text-2xl uppercase tracking-tighter text-brand-white">Banner Control Center</h3>
+                  <h3 className="font-display text-2xl uppercase tracking-tighter text-brand-white">
+                     Banner <span className="text-brand-orange">Control Center</span>
+                  </h3>
                   <p className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">Deploy site-wide announcements and sales.</p>
                </div>
                <Link 
@@ -188,7 +192,9 @@ export default function MarketingHubPage() {
                        </button>
                     </div>
                     
-                    <h4 className="font-display text-xl uppercase tracking-tight text-brand-white mb-2">{promo.title}</h4>
+                    <h4 className="font-display text-xl uppercase tracking-tight text-brand-white mb-2">
+                       {promo.title.split(' ')[0]} <span className="text-brand-orange">{promo.title.split(' ').slice(1).join(' ')}</span>
+                    </h4>
                     <p className="font-sans text-xs text-brand-grey mb-6 leading-relaxed line-clamp-2">{promo.content}</p>
                     
                     <div className="flex justify-between items-center pt-6 border-t border-brand-border/50">

@@ -94,7 +94,9 @@ export default function SEOMetadataManagerPage() {
 
       <div className="blueprint-border bg-brand-carbon overflow-hidden">
         <div className="p-6 bg-brand-obsidian border-b border-brand-border flex justify-between items-center">
-           <h3 className="font-display text-sm uppercase tracking-widest text-brand-white">Route Specific Overrides</h3>
+           <h3 className="font-display text-sm uppercase tracking-widest text-brand-white">
+             Route <span className="text-brand-orange">Specific Overrides</span>
+           </h3>
         </div>
         <table className="w-full text-left">
            <thead>
@@ -156,7 +158,9 @@ export default function SEOMetadataManagerPage() {
               
               <div className="relative z-10 space-y-8">
                  <div className="flex justify-between items-start mb-4">
-                    <h2 className="font-display text-3xl uppercase tracking-tighter text-brand-white">Deploy Route <span className="text-brand-orange">Override</span></h2>
+                    <h2 className="font-display text-3xl uppercase tracking-tighter text-brand-white">
+                      Deploy <span className="text-brand-orange">Route Override</span>
+                    </h2>
                     <button onClick={() => setIsEditing(null)} className="text-brand-grey hover:text-brand-white">Abort Sync</button>
                  </div>
 

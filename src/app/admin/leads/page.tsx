@@ -66,6 +66,9 @@ export default function LeadsPage() {
           <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4">
             <MessageSquare size={12} /> Intelligence Node: leads.crm
           </div>
+          <h2 className="font-display text-2xl uppercase tracking-tighter text-brand-white">
+            System <span className="text-brand-orange">Verification</span>
+          </h2>
           <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
             Lead <span className="text-brand-orange">Pipeline</span>
           </h1>
@@ -171,7 +174,9 @@ export default function LeadsPage() {
            {pipelineStages.map((stage) => (
              <div key={stage.id} className="space-y-6">
                 <div className="flex items-center justify-between border-b border-brand-border pb-4">
-                   <h3 className="font-display text-sm uppercase tracking-widest text-brand-white">{stage.name}</h3>
+                   <h3 className="font-display text-sm uppercase tracking-widest text-brand-white">
+                     {stage.name.split(' ')[0]} <span className="text-brand-orange">{stage.name.split(' ').slice(1).join(' ')}</span>
+                   </h3>
                    <span className="font-mono text-[10px] text-brand-grey">{leads.filter(l => (l.pipeline_status || 'new') === stage.id).length}</span>
                 </div>
                 
@@ -222,20 +227,28 @@ export default function LeadsPage() {
            
            <div className="mb-12">
               <span className="font-mono text-[10px] text-brand-orange uppercase tracking-widest mb-2 block">Tactical Dossier</span>
-              <h2 className="font-display text-4xl uppercase text-brand-white break-all mb-2">{activeLead.email}</h2>
+              <h2 className="font-display text-4xl uppercase text-brand-white break-all mb-2">
+                <span className="text-brand-white text-3xl opacity-50 block mb-2 font-mono tracking-widest">Identified Entity:</span>
+                <span className="text-brand-orange">{activeLead.email.split('@')[0]}</span>
+                <span className="text-brand-white opacity-40">@{activeLead.email.split('@')[1]}</span>
+              </h2>
               <span className="font-mono text-[10px] text-brand-grey uppercase tracking-[0.3em]">ID: {activeLead.id.substring(0, 12)}</span>
            </div>
 
            <div className="space-y-12">
               <section className="space-y-4">
-                 <h4 className="font-mono text-[10px] text-brand-grey uppercase tracking-widest border-b border-brand-border pb-2">Captured Intelligence</h4>
+                 <h4 className="font-mono text-[10px] text-brand-white uppercase tracking-widest border-b border-brand-border pb-2">
+                    Captured <span className="text-brand-orange">Intelligence</span>
+                 </h4>
                  <div className="blueprint-border p-6 bg-brand-obsidian font-mono text-[10px] text-brand-grey overflow-x-auto">
                     <pre>{typeof activeLead.content === 'object' ? JSON.stringify(activeLead.content, null, 2) : activeLead.content}</pre>
                  </div>
               </section>
 
               <section className="space-y-6">
-                 <h4 className="font-mono text-[10px] text-brand-grey uppercase tracking-widest border-b border-brand-border pb-2">Activity Log</h4>
+                 <h4 className="font-mono text-[10px] text-brand-white uppercase tracking-widest border-b border-brand-border pb-2">
+                    Activity <span className="text-brand-orange">Log</span>
+                 </h4>
                  <LeadActivityLogger leadId={activeLead.id} />
               </section>
            </div>

@@ -74,7 +74,10 @@ export default function ProfilePage() {
                     <Camera size={24} className="text-brand-white" />
                   </div>
                 </div>
-                <h3 className="font-display text-2xl uppercase text-brand-white mb-2">{profile?.full_name || user?.email?.split('@')[0]}</h3>
+                <h3 className="font-display text-2xl uppercase text-brand-white mb-2">
+                  <span className="text-brand-white">{(profile?.full_name || user?.email?.split('@')[0])?.split(' ')[0]}</span>{' '}
+                  <span className="text-brand-orange">{(profile?.full_name || user?.email?.split('@')[0])?.split(' ').slice(1).join(' ')}</span>
+                </h3>
                 <span className="px-3 py-1 bg-brand-orange/10 border border-brand-orange text-brand-orange font-mono text-[9px] uppercase tracking-widest">
                   {profile?.role || 'Super Admin'}
                 </span>
@@ -109,7 +112,7 @@ export default function ProfilePage() {
         {/* Edit Form */}
         <div className="xl:col-span-2 space-y-8">
            <form onSubmit={handleUpdate} className="blueprint-border p-8 bg-brand-carbon">
-              <h2 className="font-display text-2xl uppercase mb-8 border-b border-brand-border pb-4">Credentials & Details</h2>
+              <h2 className="font-display text-xl uppercase tracking-widest text-brand-white mb-8 border-b border-brand-border pb-4">Credentials <span className="text-brand-orange">& Details</span></h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 <div className="space-y-2">
@@ -144,7 +147,7 @@ export default function ProfilePage() {
 
               <div className="pt-8 border-t border-brand-border">
                 <h3 className="flex items-center gap-3 font-display text-lg uppercase tracking-tighter text-brand-white mb-6">
-                  <Key size={18} className="text-brand-orange" /> Authentication Security
+                  <Key size={18} className="text-brand-orange" /> Authentication <span className="text-brand-orange">Security</span>
                 </h3>
                 <div className="flex flex-col md:flex-row gap-6 justify-between items-center">
                    <p className="font-sans text-xs text-brand-grey max-w-sm">

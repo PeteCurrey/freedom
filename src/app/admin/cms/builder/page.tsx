@@ -134,7 +134,9 @@ export default function LandingPageBuilder() {
                       <Layout size={24} />
                     </div>
                     <div>
-                      <h3 className="font-display text-lg uppercase text-brand-white">{p.title}</h3>
+                      <h3 className="font-display text-lg uppercase text-brand-white">
+                        {p.title.split(' ')[0]} <span className="text-brand-orange">{p.title.split(' ').slice(1).join(' ')}</span>
+                      </h3>
                       <div className="flex items-center gap-3">
                          <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Slug: /{p.slug}</span>
                          <span className="w-1 h-1 rounded-full bg-brand-orange" />

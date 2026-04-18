@@ -21,37 +21,6 @@ const vehicleMap: Record<string, string> = {
   "iveco-daily": "Iveco Daily",
 };
 
-// Fallback links in case the database is not yet seeded or configured
-const getFallbackLinks = (slug: string, vehicleName: string) => {
-  const affLinks: Record<string, string> = {
-    "mercedes-sprinter": "https://sovrn.co/8jnot3i",
-    "man-tge": "https://sovrn.co/11auwij",
-    "fiat-ducato": "https://sovrn.co/12rriq1",
-    "peugeot-boxer": "https://www.autotrader.co.uk/vans/used-vans/peugeot/boxer",
-    "citroen-relay": "https://www.autotrader.co.uk/vans/used-vans/citroen/relay",
-  };
-
-  const vanTraderUrl = affLinks[slug] || `https://www.autotrader.co.uk/vans/used-vans/${slug.replace('-', '/')}`;
-  const ebayUrl = `https://www.ebay.co.uk/sch/i.html?_nkw=${vehicleName.replace(' ', '+')}+panel+van+lwb`;
-
-  return [
-    {
-      id: "fallback-ebay",
-      marketplace_name: "eBay Motors UK",
-      affiliate_url: ebayUrl,
-      icon_type: "ebay",
-      is_fallback: true
-    },
-    {
-      id: "fallback-vantrader",
-      marketplace_name: "VanTrader Classifieds",
-      affiliate_url: vanTraderUrl,
-      icon_type: "vantrader",
-      is_fallback: true
-    }
-  ];
-};
-
 export default function MarketplacePage() {
   const { slug } = useParams();
   const vehicleName = vehicleMap[slug as string] || "Base";
@@ -67,16 +36,13 @@ export default function MarketplacePage() {
         .eq('is_active', true)
         .order('created_at', { ascending: true });
       
-      if (data && data.length > 0) {
+      if (data) {
         setMarketplaceLinks(data);
-      } else {
-        // Use fallback if database returns nothing (prevents "vanishing" links)
-        setMarketplaceLinks(getFallbackLinks(slug as string, vehicleName));
       }
       setLoading(false);
     }
     fetchLinks();
-  }, [slug, vehicleName]);
+  }, [slug]);
 
   const ebayHeroUrl = generateEbaySearchUrl({ vehicleName });
 
@@ -105,7 +71,9 @@ export default function MarketplacePage() {
               </p>
             </div>
             <a 
-              href={ebayHeroUrl}
+              href={marketplaceLinks.find(l => l.icon_type === 'ebay')?.id 
+                ? `/api/affiliate/redirect?type=marketplace&id=${marketplaceLinks.find(l => l.icon_type === 'ebay').id}` 
+                : ebayHeroUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-brand-orange text-white px-10 py-5 font-display text-xs uppercase tracking-[0.2em] hover:scale-105 transition-transform inline-flex items-center gap-3"
@@ -155,9 +123,9 @@ export default function MarketplacePage() {
                       key={link.id}
                       title={link.marketplace_name}
                       description={`Direct conduit to ${link.marketplace_name} results for ${vehicleName} chassis. Includes pre-applied trade filters.`}
-                      url={link.is_fallback ? link.affiliate_url : `/api/affiliate/redirect?type=marketplace&id=${link.id}`}
+                      url={`/api/affiliate/redirect?type=marketplace&id=${link.id}`}
                       logo={link.icon_type === 'ebay' ? "/images/systems-showcase.png" : "/images/hero-background.png"}
-                      badge={link.is_fallback ? "Vetted Source" : "Affiliate Partner"}
+                      badge={"Affiliate Partner"}
                     />
                   ))
                 ) : !loading ? (

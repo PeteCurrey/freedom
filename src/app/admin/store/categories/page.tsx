@@ -70,7 +70,7 @@ export default function ManageCategoriesPage() {
            <div className="blueprint-border bg-brand-carbon overflow-hidden">
              <div className="p-6 bg-brand-obsidian border-b border-brand-border flex items-center gap-3">
                <FolderOpen className="text-brand-orange" size={20} />
-               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Active Classifications</h2>
+               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Active <span className="text-brand-orange">Classifications</span></h2>
              </div>
              {categories.length === 0 && !loading && (
                 <div className="p-12 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">
@@ -100,7 +100,7 @@ export default function ManageCategoriesPage() {
         {/* Add Category */}
         <div className="lg:col-span-1">
            <div className="blueprint-border p-8 bg-brand-carbon sticky top-32">
-             <h2 className="font-display text-xl uppercase tracking-widest text-brand-white mb-8 border-b border-brand-border pb-4">Create New Category</h2>
+             <h2 className="font-display text-xl uppercase tracking-widest text-brand-white mb-8 border-b border-brand-border pb-4">Create <span className="text-brand-orange">New Category</span></h2>
              
              <div className="space-y-6">
                 <div>

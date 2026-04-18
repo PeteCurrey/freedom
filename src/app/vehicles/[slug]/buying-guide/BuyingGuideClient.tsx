@@ -263,7 +263,8 @@ export default function BuyingGuideClient({ slug }: { slug: string }) {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             <a href={vehicle.ebaySearch} target="_blank" className="blueprint-border p-10 bg-brand-obsidian group hover:border-brand-orange transition-all h-full flex flex-col justify-between italic relative">
+             {/* These links are now managed via Admin → Marketing → Marketplace Links */}
+             <a href={`/vehicles/${slug}/listings`} className="blueprint-border p-10 bg-brand-obsidian group hover:border-brand-orange transition-all h-full flex flex-col justify-between italic relative">
                 <Search className="w-8 h-8 text-brand-orange mb-8" />
                 <div>
                    <h3 className="font-display text-xl mb-2 text-brand-white uppercase underline">eBay Motors</h3>
@@ -271,19 +272,19 @@ export default function BuyingGuideClient({ slug }: { slug: string }) {
                 </div>
                 <ExternalLink className="absolute top-6 right-6 w-4 h-4 text-brand-grey group-hover:text-brand-orange" />
              </a>
-             <a href={vehicle.autotraderSearch} target="_blank" className="blueprint-border p-10 bg-brand-obsidian group hover:border-brand-orange transition-all h-full flex flex-col justify-between italic relative">
+             <a href={`/vehicles/${slug}/listings`} className="blueprint-border p-10 bg-brand-obsidian group hover:border-brand-orange transition-all h-full flex flex-col justify-between italic relative">
                 <Search className="w-8 h-8 text-brand-orange mb-8" />
                 <div>
                    <h3 className="font-display text-xl mb-2 text-brand-white uppercase underline">AutoTrader Van</h3>
-                   <p className="font-sans text-brand-grey text-xs">Main dealer & trade stock.</p>
+                   <p className="font-sans text-brand-grey text-xs">Main dealer &amp; trade stock.</p>
                 </div>
                 <ExternalLink className="absolute top-6 right-6 w-4 h-4 text-brand-grey group-hover:text-brand-orange" />
              </a>
-             <a href="https://www.facebook.com/marketplace/category/vehicles" target="_blank" className="blueprint-border p-10 bg-brand-obsidian group hover:border-brand-orange transition-all h-full flex flex-col justify-between italic relative">
+             <a href={`/vehicles/${slug}/listings`} className="blueprint-border p-10 bg-brand-obsidian group hover:border-brand-orange transition-all h-full flex flex-col justify-between italic relative">
                 <Search className="w-8 h-8 text-brand-orange mb-8" />
                 <div>
                    <h3 className="font-display text-xl mb-2 text-brand-white uppercase underline">FB Marketplace</h3>
-                   <p className="font-sans text-brand-grey text-xs">Private bargains & local sales.</p>
+                   <p className="font-sans text-brand-grey text-xs">Private bargains &amp; local sales.</p>
                 </div>
                 <ExternalLink className="absolute top-6 right-6 w-4 h-4 text-brand-grey group-hover:text-brand-orange" />
              </a>

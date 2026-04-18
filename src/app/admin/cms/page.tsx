@@ -147,7 +147,7 @@ export default function CMSPage() {
                  {activeSection === 'hero' && (
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2">
                        <h2 className="font-display text-2xl uppercase tracking-tighter text-brand-white border-b border-brand-border pb-6 mb-8">
-                          Hero Banner <span className="text-brand-orange">Protocol</span>
+                          Hero <span className="text-brand-orange">Banner Protocol</span>
                        </h2>
                        
                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">

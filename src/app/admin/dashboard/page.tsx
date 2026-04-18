@@ -113,7 +113,9 @@ export default function AdminDashboardPage() {
          {operationHubs.map((hub, idx) => (
            <div key={idx} className="space-y-6">
               <div className="border-l-2 border-brand-orange pl-4 py-1">
-                 <h2 className="font-display text-xl uppercase tracking-widest text-brand-white leading-none">{hub.title}</h2>
+                 <h2 className="font-display text-xl uppercase tracking-widest text-brand-white leading-none">
+                    {hub.title.split(' ')[0]} <span className="text-brand-orange">{hub.title.split(' ').slice(1).join(' ')}</span>
+                 </h2>
                  <p className="font-mono text-[9px] text-brand-grey uppercase mt-1">{hub.description}</p>
               </div>
               
@@ -141,7 +143,9 @@ export default function AdminDashboardPage() {
         <div className="blueprint-border p-8 bg-brand-carbon relative overflow-hidden group">
            <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
            <div className="relative z-10">
-              <h3 className="font-display text-2xl uppercase tracking-tighter text-brand-white mb-2">Mass Product Sync</h3>
+              <h3 className="font-display text-2xl uppercase tracking-tighter text-brand-white mb-2">
+                Mass <span className="text-brand-orange">Product Sync</span>
+              </h3>
               <p className="font-sans text-xs text-brand-grey mb-8 max-w-sm">Synchronize wholesale catalogs from suppliers like <span className="text-brand-orange">Energy Solutions</span> directly into your storefront.</p>
               <Link 
                 href="/admin/store/import" 

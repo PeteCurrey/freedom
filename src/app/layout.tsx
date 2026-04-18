@@ -47,6 +47,9 @@ export const metadata: Metadata = {
     title: "Amplios",
     description: "Built for the road. Engineered for life.",
   },
+  other: {
+    'arwin-verification': 'arwin',
+  }
 };
 
 export default function RootLayout({

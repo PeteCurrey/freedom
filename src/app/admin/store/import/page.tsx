@@ -173,7 +173,7 @@ export default function StoreImportPage() {
            <div className="lg:col-span-4 space-y-6">
               {/* Configuration Panel */}
               <div className="bg-brand-carbon blueprint-border p-6 space-y-6">
-                 <h2 className="font-mono text-xs uppercase tracking-widest text-brand-white">1. Global Config</h2>
+                 <h2 className="font-mono text-xs uppercase tracking-widest text-brand-white">1. Global <span className="text-brand-orange">Config</span></h2>
                  
                  <div>
                     <label className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-2">Assign to Category</label>
@@ -203,7 +203,7 @@ export default function StoreImportPage() {
               {/* Upload Panel */}
               <div className="bg-brand-carbon blueprint-border p-6 flex flex-col items-center justify-center text-center space-y-4">
                  <Database className="w-8 h-8 text-brand-orange mb-2" />
-                 <h2 className="font-mono text-xs uppercase tracking-widest text-brand-white">2. Upload Feed</h2>
+                 <h2 className="font-mono text-xs uppercase tracking-widest text-brand-white">2. Upload <span className="text-brand-orange">Feed</span></h2>
                  <p className="font-sans text-brand-grey text-xs">Must be a standard comma-separated CSV file mapping one product per row.</p>
                  
                  <input type="file" accept=".csv" ref={fileInputRef} onChange={handleFileUpload} className="hidden" />
@@ -216,7 +216,7 @@ export default function StoreImportPage() {
            <div className="lg:col-span-8">
               {/* Mapping & Preview */}
               <div className="bg-brand-carbon blueprint-border p-6 min-h-[500px] flex flex-col">
-                 <h2 className="font-mono text-xs uppercase tracking-widest text-brand-white mb-6">3. Dynamic Mapping & Preview</h2>
+                 <h2 className="font-mono text-xs uppercase tracking-widest text-brand-white mb-6">3. Dynamic <span className="text-brand-orange">Mapping & Preview</span></h2>
                  
                  {headers.length === 0 ? (
                     <div className="flex-1 flex items-center justify-center border border-dashed border-brand-border/50">

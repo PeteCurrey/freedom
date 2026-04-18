@@ -168,7 +168,7 @@ export default function SettingsPage() {
            <div className="p-8 border border-white/5 bg-brand-obsidian/50">
               <div className="flex items-center gap-3 mb-6">
                 <Shield className="text-brand-orange" size={20} />
-                <h3 className="font-display text-lg uppercase tracking-tighter text-brand-white">Security Protocol</h3>
+                <h3 className="font-display text-lg uppercase tracking-tighter text-brand-white">Security <span className="text-brand-orange">Protocol</span></h3>
               </div>
               <p className="font-sans text-xs text-brand-grey leading-relaxed mb-8">
                 All API keys are stored in the <span className="text-brand-orange font-mono">admin_settings</span> table. 

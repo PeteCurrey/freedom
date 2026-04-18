@@ -101,7 +101,7 @@ export default function NewProductPage() {
            <div className="blueprint-border bg-brand-carbon p-8">
              <div className="flex items-center gap-3 mb-8 border-b border-brand-border pb-4">
                <Tag className="text-brand-orange" size={20} />
-               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Core Identity</h2>
+               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Core <span className="text-brand-orange">Identity</span></h2>
              </div>
              
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -185,7 +185,7 @@ export default function NewProductPage() {
            <div className="blueprint-border bg-brand-carbon p-8">
              <div className="flex items-center gap-3 mb-8 border-b border-brand-border pb-4">
                <AlignLeft className="text-brand-orange" size={20} />
-               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Marketing Content</h2>
+               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Marketing <span className="text-brand-orange">Content</span></h2>
              </div>
              <div className="space-y-6">
                 <div>
@@ -213,7 +213,7 @@ export default function NewProductPage() {
            <div className="blueprint-border bg-brand-carbon p-8 top-32 sticky">
              <div className="flex items-center gap-3 mb-8 border-b border-brand-border pb-4">
                <DollarSign className="text-brand-orange" size={20} />
-               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Logistics</h2>
+               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Logistics <span className="text-brand-orange">Pipeline</span></h2>
              </div>
              
              <div className="space-y-6 mb-8">
@@ -252,7 +252,7 @@ export default function NewProductPage() {
 
              <div className="flex items-center gap-3 mb-8 border-b border-brand-border pb-4 pt-4">
                <ImageIcon className="text-brand-orange" size={20} />
-               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Media Asset</h2>
+               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Media <span className="text-brand-orange">Asset Registry</span></h2>
              </div>
 
              <div className="space-y-4">
@@ -277,7 +277,7 @@ export default function NewProductPage() {
              
              <div className="flex items-center gap-3 mb-8 border-b border-brand-border pb-4 pt-8">
                <Settings className="text-brand-orange" size={20} />
-               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Status</h2>
+               <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Deployment <span className="text-brand-orange">Status</span></h2>
              </div>
              
              <label className="flex items-center gap-4 cursor-pointer">

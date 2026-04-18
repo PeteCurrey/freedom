@@ -83,7 +83,9 @@ export default function AdminLayout({
     return (
       <div className="bg-brand-obsidian min-h-screen flex flex-col items-center justify-center p-12">
         <div className="w-16 h-16 border-t-2 border-brand-orange animate-spin rounded-full mb-8" />
-        <h2 className="font-display text-2xl uppercase tracking-tighter text-brand-white">Authenticating...</h2>
+        <h2 className="font-display text-2xl uppercase tracking-tighter text-brand-white">
+          System <span className="text-brand-orange">Verification</span>
+        </h2>
         <p className="font-mono text-[10px] uppercase text-brand-grey tracking-[0.2em] mt-4">Establishing Secure Node Connection</p>
       </div>
     );

@@ -260,38 +260,10 @@ export default async function VehicleProfile({ params }: { params: Promise<{ slu
                 </a>
               ))
             ) : (
-              /* High-Fidelity Technical Fallback */
-              [
-                { name: 'eBay Motors UK', url: `https://www.ebay.co.uk/sch/i.html?_nkw=${encodeURIComponent(vehicle.name)}+panel+van`, type: 'ebay' },
-                { name: 'AutoTrader Vans', url: 'https://www.autotrader.co.uk/vans', type: 'autotrader' },
-                { name: 'Facebook Marketplace', url: 'https://www.facebook.com/marketplace/category/vehicles', type: 'fb' }
-              ].map((fallback, i) => (
-                <a
-                  key={i}
-                  href={fallback.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group blueprint-border bg-brand-obsidian/40 p-10 flex flex-col justify-between h-64 hover:bg-brand-orange/5 transition-all"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="font-display text-2xl tracking-tighter text-brand-grey group-hover:text-brand-white transition-colors">
-                      {fallback.name}
-                    </div>
-                    <ExternalLink className="w-5 h-5 text-brand-grey group-hover:text-brand-orange transition-all" />
-                  </div>
-                  
-                  <div className="py-6 border-y border-brand-border/10 my-6">
-                    <p className="font-mono text-[9px] text-brand-grey/50 uppercase tracking-widest mb-2 italic">Standard Node (Unlogged)</p>
-                    <h3 className="font-display text-sm uppercase text-brand-grey/70 group-hover:text-brand-orange transition-colors">
-                      Search all {vehicle.name}s
-                    </h3>
-                  </div>
-
-                  <span className="font-mono text-[10px] text-brand-orange uppercase font-bold tracking-widest">
-                    External Route →
-                  </span>
-                </a>
-              ))
+              /* Clean empty state — add links via Admin → Marketing → Marketplace Links */
+              <div className="col-span-3 blueprint-border p-12 bg-brand-obsidian/40 text-center">
+                <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">No marketplace nodes configured. Add via Admin Panel → Marketplace Links.</p>
+              </div>
             )}
           </div>
           <p className="font-mono text-[8px] text-brand-grey/50 uppercase tracking-widest mt-12 max-w-2xl leading-relaxed">

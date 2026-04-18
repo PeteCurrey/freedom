@@ -51,6 +51,7 @@ export function AdminSidebar({ isLightMode, onToggleTheme }: AdminSidebarProps) 
   return (
     <aside className={cn(
       "bg-brand-carbon border-r border-brand-border h-screen sticky top-0 transition-all duration-300 flex flex-col z-[100]",
+      "admin-sidebar-adaptive",
       isCollapsed ? "w-20" : "w-64"
     )}>
       {/* Sidebar Header */}
