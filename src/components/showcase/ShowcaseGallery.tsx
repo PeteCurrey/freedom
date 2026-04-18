@@ -92,7 +92,7 @@ export default function ShowcaseGallery({ initialBuilds }: ShowcaseGalleryProps)
                     <p className="font-sans text-brand-grey text-sm leading-relaxed mb-8">{build.description}</p>
                     
                     <div className="grid grid-cols-3 gap-4 mt-auto pt-8 border-t border-brand-border/30">
-                      {Object.entries(build.specs_summary || build.specs || {}).map(([key, val]) => (
+                      {Object.entries(build.specs_summary || {}).map(([key, val]) => (
                         <div key={key}>
                           <p className="font-mono text-[7px] text-brand-grey uppercase tracking-widest mb-1">{key}</p>
                           <p className="font-mono text-[9px] text-brand-white">{String(val)}</p>

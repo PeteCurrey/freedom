@@ -33,7 +33,7 @@ export default async function StoreHub() {
       {/* 1. CINEMATIC HERO */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <Image
-          src="/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/luxury_iveco_snow_canada_hd_hero_1776506636919.png"
+          src="/images/store-hero.png"
           alt="Luxury Iveco Daily 4x4 Expedition"
           fill
           priority
@@ -117,18 +117,20 @@ export default async function StoreHub() {
            </div>
 
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-brand-border">
-               {categories?.map((cat) => {
-                 // Mapping generated images to categories
-                 const imageMap: Record<string, string> = {
-                   'power-systems': '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/cat_electrical_power_systems_1776505608980.png',
-                   'climate-control': '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/cat_heating_climate_control_1776505630980.png',
-                   'water-plumbing': '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/cat_water_plumbing_systems_1776505649499.png',
-                   'insulation-build': '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/cat_insulation_ventilation_build_1776505666892.png',
-                   'gas-lpg': '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/cat_gas_lpg_systems_1776505691366.png',
-                   'interior-hardware': '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/cat_interior_hardware_furniture_1776505705046.png'
-                 };
-                 
-                 const bgImage = imageMap[cat.slug] || '/images/hero-background.png';
+                {categories?.map((cat) => {
+                  // Mapping generated images to categories
+                  const imageMap: Record<string, string> = {
+                    'power-systems': '/images/cat-power.png',
+                    'climate-control': '/images/cat-climate.png',
+                    'water-plumbing': '/images/cat-water.png',
+                    'insulation-build': '/images/cat-insulation.png',
+                    'gas-lpg': '/images/cat-gas.png',
+                    'interior-hardware': '/images/cat-interior.png',
+                    'chassis-exterior': '/images/tech-water.png', // Placeholder until high-fi asset generated
+                    'security-monitoring': '/images/tech-electrical.png' // Placeholder until high-fi asset generated
+                  };
+                  
+                  const bgImage = imageMap[cat.slug] || '/images/hero-background.png';
 
                  return (
                    <div 
@@ -214,10 +216,10 @@ export default async function StoreHub() {
               
               <div className="grid grid-cols-2 gap-4">
                  {[
-                   { name: 'Essential Off-Grid', img: '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/kit_essential_offgrid_bundle_1776505721992.png', savings: '12%' },
-                   { name: 'Expedition Extreme', img: '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/kit_expedition_extreme_bundle_1776505738197.png', savings: '18%' },
-                   { name: 'Luxury Living', img: '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/kit_luxury_living_bundle_1776505764537.png', savings: '15%' },
-                   { name: 'Base Foundation', img: '/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/kit_base_foundation_bundle_1776505780135.png', savings: '22%' }
+                   { name: 'Essential Off-Grid', img: '/images/kit-essential.png', savings: '12%' },
+                   { name: 'Expedition Extreme', img: '/images/kit-expedition.png', savings: '18%' },
+                   { name: 'Luxury Living', img: '/images/kit-luxury.png', savings: '15%' },
+                   { name: 'Base Foundation', img: '/images/kit-base.png', savings: '22%' }
                  ].map((kit, i) => (
                    <div key={i} className="relative aspect-square bg-brand-obsidian blueprint-border overflow-hidden group cursor-pointer">
                       <Image 

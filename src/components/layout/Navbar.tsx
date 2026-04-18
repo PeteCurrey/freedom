@@ -56,7 +56,6 @@ const navLinks: NavLink[] = [
       { name: "Interior & Furniture", href: "/systems/interior-furniture", tagline: "Design the Core", image: "/images/interior-showcase.png" },
     ]
   },
-  { name: "Resources", href: "/resources" },
   { 
     name: "Store", 
     href: "/store", 
@@ -69,8 +68,7 @@ const navLinks: NavLink[] = [
       { name: "Build Kits", href: "/store/kits", tagline: "Bundled System Packs", image: "/images/community-showcase.png" },
     ]
   },
-  { name: "Build Planner", href: "/planner" },
-  { name: "AI Advisor", href: "/advisor" },
+  { name: "Resources", href: "/resources" },
   { 
     name: "Engineering", 
     href: "/tools", 
@@ -246,6 +244,13 @@ export function Navbar() {
 
         {/* Utility Nav */}
         <div className="flex items-center space-x-6 text-brand-white/80">
+          <Link 
+            href="/planner" 
+            className="hidden xl:flex items-center gap-2 bg-brand-orange/10 border border-brand-orange/30 px-5 py-2 group/cta transition-all hover:bg-brand-orange"
+          >
+            <span className="font-display text-[9px] uppercase tracking-widest text-brand-orange group-hover/cta:text-white transition-colors">Build Planner</span>
+            <ArrowRight className="w-3 h-3 text-brand-orange group-hover/cta:text-white transition-colors" />
+          </Link>
           <button className="hover:text-brand-orange transition-colors">
             <Search className="w-5 h-5" />
           </button>

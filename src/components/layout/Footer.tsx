@@ -62,7 +62,7 @@ export function Footer() {
           {/* Brand Col */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block mb-6">
-              <span className="font-display text-2xl text-brand-white">AMPLIOS</span>
+              <span className="font-display text-2xl text-brand-white">AMPLIOS<span className="text-brand-orange">.</span></span>
             </Link>
             <p className="font-sans text-brand-grey text-sm mb-8 max-w-sm leading-relaxed">
               Definitive resources and premium gear for serious self-build motorhome and campervan
