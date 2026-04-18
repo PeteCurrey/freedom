@@ -123,20 +123,42 @@ export function Navbar() {
         .select('name, slug, subcategories')
         .order('sort_order', { ascending: true });
         
-      if (data && data.length > 0) {
+      const EXPANSION_CATEGORIES = [
+        { name: 'Chassis & Exterior', slug: 'chassis-exterior', subcategories: [] },
+        { name: 'Security & Monitoring', slug: 'security-monitoring', subcategories: [] }
+      ];
+
+      const imageMap: Record<string, string> = {
+        'power-systems': '/images/cat-power.png',
+        'climate-control': '/images/cat-climate.png',
+        'water-plumbing': '/images/cat-water.png',
+        'insulation-build': '/images/cat-insulation.png',
+        'gas-lpg': '/images/cat-gas.png',
+        'interior-hardware': '/images/cat-interior.png',
+        'chassis-exterior': '/images/tech-water.png',
+        'security-monitoring': '/images/tech-electrical.png'
+      };
+        
+      if (data || EXPANSION_CATEGORIES) {
         setLinks(currentLinks => {
           const newLinks = [...currentLinks];
           const storeIndex = newLinks.findIndex(l => l.name === 'Store');
           if (storeIndex !== -1) {
+            // Merge DB and Expansion
+            const allCats = [...(data || [])];
+            EXPANSION_CATEGORIES.forEach(exp => {
+              if (!allCats.find(c => c.slug === exp.slug)) allCats.push(exp as any);
+            });
+
             newLinks[storeIndex] = {
               ...newLinks[storeIndex],
-              items: data.map(cat => ({
+              items: allCats.map(cat => ({
                 name: cat.name,
                 href: `/store/${cat.slug}`,
-                tagline: Array.isArray(cat.subcategories) 
+                tagline: Array.isArray(cat.subcategories) && cat.subcategories.length > 0
                   ? cat.subcategories.slice(0, 3).map((s: any) => s.name).join(' · ')
-                  : "Engineering Component",
-                image: "/images/hero-background.png" 
+                  : "Technical Registry",
+                image: imageMap[cat.slug] || "/images/hero-background.png" 
               }))
             };
           }

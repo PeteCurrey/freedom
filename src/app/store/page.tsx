@@ -25,8 +25,20 @@ export default async function StoreHub() {
     .limit(1);
 
   const product = editorsPick?.[0];
+  
+  // High-fidelity taxonomy expansion nodes
+  const EXPANSION_CATEGORIES = [
+    { id: 'exp-1', name: 'Chassis & Exterior', slug: 'chassis-exterior', description: 'Heavy-duty racks, ladders, wheels, and expedition hardware for your base vehicle.' },
+    { id: 'exp-2', name: 'Security & Monitoring', slug: 'security-monitoring', description: 'Professional-grade locks, alarm systems, and off-grid tracking technology.' }
+  ];
 
-  return (
+  // Merge DB categories with expansion nodes, ensuring no duplicates by slug
+  const allCategories = [...(categories || [])];
+  EXPANSION_CATEGORIES.forEach(expCat => {
+    if (!allCategories.find(c => c.slug === expCat.slug)) {
+      allCategories.push(expCat as any);
+    }
+  });
     <main className="bg-brand-obsidian min-h-screen">
       <Navbar />
       
@@ -116,9 +128,9 @@ export default async function StoreHub() {
               <div className="font-mono text-[10px] uppercase text-brand-grey">0X Categories Loaded</div>
            </div>
 
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-brand-border">
-                {categories?.map((cat) => {
-                  // Mapping generated images to categories
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-brand-border">
+                {allCategories.map((cat) => {
+                  // Mapping generated images to technical categories
                   const imageMap: Record<string, string> = {
                     'power-systems': '/images/cat-power.png',
                     'climate-control': '/images/cat-climate.png',
@@ -126,8 +138,8 @@ export default async function StoreHub() {
                     'insulation-build': '/images/cat-insulation.png',
                     'gas-lpg': '/images/cat-gas.png',
                     'interior-hardware': '/images/cat-interior.png',
-                    'chassis-exterior': '/images/tech-water.png', // Placeholder until high-fi asset generated
-                    'security-monitoring': '/images/tech-electrical.png' // Placeholder until high-fi asset generated
+                    'chassis-exterior': '/images/tech-water.png',
+                    'security-monitoring': '/images/tech-electrical.png'
                   };
                   
                   const bgImage = imageMap[cat.slug] || '/images/hero-background.png';
