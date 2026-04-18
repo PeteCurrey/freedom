@@ -16,23 +16,40 @@ const SUPPORTED_VEHICLES = [
 
 export default function MarketplaceLinksManager() {
   const [links, setLinks] = useState<any[]>([]);
+  const [affiliates, setAffiliates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedVehicle, setSelectedVehicle] = useState(SUPPORTED_VEHICLES[0].id);
-  const [newMarketplace, setNewMarketplace] = useState({ name: "", url: "", icon: "external" });
+  const [newMarketplace, setNewMarketplace] = useState({ 
+    name: "", 
+    url: "", 
+    icon: "external",
+    affiliate_id: "",
+    listing_label: ""
+  });
 
   useEffect(() => {
-    fetchLinks();
+    fetchData();
   }, [selectedVehicle]);
 
-  async function fetchLinks() {
+  async function fetchData() {
     setLoading(true);
-    const { data } = await supabase
+    
+    // Fetch Marketplace Links
+    const { data: linkData } = await supabase
       .from('vehicle_marketplaces')
-      .select('*')
+      .select('*, affiliate_management(name)')
       .eq('vehicle_id', selectedVehicle)
       .order('created_at', { ascending: true });
     
-    setLinks(data || []);
+    setLinks(linkData || []);
+
+    // Fetch Global Affiliates
+    const { data: affiliateData } = await supabase
+      .from('affiliate_management')
+      .select('id, name')
+      .order('name');
+    
+    setAffiliates(affiliateData || []);
     setLoading(false);
   }
 
@@ -41,7 +58,7 @@ export default function MarketplaceLinksManager() {
     
     // Auto format url
     let formattedUrl = newMarketplace.url;
-    if (!formattedUrl.startsWith('http')) {
+    if (!formattedUrl.startsWith('http') && !newMarketplace.affiliate_id) {
       formattedUrl = `https://${formattedUrl}`;
     }
 
@@ -50,14 +67,16 @@ export default function MarketplaceLinksManager() {
       marketplace_name: newMarketplace.name,
       affiliate_url: formattedUrl,
       icon_type: newMarketplace.icon,
+      affiliate_id: newMarketplace.affiliate_id || null,
+      listing_label: newMarketplace.listing_label || null,
       is_active: true
     }]);
 
     if (error) {
       alert("Error adding link: " + error.message);
     } else {
-      setNewMarketplace({ name: "", url: "", icon: "external" });
-      fetchLinks();
+      setNewMarketplace({ name: "", url: "", icon: "external", affiliate_id: "", listing_label: "" });
+      fetchData();
     }
   };
 
@@ -102,42 +121,63 @@ export default function MarketplaceLinksManager() {
 
            {/* Main View */}
            <div className="lg:col-span-2 space-y-8">
-              {/* Add New Panel */}
-              <div className="bg-brand-carbon border border-brand-border p-6">
-                 <h2 className="font-mono text-[10px] text-brand-orange uppercase tracking-widest mb-4">Register New Route</h2>
-                 <div className="grid grid-cols-2 gap-4 mb-4">
-                    <input 
-                      type="text" 
-                      value={newMarketplace.name}
-                      onChange={e => setNewMarketplace({...newMarketplace, name: e.target.value})}
-                      placeholder="e.g. Van Trader UK"
-                      className="w-full bg-brand-obsidian p-3 font-sans text-sm outline-none focus:border-brand-orange border border-brand-border text-white"
-                    />
-                    <select 
-                      value={newMarketplace.icon}
-                      onChange={e => setNewMarketplace({...newMarketplace, icon: e.target.value})}
-                      className="w-full bg-brand-obsidian p-3 font-sans text-sm outline-none focus:border-brand-orange border border-brand-border text-brand-grey appearance-none"
-                    >
-                       <option value="external">Standard Link Icon</option>
-                       <option value="ebay">eBay Motors Icon</option>
-                       <option value="autotrader">AutoTrader Icon</option>
-                       <option value="vantrader">Van Trader Icon</option>
-                    </select>
-                 </div>
-                 <input 
-                   type="text" 
-                   value={newMarketplace.url}
-                   onChange={e => setNewMarketplace({...newMarketplace, url: e.target.value})}
-                   placeholder="https://affiliate-link.com?track=123"
-                   className="w-full bg-brand-obsidian p-3 font-mono text-xs outline-none focus:border-brand-orange border border-brand-border text-white mb-4"
-                 />
-                 <button 
-                  onClick={handleAddLink}
-                  className="w-full py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange flex items-center justify-center gap-2 transition-all"
-                 >
-                    <Plus size={14} /> Inject Routing
-                 </button>
-              </div>
+               {/* Add New Panel */}
+               <div className="bg-brand-carbon border border-brand-border p-6">
+                  <h2 className="font-mono text-[10px] text-brand-orange uppercase tracking-widest mb-4">Register New Route</h2>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                     <div className="space-y-4">
+                        <input 
+                          type="text" 
+                          value={newMarketplace.name}
+                          onChange={e => setNewMarketplace({...newMarketplace, name: e.target.value})}
+                          placeholder="e.g. eBay Motors UK"
+                          className="w-full bg-brand-obsidian p-3 font-sans text-sm outline-none focus:border-brand-orange border border-brand-border text-white"
+                        />
+                        <select 
+                          value={newMarketplace.icon}
+                          onChange={e => setNewMarketplace({...newMarketplace, icon: e.target.value})}
+                          className="w-full bg-brand-obsidian p-3 font-sans text-sm outline-none focus:border-brand-orange border border-brand-border text-brand-grey appearance-none"
+                        >
+                           <option value="external">Standard Link Icon</option>
+                           <option value="ebay">eBay Motors Icon</option>
+                           <option value="autotrader">AutoTrader Icon</option>
+                           <option value="vantrader">Van Trader Icon</option>
+                        </select>
+                     </div>
+                     <div className="space-y-4">
+                        <select 
+                          value={newMarketplace.affiliate_id}
+                          onChange={e => setNewMarketplace({...newMarketplace, affiliate_id: e.target.value})}
+                          className="w-full bg-brand-obsidian p-3 font-sans text-sm outline-none focus:border-brand-orange border border-brand-border text-white appearance-none"
+                        >
+                           <option value="">No Global Partner Link</option>
+                           {affiliates.map(a => (
+                             <option key={a.id} value={a.id}>{a.name}</option>
+                           ))}
+                        </select>
+                        <input 
+                          type="text" 
+                          value={newMarketplace.listing_label}
+                          onChange={e => setNewMarketplace({...newMarketplace, listing_label: e.target.value})}
+                          placeholder="Button Label: VIEW ON EBAY"
+                          className="w-full bg-brand-obsidian p-3 font-sans text-sm outline-none focus:border-brand-orange border border-brand-border text-white"
+                        />
+                     </div>
+                  </div>
+                  <input 
+                    type="text" 
+                    value={newMarketplace.url}
+                    onChange={e => setNewMarketplace({...newMarketplace, url: e.target.value})}
+                    placeholder="Affiliate URL or Listing ID (if linked to partner)"
+                    className="w-full bg-brand-obsidian p-3 font-mono text-xs outline-none focus:border-brand-orange border border-brand-border text-white mb-4"
+                  />
+                  <button 
+                   onClick={handleAddLink}
+                   className="w-full py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange flex items-center justify-center gap-2 transition-all"
+                  >
+                     <Plus size={14} /> Inject Routing Node
+                  </button>
+               </div>
 
               {/* Active Links Table */}
               <div className="bg-brand-carbon border border-brand-border overflow-hidden">
@@ -145,28 +185,42 @@ export default function MarketplaceLinksManager() {
                     <h2 className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">Active Routes for {SUPPORTED_VEHICLES.find(v => v.id === selectedVehicle)?.name}</h2>
                  </div>
                  <div className="divide-y divide-brand-border/50">
-                    {loading ? (
-                       <div className="p-8 text-center text-brand-grey font-mono text-xs">Scanning registry...</div>
-                    ) : links.length === 0 ? (
-                       <div className="p-8 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">No affiliate routes registered for this chassis.</div>
-                    ) : (
-                       links.map(link => (
-                          <div key={link.id} className="p-4 flex items-center justify-between hover:bg-brand-obsidian transition-colors">
-                             <div>
-                                <span className="block font-display text-lg uppercase tracking-wider">{link.marketplace_name}</span>
-                                <a href={link.affiliate_url} target="_blank" rel="noreferrer" className="block font-mono text-[8px] text-brand-orange uppercase tracking-widest truncate max-w-[300px] mt-1 hover:underline">
-                                   {link.affiliate_url}
-                                </a>
-                             </div>
-                             <div className="flex items-center gap-4">
-                                <span className={`px-2 py-1 border font-mono text-[8px] uppercase tracking-widest ${link.is_active ? 'border-green-500/30 text-green-500' : 'border-red-500/30 text-red-500'}`}>
-                                   {link.is_active ? 'Active' : 'Offline'}
-                                </span>
-                                <button onClick={() => handleDelete(link.id)} className="text-brand-grey hover:text-red-500 transition-colors p-2"><Trash2 size={16}/></button>
-                             </div>
-                          </div>
-                       ))
-                    )}
+                     {loading ? (
+                        <div className="p-8 text-center text-brand-grey font-mono text-xs">Scanning registry...</div>
+                     ) : links.length === 0 ? (
+                        <div className="p-8 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">No affiliate routes registered for this chassis.</div>
+                     ) : (
+                        links.map(link => (
+                           <div key={link.id} className="p-6 flex items-center justify-between hover:bg-brand-obsidian transition-colors">
+                              <div className="flex-1">
+                                 <div className="flex items-center gap-3 mb-1">
+                                    <span className="block font-display text-xl uppercase tracking-wider">{link.marketplace_name}</span>
+                                    {link.affiliate_management && (
+                                       <span className="px-2 py-0.5 bg-brand-orange/10 border border-brand-orange/30 font-mono text-[7px] text-brand-orange uppercase tracking-wider">
+                                          Partner: {link.affiliate_management.name}
+                                       </span>
+                                    )}
+                                 </div>
+                                 <div className="flex items-center gap-2">
+                                    <LinkIcon className="w-3 h-3 text-brand-grey" />
+                                    <a href={link.affiliate_url} target="_blank" rel="noreferrer" className="block font-mono text-[10px] text-brand-grey hover:text-brand-orange transition-colors truncate max-w-[400px]">
+                                       {link.affiliate_url}
+                                    </a>
+                                 </div>
+                              </div>
+                              <div className="flex items-center gap-6">
+                                 <div className="text-right">
+                                    <span className="block font-display text-xl text-brand-orange leading-none">{link.click_count || 0}</span>
+                                    <span className="block font-mono text-[7px] text-brand-grey uppercase tracking-widest mt-1">Clicks</span>
+                                 </div>
+                                 <span className={`px-3 py-1 border font-mono text-[8px] uppercase tracking-widest ${link.is_active ? 'border-green-500/30 text-green-500 bg-green-500/5' : 'border-red-500/30 text-red-500 bg-red-500/5'}`}>
+                                    {link.is_active ? 'Active Node' : 'Registry offline'}
+                                 </span>
+                                 <button onClick={() => handleDelete(link.id)} className="text-brand-grey hover:text-red-500 transition-colors p-2"><Trash2 size={18}/></button>
+                              </div>
+                           </div>
+                        ))
+                     )}
                  </div>
               </div>
            </div>

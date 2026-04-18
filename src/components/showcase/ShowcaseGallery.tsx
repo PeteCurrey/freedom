@@ -5,22 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
-
-interface Build {
-  id: string;
-  slug?: string;
-  title: string;
-  vehicle_model: string;
-  chassis_type: string;
-  description: string;
-  hero_image?: string;
-  specs?: any;
-  specs_summary?: any;
-  year_completed?: number;
-  user_handle?: string;
-  is_community_pick?: boolean;
-  rating?: number;
-}
+import { Build } from "@/lib/data/showcase";
 
 interface ShowcaseGalleryProps {
   initialBuilds: Build[];

@@ -106,35 +106,55 @@ export default function FindAVan() {
                      </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                     {marketplaceLinks.length > 0 ? (
-                       marketplaceLinks.map((link) => (
-                         <a 
-                          key={link.id}
-                          href={`/api/affiliate/redirect?type=marketplace&id=${link.id}`}
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="group p-8 blueprint-border bg-brand-obsidian hover:bg-brand-orange/5 transition-all flex flex-col justify-between min-h-[220px]"
-                         >
-                            <div className="flex justify-between items-start">
-                               <div className="h-12 bg-brand-carbon flex items-center justify-center px-4 py-2 border border-brand-border">
-                                  {link.icon_type === 'ebay' && <span className="font-display text-xs text-white">eBAY UK</span>}
-                                  {link.icon_type === 'autotrader' && <span className="font-display text-xs text-white">AUTOTRADER</span>}
-                                  {link.icon_type === 'vantrader' && <span className="font-display text-xs text-white">VAN TRADER</span>}
-                                  {link.icon_type === 'external' && <ExternalLink className="w-4 h-4 text-brand-orange" />}
-                               </div>
-                               <ExternalLink className="w-5 h-5 text-brand-grey group-hover:text-brand-orange transition-colors" />
-                            </div>
-                            <div className="mt-8">
-                               <h3 className="font-display text-2xl mb-2">{link.marketplace_name}</h3>
-                               <p className="font-sans text-brand-grey text-[10px] uppercase tracking-widest">Verified Supplier Network</p>
-                            </div>
-                            <div className="mt-auto pt-6 border-t border-brand-border/30 flex justify-between items-center">
-                               <span className="font-mono text-[8px] text-brand-grey/50 uppercase tracking-widest">Tracking Active</span>
-                               <span className="font-mono text-[9px] text-brand-orange uppercase tracking-widest font-bold group-hover:translate-x-1 transition-transform">Search Inventory →</span>
-                            </div>
-                         </a>
-                       ))
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         {marketplaceLinks.length > 0 ? (
+                           marketplaceLinks.map((link) => (
+                             <div 
+                              key={link.id}
+                              className="group p-8 blueprint-border bg-brand-obsidian hover:bg-brand-orange/5 transition-all flex flex-col justify-between min-h-[260px] relative overflow-hidden"
+                             >
+                                <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-30 transition-opacity">
+                                   <div className="font-mono text-[6px] uppercase tracking-[0.3em] rotate-90 origin-right">REGISTRY // NODE</div>
+                                </div>
+
+                                <div className="flex justify-between items-start mb-6">
+                                   <div className="h-12 bg-brand-carbon flex items-center justify-center px-4 py-2 border border-brand-border">
+                                      {link.icon_type === 'ebay' && <span className="font-display text-xs text-white">eBAY UK</span>}
+                                      {link.icon_type === 'autotrader' && <span className="font-display text-xs text-white">AUTOTRADER</span>}
+                                      {link.icon_type === 'vantrader' && <span className="font-display text-xs text-white">VAN TRADER</span>}
+                                      {link.icon_type === 'external' && <ExternalLink className="w-4 h-4 text-brand-orange" />}
+                                   </div>
+                                   <div className="flex flex-col items-end gap-2">
+                                      <div className="flex items-center gap-2 px-2 py-1 bg-brand-orange/10 border border-brand-orange/30">
+                                         <span className="w-1 h-1 bg-brand-orange rounded-full animate-pulse" />
+                                         <span className="font-mono text-[7px] text-brand-orange uppercase tracking-widest leading-none">Tracking Active</span>
+                                      </div>
+                                   </div>
+                                </div>
+
+                                <div className="mb-8">
+                                   <h3 className="font-display text-2xl mb-1 uppercase tracking-tight">{link.marketplace_name}</h3>
+                                   <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest opacity-60">Hand-Picked Marketplace Conduit</p>
+                                </div>
+
+                                <div className="mt-auto">
+                                   <a 
+                                      href={`/api/affiliate/redirect?type=marketplace&id=${link.id}`}
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="w-full bg-brand-orange text-white py-4 font-display text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-white hover:text-brand-obsidian transition-all group/btn"
+                                   >
+                                      {link.listing_label || `VIEW MODELS ON ${link.icon_type?.toUpperCase() || 'MARKET'}`}
+                                      <ExternalLink className="w-3 h-3 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+                                   </a>
+                                   
+                                   <div className="mt-4 flex justify-between items-center opacity-40">
+                                      <span className="font-mono text-[7px] text-brand-grey uppercase tracking-widest">Global Affiliate Network</span>
+                                      <span className="font-mono text-[7px] text-brand-grey uppercase tracking-widest">ID: {link.id.slice(0, 8)}</span>
+                                   </div>
+                                </div>
+                             </div>
+                           ))
                      ) : (
                        <div className="col-span-full p-12 text-center bg-brand-obsidian border border-brand-border/50">
                          <Search className="w-8 h-8 text-brand-grey mx-auto mb-4" />

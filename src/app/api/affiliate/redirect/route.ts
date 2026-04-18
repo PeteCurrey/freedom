@@ -35,21 +35,37 @@ export async function GET(request: Request) {
     else if (type === "marketplace") {
       const { data } = await supabase
         .from("vehicle_marketplaces")
-        .select("affiliate_url")
+        .select(`
+          id,
+          affiliate_url,
+          affiliate_id,
+          affiliate_management:affiliate_id (
+            id,
+            base_url,
+            tracking_id
+          )
+        `)
         .eq("id", id)
         .single();
       
       if (data) {
-        targetUrl = data.affiliate_url;
-        await supabase.from("vehicle_marketplaces")
-          .update({ 
-            click_count: supabase.rpc("increment"), // Note: This is conceptual, RPC is better for concurrency
-            last_click_at: timestamp 
-          })
-          .eq("id", id);
-        
-        // Better way with standard SQL via RPC to avoid race conditions
-        await supabase.rpc("increment_marketplace_click", { row_id: id });
+        // If linked to a global affiliate partner, use their resolution logic
+        if (data.affiliate_management) {
+          const partner = data.affiliate_management as any;
+          // Build URL: Base URL + Affiliate URL (used as listing part) + Tracking
+          // This is flexible depending on how the URLs are stored
+          targetUrl = data.affiliate_url.startsWith('http') 
+            ? data.affiliate_url 
+            : `${partner.base_url}${data.affiliate_url}`;
+          
+          // Increment both marketplace and global affiliate clicks
+          await supabase.rpc("increment_marketplace_click", { row_id: id });
+          await supabase.rpc("increment_affiliate_click", { row_id: partner.id });
+        } else {
+          // Standard legacy logic
+          targetUrl = data.affiliate_url;
+          await supabase.rpc("increment_marketplace_click", { row_id: id });
+        }
       }
     }
     else if (type === "supplier") {

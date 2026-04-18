@@ -31,21 +31,17 @@ export default async function StoreHub() {
       <Navbar />
       
       {/* 1. CINEMATIC HERO */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Image Layer */}
-        <div className="absolute inset-0 z-0">
-          <Image 
-            src="/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/luxury_iveco_snow_canada_1776505225083.png" 
-            alt="Expedition Background" 
-            fill 
-            className="object-cover grayscale-[0.3] brightness-[0.4]"
-            priority
-          />
-          {/* Depth Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-b from-brand-obsidian via-transparent to-brand-obsidian opacity-80" />
-          <div className="absolute inset-0 bg-radial-gradient from-transparent to-brand-obsidian/80" />
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        <Image
+          src="/Users/petercurrey/.gemini/antigravity/brain/94afb30f-4c38-44c4-a71a-42efc2c7c8f5/luxury_iveco_snow_canada_hd_hero_1776506636919.png"
+          alt="Luxury Iveco Daily 4x4 Expedition"
+          fill
+          priority
+          className="object-cover scale-105 animate-slow-zoom"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-obsidian/40 via-transparent to-brand-obsidian" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]" />
           <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
-        </div>
         
         <div className="container mx-auto px-6 relative z-10 text-center pt-24">
           <div className="max-w-5xl mx-auto">
