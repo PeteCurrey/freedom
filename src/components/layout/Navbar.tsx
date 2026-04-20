@@ -53,6 +53,7 @@ const navLinks: NavLink[] = [
       { name: "Air Conditioning", href: "/systems/air-conditioning", tagline: "Ultimate Climate Control", image: "/images/heating-system-technical.png" },
       { name: "Wheels & Tyres", href: "/systems/wheels-tyres", tagline: "The Foundation of Grip", image: "/images/wheels-tyres-technical.png" },
       { name: "Exterior Equipment", href: "/systems/exterior-equipment", tagline: "Racks, Ladders, Awnings", image: "/images/exterior-equipment-technical.png" },
+      { name: "Security & Tracking", href: "/systems/security-tracking", tagline: "Protect Your Sanctuary", image: "/images/step_security_cinematic_1776675013013.png" },
       { name: "Interior & Furniture", href: "/systems/interior-furniture", tagline: "Design the Core", image: "/images/interior-showcase.png" },
     ]
   },

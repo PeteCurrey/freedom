@@ -39,6 +39,13 @@ export default function NewProductPage() {
     is_affiliate: false,
     affiliate_url: "",
     affiliate_id: "",
+    is_editor_pick: false,
+    sort_priority: 0,
+    video_enabled: false,
+    video_source: "youtube",
+    video_url: "",
+    video_title: "",
+    video_description: "",
   });
 
   useEffect(() => {
@@ -296,6 +303,86 @@ export default function NewProductPage() {
                  />
                  <span className="font-mono text-xs uppercase tracking-widest text-brand-white">Active (Visible in Store)</span>
               </label>
+
+              <div className="pt-8 border-t border-brand-border mt-8">
+                 <div className="flex items-center gap-3 mb-8 border-b border-brand-border pb-4">
+                   <Tag className="text-brand-orange" size={20} />
+                   <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Editorial <span className="text-brand-orange">Control</span></h2>
+                 </div>
+                 
+                 <label className="flex items-center gap-4 cursor-pointer mb-6">
+                    <input 
+                      type="checkbox" 
+                      checked={product.is_editor_pick || false}
+                      onChange={(e) => setProduct({ ...product, is_editor_pick: e.target.checked })}
+                      className="w-4 h-4 accent-brand-orange"
+                    />
+                    <span className="font-mono text-xs uppercase tracking-widest text-brand-white">Editor's Pick Feature</span>
+                 </label>
+
+                 <div className="space-y-2">
+                    <label className="block font-mono text-[9px] text-brand-grey uppercase tracking-widest">Sort Priority (Higher = First)</label>
+                    <input 
+                      type="number" 
+                      value={product.sort_priority || 0}
+                      onChange={(e) => setProduct({ ...product, sort_priority: Number(e.target.value) })}
+                      className="w-full bg-brand-obsidian border border-brand-border p-3 font-mono text-sm text-brand-white focus:border-brand-orange outline-none"
+                    />
+                 </div>
+              </div>
+
+              <div className="pt-8 border-t border-brand-border mt-8">
+                 <div className="flex items-center gap-3 mb-8 border-b border-brand-border pb-4">
+                   <Tag className="text-brand-orange" size={20} />
+                   <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Video <span className="text-brand-orange">Registry</span></h2>
+                 </div>
+                 
+                 <label className="flex items-center gap-4 cursor-pointer mb-6">
+                    <input 
+                      type="checkbox" 
+                      checked={product.video_enabled || false}
+                      onChange={(e) => setProduct({ ...product, video_enabled: e.target.checked })}
+                      className="w-4 h-4 accent-brand-orange"
+                    />
+                    <span className="font-mono text-xs uppercase tracking-widest text-brand-white">Enable Video Player</span>
+                 </label>
+
+                 {product.video_enabled && (
+                    <div className="space-y-6 pt-4 animate-in fade-in slide-in-from-top-2">
+                       <div className="space-y-2">
+                          <label className="block font-mono text-[9px] text-brand-grey uppercase tracking-widest">Video Source</label>
+                          <select 
+                            value={product.video_source || "youtube"}
+                            onChange={(e) => setProduct({ ...product, video_source: e.target.value })}
+                            className="w-full bg-brand-obsidian border border-brand-border p-3 font-sans text-xs text-brand-white focus:border-brand-orange outline-none"
+                          >
+                             <option value="youtube">YouTube</option>
+                             <option value="vimeo">Vimeo</option>
+                             <option value="upload">Manual Upload / Direct Link</option>
+                          </select>
+                       </div>
+                       <div className="space-y-2">
+                          <label className="block font-mono text-[9px] text-brand-grey uppercase tracking-widest">Video URL / ID</label>
+                          <input 
+                            type="text" 
+                            value={product.video_url || ""}
+                            onChange={(e) => setProduct({ ...product, video_url: e.target.value })}
+                            placeholder="https://youtube.com/watch?v=..."
+                            className="w-full bg-brand-obsidian border border-brand-border p-3 font-mono text-[10px] text-brand-grey focus:border-brand-orange outline-none"
+                          />
+                       </div>
+                       <div className="space-y-2">
+                          <label className="block font-mono text-[9px] text-brand-grey uppercase tracking-widest">Video Title</label>
+                          <input 
+                            type="text" 
+                            value={product.video_title || ""}
+                            onChange={(e) => setProduct({ ...product, video_title: e.target.value })}
+                            className="w-full bg-brand-obsidian border border-brand-border p-3 font-sans text-xs text-brand-white focus:border-brand-orange outline-none"
+                          />
+                       </div>
+                    </div>
+                 )}
+              </div>
 
               <div className="pt-8 border-t border-brand-border mt-8">
                  <div className="flex items-center gap-3 mb-6">

@@ -254,6 +254,51 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <div className="prose prose-invert max-w-none text-brand-grey text-lg leading-relaxed">
                 <p className="whitespace-pre-line">{product.full_description || "No detailed description provided for this component."}</p>
                 
+                {/* 4. PRODUCT VIDEO SYSTEM */}
+                {product.video_enabled && product.video_url && (
+                  <div className="my-16 space-y-8 animate-in fade-in duration-1000">
+                    <div className="flex items-center gap-4 border-l-2 border-brand-orange pl-6">
+                       <div className="w-10 h-10 bg-brand-orange/10 flex items-center justify-center text-brand-orange rounded-full">
+                          <Plus className="w-5 h-5 animate-pulse" />
+                       </div>
+                       <div>
+                          <span className="font-mono text-[10px] text-brand-orange uppercase tracking-widest block">Technical Walkthrough</span>
+                          <h3 className="font-display text-2xl uppercase text-white">{product.video_title || "Field Performance Review"}</h3>
+                       </div>
+                    </div>
+                    
+                    <div className="aspect-video bg-brand-carbon blueprint-border overflow-hidden relative group">
+                       <div className="absolute inset-0 z-0 opacity-10 pointer-events-none blueprint-grid" />
+                       {product.video_source === 'youtube' ? (
+                         <iframe 
+                           src={`https://www.youtube.com/embed/${product.video_url.split('v=')[1]?.split('&')[0] || product.video_url.split('/').pop()}`}
+                           className="w-full h-full relative z-10"
+                           allowFullScreen
+                         />
+                       ) : product.video_source === 'vimeo' ? (
+                         <iframe 
+                           src={`https://player.vimeo.com/video/${product.video_url.split('/').pop()}`}
+                           className="w-full h-full relative z-10"
+                           allowFullScreen
+                         />
+                       ) : (
+                         <video 
+                           src={product.video_url} 
+                           controls 
+                           className="w-full h-full relative z-10"
+                           poster={product.images?.[0]}
+                         />
+                       )}
+                    </div>
+                    
+                    {product.video_description && (
+                      <p className="font-mono text-xs text-brand-grey leading-relaxed max-w-2xl">
+                         {product.video_description}
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 <div className="my-16 blueprint-border p-12 bg-brand-obsidian/30 relative">
                   <div className="absolute top-0 right-0 p-6 opacity-10"><Terminal size={64} /></div>
                   <h3 className="font-display text-2xl uppercase mb-6 flex items-center gap-4 italic">

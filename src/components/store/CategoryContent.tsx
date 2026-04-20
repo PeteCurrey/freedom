@@ -32,89 +32,23 @@ interface CategoryContentProps {
   editorsPick?: Product;
 }
 
-export function CategoryContent({ category, initialProducts, editorsPick }: CategoryContentProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  
-  // State from URL
-  const activeSub = searchParams.get("sub") || "all";
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [selectedTiers, setSelectedTiers] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
-
-  // Subcategory Taxonomy Mapping (Job 1)
-  const subcategoryTaxonomy: Record<string, { slug: string; name: string }[]> = {
-    "power-systems": [
-      { slug: "inverters", name: "Inverters & chargers" },
-      { slug: "solar", name: "Solar panels" },
-      { slug: "mppt-controllers", name: "MPPT controllers" },
-      { slug: "dc-dc-chargers", name: "DC-DC chargers" },
-      { slug: "batteries", name: "Batteries" },
-      { slug: "monitoring", name: "Monitoring" },
-      { slug: "shore-power", name: "Shore power" },
-      { slug: "cables-fuses", name: "Cables & fuses" },
-    ],
-    "climate-control": [
-      { slug: "diesel-heaters", name: "Diesel heaters" },
-      { slug: "lpg-heaters", name: "LPG heaters" },
-      { slug: "combi-systems", name: "Combi systems" },
-      { slug: "air-conditioning", name: "Air conditioning" },
-      { slug: "water-heaters", name: "Water heaters" },
-      { slug: "ducting", name: "Ducting & vents" },
-      { slug: "controllers", name: "Controllers" },
-    ],
-    "water-plumbing": [
-      { slug: "fresh-tanks", name: "Fresh water tanks" },
-      { slug: "grey-tanks", name: "Grey water tanks" },
-      { slug: "pumps", name: "Pumps" },
-      { slug: "taps", name: "Taps & mixers" },
-      { slug: "shower", name: "Shower systems" },
-      { slug: "filtration", name: "Filtration" },
-      { slug: "pipe-fittings", name: "Pipe & fittings" },
-    ],
-    "insulation-build": [
-      { slug: "sound-deadening", name: "Sound deadening" },
-      { slug: "thermal-insulation", name: "Thermal insulation" },
-      { slug: "vapour", name: "Vapour barriers" },
-      { slug: "ply", name: "Lightweight ply" },
-      { slug: "cladding", name: "Cladding" },
-      { slug: "floors", name: "Floor materials" },
-      { slug: "adhesives", name: "Adhesives & sealants" },
-    ],
-    "gas-lpg": [
-      { slug: "hobs", name: "Hobs & cookers" },
-      { slug: "ovens", name: "Ovens & grills" },
-      { slug: "regulators", name: "Regulators" },
-      { slug: "lockers", name: "Gas lockers" },
-      { slug: "piping", name: "Piping & fittings" },
-      { slug: "safety", name: "Safety (alarms & vents)" },
-    ],
-    "windows-ventilation": [
-      { slug: "roof-fans", name: "Roof vent fans" },
-      { slug: "fixed-windows", name: "Fixed windows" },
-      { slug: "sliding-windows", name: "Sliding windows" },
-      { slug: "mushroom-vents", name: "Mushroom vents" },
-      { slug: "rooflights", name: "Rooflights" },
-      { slug: "blinds", name: "Blinds & covers" },
-    ]
-  };
-
-  // Derived subcategories with counts
-  const categorySubcats = subcategoryTaxonomy[category.slug] || [];
   const subcategoriesWithCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     initialProducts.forEach(p => {
       if (p.subcategory) counts[p.subcategory] = (counts[p.subcategory] || 0) + 1;
     });
 
+    const dbSubcats = Array.isArray(category.subcategories) ? category.subcategories : [];
+
     return [
       { slug: "all", name: "All", count: initialProducts.length },
-      ...categorySubcats.map(sub => ({
-        ...sub,
+      ...dbSubcats.map((sub: any) => ({
+        slug: sub.slug,
+        name: sub.name,
         count: counts[sub.slug] || 0
       }))
     ];
-  }, [initialProducts, categorySubcats]);
+  }, [initialProducts, category.subcategories]);
 
   // Derived filters
   const brands = useMemo(() => {
@@ -154,68 +88,102 @@ export function CategoryContent({ category, initialProducts, editorsPick }: Cate
     }
   };
 
-  // Contextual Guide Mapping (Job 2)
-  const guideMap: Record<string, { name: string; href: string; icon: any }> = {
-    "power-systems": { name: "Electrical & Solar", href: "/systems/electrical-solar", icon: Zap },
-    "climate-control": { name: "Heating & Hot Water", href: "/systems/heating-hot-water", icon: Flame },
-    "water-plumbing": { name: "Water & Plumbing", href: "/systems/water-plumbing", icon: Droplet },
-    "insulation-build": { name: "Insulation & Ventilation", href: "/systems/insulation-ventilation", icon: Shield },
-    "windows-ventilation": { name: "Insulation & Ventilation", href: "/systems/insulation-ventilation", icon: Wind },
-    "gas-lpg": { name: "Gas & LPG", href: "/systems/gas-lpg", icon: Sparkles },
-    "exterior-accessories": { name: "Exterior Equipment", href: "/systems/exterior-equipment", icon: LayoutGrid },
+  // Cinematic Asset Map
+  const assetMap: Record<string, { image: string; icon: any; advice: string }> = {
+    "power-systems": { 
+      image: "/images/electrical-system-technical.png", 
+      icon: Zap,
+      advice: "Prioritise lithium density if planning more than 3 days of winter induction cooking."
+    },
+    "climate-control": { 
+      image: "/images/heating-system-technical.png", 
+      icon: Flame,
+      advice: "Combine diesel heating with high-altitude kits if aiming for alpine deployments."
+    },
+    "water-plumbing": { 
+      image: "/images/water-plumbing-technical.png", 
+      icon: Droplet,
+      advice: "UV-C filtration is mandatory for reliable off-grid water safety from natural sources."
+    },
+    "insulation-build": { 
+      image: "/images/insulation-technical.png", 
+      icon: Shield,
+      advice: "Vapour barrier integrity determines the lifespan of your structural chassis."
+    },
+    "gas-lpg": { 
+      image: "/images/gas-lpg-technical.png", 
+      icon: Sparkles,
+      advice: "Use refillable LPG systems to scale your autonomy across international borders."
+    },
+    "lighting": { 
+      image: "/images/step_lighting_cinematic_1776674939507.png", 
+      icon: Zap,
+      advice: "Layered lighting (Ambient + Task) is essential for small-space ergonomics."
+    },
+    "security-monitoring": { 
+      image: "/images/step_security_cinematic_1776675013013.png", 
+      icon: Shield,
+      advice: "Physical deterrence is only effective when coupled with live telemetry tracking."
+    }
   };
 
-  const guide = guideMap[category.slug];
-  const Icon = guide?.icon || ShoppingBag;
+  const metadata = assetMap[category.slug] || { image: "/images/hero-background.png", icon: ShoppingBag, advice: "Consult our engineering team for complex deployment configurations." };
+  const Icon = metadata.icon;
 
   return (
-    <div className="container mx-auto px-6">
-      {/* Category Header Area */}
-      <section className="pt-48 pb-12 relative">
-        <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
-        <div className="relative z-10">
-          <div className="flex items-center gap-4 font-mono text-[10px] text-brand-grey uppercase mb-8 tracking-[0.3em]">
-            <Link href="/store" className="hover:text-brand-orange">Store</Link>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-white">{category.name}</span>
-            {activeSub !== "all" && (
-              <>
-                <ChevronRight className="w-3 h-3" />
-                <span className="text-brand-orange">{activeSub.replace(/-/g, ' ')}</span>
-              </>
-            )}
+    <div className="bg-brand-obsidian pb-32">
+      {/* 1. CINEMATIC SYSTEM HERO */}
+      <section className="relative h-[60vh] flex items-center justify-center overflow-hidden border-b border-brand-border/30">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={metadata.image} 
+            alt={category.name} 
+            className="w-full h-full object-cover grayscale opacity-20 scale-105 animate-slow-zoom" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-obsidian via-brand-obsidian/40 to-brand-obsidian" />
+          <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
+        </div>
+        
+        <div className="container mx-auto px-6 relative z-10 text-center">
+          <div className="flex items-center justify-center gap-4 font-mono text-[10px] text-brand-grey uppercase mb-8 tracking-[0.4em]">
+            <Link href="/store" className="hover:text-brand-orange transition-colors">Hub</Link>
+            <div className="h-px w-6 bg-brand-border" />
+            <span className="text-brand-orange">{category.name}</span>
           </div>
-          <h1 className="font-display text-7xl lg:text-9xl mb-8 uppercase leading-none tracking-tighter">
-            {category.name}
-          </h1>
           
-          <div className="flex flex-col lg:flex-row justify-between items-start gap-12">
-            <p className="font-sans text-brand-grey text-xl leading-relaxed max-w-2xl">
-              {category.description || "Technical grade components curated for professional off-grid conversions."}
-            </p>
-            
-            {/* Job 2: Contextual Guide CTA */}
-            {guide && (
-              <div className="group blueprint-border p-6 bg-brand-carbon/30 flex items-center gap-6 max-w-sm relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-1 h-full bg-brand-orange/30 group-hover:bg-brand-orange transition-colors" />
-                <div className="w-12 h-12 bg-brand-orange/10 border border-brand-orange/30 flex items-center justify-center shrink-0">
-                  <Icon className="w-6 h-6 text-brand-orange" />
-                </div>
-                <div>
-                  <span className="font-mono text-[9px] text-brand-orange uppercase tracking-widest block mb-2">Not sure what you need?</span>
-                  <div className="font-sans text-xs text-brand-grey leading-relaxed">
-                    Read our <Link href={guide.href} className="text-white hover:text-brand-orange underline underline-offset-4 transition-colors">{guide.name} Guide</Link> or use the <Link href="/planner" className="text-white hover:text-brand-orange underline underline-offset-4 transition-colors">Build Planner</Link> to spec your exact setup.
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+          <h1 className="font-display text-7xl lg:text-[10rem] mb-8 uppercase font-bold tracking-tighter leading-[0.8] drop-shadow-2xl">
+            {category.name.split(' ').map((word: string, i: number) => (
+               <span key={i} className={i === 1 ? "text-brand-orange block lg:inline" : "text-white"}>{word} </span>
+            ))}
+          </h1>
+
+          <p className="font-sans text-brand-grey text-xl lg:text-2xl max-w-2xl mx-auto italic">
+            {category.description || "Technical grade components curated for professional off-grid conversions."}
+          </p>
         </div>
       </section>
 
-      {/* Job 1 & Job 5 Bar: Filter Bar / Pills */}
-      <div className="sticky top-24 z-40 bg-brand-obsidian/95 backdrop-blur-xl border-y border-brand-border py-4 mb-2">
-        <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
+      {/* 2. ADVISOR STRIP */}
+      <div className="container mx-auto px-6 -mt-12 relative z-20">
+         <div className="blueprint-border p-8 bg-brand-carbon flex flex-col md:flex-row items-center justify-between gap-8 backdrop-blur-xl bg-opacity-90 shadow-2xl">
+            <div className="flex items-center gap-6">
+               <div className="w-12 h-12 bg-brand-orange/10 border border-brand-orange/30 flex items-center justify-center text-brand-orange rounded-full">
+                  <Icon className="w-6 h-6" />
+               </div>
+               <div>
+                  <span className="font-mono text-[9px] text-brand-orange uppercase tracking-widest block mb-1 font-bold">Expert Registry Advice</span>
+                  <p className="font-sans text-sm text-brand-grey italic">"{metadata.advice}"</p>
+               </div>
+            </div>
+            <Link href="/planner" className="px-10 py-4 bg-brand-orange text-white font-display text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-obsidian transition-all shadow-xl shadow-brand-orange/20 whitespace-nowrap">
+               Initialize Build Planner →
+            </Link>
+         </div>
+      </div>
+
+      {/* 3. DYNAMIC TAXONOMY BAR */}
+      <div className="sticky top-24 z-40 bg-brand-obsidian/95 backdrop-blur-xl border-y border-brand-border py-4 mb-2 mt-24">
+        <div className="container mx-auto px-6 flex flex-col lg:flex-row justify-between items-center gap-6">
           <SubcategoryPills 
             subcategories={subcategoriesWithCounts} 
             activeSub={activeSub}
@@ -223,78 +191,85 @@ export function CategoryContent({ category, initialProducts, editorsPick }: Cate
             className="w-full lg:w-auto"
           />
           
-          <div className="flex items-center gap-6 self-end lg:self-auto">
-            <span className="font-mono text-[10px] text-brand-grey uppercase">Showing {filteredProducts.length} Results</span>
-            <div className="flex border border-brand-border h-10">
-              <button className="px-3 border-r border-brand-border bg-brand-carbon text-white"><LayoutGrid size={14} /></button>
-              <button className="px-3 text-brand-grey hover:text-white transition-colors"><List size={14} /></button>
+          <div className="flex items-center gap-8 self-end lg:self-auto">
+            <div className="flex items-center gap-3">
+               <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+               <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Network Active</span>
             </div>
+            <span className="font-mono text-[10px] text-white uppercase tracking-widest border-l border-brand-border pl-8">{filteredProducts.length} Results Found</span>
           </div>
         </div>
       </div>
 
-      {/* Job 3: Editor's Pick Horizontal Strip */}
-      {editorsPick && !searchParams.get("sub") && (
-        <EditorsPickStrip product={editorsPick} />
-      )}
+      {/* 4. CONTENT GRID */}
+      <div className="container mx-auto px-6">
+        {editorsPick && !searchParams.get("sub") && (
+          <EditorsPickStrip product={editorsPick} />
+        )}
 
-      {/* Main Grid Layout */}
-      <div className={cn("flex flex-col lg:flex-row gap-12 pb-32", editorsPick && !searchParams.get("sub") ? "pt-0" : "pt-12")}>
-        {/* Sidebar */}
-        <FilterSidebar 
-          className="w-full lg:w-64 shrink-0"
-          filters={[
-            { id: 'brand', name: 'Brand', options: brands },
-            { id: 'tier', name: 'System Tier', options: tiers },
-          ]}
-          selectedFilters={{ brand: selectedBrands, tier: selectedTiers }}
-          onFilterChange={toggleBrand}
-          priceRange={priceRange}
-          onPriceChange={setPriceRange}
-          onClearAll={() => {
-            setSelectedBrands([]);
-            setSelectedTiers([]);
-            setPriceRange([0, 10000]);
-          }}
-        />
+        <div className={cn("flex flex-col lg:flex-row gap-16 pt-12", editorsPick && !searchParams.get("sub") ? "mt-0" : "mt-12")}>
+          {/* Sidebar Filters */}
+          <FilterSidebar 
+            className="w-full lg:w-72 shrink-0"
+            filters={[
+              { id: 'brand', name: 'Authorized Brand', options: brands },
+              { id: 'tier', name: 'System Deployment', options: tiers },
+            ]}
+            selectedFilters={{ brand: selectedBrands, tier: selectedTiers }}
+            onFilterChange={toggleBrand}
+            priceRange={priceRange}
+            onPriceChange={setPriceRange}
+            onClearAll={() => {
+              setSelectedBrands([]);
+              setSelectedTiers([]);
+              setPriceRange([0, 10000]);
+            }}
+          />
 
-        {/* Grid */}
-        <div className="flex-1">
-          {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <ProductCard 
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  brand={product.brand}
-                  price={product.price_gbp}
-                  compareAtPrice={product.compare_at_price}
-                  image={product.images?.[0]}
-                  slug={product.slug}
-                  badge={product.is_editor_pick ? "Editor's Pick" : undefined}
-                  systemTier={product.system_tier}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="py-32 text-center bg-brand-carbon/30 border border-dashed border-brand-border rounded-lg">
-              <p className="font-mono text-xs text-brand-grey uppercase tracking-widest mb-4">No matching gear found.</p>
-              <button 
-                onClick={() => {
-                  setSelectedBrands([]);
-                  setSelectedTiers([]);
-                  setPriceRange([0, 10000]);
-                  handleSubSelect('all');
-                }}
-                className="text-brand-orange underline font-mono text-xs uppercase tracking-widest"
-              >
-                Clear all filters
-              </button>
-            </div>
-          )}
+          {/* Product Grid */}
+          <div className="flex-1">
+            {filteredProducts.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                {filteredProducts.map((product) => (
+                  <ProductCard 
+                    key={product.id}
+                    product={{
+                      id: product.id,
+                      name: product.name,
+                      brand: product.brand,
+                      price_gbp: product.price_gbp,
+                      compare_at_price: product.compare_at_price,
+                      image_url: product.images?.[0], // Correcting to image_url for ProductCard
+                      slug: product.slug,
+                      spec_line: product.spec_line,
+                      badge: product.is_editor_pick ? "Editor's Pick" : undefined,
+                      system_tier: product.system_tier
+                    }}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="py-40 text-center blueprint-border border-dashed bg-brand-carbon/30">
+                <Search className="w-12 h-12 text-brand-grey mx-auto mb-6 opacity-30" />
+                <p className="font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-4">No Hardware found in this deployment tier.</p>
+                <button 
+                  onClick={() => {
+                    setSelectedBrands([]);
+                    setSelectedTiers([]);
+                    setPriceRange([0, 10000]);
+                    handleSubSelect('all');
+                  }}
+                  className="text-brand-orange underline font-mono text-[10px] uppercase tracking-widest"
+                >
+                  Reset Active Filters
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
+  );
+}
   );
 }
