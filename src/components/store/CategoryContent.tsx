@@ -6,7 +6,7 @@ import { FilterSidebar } from "@/components/store/FilterSidebar";
 import { ProductCard } from "@/components/store/ProductCard";
 import { SubcategoryPills } from "@/components/store/SubcategoryPills";
 import { EditorsPickStrip } from "@/components/store/EditorsPickStrip";
-import { ShoppingBag, ChevronRight, LayoutGrid, List, Zap, Flame, Droplet, Shield, Wind, Sparkles } from "lucide-react";
+import { ShoppingBag, ChevronRight, LayoutGrid, List, Zap, Flame, Droplet, Shield, Wind, Sparkles, Search } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +31,15 @@ interface CategoryContentProps {
   initialProducts: Product[];
   editorsPick?: Product;
 }
+
+export function CategoryContent({ category, initialProducts, editorsPick }: CategoryContentProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeSub = searchParams.get("sub") || "all";
+
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [selectedTiers, setSelectedTiers] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
 
   const subcategoriesWithCounts = useMemo(() => {
     const counts: Record<string, number> = {};
@@ -233,18 +242,16 @@ interface CategoryContentProps {
                 {filteredProducts.map((product) => (
                   <ProductCard 
                     key={product.id}
-                    product={{
-                      id: product.id,
-                      name: product.name,
-                      brand: product.brand,
-                      price_gbp: product.price_gbp,
-                      compare_at_price: product.compare_at_price,
-                      image_url: product.images?.[0], // Correcting to image_url for ProductCard
-                      slug: product.slug,
-                      spec_line: product.spec_line,
-                      badge: product.is_editor_pick ? "Editor's Pick" : undefined,
-                      system_tier: product.system_tier
-                    }}
+                    id={product.id}
+                    name={product.name}
+                    brand={product.brand}
+                    price={product.price_gbp}
+                    compareAtPrice={product.compare_at_price}
+                    image={product.images?.[0]}
+                    slug={product.slug}
+                    specLine={product.spec_line}
+                    badge={product.is_editor_pick ? "Editor's Pick" : undefined}
+                    systemTier={product.system_tier}
                   />
                 ))}
               </div>
@@ -269,7 +276,5 @@ interface CategoryContentProps {
         </div>
       </div>
     </div>
-  );
-}
   );
 }

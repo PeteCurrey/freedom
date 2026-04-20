@@ -192,7 +192,18 @@ export default async function StoreHub() {
           <div className="flex overflow-x-auto pb-12 no-scrollbar gap-8">
             {trending?.map((prod) => (
               <div key={prod.id} className="min-w-[320px] shrink-0">
-                 <ProductCard product={prod} />
+                 <ProductCard 
+                   id={prod.id}
+                   name={prod.name}
+                   brand={prod.brand}
+                   price={prod.price_gbp}
+                   compareAtPrice={prod.compare_at_price}
+                   image={prod.images?.[0] || prod.image_url}
+                   slug={prod.slug}
+                   specLine={prod.spec_line}
+                   badge={prod.is_editor_pick ? "Editor's Pick" : undefined}
+                   systemTier={prod.system_tier}
+                 />
               </div>
             ))}
           </div>

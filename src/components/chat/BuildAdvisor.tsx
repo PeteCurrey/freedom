@@ -14,6 +14,8 @@ interface BuildAdvisorProps {
     vehicle?: string;
     layout?: string;
     systems?: any;
+    weight?: number;
+    cost?: number;
   };
 }
 

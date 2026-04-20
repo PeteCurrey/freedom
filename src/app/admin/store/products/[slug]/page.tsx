@@ -16,7 +16,8 @@ import {
   Trash2,
   Monitor,
   TrendingUp,
-  Play
+  Play,
+  Sparkles
 } from "lucide-react";
 import { use } from "react";
 

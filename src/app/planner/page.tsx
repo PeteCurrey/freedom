@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { 
   Zap, Thermometer, Droplets, Weight, 
   PoundSterling, CheckCircle2,
-  ChevronRight, ArrowLeft, Download, Eye,
+  ChevronRight, ArrowLeft, ArrowRight, Download, Eye,
   Wind, Flame, Loader2, Layout, AlertTriangle,
   Sun, Shield, Sparkles, Settings, Info,
   Search, Package, Monitor

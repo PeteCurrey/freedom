@@ -10,7 +10,8 @@ import {
   Mail,
   Calendar,
   Filter,
-  User as UserIcon
+  User as UserIcon,
+  Zap
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LeadActivityLogger } from "@/components/admin/leads/LeadActivityLogger";
@@ -251,6 +252,57 @@ export default function LeadsPage() {
                  </h4>
                  <LeadActivityLogger leadId={activeLead.id} />
               </section>
+
+              {activeLead.type === 'advisor' && (
+                  <section className="pt-8 border-t border-brand-border">
+                     <button 
+                       onClick={async () => {
+                         const displayId = `AM-${Math.floor(100 + Math.random() * 900)}`;
+                         const content = activeLead.content || {};
+                         
+                         // 1. Create the Project
+                         const { data: project, error: pError } = await supabase
+                           .from('build_projects')
+                           .insert({
+                             display_id: displayId,
+                             client_name: activeLead.email.split('@')[0].toUpperCase(),
+                             vehicle_name: content.chassis || "Bespoke Platform",
+                             vehicle_slug: content.chassis?.toLowerCase().replace('_', '-'),
+                             current_stage: 'DESIGN'
+                           })
+                           .select()
+                           .single();
+
+                         if (pError) {
+                           alert("Registry Handshake Failed: " + pError.message);
+                           return;
+                         }
+
+                         // 2. Add System Nodes from configuration
+                         if (content.systems && Array.isArray(content.systems)) {
+                           const nodes = content.systems.map((s: string) => ({
+                             project_id: project.id,
+                             component_name: s,
+                             status: 'PENDING'
+                           }));
+                           await supabase.from('project_installations').insert(nodes);
+                         }
+
+                         // 3. Update Lead Status
+                         await supabase.from('leads').update({ pipeline_status: 'qualified' }).eq('id', activeLead.id);
+
+                         alert(`Protocol Initialized: Project ${displayId} is now live in the Registry.`);
+                         window.location.href = `/admin/projects/${project.id}`;
+                       }}
+                       className="w-full py-6 bg-brand-orange text-white font-display text-xs uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-3 group"
+                     >
+                        <Zap className="w-4 h-4" /> Initialize Build Node
+                     </button>
+                     <p className="mt-4 font-mono text-[8px] text-brand-grey text-center uppercase tracking-widest italic opacity-50">
+                        This will provision a secure build node and synchronize metadata.
+                     </p>
+                  </section>
+               )}
            </div>
         </div>
       )}

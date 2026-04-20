@@ -25,7 +25,6 @@ export default function MarketingHubPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  useEffect(() => {
     async function fetchData() {
       // 1. Fetch Global Partners
       const { data: partners } = await supabase
@@ -66,8 +65,6 @@ export default function MarketingHubPage() {
       setPromotions(promoData || []);
       setLoading(false);
     }
-    fetchData();
-  }, []);
     fetchData();
   }, []);
 

@@ -69,6 +69,10 @@ const navLinks: NavLink[] = [
       { name: "Build Kits", href: "/store/kits", tagline: "Bundled System Packs", image: "/images/community-showcase.png" },
     ]
   },
+  { 
+    name: "Resources",
+    href: "/resources",
+    mega: true,
     items: [
       { name: "The Journey", href: "/journey", tagline: "Track Your Build Node", image: "/images/hero-background.png" },
       { name: "Document Library", href: "/resources", tagline: "Manuals & Guides", image: "/images/sprinter.png" },
