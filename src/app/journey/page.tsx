@@ -58,8 +58,8 @@ export default function JourneyEntryPage() {
         <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
       </div>
 
-      <section className="relative z-10 min-h-screen flex items-center justify-center pt-24 pb-12 px-6">
-        <div className="max-w-xl w-full" ref={terminalRef}>
+      <section className="relative z-10 min-h-screen flex items-center justify-center pt-40 pb-12 px-6">
+        <div className="max-w-xl w-full mt-12" ref={terminalRef}>
           <div className="blueprint-border bg-brand-obsidian/40 backdrop-blur-2xl p-12 relative overflow-hidden group">
             {/* Corner Accents */}
             <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-brand-orange/30 group-hover:border-brand-orange transition-all duration-700" />
