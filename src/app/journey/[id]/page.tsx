@@ -20,13 +20,31 @@ import {
   Maximize2,
   Layers,
   ArrowUpRight,
-  Info
+  Info,
+  Monitor
 } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollToPlugin);
+
+// Map vehicle_slug -> schematic image path
+const SCHEMATIC_MAP: Record<string, string> = {
+  'mercedes-sprinter': '/images/sprinter-schematic.png',
+  'ford-transit':      '/images/transit-schematic.png',
+  'vw-crafter':        '/images/sprinter-schematic.png',
+  'man-tge':           '/images/sprinter-schematic.png',
+  'fiat-ducato':       '/images/peugeot-boxer-schematic.png',
+  'iveco-daily':       '/images/peugeot-boxer-schematic.png',
+  'peugeot-boxer':     '/images/peugeot-boxer-schematic.png',
+  'citroen-relay':     '/images/citroen-relay-schematic.png',
+};
+
+function getSchematic(slug: string | null): string {
+  if (!slug) return '/images/sprinter-schematic.png';
+  return SCHEMATIC_MAP[slug] ?? '/images/sprinter-schematic.png';
+}
 
 export default function BuildTrackerPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: displayId } = use(params);
@@ -174,7 +192,51 @@ export default function BuildTrackerPage({ params }: { params: Promise<{ id: str
         </div>
       </section>
 
-      {/* 3. MAIN DASHBOARD CONTENT */}
+      {/* 3. VEHICLE SCHEMATIC PANEL */}
+      <section className="py-20 border-b border-brand-border/30 bg-brand-obsidian dashboard-node">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col lg:flex-row items-center gap-16">
+            {/* Schematic Image */}
+            <div className="relative w-full lg:w-2/3 h-64 lg:h-80 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-brand-obsidian via-transparent to-brand-obsidian z-10 pointer-events-none" />
+              <Image
+                src={getSchematic(project.vehicle_slug)}
+                alt={`${project.vehicle_name} schematic`}
+                fill
+                className="object-contain opacity-60 grayscale brightness-90"
+              />
+              {/* Technical grid overlay */}
+              <div className="absolute inset-0 blueprint-grid opacity-20 pointer-events-none" />
+              {/* Corner label */}
+              <div className="absolute top-4 left-4 z-20">
+                <span className="font-mono text-[8px] text-brand-orange uppercase tracking-[0.3em] bg-brand-obsidian/80 px-3 py-1">
+                  CHASSIS // {project.vehicle_name.toUpperCase()}
+                </span>
+              </div>
+            </div>
+            {/* Chassis Spec Panel */}
+            <div className="w-full lg:w-1/3 space-y-8">
+              <div className="border-l-2 border-brand-orange pl-6">
+                <h3 className="font-display text-3xl uppercase tracking-tighter mb-2">
+                  Chassis <span className="text-brand-orange">Registry</span>
+                </h3>
+                <p className="font-sans text-sm text-brand-grey italic">
+                  Technical specification node derived from your build configuration.
+                </p>
+              </div>
+              <div className="space-y-5">
+                <MetaRow label="Vehicle Platform" value={project.vehicle_name} />
+                <MetaRow label="Build Node" value={project.display_id} />
+                <MetaRow label="Build Start" value={new Date(project.start_date).toLocaleDateString('en-GB')} />
+                <MetaRow label="Target Completion" value={project.estimated_completion ? new Date(project.estimated_completion).toLocaleDateString('en-GB') : 'TBC'} />
+                <MetaRow label="Lead Engineer" value={project.technician_name} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. MAIN DASHBOARD CONTENT */}
       <section className="py-24 relative overflow-hidden">
         <div className="blueprint-grid absolute inset-0 opacity-5 pointer-events-none" />
         <div className="container mx-auto px-6 relative z-10">
@@ -367,25 +429,4 @@ function ErrorTerminal({ message }: any) {
          </div>
       </main>
    );
-}
-
-function Monitor(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="20" height="14" x="2" y="3" rx="2" />
-      <line x1="8" x2="16" y1="21" y2="21" />
-      <line x1="12" x2="12" y1="17" y2="21" />
-    </svg>
-  );
 }
