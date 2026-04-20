@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, Zap, CreditCard, Plus } from "lucide-react";
+import { ShoppingBag, Zap, CreditCard, Plus, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface StickyProductBarProps {
@@ -13,6 +13,7 @@ interface StickyProductBarProps {
     price_gbp: number;
     image?: string;
     slug: string;
+    is_affiliate?: boolean;
   };
 }
 
@@ -33,6 +34,11 @@ export function StickyProductBar({ product }: StickyProductBarProps) {
   }, []);
 
   const handleAddToCart = () => {
+    if (product.is_affiliate) {
+      window.open(`/api/affiliate/redirect?type=product&id=${product.id}`, '_blank');
+      return;
+    }
+
     const stored = localStorage.getItem("diym_cart");
     let cart = stored ? JSON.parse(stored) : [];
     
@@ -80,12 +86,20 @@ export function StickyProductBar({ product }: StickyProductBarProps) {
                   <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest mb-1">Commission Rate</span>
                   <span className="font-display text-2xl text-white">£{(product.price_gbp / 100).toLocaleString()}</span>
                </div>
-               <button
-                 onClick={handleAddToCart}
-                 className="bg-brand-orange text-white px-8 py-4 font-display text-[10px] uppercase tracking-[0.2em] hover:bg-white hover:text-brand-obsidian transition-all flex items-center gap-3 shadow-[0_0_30px_rgba(255,107,0,0.2)]"
-               >
-                 Register Component <Plus size={12} />
-               </button>
+                <button
+                  onClick={handleAddToCart}
+                  className="bg-brand-orange text-white px-8 py-4 font-display text-[10px] uppercase tracking-[0.2em] hover:bg-white hover:text-brand-obsidian transition-all flex items-center gap-3 shadow-[0_0_30px_rgba(255,107,0,0.2)]"
+                >
+                  {product.is_affiliate ? (
+                    <>
+                      View Technical Link <ExternalLink size={12} />
+                    </>
+                  ) : (
+                    <>
+                      Register Component <Plus size={12} />
+                    </>
+                  )}
+                </button>
             </div>
           </div>
           

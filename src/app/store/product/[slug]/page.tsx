@@ -195,6 +195,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     price_gbp: product.price_gbp,
                     image_url: product.images?.[0],
                     slug: product.slug,
+                    is_affiliate: product.is_affiliate,
                   }} />
                   <Link href="/planner" className="w-full py-5 border border-brand-border text-brand-grey hover:text-white hover:bg-brand-orange/10 hover:border-brand-orange transition-all text-center font-display text-[10px] uppercase tracking-widest">
                     Add to Build Plan
@@ -330,6 +331,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   slug={p.slug}
                   specLine={p.spec_line}
                   badge={p.badge}
+                  isAffiliate={p.is_affiliate}
                   systemTier={p.system_tier}
                 />
               ))}
@@ -356,6 +358,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         price_gbp: product.price_gbp,
         image: product.images?.[0],
         slug: product.slug,
+        is_affiliate: product.is_affiliate,
       }} />
 
       <Footer />

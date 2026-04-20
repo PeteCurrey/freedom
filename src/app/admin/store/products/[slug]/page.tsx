@@ -23,6 +23,7 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
   
   const [categories, setCategories] = useState<any[]>([]);
   const [suppliers, setSuppliers] = useState<any[]>([]);
+  const [affiliates, setAffiliates] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState<any>({
@@ -39,6 +40,9 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
     full_description: "",
     image_url: "",
     is_active: true,
+    is_affiliate: false,
+    affiliate_url: "",
+    affiliate_id: "",
   });
 
   useEffect(() => {
@@ -46,8 +50,10 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
       // 1. Fetch Categories & Suppliers
       const { data: catData } = await supabase.from('product_categories').select('*').order('name');
       const { data: supData } = await supabase.from('suppliers').select('*').order('name');
+      const { data: affData } = await supabase.from('affiliate_management').select('*').order('name');
       setCategories(catData || []);
       setSuppliers(supData || []);
+      setAffiliates(affData || []);
 
       // 2. Fetch Product
       const { data: prodData } = await supabase.from('products').select('*').eq('slug', slug).single();
@@ -55,6 +61,7 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
         setProduct({
           ...prodData,
           supplier_id: prodData.supplier_id || "",
+          affiliate_id: prodData.affiliate_id || "",
           price_gbp: prodData.price_gbp / 100 // Convert pence back to gbp for editing
         });
       }
@@ -311,15 +318,60 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
                <h2 className="font-display text-xl uppercase tracking-widest text-brand-white">Deployment <span className="text-brand-orange">Status</span></h2>
              </div>
              
-             <label className="flex items-center gap-4 cursor-pointer">
-                <input 
-                  type="checkbox" 
-                  checked={product.is_active}
-                  onChange={(e) => setProduct({ ...product, is_active: e.target.checked })}
-                  className="w-4 h-4 accent-brand-orange"
-                />
-                <span className="font-mono text-xs uppercase tracking-widest text-brand-white">Active (Visible in Store)</span>
-             </label>
+             <label className="flex items-center gap-4 cursor-pointer mb-6">
+                 <input 
+                   type="checkbox" 
+                   checked={product.is_active}
+                   onChange={(e) => setProduct({ ...product, is_active: e.target.checked })}
+                   className="w-4 h-4 accent-brand-orange"
+                 />
+                 <span className="font-mono text-xs uppercase tracking-widest text-brand-white">Active (Visible in Store)</span>
+              </label>
+
+              <div className="pt-8 border-t border-brand-border mt-8">
+                 <div className="flex items-center gap-3 mb-6">
+                   <TrendingUp className="text-brand-orange w-4 h-4" />
+                   <h2 className="font-display text-sm uppercase tracking-widest text-brand-white">Commercial <span className="text-brand-orange">Routing</span></h2>
+                 </div>
+                 
+                 <label className="flex items-center gap-4 cursor-pointer mb-6">
+                    <input 
+                      type="checkbox" 
+                      checked={product.is_affiliate}
+                      onChange={(e) => setProduct({ ...product, is_affiliate: e.target.checked })}
+                      className="w-4 h-4 accent-brand-orange"
+                    />
+                    <span className="font-mono text-xs uppercase tracking-widest text-brand-white">Affiliate Product</span>
+                 </label>
+
+                 {product.is_affiliate && (
+                    <div className="space-y-6 pt-4 animate-in fade-in slide-in-from-top-2">
+                       <div className="space-y-2">
+                          <label className="block font-mono text-[9px] text-brand-grey uppercase tracking-widest">Global Partner</label>
+                          <select 
+                            value={product.affiliate_id}
+                            onChange={(e) => setProduct({ ...product, affiliate_id: e.target.value })}
+                            className="w-full bg-brand-obsidian border border-brand-border p-3 font-sans text-xs text-brand-white focus:border-brand-orange outline-none appearance-none"
+                          >
+                             <option value="">No Global Partner</option>
+                             {affiliates.map(a => (
+                               <option key={a.id} value={a.id}>{a.name}</option>
+                             ))}
+                          </select>
+                       </div>
+                       <div className="space-y-2">
+                          <label className="block font-mono text-[9px] text-brand-grey uppercase tracking-widest">Affiliate / Buy URL</label>
+                          <input 
+                            type="text" 
+                            value={product.affiliate_url}
+                            onChange={(e) => setProduct({ ...product, affiliate_url: e.target.value })}
+                            placeholder="https://..."
+                            className="w-full bg-brand-obsidian border border-brand-border p-3 font-mono text-[10px] text-brand-grey focus:border-brand-orange outline-none"
+                          />
+                       </div>
+                    </div>
+                 )}
+              </div>
 
            </div>
         </div>

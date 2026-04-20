@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ShoppingCart, Check } from "lucide-react";
+import { ShoppingCart, Check, ExternalLink } from "lucide-react";
 
 interface AddToCartButtonProps {
   product: {
@@ -11,6 +11,7 @@ interface AddToCartButtonProps {
     price_gbp: number;
     image_url?: string;
     slug: string;
+    is_affiliate?: boolean;
   };
 }
 
@@ -18,6 +19,11 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
   const [added, setAdded] = useState(false);
 
   const handleAdd = () => {
+    if (product.is_affiliate) {
+      window.open(`/api/affiliate/redirect?type=product&id=${product.id}`, '_blank');
+      return;
+    }
+
     const stored = localStorage.getItem("diym_cart");
     const cart = stored ? JSON.parse(stored) : [];
 
@@ -55,6 +61,10 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
       {added ? (
         <>
           <Check className="w-4 h-4" /> Added to Cart
+        </>
+      ) : product.is_affiliate ? (
+        <>
+          <ExternalLink className="w-4 h-4" /> View Technical Link
         </>
       ) : (
         <>

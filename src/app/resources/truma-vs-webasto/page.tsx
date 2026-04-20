@@ -6,8 +6,22 @@ import {
   TrendingUp, Scale, Info
 } from "lucide-react";
 import Link from "next/link";
+import { ProductCard } from "@/components/store/ProductCard";
+import { createClient } from "@supabase/supabase-js";
 
-export default function HeatingGuide() {
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder_key'
+);
+
+export default async function HeatingGuide() {
+  const { data: featuredProducts } = await supabaseAdmin
+    .from('products')
+    .select('*')
+    .in('slug', ['truma-combi-4e', 'webasto-airtop-2000']);
+
+  const truma = featuredProducts?.find(p => p.slug === 'truma-combi-4e');
+  const webasto = featuredProducts?.find(p => p.slug === 'webasto-airtop-2000');
   return (
     <main className="bg-brand-obsidian min-h-screen">
       <Navbar />
@@ -56,12 +70,20 @@ export default function HeatingGuide() {
                               Focuses on rapid, high-intensity air heating. Fuel is drawn directly from your vehicle&apos;s main tank. Ideal for smaller vans or quick deployments.
                            </p>
                         </div>
-                        <div className="blueprint-border p-10 bg-brand-carbon">
-                           <h3 className="font-display text-xl text-brand-orange uppercase mb-4">Truma: The Full Boiler</h3>
-                           <p className="text-sm leading-relaxed">
-                              A dual-purpose system that heats 10L of water while circulating air. It is significantly larger but offers &apos;Home Comfort&apos; levels of amenity.
-                           </p>
-                        </div>
+                         <div className="blueprint-border p-10 bg-brand-carbon flex flex-col h-full">
+                            <h3 className="font-display text-xl text-brand-orange uppercase mb-4">Truma: The Full Boiler</h3>
+                            <p className="text-sm leading-relaxed mb-8 flex-1">
+                               A dual-purpose system that heats 10L of water while circulating air. It is significantly larger but offers &apos;Home Comfort&apos; levels of amenity.
+                            </p>
+                            {truma && (
+                               <Link 
+                                 href={`/api/affiliate/redirect?type=product&id=${truma.id}`}
+                                 className="inline-flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-widest hover:text-white transition-colors"
+                               >
+                                  Deploy System Registry <ChevronRight size={12} />
+                               </Link>
+                            )}
+                         </div>
                      </div>
                   </section>
 

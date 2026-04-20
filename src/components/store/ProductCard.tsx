@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingCart, Plus } from "lucide-react";
+import { ShoppingCart, Plus, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
@@ -16,6 +16,7 @@ interface ProductCardProps {
   specLine?: string;
   badge?: string;
   systemTier?: string;
+  isAffiliate?: boolean;
   className?: string;
 }
 
@@ -30,6 +31,7 @@ export function ProductCard({
   specLine,
   badge,
   systemTier,
+  isAffiliate,
   className,
 }: ProductCardProps) {
   const formattedPrice = (price / 100).toLocaleString("en-GB", {
@@ -44,9 +46,14 @@ export function ProductCard({
       })
     : null;
 
-  const addToCart = (e: React.MouseEvent) => {
+  const handleAction = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    if (isAffiliate) {
+      window.open(`/api/affiliate/redirect?type=product&id=${id}`, '_blank');
+      return;
+    }
     
     const stored = localStorage.getItem("diym_cart");
     let cart = stored ? JSON.parse(stored) : [];
@@ -145,10 +152,17 @@ export function ProductCard({
           </div>
           
           <button 
-            onClick={addToCart}
-            className="bg-brand-orange hover:bg-white text-white hover:text-brand-obsidian p-2 transition-all group/btn"
+            onClick={handleAction}
+            className={cn(
+              "p-2 transition-all group/btn",
+              isAffiliate ? "bg-brand-orange/20 hover:bg-brand-orange text-brand-orange hover:text-white" : "bg-brand-orange hover:bg-white text-white hover:text-brand-obsidian"
+            )}
           >
-            <Plus className="w-4 h-4 transition-transform group-hover/btn:rotate-90" />
+            {isAffiliate ? (
+              <ExternalLink className="w-4 h-4 transition-transform group-hover/btn:scale-110" />
+            ) : (
+              <Plus className="w-4 h-4 transition-transform group-hover/btn:rotate-90" />
+            )}
           </button>
         </div>
       </div>

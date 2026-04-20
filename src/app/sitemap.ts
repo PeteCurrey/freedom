@@ -18,7 +18,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/advisor',
     '/planner',
     '/account',
-    '/tools/cable-calculator'
+    '/tools/cable-calculator',
+    '/suppliers'
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
@@ -62,7 +63,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic Showcase Pages
   const showcasePages = await getShowcasePages(baseUrl);
 
-  return [...staticPages, ...vehiclePages, ...resourcePages, ...productPages, ...showcasePages];
+  // Dynamic Supplier Pages
+  const supplierPages = await getSupplierPages(baseUrl);
+
+  return [...staticPages, ...vehiclePages, ...resourcePages, ...productPages, ...showcasePages, ...supplierPages];
 }
 
 async function getProductPages(baseUrl: string) {
@@ -99,6 +103,23 @@ async function getShowcasePages(baseUrl: string) {
     }));
   } catch (error) {
     console.error('Error fetching sitemap showcase builds:', error);
+    return [];
+  }
+}
+async function getSupplierPages(baseUrl: string) {
+  try {
+    const { data: suppliers } = await supabase
+      .from('suppliers')
+      .select('id');
+
+    return (suppliers || []).map((s) => ({
+      url: `${baseUrl}/suppliers/${s.id}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    }));
+  } catch (error) {
+    console.error('Error fetching sitemap suppliers:', error);
     return [];
   }
 }

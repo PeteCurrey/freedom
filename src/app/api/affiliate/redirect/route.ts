@@ -81,6 +81,40 @@ export async function GET(request: Request) {
         await supabase.from("suppliers").update({ last_lead_at: timestamp }).eq("id", id);
       }
     }
+    else if (type === "product") {
+      const { data } = await supabase
+        .from("products")
+        .select(`
+          id,
+          affiliate_url,
+          affiliate_id,
+          affiliate_management:affiliate_id (
+            id,
+            base_url,
+            tracking_id
+          )
+        `)
+        .eq("id", id)
+        .single();
+      
+      if (data && data.affiliate_url) {
+        if (data.affiliate_management) {
+          const partner = data.affiliate_management as any;
+          // Strategy match: If URL is relative, prepend partner base
+          targetUrl = data.affiliate_url.startsWith('http') 
+            ? data.affiliate_url 
+            : `${partner.base_url}${data.affiliate_url}`;
+            
+          await supabase.from("affiliate_management").update({ last_click_at: timestamp }).eq("id", partner.id);
+        } else {
+          targetUrl = data.affiliate_url;
+        }
+        
+        // Final telemetry sync
+        await supabase.rpc("increment_product_click", { row_id: id });
+        await supabase.from("products").update({ last_click_at: timestamp }).eq("id", id);
+      }
+    }
 
     return NextResponse.redirect(targetUrl);
   } catch (error) {

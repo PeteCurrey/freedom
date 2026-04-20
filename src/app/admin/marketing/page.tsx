@@ -25,12 +25,37 @@ export default function MarketingHubPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+  useEffect(() => {
     async function fetchData() {
-      // Fetch Affiliates (Mock for now)
-      setLinks([
-        { id: 1, name: "Amazon Solar Panels", url: "https://amzn.to/3xyz", clicks: 1240, conv: "4.2%", revenue: 84.50, status: 'active' },
-        { id: 2, name: "Victron Multiplus Blue", url: "https://kit.co/freedom/victron", clicks: 890, conv: "2.1%", revenue: 156.00, status: 'active' },
-      ]);
+      // 1. Fetch Global Partners
+      const { data: partners } = await supabase
+        .from('affiliate_management')
+        .select('id, name, base_url, click_count')
+        .order('click_count', { ascending: false });
+
+      // 2. Fetch Top Products
+      const { data: topProducts } = await supabase
+        .from('products')
+        .select('id, name, click_count, affiliate_url')
+        .eq('is_affiliate', true)
+        .order('click_count', { ascending: false })
+        .limit(5);
+
+      // 3. Fetch Top Suppliers
+      const { data: topSuppliers } = await supabase
+        .from('suppliers')
+        .select('id, name, lead_count, website')
+        .order('lead_count', { ascending: false })
+        .limit(5);
+
+      // Merge into unified tracking list
+      const unifiedLinks = [
+        ...(partners || []).map(p => ({ id: p.id, name: p.name, url: p.base_url, clicks: p.click_count || 0, type: 'partner' })),
+        ...(topProducts || []).map(p => ({ id: p.id, name: `[Product] ${p.name}`, url: p.affiliate_url, clicks: p.click_count || 0, type: 'product' })),
+        ...(topSuppliers || []).map(s => ({ id: s.id, name: `[Supplier] ${s.name}`, url: s.website, clicks: s.lead_count || 0, type: 'supplier' }))
+      ].sort((a, b) => b.clicks - a.clicks);
+
+      setLinks(unifiedLinks);
 
       // Fetch Promotions
       const { data: promoData } = await supabase
@@ -41,6 +66,8 @@ export default function MarketingHubPage() {
       setPromotions(promoData || []);
       setLoading(false);
     }
+    fetchData();
+  }, []);
     fetchData();
   }, []);
 
@@ -104,7 +131,9 @@ export default function MarketingHubPage() {
                      <span className="font-mono text-[9px] text-green-500 uppercase">+12.4%</span>
                   </div>
                   <span className="block font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-1">Affiliate Clicks</span>
-                  <span className="block font-display text-3xl text-brand-white">2.6k</span>
+                  <span className="block font-display text-3xl text-brand-white">
+                    {links.reduce((acc, curr) => acc + curr.clicks, 0).toLocaleString()}
+                  </span>
                </div>
                <div className="blueprint-border p-8 bg-brand-carbon border-l-4 border-brand-orange">
                   <div className="flex justify-between items-start mb-6">
@@ -133,19 +162,29 @@ export default function MarketingHubPage() {
                      </tr>
                   </thead>
                   <tbody className="font-sans text-xs">
-                     {links.map((link) => (
-                        <tr key={link.id} className="border-b border-brand-border/50 hover:bg-brand-obsidian transition-colors">
-                           <td className="p-6">
-                              <span className="block font-display text-sm uppercase text-brand-white">{link.name}</span>
-                              <span className="block font-mono text-[8px] text-brand-grey uppercase truncate">{link.url}</span>
-                           </td>
-                           <td className="p-6 font-mono text-brand-white">{link.clicks}</td>
-                           <td className="p-6 font-display text-lg text-brand-white">£{link.revenue.toFixed(2)}</td>
-                           <td className="p-6 text-right">
-                              <button className="p-2 border border-brand-border text-brand-grey hover:text-brand-orange"><Copy size={14} /></button>
-                           </td>
-                        </tr>
-                     ))}
+                      {links.map((link) => (
+                         <tr key={link.id} className="border-b border-brand-border/50 hover:bg-brand-obsidian transition-colors">
+                            <td className="p-6">
+                               <div className="flex items-center gap-3">
+                                  <span className="font-mono text-[8px] text-brand-orange uppercase border border-brand-orange/20 px-1">{link.type}</span>
+                                  <span className="font-display text-sm uppercase text-brand-white">{link.name}</span>
+                               </div>
+                               <span className="block font-mono text-[8px] text-brand-grey uppercase truncate max-w-xs">{link.url}</span>
+                            </td>
+                            <td className="p-6 font-mono text-brand-white">{link.clicks}</td>
+                            <td className="p-6 font-display text-lg text-brand-white">£{(link.clicks * 0.05).toFixed(2)}*</td>
+                            <td className="p-6 text-right">
+                               <button 
+                                 onClick={() => {
+                                   navigator.clipboard.writeText(link.url);
+                                 }}
+                                 className="p-2 border border-brand-border text-brand-grey hover:text-brand-orange"
+                               >
+                                  <Copy size={14} />
+                               </button>
+                            </td>
+                         </tr>
+                      ))}
                   </tbody>
                </table>
             </div>

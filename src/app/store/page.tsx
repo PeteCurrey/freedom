@@ -26,19 +26,9 @@ export default async function StoreHub() {
 
   const product = editorsPick?.[0];
   
-  // High-fidelity taxonomy expansion nodes
-  const EXPANSION_CATEGORIES = [
-    { id: 'exp-1', name: 'Chassis & Exterior', slug: 'chassis-exterior', description: 'Heavy-duty racks, ladders, wheels, and expedition hardware for your base vehicle.' },
-    { id: 'exp-2', name: 'Security & Monitoring', slug: 'security-monitoring', description: 'Professional-grade locks, alarm systems, and off-grid tracking technology.' }
-  ];
-
-  // Merge DB categories with expansion nodes, ensuring no duplicates by slug
-  const allCategories = [...(categories || [])];
-  EXPANSION_CATEGORIES.forEach(expCat => {
-    if (!allCategories.find(c => c.slug === expCat.slug)) {
-      allCategories.push(expCat as any);
-    }
-  });
+  const product = editorsPick?.[0];
+  
+  const allCategories = categories || [];
 
   return (
     <main className="bg-brand-obsidian min-h-screen">
