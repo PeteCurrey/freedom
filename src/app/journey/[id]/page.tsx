@@ -61,6 +61,14 @@ export default function BuildTrackerPage({ params }: { params: Promise<{ id: str
     async function fetchJourney() {
       setLoading(true);
       
+      // 0. Verify Auth
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setError("UNAUTHORIZED: PROJECT ACCESS RESTRICTED.");
+        setLoading(false);
+        return;
+      }
+
       // 1. Fetch Project by Display ID (The Public Key)
       const { data: projData, error: projError } = await supabase
         .from('build_projects')
@@ -70,7 +78,14 @@ export default function BuildTrackerPage({ params }: { params: Promise<{ id: str
         .single();
       
       if (projError || !projData) {
-        setError("Invalid Registry Node ID. Connection Terminated.");
+        setError("INVALID NODE: Connection Terminated.");
+        setLoading(false);
+        return;
+      }
+
+      // Double-check ownership in case RLS isn't caught early
+      if (projData.client_email !== user.email) {
+        setError("CLEARANCE DENIED: Access to this node is restricted to the registered owner.");
         setLoading(false);
         return;
       }
