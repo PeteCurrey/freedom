@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, User, ShoppingCart, Menu, X, ChevronDown, ArrowRight } from "lucide-react";
+import { Search, User, ShoppingCart, Menu, X, ChevronDown, ArrowRight, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
 import { supabase } from "@/lib/supabase";
@@ -69,7 +69,11 @@ const navLinks: NavLink[] = [
       { name: "Build Kits", href: "/store/kits", tagline: "Bundled System Packs", image: "/images/community-showcase.png" },
     ]
   },
-  { name: "Resources", href: "/resources" },
+    items: [
+      { name: "The Journey", href: "/journey", tagline: "Track Your Build Node", image: "/images/hero-background.png" },
+      { name: "Document Library", href: "/resources", tagline: "Manuals & Guides", image: "/images/sprinter.png" },
+    ]
+  },
   { 
     name: "Engineering", 
     href: "/tools", 
@@ -268,6 +272,13 @@ export function Navbar() {
         {/* Utility Nav */}
         <div className="flex items-center space-x-6 text-brand-white/80">
           <Link 
+            href="/journey" 
+            className="hidden lg:flex items-center gap-2 border border-brand-border px-5 py-2 group/journey transition-all hover:border-brand-orange"
+          >
+            <Shield className="w-3 h-3 text-brand-orange" />
+            <span className="font-display text-[9px] uppercase tracking-widest text-brand-grey group-hover/journey:text-white transition-colors">Track Build</span>
+          </Link>
+          <Link 
             href="/planner" 
             className="hidden xl:flex items-center gap-2 bg-brand-orange/10 border border-brand-orange/30 px-5 py-2 group/cta transition-all hover:bg-brand-orange"
           >
@@ -330,6 +341,15 @@ export function Navbar() {
                 {link.name}
               </Link>
             ))}
+            
+            <Link 
+              href="/journey" 
+              className="mobile-menu-item mt-8 px-6 py-4 border border-brand-orange text-brand-orange font-mono text-[10px] uppercase tracking-[0.3em] flex items-center justify-between group"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <span>Track My Build</span>
+              <Shield className="w-4 h-4" />
+            </Link>
           </div>
 
           <div className="mt-auto pt-16 border-t border-brand-border flex flex-col space-y-4">
