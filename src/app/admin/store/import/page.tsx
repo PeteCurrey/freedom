@@ -23,6 +23,7 @@ export default function StoreImportPage() {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [summary, setSummary] = useState<{ processed: number, successes: number, errors: number } | null>(null);
+  const [lastError, setLastError] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -107,6 +108,7 @@ export default function StoreImportPage() {
 
     setUploading(true);
     setSummary(null);
+    setLastError(null);
     let successCount = 0;
     let errorCount = 0;
 
@@ -123,8 +125,9 @@ export default function StoreImportPage() {
 
        // Parse optional numeric fields
        const parseOptionalNumeric = (key: string) => {
-         if (!mapping[key as keyof typeof mapping] || !row[mapping[key as keyof typeof mapping]]) return null;
-         const val = parseFloat(row[mapping[key as keyof typeof mapping]].replace(/[^0-9.]/g, ''));
+         const col = mapping[key as keyof typeof mapping];
+         if (!col || !row[col]) return null;
+         const val = parseFloat(row[col].toString().replace(/[^0-9.]/g, ''));
          return isNaN(val) ? null : val;
        };
 
@@ -133,41 +136,70 @@ export default function StoreImportPage() {
        const stockQty = parseOptionalNumeric('stock_quantity');
        const weight = parseOptionalNumeric('weight_grams');
 
+       // IMPROVED SLUG LOGIC: Append SKU to name-slug to ensure uniqueness
+       const nameSlug = row[mapping.name].toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+       const skuSlug = row[mapping.sku].toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+       const finalSlug = `${nameSlug}-${skuSlug}`;
+
        // Construct payload matching DB schema
        const payload: any = {
           name: row[mapping.name],
           sku: row[mapping.sku],
           brand: mapping.brand ? row[mapping.brand] : "",
-          price_gbp: numericPrice * 100, // DB expects pence
+          price_gbp: Math.round(numericPrice * 100), // Ensure integer
           category_id: targetCategory,
           supplier_id: targetSupplier,
-          slug: row[mapping.name].toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-          is_active: true
+          slug: finalSlug,
+          is_active: true,
+          updated_at: new Date().toISOString()
        };
 
-       if (costPrice !== null) payload.cost_price = costPrice * 100;
-       if (comparePrice !== null) payload.compare_at_price = comparePrice * 100;
-       if (stockQty !== null) payload.stock_quantity = stockQty;
-       if (weight !== null) payload.weight_grams = weight; // Assuming input is already in grams or needs unit conversion in a real app
+       if (costPrice !== null) payload.cost_price = Math.round(costPrice * 100);
+       if (comparePrice !== null) payload.compare_at_price = Math.round(comparePrice * 100);
+       if (stockQty !== null) payload.stock_quantity = Math.round(stockQty);
+       if (weight !== null) payload.weight_grams = Math.round(weight);
 
        try {
-         // Check if exists
-         const { data: existing } = await supabase.from('products').select('id').eq('sku', payload.sku).single();
+         // Check if exists by SKU
+         const { data: existing, error: fetchErr } = await supabase
+           .from('products')
+           .select('id')
+           .eq('sku', payload.sku)
+           .maybeSingle();
          
+         if (fetchErr) {
+            console.error("Fetch Error for SKU", payload.sku, fetchErr);
+            errorCount++;
+            continue;
+         }
+
          if (existing) {
             if (conflictStrategy === "overwrite") {
-               await supabase.from('products').update(payload).eq('id', existing.id);
-               successCount++;
+               const { error: updErr } = await supabase.from('products').update(payload).eq('id', existing.id);
+               if (updErr) {
+                  console.error("Update Error for SKU", payload.sku, updErr);
+                  errorCount++;
+               } else {
+                  successCount++;
+               }
             } else {
-               // Skip
+               // Skip - counted as "processed" but not a new success in this context
+               // We'll treat skipped as successes for the UI to show progress
+               successCount++; 
             }
          } else {
             // Insert new 
             const { error: insErr } = await supabase.from('products').insert([payload]);
-            if (insErr) errorCount++;
-            else successCount++;
+            if (insErr) {
+               console.error("Insert Error for SKU", payload.sku, insErr);
+               errorCount++;
+            } else {
+               successCount++;
+            }
          }
-       } catch (err) {
+       } catch (err: any) {
+         console.error("Catch Error for row", i, err);
+         setLastError(`Row ${i + 1}: ${err.message || "Unknown error"}`);
          errorCount++;
        }
 
@@ -350,7 +382,12 @@ export default function StoreImportPage() {
                                  <span className="text-green-500">{summary.successes} Success</span>
                                  <span className="text-red-500">{summary.errors} Ignored/Errors</span>
                               </div>
-                           </div>
+                              {summary.errors > 0 && lastError && (
+                                 <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 font-mono text-[9px] text-red-500 uppercase text-center w-full">
+                                    Last Error: {lastError}
+                                 </div>
+                              )}
+                            </div>
                        ) : (
                           <button 
                             onClick={executeImport}
