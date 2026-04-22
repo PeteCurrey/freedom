@@ -191,6 +191,44 @@ const DVLARules = () => (
   </div>
 );
 
+// --- ARTICLE 4: Solar Efficiency & Shading ---
+const SolarGuide = () => (
+  <div className="space-y-16">
+    <div className="prose prose-invert max-w-none">
+       <p className="font-sans text-brand-grey text-lg leading-relaxed">
+         The most common misconception in van life is that a 200W solar panel produces 200W of power. In reality, a single leaf falling on one corner of your panel can drop your output by 80%. This guide explains the engineering behind the &quot;Shading Problem&quot;.
+       </p>
+
+       <h2 className="font-display text-3xl uppercase mt-24 mb-12">How Bypass Diodes Work</h2>
+       <p className="font-sans text-brand-grey">
+         Most rigid panels are divided into 3 &quot;strings&quot; of cells. Each string has a bypass diode. If one string is shaded, the diode allows current to bypass it so the other two strings can still work.
+       </p>
+       
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-16 not-prose">
+          <div className="blueprint-border p-8 bg-brand-carbon border-brand-orange/40">
+             <h3 className="font-mono text-[10px] text-brand-orange uppercase mb-4 tracking-widest font-bold">Parallel Wiring</h3>
+             <p className="font-sans text-xs text-brand-grey leading-relaxed">
+               Lower voltage, higher current. If one panel is shaded, it doesn&apos;t affect the other panel at all. Best for vans with roof racks or fans that might shade a panel.
+             </p>
+          </div>
+          <div className="blueprint-border p-8 bg-brand-carbon border-brand-grey/20">
+             <h3 className="font-mono text-[10px] text-brand-grey uppercase mb-4 tracking-widest font-bold">Series Wiring</h3>
+             <p className="font-sans text-xs text-brand-grey leading-relaxed">
+               Higher voltage, lower current. Starts charging earlier in the morning. However, if one panel is shaded, the output of BOTH panels drops to the level of the shaded one.
+             </p>
+          </div>
+       </div>
+
+       <div className="bg-brand-orange/10 p-10 border-l-4 border-l-brand-orange mb-16 not-prose italic">
+          <p className="font-sans text-brand-white text-lg">
+            <span className="font-display text-brand-orange block mb-2 uppercase tracking-widest text-xs font-bold">// THE SOLUTION</span>
+            &quot;If you have space for two panels, wire them in parallel if you have roof obstructions. If you have a clean roof, series-parallel hybrid (2S2P) is the ultimate for efficiency.&quot;
+          </p>
+       </div>
+    </div>
+  </div>
+);
+
 // --- ARTICLE REGISTRY ---
 const ARTICLES = {
   "conversion-cost-guide": {
@@ -219,6 +257,15 @@ const ARTICLES = {
      time: "25 min",
      difficulty: "Intermediate",
      component: <DVLARules />
+  },
+  "solar-shading-guide": {
+    title: "Solar Efficiency & The Shading Problem",
+    subtitle: "Why 10% shading can kill 90% of your power — and how to fix it.",
+    image: "https://images.unsplash.com/photo-1509391366360-fe58f9671753?q=80&w=1000",
+    category: "Electrical",
+    time: "15 min",
+    difficulty: "Advanced",
+    component: <SolarGuide />
   }
 };
 

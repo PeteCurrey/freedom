@@ -29,6 +29,15 @@ export interface VehicleData {
   autotraderSearch: string;
   fbSearch: string;
   internalWidth: string;
+  
+  // Engineering Integration Specs
+  wheelbase: number; // m
+  gvm: number; // kg
+  frontAxleLimit: number; // kg
+  rearAxleLimit: number; // kg
+  unladenMass: number; // kg
+  unladenFront: number; // kg
+  unladenRear: number; // kg
 }
 
 export const vehicleData: Record<string, VehicleData> = {
@@ -60,6 +69,13 @@ export const vehicleData: Record<string, VehicleData> = {
     autotraderSearch: "https://www.autotrader.co.uk/van-search?make=Mercedes-Benz&model=Sprinter",
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
     internalWidth: "1.78m",
+    wheelbase: 4.325,
+    gvm: 3500,
+    frontAxleLimit: 1860,
+    rearAxleLimit: 2250,
+    unladenMass: 2280,
+    unladenFront: 1350,
+    unladenRear: 930
   },
   "vw-crafter": {
     name: "VW CRAFTER",
@@ -88,6 +104,13 @@ export const vehicleData: Record<string, VehicleData> = {
     autotraderSearch: "https://www.autotrader.co.uk/van-search?make=Volkswagen&model=Crafter",
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
     internalWidth: "1.80m",
+    wheelbase: 3.640,
+    gvm: 3500,
+    frontAxleLimit: 1800,
+    rearAxleLimit: 2100,
+    unladenMass: 2150,
+    unladenFront: 1250,
+    unladenRear: 900
   },
   "ford-transit": {
     name: "FORD TRANSIT",
@@ -116,6 +139,13 @@ export const vehicleData: Record<string, VehicleData> = {
     autotraderSearch: "https://www.autotrader.co.uk/van-search?make=Ford&model=Transit",
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
     internalWidth: "1.78m",
+    wheelbase: 3.750,
+    gvm: 3500,
+    frontAxleLimit: 1850,
+    rearAxleLimit: 2250,
+    unladenMass: 2310,
+    unladenFront: 1320,
+    unladenRear: 990
   },
   "man-tge": {
     name: "MAN TGE",
@@ -143,6 +173,13 @@ export const vehicleData: Record<string, VehicleData> = {
     autotraderSearch: "https://www.autotrader.co.uk/van-search?make=MAN&model=TGE",
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
     internalWidth: "1.80m",
+    wheelbase: 3.640,
+    gvm: 3500,
+    frontAxleLimit: 1800,
+    rearAxleLimit: 2100,
+    unladenMass: 2150,
+    unladenFront: 1250,
+    unladenRear: 900
   },
   "fiat-ducato": {
     name: "FIAT DUCATO",
@@ -171,6 +208,13 @@ export const vehicleData: Record<string, VehicleData> = {
     autotraderSearch: "https://www.autotrader.co.uk/van-search?make=Fiat&model=Ducato",
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
     internalWidth: "1.87m",
+    wheelbase: 4.035,
+    gvm: 3500,
+    frontAxleLimit: 1850,
+    rearAxleLimit: 2000,
+    unladenMass: 1975,
+    unladenFront: 1150,
+    unladenRear: 825
   },
   "peugeot-boxer": {
     name: "PEUGEOT BOXER",
@@ -199,6 +243,13 @@ export const vehicleData: Record<string, VehicleData> = {
     autotraderSearch: "https://www.autotrader.co.uk/van-search?make=Peugeot&model=Boxer",
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
     internalWidth: "1.87m",
+    wheelbase: 4.035,
+    gvm: 3500,
+    frontAxleLimit: 1850,
+    rearAxleLimit: 2000,
+    unladenMass: 1975,
+    unladenFront: 1150,
+    unladenRear: 825
   },
   "citroen-relay": {
     name: "CITROEN RELAY",
@@ -227,6 +278,13 @@ export const vehicleData: Record<string, VehicleData> = {
     autotraderSearch: "https://www.autotrader.co.uk/van-search?make=Citroen&model=Relay",
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
     internalWidth: "1.87m",
+    wheelbase: 4.035,
+    gvm: 3500,
+    frontAxleLimit: 1850,
+    rearAxleLimit: 2000,
+    unladenMass: 1975,
+    unladenFront: 1150,
+    unladenRear: 825
   },
   "iveco-daily": {
     name: "IVECO DAILY",
@@ -255,5 +313,12 @@ export const vehicleData: Record<string, VehicleData> = {
     autotraderSearch: "https://www.autotrader.co.uk/van-search?make=Iveco&model=Daily",
     fbSearch: "https://www.facebook.com/marketplace/category/vehicles",
     internalWidth: "1.74m",
+    wheelbase: 4.100,
+    gvm: 3500,
+    frontAxleLimit: 1900,
+    rearAxleLimit: 2600,
+    unladenMass: 2450,
+    unladenFront: 1400,
+    unladenRear: 1050
   },
 };

@@ -10,13 +10,21 @@ import {
   ArrowLeft,
   Truck,
   Globe,
-  ExternalLink
+  ExternalLink,
+  Search,
+  Filter,
+  ChevronDown
 } from "lucide-react";
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 
 export default function SuppliersManagerPage() {
   const [suppliers, setSuppliers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [sortBy, setSortBy] = useState("name-asc");
 
   useEffect(() => {
     fetchSuppliers();
@@ -121,6 +129,60 @@ export default function SuppliersManagerPage() {
     await autoSeed();
   };
 
+  // Extract all unique categories for filtering
+  const allCategories = useMemo(() => {
+    const cats = new Set<string>();
+    suppliers.forEach(s => {
+      (s.categories || []).forEach((c: string) => cats.add(c));
+    });
+    return Array.from(cats).sort();
+  }, [suppliers]);
+
+  // Combined filtering and sorting logic
+  const filteredSuppliers = useMemo(() => {
+    let result = [...suppliers];
+
+    // Search
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(s => 
+        s.name.toLowerCase().includes(q) || 
+        s.description?.toLowerCase().includes(q) ||
+        (s.brands_handled || []).some((b: string) => b.toLowerCase().includes(q))
+      );
+    }
+
+    // Category Filter
+    if (selectedCategory !== "all") {
+      result = result.filter(s => (s.categories || []).includes(selectedCategory));
+    }
+
+    // Status Filter
+    if (selectedStatus !== "all") {
+      result = result.filter(s => s.status === selectedStatus);
+    }
+
+    // Sorting
+    result.sort((a, b) => {
+      switch (sortBy) {
+        case "name-asc":
+          return a.name.localeCompare(b.name);
+        case "name-desc":
+          return b.name.localeCompare(a.name);
+        case "status":
+          return (a.status || "").localeCompare(b.status || "");
+        case "active-first":
+          if (a.status === 'active_trade' && b.status !== 'active_trade') return -1;
+          if (a.status !== 'active_trade' && b.status === 'active_trade') return 1;
+          return a.name.localeCompare(b.name);
+        default:
+          return 0;
+      }
+    });
+
+    return result;
+  }, [suppliers, searchQuery, selectedCategory, selectedStatus, sortBy]);
+
   return (
     <div className="p-8 pb-32 min-h-screen bg-brand-obsidian text-brand-white">
       {/* Header */}
@@ -148,11 +210,69 @@ export default function SuppliersManagerPage() {
         </div>
       </div>
 
+      {/* Filter / Search Hub */}
+      <div className="mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-grey" />
+          <input 
+            type="text"
+            placeholder="Search suppliers..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-brand-carbon border border-brand-border p-4 pl-12 font-mono text-[10px] uppercase tracking-widest text-brand-white focus:border-brand-orange outline-none transition-all"
+          />
+        </div>
+
+        <div className="relative">
+          <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-grey" />
+          <select 
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="w-full bg-brand-carbon border border-brand-border p-4 pl-12 font-mono text-[10px] uppercase tracking-widest text-brand-white focus:border-brand-orange outline-none appearance-none transition-all cursor-pointer"
+          >
+            <option value="all">All Categories</option>
+            {allCategories.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+          <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-3 h-3 text-brand-grey pointer-events-none" />
+        </div>
+
+        <div className="relative">
+          <select 
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="w-full bg-brand-carbon border border-brand-border p-4 px-6 font-mono text-[10px] uppercase tracking-widest text-brand-white focus:border-brand-orange outline-none appearance-none transition-all cursor-pointer"
+          >
+            <option value="all">All Account Statuses</option>
+            <option value="active_trade">Active Trade</option>
+            <option value="potential">Open Sourcing</option>
+            <option value="applied">Pending Approval</option>
+            <option value="on_hold">On Hold</option>
+          </select>
+          <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-3 h-3 text-brand-grey pointer-events-none" />
+        </div>
+
+        <div className="relative">
+          <select 
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="w-full bg-brand-carbon border border-brand-border p-4 px-6 font-mono text-[10px] uppercase tracking-widest text-brand-white focus:border-brand-orange outline-none appearance-none transition-all cursor-pointer"
+          >
+            <option value="name-asc">Sort: A - Z</option>
+            <option value="name-desc">Sort: Z - A</option>
+            <option value="active-first">Sort: Active First</option>
+            <option value="status">Sort: Status Type</option>
+          </select>
+          <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-3 h-3 text-brand-grey pointer-events-none" />
+        </div>
+      </div>
+
       <div className="blueprint-border bg-brand-carbon overflow-hidden">
          <table className="w-full text-left border-collapse">
             <thead>
                <tr className="bg-brand-obsidian/50 border-b border-brand-border/50 font-mono text-[10px] text-brand-grey uppercase tracking-widest">
-                  <th className="p-6">Supplier & Identity</th>
+                  <th className="p-6">Supplier & Identity ({filteredSuppliers.length})</th>
                   <th className="p-6">Account Type</th>
                   <th className="p-6">Brand Portfolio</th>
                   <th className="p-6">System Focus</th>
@@ -162,14 +282,14 @@ export default function SuppliersManagerPage() {
             <tbody className="divide-y divide-brand-border/50">
                 {loading ? (
                   <tr><td colSpan={5} className="p-12 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">Loading network nodes...</td></tr>
-                ) : suppliers.length === 0 ? (
+                ) : filteredSuppliers.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="p-12 text-center text-brand-grey font-mono text-[10px] uppercase tracking-widest">
-                      No suppliers mapped. Run the registry sync migration and add suppliers.
+                      No suppliers match your current filter registry.
                     </td>
                   </tr>
                 ) : (
-                  suppliers.map(s => (
+                  filteredSuppliers.map(s => (
                     <tr key={s.id} className="group hover:bg-brand-obsidian/50 transition-colors">
                       <td className="p-6">
                         <span className="block font-display text-xl uppercase tracking-wider group-hover:text-brand-orange transition-colors">{s.name}</span>

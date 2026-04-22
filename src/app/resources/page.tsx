@@ -13,6 +13,7 @@ const guides = [
   { slug: "lithium-battery-guide", title: "Complete Guide to LiFePO4 Lithium Batteries", category: "Electrical", time: "15 min", difficulty: "Intermediate", image: "/images/tech-electrical.png" },
   { slug: "truma-combi-install", title: "Installing a Truma Combi: Step-by-Step", category: "Heating", time: "25 min", difficulty: "Advanced", image: "/images/cat-climate.png" },
   { slug: "sound-deadening-basics", title: "Sound Deadening vs Insulation: What You Need", category: "Insulation", time: "10 min", difficulty: "Beginner", image: "/images/cat-insulation.png" },
+  { slug: "solar-shading-guide", title: "Solar Efficiency & The Shading Problem", category: "Electrical", time: "15 min", difficulty: "Advanced", image: "/images/tech-electrical.png" },
 ];
 
 export default function ResourcesPage() {

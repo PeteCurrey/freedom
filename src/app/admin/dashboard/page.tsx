@@ -8,7 +8,7 @@ import {
   Plus, Edit, Trash2, Search, ExternalLink,
   CheckCircle, AlertCircle, TrendingUp, ArrowUpRight,
   MessageSquare, FileText, Monitor, Globe, Shield,
-  Truck, Zap, Activity, Layers
+  Truck, Zap, Activity, Layers, LayoutDashboard
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -61,8 +61,8 @@ export default function AdminDashboardPage() {
       description: "Editorial & Static Nodes",
       links: [
         { name: "Journal Library", href: "/admin/journal", icon: FileText, color: "text-brand-orange" },
+        { name: "Blueprint Designer", href: "/admin/blueprints", icon: LayoutDashboard, color: "text-blue-500" },
         { name: "Modular CMS", href: "/admin/cms", icon: Monitor, color: "text-purple-500" },
-        { name: "Product Archive", href: "/admin/store", icon: ShoppingBag, color: "text-brand-orange" },
       ]
     },
     {

@@ -18,8 +18,10 @@ import {
   Sun, Shield, Sparkles, Settings, Info,
   Search, Package, Monitor
 } from "lucide-react";
-import { BuildAdvisor } from "@/components/chat/BuildAdvisor";
 import Image from "next/image";
+import { vehicleData } from "@/lib/data/vehicles";
+import { systemManifests } from "@/lib/data/manifests";
+import { TechnicalBOM } from '@/components/planner/TechnicalBOM';
 
 // --- CONFIGURATION DATA ---
 
@@ -30,12 +32,7 @@ const steps = [
   "Security", "Finishing", "Review"
 ];
 
-const vehicleFoundations = [
-  { id: "mercedes-sprinter", name: "Mercedes Sprinter", configs: ["144\" WB", "170\" WB", "170\" EXT"], baseWeight: 2200, payload: 1300, price: 0 },
-  { id: "vw-crafter", name: "VW Crafter", configs: ["MWB", "LWB", "LWB Maxi"], baseWeight: 2150, payload: 1350, price: 0 },
-  { id: "fiat-ducato", name: "Fiat Ducato", configs: ["L2H2", "L3H2", "L4H3"], baseWeight: 1950, payload: 1550, price: 0 },
-  { id: "ford-transit", name: "Ford Transit", configs: ["L2H2", "L3H3", "L4H3"], baseWeight: 1950, payload: 1550, price: 0 },
-];
+// Redundant Foundations removed in favor of @/lib/data/vehicles
 
 const layoutTemplates = [
   { id: "expedition", name: "The Expedition", description: "Fixed rear transverse bed, mid kitchen, front dinette.", bestFor: "Solo or Couples", image: "/images/bespoke-sprinter.png" },
@@ -55,9 +52,9 @@ const systemConfigs = {
     proTip: "Always use oversized cables for inverter-to-battery connections to prevent voltage drop and heating.",
     image: "/images/tech-electrical.png",
     tiers: [
-      { id: "basic", name: "First Light (Basic 12V)", price: 500, weight: 15, features: ["100Ah AGM", "Split Charge", "USB Sockets"], icon: Zap },
-      { id: "mid", name: "Grid Independent (Lithium)", price: 2400, weight: 35, features: ["200Ah Lithium", "200W Solar", "800W Inverter"], icon: Zap },
-      { id: "pro", name: "Full Autonomy (Premium)", price: 6500, weight: 65, features: ["400Ah Lithium", "600W Solar", "3000W Multiplus"], icon: Zap },
+      { id: "basic", name: "First Light (Basic 12V)", price: 500, weight: 15, position: 1.5, features: ["100Ah AGM", "Split Charge", "USB Sockets"], icon: Zap },
+      { id: "mid", name: "Grid Independent (Lithium)", price: 2400, weight: 35, position: 1.5, features: ["200Ah Lithium", "200W Solar", "800W Inverter"], icon: Zap },
+      { id: "pro", name: "Full Autonomy (Premium)", price: 6500, weight: 65, position: 1.5, features: ["400Ah Lithium", "600W Solar", "3000W Multiplus"], icon: Zap },
     ]
   },
   lighting: {
@@ -65,9 +62,9 @@ const systemConfigs = {
     proTip: "Use warm white (3000K) LEDs for the interior to avoid a clinical, 'hospital' feel.",
     image: "/images/step_lighting_cinematic_1776674939507.png",
     tiers: [
-      { id: "basic", name: "Stealth Setup", price: 200, weight: 2, features: ["Soft White LED Strips", "Single Zone Control"], icon: Sun },
-      { id: "mid", name: "Multi-Zone Pro", price: 550, weight: 4, features: ["3-Zone Dimming", "Under-Cabinet LEDs", "App Control"], icon: Sun },
-      { id: "pro", name: "Cinematic Luxe", price: 1200, weight: 10, features: ["RGBW Ambient Strips", "External Scene Lights", "Motion Entry Lighting"], icon: Sun },
+      { id: "basic", name: "Stealth Setup", price: 200, weight: 2, position: 2.0, features: ["Soft White LED Strips", "Single Zone Control"], icon: Sun },
+      { id: "mid", name: "Multi-Zone Pro", price: 550, weight: 4, position: 2.0, features: ["3-Zone Dimming", "Under-Cabinet LEDs", "App Control"], icon: Sun },
+      { id: "pro", name: "Cinematic Luxe", price: 1200, weight: 10, position: 2.0, features: ["RGBW Ambient Strips", "External Scene Lights", "Motion Entry Lighting"], icon: Sun },
     ]
   },
   heating: {
@@ -75,9 +72,9 @@ const systemConfigs = {
     proTip: "A diesel heater altitude kit is essential if you plan on skiing or mountain trekking above 1500m.",
     image: "/images/cat-climate.png",
     tiers: [
-      { id: "basic", name: "Take the Edge Off", price: 250, weight: 5, features: ["5kW Diesel Heater", "2 Outlets"], icon: Thermometer },
-      { id: "mid", name: "Four Season (Webasto)", price: 1500, weight: 12, features: ["Webasto Air Top", "Digital Controller"], icon: Thermometer },
-      { id: "pro", name: "Home Comfort (Truma)", price: 3000, weight: 22, features: ["Truma Combi 4E", "Dual Fuel", "10L Water Tank"], icon: Thermometer },
+      { id: "basic", name: "Take the Edge Off", price: 250, weight: 5, position: 0.5, features: ["5kW Diesel Heater", "2 Outlets"], icon: Thermometer },
+      { id: "mid", name: "Four Season (Webasto)", price: 1500, weight: 12, position: 0.5, features: ["Webasto Air Top", "Digital Controller"], icon: Thermometer },
+      { id: "pro", name: "Home Comfort (Truma)", price: 3000, weight: 22, position: 1.0, features: ["Truma Combi 4E", "Dual Fuel", "10L Water Tank"], icon: Thermometer },
     ]
   },
   water: {
@@ -85,9 +82,9 @@ const systemConfigs = {
     proTip: "Accumulator tanks drastically reduce pump cycling noise and extend the life of your plumbing joints.",
     image: "/images/tech-water.png",
     tiers: [
-      { id: "basic", name: "The Essentials", price: 300, weight: 10, features: ["40L Fresh", "25L Grey", "Submersible Pump"], icon: Droplets },
-      { id: "mid", name: "Clean Living", price: 700, weight: 25, features: ["80L Fresh", "Pressure Pump", "Hot Mixer Tap"], icon: Droplets },
-      { id: "pro", name: "Full Wet Room", price: 1200, weight: 45, features: ["100L Fresh", "Internal Shower", "Water Filter"], icon: Droplets },
+      { id: "basic", name: "The Essentials", price: 300, weight: 10, position: 3.5, features: ["40L Fresh", "25L Grey", "Submersible Pump"], icon: Droplets },
+      { id: "mid", name: "Clean Living", price: 700, weight: 25, position: 3.5, features: ["80L Fresh", "Pressure Pump", "Hot Mixer Tap"], icon: Droplets },
+      { id: "pro", name: "Full Wet Room", price: 1200, weight: 45, position: 3.0, features: ["100L Fresh", "Internal Shower", "Water Filter"], icon: Droplets },
     ]
   },
   gas: {
@@ -95,9 +92,9 @@ const systemConfigs = {
     proTip: "Always use a gas locker with a floor vent for safety. It's a non-negotiable for insurance.",
     image: "/images/cat-gas.png",
     tiers: [
-      { id: "none", name: "No Gas (All Electric)", price: 0, weight: 0, features: ["Induction Cooking", "Diesel Heating"], icon: Flame },
-      { id: "basic", name: "Single Bottle", price: 300, weight: 15, features: ["6kg Calor", "2-Burner Hob"], icon: Flame },
-      { id: "pro", name: "Dual Bottle / Auto Change", price: 700, weight: 30, features: ["2x 6kg Bottles", "Oven/Grill", "BBQ Point"], icon: Flame },
+      { id: "none", name: "No Gas (All Electric)", price: 0, weight: 0, position: 0, features: ["Induction Cooking", "Diesel Heating"], icon: Flame },
+      { id: "basic", name: "Single Bottle", price: 300, weight: 15, position: 3.8, features: ["6kg Calor", "2-Burner Hob"], icon: Flame },
+      { id: "pro", name: "Dual Bottle / Auto Change", price: 700, weight: 30, position: 3.8, features: ["2x 6kg Bottles", "Oven/Grill", "BBQ Point"], icon: Flame },
     ]
   },
   insulation: {
@@ -105,9 +102,9 @@ const systemConfigs = {
     proTip: "Cover every inch of exposed metal with insulation or lining carpet to prevent condensation cold-spots.",
     image: "/images/cat-insulation.png",
     tiers: [
-      { id: "basic", name: "Three Season", price: 400, weight: 30, features: ["25mm Foam", "Dodo Mat", "1x MaxxFan"], icon: Wind },
-      { id: "mid", name: "All Season", price: 800, weight: 50, features: ["50mm Rigid Board", "Thinsulate", "Rain Sensor Fan"], icon: Wind },
-      { id: "pro", name: "Extreme Climate", price: 1700, weight: 80, features: ["Full Composite", "Underfloor Heating", "Double Glazing"], icon: Wind },
+      { id: "basic", name: "Three Season", price: 400, weight: 30, position: 2.0, features: ["25mm Foam", "Dodo Mat", "1x MaxxFan"], icon: Wind },
+      { id: "mid", name: "All Season", price: 800, weight: 50, position: 2.0, features: ["50mm Rigid Board", "Thinsulate", "Rain Sensor Fan"], icon: Wind },
+      { id: "pro", name: "Extreme Climate", price: 1700, weight: 80, position: 2.0, features: ["Full Composite", "Underfloor Heating", "Double Glazing"], icon: Wind },
     ]
   },
   windows: {
@@ -115,8 +112,8 @@ const systemConfigs = {
     proTip: "Bonded windows provide a much cleaner, factory look than traditional rubber-seal windows.",
     image: "/images/cat-interior.png",
     tiers: [
-      { id: "basic", name: "Standard Venting", price: 400, weight: 12, features: ["1x Sliding Window", "1x Fixed Window"], icon: Eye },
-      { id: "pro", name: "Full Panoramic", price: 1200, weight: 35, features: ["All-Round Glass", "Privacy Tint", "Blackout Blinds"], icon: Eye },
+      { id: "basic", name: "Standard Venting", price: 400, weight: 12, position: 2.0, features: ["1x Sliding Window", "1x Fixed Window"], icon: Eye },
+      { id: "pro", name: "Full Panoramic", price: 1200, weight: 35, position: 2.0, features: ["All-Round Glass", "Privacy Tint", "Blackout Blinds"], icon: Eye },
     ]
   },
   exterior: {
@@ -124,9 +121,9 @@ const systemConfigs = {
     proTip: "Side-mounted ladders are less stress on the rear door hinges and don't block your rearview optics.",
     image: "/images/step_exterior_cinematic_1776674981526.png",
     tiers: [
-      { id: "basic", name: "Minimalist Utility", price: 350, weight: 15, features: ["Roof Cross Bars", "Side Steps"], icon: Settings },
-      { id: "mid", name: "Basecamp Ready", price: 1400, weight: 45, features: ["Fiamma Awning", "Rear Ladder", "Lashing Points"], icon: Settings },
-      { id: "pro", name: "Expedition Grade", price: 3500, weight: 85, features: ["Full Walk-On Rack", "Side Ladder", "Case Storage"], icon: Settings },
+      { id: "basic", name: "Minimalist Utility", price: 350, weight: 15, position: 4.5, features: ["Roof Cross Bars", "Side Steps"], icon: Settings },
+      { id: "mid", name: "Basecamp Ready", price: 1400, weight: 45, position: 4.5, features: ["Fiamma Awning", "Rear Ladder", "Lashing Points"], icon: Settings },
+      { id: "pro", name: "Expedition Grade", price: 3500, weight: 85, position: 4.5, features: ["Full Walk-On Rack", "Side Ladder", "Case Storage"], icon: Settings },
     ]
   },
   security: {
@@ -134,9 +131,9 @@ const systemConfigs = {
     proTip: "A Ghost immobiliser is the single most effective electronic theft deterrent currently available in the UK.",
     image: "/images/step_security_cinematic_1776675013013.png",
     tiers: [
-      { id: "basic", name: "Deterrent Level", price: 250, weight: 5, features: ["External Deadlocks", "OBD Port Lock"], icon: Shield },
-      { id: "mid", name: "Pro Monitoring", price: 650, weight: 8, features: ["Thatcham S7 Tracker", "24/7 Monitoring", "Internal Alarm"], icon: Shield },
-      { id: "pro", name: "Fortress Mode", price: 1500, weight: 12, features: ["Ghost Immobiliser", "S5+ Tracker", "Motion CCTV"], icon: Shield },
+      { id: "basic", name: "Deterrent Level", price: 250, weight: 5, position: 0.5, features: ["External Deadlocks", "OBD Port Lock"], icon: Shield },
+      { id: "mid", name: "Pro Monitoring", price: 650, weight: 8, position: 0.5, features: ["Thatcham S7 Tracker", "24/7 Monitoring", "Internal Alarm"], icon: Shield },
+      { id: "pro", name: "Fortress Mode", price: 1500, weight: 12, position: 0.5, features: ["Ghost Immobiliser", "S5+ Tracker", "Motion CCTV"], icon: Shield },
     ]
   },
   finishing: {
@@ -144,9 +141,9 @@ const systemConfigs = {
     proTip: "Opt for marine-grade fabrics; they're UV resistant and much easier to clean after a muddy adventure.",
     image: "/images/step_finishing_touches_cinematic_1776675074937.png",
     tiers: [
-      { id: "basic", name: "Raw Efficiency", price: 500, weight: 10, features: ["Birch Ply Trim", "Canvas Upholstery"], icon: Sparkles },
-      { id: "mid", name: "Mountain Modern", price: 1800, weight: 25, features: ["Bamboo Worktops", "Velour Lining", "Premium Foam"], icon: Sparkles },
-      { id: "pro", name: "Luxury High-End", price: 4500, weight: 40, features: ["Solid Walnut", "Alcantara Upholstery", "Stone Worktops"], icon: Sparkles },
+      { id: "basic", name: "Raw Efficiency", price: 500, weight: 10, position: 2.5, features: ["Birch Ply Trim", "Canvas Upholstery"], icon: Sparkles },
+      { id: "mid", name: "Mountain Modern", price: 1800, weight: 25, position: 2.5, features: ["Bamboo Worktops", "Velour Lining", "Premium Foam"], icon: Sparkles },
+      { id: "pro", name: "Luxury High-End", price: 4500, weight: 40, position: 2.5, features: ["Solid Walnut", "Alcantara Upholstery", "Stone Worktops"], icon: Sparkles },
     ]
   }
 };
@@ -191,16 +188,14 @@ export default function BuildPlanner() {
     setClientBuildId("BUILD-" + Math.random().toString(36).substring(2, 9).toUpperCase());
   }, []);
 
-  // Derived Values
+  // --- Engineering Calculation Engine ---
   const totals = useMemo(() => {
     let cost = 0;
     let weight = 0;
+    let moment = 0; // kg*m relative to front axle
     
-    // Add layout base costs
-    const layout = layoutTemplates.find(l => l.id === selections.layoutId);
-    if (layout) {
-      // cost += layout.price || 0;
-    }
+    const vehicle = vehicleData[selections.vehicleId];
+    if (!vehicle) return { cost: 0, weight: 0, frontAxle: 0, rearAxle: 0, cog: 0 };
 
     // Sum system tiers
     Object.entries(selections.systems).forEach(([key, tierId]) => {
@@ -208,22 +203,47 @@ export default function BuildPlanner() {
       if (config) {
         cost += config.price;
         weight += config.weight;
+        // Calculation: Moment = Mass * Position (from front axle)
+        moment += config.weight * (config.position || 0.5);
       }
     });
 
-    // Add sleeping system
+    // Add sleeping system (Assume position is rear-heavy for fixed, mid for seat)
     const sleep = sleepSystems.find(s => s.id === selections.sleepingId);
     if (sleep) {
       cost += sleep.price;
       weight += sleep.weight;
+      const sleepPos = selections.sleepingId === 'fixed-rear' ? (vehicle.wheelbase * 0.9) : 2.5;
+      moment += sleep.weight * sleepPos;
     }
 
-    return { cost, weight };
-  }, [selections.systems, selections.sleepingId, selections.vehicleId, selections.layoutId]);
+    // Moment Principle: Rear Axle Incremental Load = Total Moment / Wheelbase
+    const rearIncremental = moment / vehicle.wheelbase;
+    const frontIncremental = weight - rearIncremental;
 
-  const vehicle = vehicleFoundations.find(v => v.id === selections.vehicleId);
-  const payloadLimit = vehicle?.payload || 3500;
-  const payloadUsagePercent = Math.min(1000, (totals.weight / payloadLimit) * 100);
+    const frontAxle = vehicle.unladenFront + frontIncremental;
+    const rearAxle = vehicle.unladenRear + rearIncremental;
+    
+    // Combined Center of Gravity (m from front axle)
+    const totalMass = vehicle.unladenMass + weight;
+    const totalMoment = (vehicle.unladenRear * vehicle.wheelbase) + moment;
+    const cog = totalMoment / totalMass;
+
+    return { 
+      cost, 
+      weight, 
+      frontAxle, 
+      rearAxle, 
+      cog,
+      totalMass,
+      gvmOver: totalMass > vehicle.gvm,
+      frontOver: frontAxle > vehicle.frontAxleLimit,
+      rearOver: rearAxle > vehicle.rearAxleLimit
+    };
+  }, [selections.systems, selections.sleepingId, selections.vehicleId]);
+
+  const selectedVehicle = vehicleData[selections.vehicleId];
+  const payloadUsagePercent = selectedVehicle ? Math.round((totals.totalMass / selectedVehicle.gvm) * 100) : 0;
 
   const nextStep = () => setCurrentStep((s) => Math.min(s + 1, steps.length - 1));
   const prevStep = () => setCurrentStep((s) => Math.max(s - 1, 0));
@@ -261,10 +281,10 @@ export default function BuildPlanner() {
       const planId = savedPlanId || await savePlan();
       if (!planId) throw new Error("Could not save build plan.");
 
-      const response = await fetch("/api/checkout", {
+      const response = await fetch("/api/stripe/checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId, tier }),
+        body: JSON.stringify({ buildId: planId, tier }),
       });
       const data = await response.json();
       if (data.url) window.location.href = data.url;
@@ -357,20 +377,17 @@ export default function BuildPlanner() {
                         <p className="font-sans text-brand-grey text-lg max-w-xl">Every serious build starts with the right foundation. Select your preferred vehicle platform.</p>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {vehicleFoundations.map((v) => (
+                        {Object.entries(vehicleData).map(([id, v]) => (
                           <button
-                            key={v.id}
-                            onClick={() => setSelections({ ...selections, vehicleId: v.id })}
+                            key={id}
+                            onClick={() => setSelections({ ...selections, vehicleId: id })}
                             className={cn(
                               "p-8 text-left blueprint-border transition-all group relative",
-                              selections.vehicleId === v.id ? "bg-brand-orange/10 border-brand-orange shadow-[0_0_30px_rgba(255,107,0,0.1)]" : "bg-brand-obsidian/50 hover:border-brand-grey"
+                              selections.vehicleId === id ? "bg-brand-orange/10 border-brand-orange shadow-[0_0_30px_rgba(255,107,0,0.1)]" : "bg-brand-obsidian/50 hover:border-brand-grey"
                             )}
                           >
                             <span className="font-display text-2xl uppercase block mb-2">{v.name}</span>
                             <div className="flex items-center gap-4 text-brand-grey font-mono text-[9px] uppercase tracking-widest">
-                               <span className="flex items-center gap-1.5"><Weight className="w-3 h-3" /> Base {v.baseWeight}kg</span>
-                               <span className="flex items-center gap-1.5 text-brand-orange/60"><ArrowRight className="w-3 h-3" /> Cap {v.payload}kg</span>
-                            </div>
                             <div className="flex flex-wrap gap-2 mt-8">
                               {v.configs.map(c => (
                                 <span 
@@ -596,21 +613,68 @@ export default function BuildPlanner() {
                         </div>
                       </div>
 
-                      {/* Selections Summary Grid */}
-                      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                         {Object.entries(selections.systems).map(([key, tierId]) => {
-                           const config = (systemConfigs as any)[key]?.tiers.find((t: any) => t.id === tierId);
-                           if (!config) return null;
-                           return (
-                             <div key={key} className="blueprint-border bg-brand-obsidian/60 p-4 flex flex-col items-center text-center group">
-                                <div className="w-8 h-8 rounded-full border border-brand-border/40 flex items-center justify-center mb-4 group-hover:border-brand-orange transition-colors">
-                                   <config.icon className="w-4 h-4 text-brand-orange" />
-                                </div>
-                                <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest mb-1">{key}</span>
-                                <span className="font-display text-[10px] uppercase text-white truncate w-full">{config.name}</span>
+                      {/* MASTER BLUEPRINT PREVIEW (PDF Sample) */}
+                      <div className="pt-8 w-full max-w-5xl mx-auto">
+                        <div className="flex items-center justify-between mb-4">
+                           <h3 className="font-mono text-[10px] text-brand-orange uppercase tracking-[0.2em] flex items-center gap-2">
+                             <Search className="w-3 h-3" /> Preview: Blueprint Page 4/80
+                           </h3>
+                           <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest bg-brand-obsidian px-3 py-1 border border-brand-border/40">Watermarked Sample</span>
+                        </div>
+                        
+                        <div className="w-full bg-[#111] p-2 md:p-8 rounded shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-brand-border/60 relative overflow-hidden group">
+                           {/* Watermark overlay */}
+                           <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-5 select-none z-50">
+                              <span className="font-display text-[150px] uppercase text-brand-white rotate-[-30deg]">SAMPLE</span>
+                           </div>
+
+                           {/* Document Header */}
+                           <div className="flex border-b border-brand-border/40 pb-4 mb-4">
+                              <div className="flex-1">
+                                 <h1 className="font-display text-2xl uppercase text-white tracking-tight">System Composite Diagram</h1>
+                                 <p className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Doc Ref: FRV-{clientBuildId}</p>
+                              </div>
+                              <div className="text-right">
+                                 <span className="font-display text-sm text-brand-orange uppercase block">{selectedVehicle?.name}</span>
+                                 <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest text-right block">V.1.0 // {new Date().getFullYear()}</span>
+                              </div>
+                           </div>
+
+                           {/* The Dynamic Schematic */}
+                           <div className="w-full bg-black/50 blueprint-border relative">
+                              <SVGSchematic 
+                                masterSelections={selections.systems} 
+                                vehicleLength={selectedVehicle?.wheelbase ? selectedVehicle.wheelbase * 1500 : 6000} 
+                                vehicleWidth={1800}
+                                className="w-full"
+                              />
+                           </div>
+
+                           {/* Engineering Notes & Constraints */}
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                             <div>
+                               <h4 className="font-mono text-[9px] text-brand-grey uppercase tracking-[0.2em] mb-2 border-b border-brand-border/40 pb-2">Technical Constraints</h4>
+                               <ul className="space-y-1 font-mono text-[8px] text-brand-grey uppercase">
+                                 <li className="flex justify-between"><span>GVM Cap:</span> <span className="text-white">{selectedVehicle?.gvm}kg</span></li>
+                                 <li className="flex justify-between"><span>Unladen Base:</span> <span className="text-white">{selectedVehicle?.unladenMass}kg</span></li>
+                                 <li className="flex justify-between font-bold"><span>Projected Mass:</span> <span className="text-brand-orange">{Math.round(totals.totalMass)}kg</span></li>
+                                 <li className="flex justify-between"><span>Front Axle:</span> <span className="text-white">{Math.round(totals.frontAxle)}kg / {selectedVehicle?.frontAxleLimit}kg</span></li>
+                                 <li className="flex justify-between"><span>Rear Axle:</span> <span className="text-white">{Math.round(totals.rearAxle)}kg / {selectedVehicle?.rearAxleLimit}kg</span></li>
+                               </ul>
                              </div>
-                           );
-                         })}
+                             <div className="relative">
+                               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#111] z-10" /> {/* Bleed out the BOM to tease content */}
+                               <div className="opacity-50 blur-[1px]">
+                                 <TechnicalBOM selections={selections} isPreview={true} />
+                               </div>
+                               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap">
+                                 <span className="font-mono text-[9px] bg-brand-orange text-white px-4 py-2 uppercase tracking-widest hidden md:block">
+                                   Full BOM Available in Purchased Report
+                                 </span>
+                               </div>
+                             </div>
+                           </div>
+                        </div>
                       </div>
                       
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12 border-t border-brand-border/40">
@@ -693,60 +757,99 @@ export default function BuildPlanner() {
                   <div className="space-y-10">
                     <div>
                       <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-2 flex items-center gap-2">
-                         <Layout className="w-3 h-3" /> Selected Platform
+                         <Layout className="w-3 h-3" /> selected foundation
                       </p>
-                      <p className="font-display text-2xl uppercase leading-none text-white">{vehicle?.name}</p>
+                      <p className="font-display text-2xl uppercase leading-none text-white">{selectedVehicle?.name}</p>
                       <p className="font-mono text-[10px] text-brand-orange uppercase mt-2 tracking-widest">{selections.configId}</p>
                     </div>
                     
-                    <div className="pt-10 border-t border-brand-border/40 space-y-6">
+                    <div className="pt-10 border-t border-brand-border/40 space-y-8">
                       <div className="flex justify-between items-end">
                         <div className="flex items-center gap-2">
                           <PoundSterling className="w-4 h-4 text-brand-grey" />
-                          <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">Hardware Subtotal</span>
+                          <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">hardware subtotal</span>
                         </div>
                         <span className="font-display text-3xl text-white">£{totals.cost.toLocaleString()}</span>
                       </div>
                       
-                      <div className="space-y-2">
+                      {/* GVM GAUGE */}
+                      <div className="space-y-3">
                         <div className="flex justify-between items-end">
-                           <div className="flex items-center gap-2 text-brand-orange">
-                              <Weight className="w-4 h-4" />
-                              <span className="font-mono text-[10px] uppercase tracking-widest">Mass Accrual</span>
+                           <div className="flex items-center gap-2">
+                              <Weight className="w-3.5 h-3.5 text-brand-grey" />
+                              <span className="font-mono text-[10px] uppercase tracking-widest text-brand-grey">gross vehicle mass (est)</span>
                            </div>
-                           <span className="font-display text-3xl text-brand-orange">{totals.weight}kg</span>
+                           <span className={cn(
+                             "font-display text-3xl",
+                             totals.gvmOver ? "text-red-500" : "text-white"
+                           )}>{Math.round(totals.totalMass)}kg</span>
                         </div>
-                        {/* Payload Progress Bar */}
                         <div className="h-1 bg-brand-carbon relative overflow-hidden">
                            <div 
                              className={cn(
                                "h-full transition-all duration-1000",
-                               payloadUsagePercent > 90 ? "bg-red-500" : payloadUsagePercent > 70 ? "bg-yellow-500" : "bg-brand-orange"
+                               totals.gvmOver ? "bg-red-500" : payloadUsagePercent > 90 ? "bg-yellow-500" : "bg-brand-orange"
                              )} 
-                             style={{ width: `${Math.min(100, (totals.weight / payloadLimit) * 100)}%` }} 
+                             style={{ width: `${Math.min(100, payloadUsagePercent)}%` }} 
                            />
                         </div>
                         <div className="flex justify-between font-mono text-[8px] uppercase tracking-widest text-brand-grey">
-                           <span>Base Net</span>
-                           <span>Payload: {payloadLimit}kg</span>
+                           <span>Base Net {selectedVehicle?.unladenMass}kg</span>
+                           <span className={totals.gvmOver ? "text-red-500 font-bold" : ""}>PL Limit: {selectedVehicle?.gvm}kg</span>
+                        </div>
+                      </div>
+
+                      {/* AXLE DISTRIBUTION */}
+                      <div className="pt-8 border-t border-brand-border/20 space-y-6">
+                        <div className="flex items-center gap-2 mb-4">
+                           <Settings className="w-3 h-3 text-brand-orange" />
+                           <span className="font-mono text-[9px] text-brand-orange uppercase tracking-[0.2em]">Axle Logic Hub</span>
+                        </div>
+                        
+                        {/* Front Axle */}
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-end">
+                             <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Front Axle Hub</span>
+                             <span className={cn("font-display text-lg", totals.frontOver ? "text-red-500" : "text-white")}>{Math.round(totals.frontAxle)}kg</span>
+                          </div>
+                          <div className="h-0.5 bg-brand-carbon">
+                             <div 
+                               className={cn("h-full transition-all duration-700", totals.frontOver ? "bg-red-500" : "bg-brand-orange")}
+                               style={{ width: `${Math.min(100, (totals.frontAxle / (selectedVehicle?.frontAxleLimit || 1)) * 100)}%` }}
+                             />
+                          </div>
+                        </div>
+
+                        {/* Rear Axle */}
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-end">
+                             <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Rear Axle Hub</span>
+                             <span className={cn("font-display text-lg", totals.rearOver ? "text-red-500" : "text-white")}>{Math.round(totals.rearAxle)}kg</span>
+                          </div>
+                          <div className="h-0.5 bg-brand-carbon">
+                             <div 
+                               className={cn("h-full transition-all duration-700", totals.rearOver ? "bg-red-500" : "bg-brand-orange")}
+                               style={{ width: `${Math.min(100, (totals.rearAxle / (selectedVehicle?.rearAxleLimit || 1)) * 100)}%` }}
+                             />
+                          </div>
                         </div>
                       </div>
                     </div>
 
                     {/* Technical Constraints */}
-                    {payloadUsagePercent > 80 && (
+                    {(totals.gvmOver || totals.frontOver || totals.rearOver) && (
                       <div className={cn(
                         "p-6 border font-mono text-[10px] uppercase tracking-widest flex flex-col gap-4 animate-pulse",
-                        payloadUsagePercent > 100 ? "bg-red-500/10 border-red-500 text-red-500" : "bg-yellow-500/10 border-yellow-500 text-yellow-500"
+                        (totals.gvmOver || totals.frontOver || totals.rearOver) ? "bg-red-500/10 border-red-500 text-red-500" : "bg-yellow-500/10 border-yellow-500 text-yellow-500"
                       )}>
                         <div className="flex items-center gap-3">
                            <AlertTriangle className="w-5 h-5" />
-                           {payloadUsagePercent > 100 ? "Structural Critical" : "Payload Threshold High"}
+                           {totals.gvmOver ? "Structural Critical" : "Axle Bias Overload"}
                         </div>
                         <p className="font-sans text-[10px] leading-relaxed opacity-80 normal-case">
-                           {payloadUsagePercent > 100 
-                             ? "Current build mass exceeds chassis specification. Heavy-duty suspension upgrades or removal of secondary water tanks required." 
-                             : "You are approaching theoretical payload limits. Consider opting for lightweight composites in the finishing stage."}
+                           {totals.gvmOver 
+                             ? "Total build mass exceeds legal GVM. Light-weighting alternatives required to remain road-legal in the UK." 
+                             : "Specific axle capacity exceeded. Reposition heavy items (Batteries/Tanks) towards the center of the vehicle."}
                         </p>
                       </div>
                     )}
@@ -765,7 +868,9 @@ export default function BuildPlanner() {
                             buildId: clientBuildId || "PENDING",
                             tier: "Freedom Blueprint",
                             totalWeight: totals.weight || 0,
-                            bom: [] 
+                            bom: Object.entries(selections.systems).flatMap(([systemId, tierId]) => 
+                              systemManifests[systemId]?.[tierId] || []
+                            )
                           }} 
                         />
                       </div>

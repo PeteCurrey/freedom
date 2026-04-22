@@ -83,6 +83,7 @@ const navLinks: NavLink[] = [
     href: "/tools", 
     mega: true,
     items: [
+      { name: "Payload & Balance", href: "/tools/payload-balancer", tagline: "GVM & Axle Loading", image: "/images/bespoke-iveco.png" },
       { name: "Cable Sizing", href: "/tools/cable-calculator", tagline: "Amps, Voltage, Run", image: "/images/systems-showcase.png" },
       { name: "Cost Estimator", href: "/advisor", tagline: "Project Budgeting", image: "/images/interior-showcase.png" },
       { name: "Build Matcher", href: "/advisor", tagline: "Chassis Discovery", image: "/images/hero-background.png" },

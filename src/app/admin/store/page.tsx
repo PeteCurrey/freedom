@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 export default function StoreManagerPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [lowStockCount, setLowStockCount] = useState(0);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -27,7 +28,10 @@ export default function StoreManagerPage() {
         .from('products')
         .select('*, product_categories(name)')
         .order('created_at', { ascending: false });
+      
+      const count = (data || []).filter((p: any) => p.stock_quantity < 5).length;
       setProducts(data || []);
+      setLowStockCount(count);
       setLoading(false);
     }
     fetchProducts();
@@ -50,9 +54,6 @@ export default function StoreManagerPage() {
           <Link href="/admin/store/import" className="px-6 py-4 bg-brand-carbon text-brand-orange border border-brand-orange/30 font-mono text-[10px] uppercase tracking-widest hover:border-brand-orange transition-all flex items-center gap-2">
              Mass CSV Import
           </Link>
-          <Link href="/admin/store/categories" className="px-8 py-4 border border-brand-orange text-brand-orange font-mono text-[10px] uppercase tracking-widest hover:bg-brand-orange hover:text-brand-white transition-all flex items-center gap-2">
-             Manage Categories
-          </Link>
           <Link href="/admin/store/products/new" className="px-8 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2">
              <Plus size={14} /> Add New SKU
           </Link>
@@ -62,7 +63,7 @@ export default function StoreManagerPage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-12">
          {[
            { label: "Total SKUs", value: products.length, icon: ShoppingBag },
-           { label: "Out of Stock", value: 0, icon: TrendingDown, color: "text-red-500" },
+           { label: "Low Stock Alerts", value: lowStockCount, icon: TrendingDown, color: lowStockCount > 0 ? "text-red-500" : "text-brand-grey" },
            { label: "Featured Items", value: 5, icon: Briefcase, color: "text-brand-orange" },
            { label: "Avg. Margin", value: "32%", icon: TrendingUp, color: "text-green-500" },
          ].map((stat, i) => (

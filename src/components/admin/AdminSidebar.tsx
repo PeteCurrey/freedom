@@ -34,6 +34,7 @@ const menuItems = [
   { name: "Supplier Network", href: "/admin/store/suppliers", icon: Truck },
   { name: "Store Manager", href: "/admin/store", icon: ShoppingBag },
   { name: "Content / CMS", href: "/admin/cms", icon: Monitor },
+  { name: "Blueprint Templates", href: "/admin/blueprints", icon: FileText },
   { name: "User Admin", href: "/admin/users", icon: Users },
   { name: "API Settings", href: "/admin/settings", icon: Settings },
   { name: "My Profile", href: "/admin/profile", icon: UserCircle },

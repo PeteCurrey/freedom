@@ -11,15 +11,17 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
 
-    // Map simplified planner IDs to whatever logical values we need or just store them as is
-    // In a mature system, we would validate vehicle_id against the vehicles table UUIDs.
-    // For now, we store them as selected by the planner.
-    
+    const { data: vehicleInfo } = await supabaseAdmin
+      .from('vehicles')
+      .select('id')
+      .eq('slug', data.vehicleId)
+      .single();
+
     const { error, data: plan } = await supabaseAdmin
       .from('build_plans')
       .insert({
         name: data.name || "Untitled Build",
-        vehicle_id: null, // Would normally map "mercedes-sprinter" to a valid UUID
+        vehicle_id: vehicleInfo?.id || null, 
         configuration_id: data.configId,
         layout_id: data.layoutId,
         system_tiers: data.systems,

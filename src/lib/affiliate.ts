@@ -20,6 +20,24 @@ export function generateEbaySearchUrl({ vehicleName, category = "Van" }: Affilia
   return `${EBAY_UK_BASE}?_nkw=${searchQuery}&mkcid=1&mkrid=710-53481-19255-0&siteid=3&campid=${EPN_ID}&customid=${customId}&toolid=10001&mkevt=1`;
 }
 
+export function generateEbayProductUrl(productName: string): string {
+  const searchQuery = encodeURIComponent(productName);
+  const customId = encodeURIComponent(`bom_${productName.toLowerCase().replace(/\s+/g, '_')}`);
+  
+  return `${EBAY_UK_BASE}?_nkw=${searchQuery}&mkcid=1&mkrid=710-53481-19255-0&siteid=3&campid=${EPN_ID}&customid=${customId}&toolid=10001&mkevt=1`;
+}
+
+export function generateProductLink(productName: string, supplierWebsite: string, supplierId: string): string {
+  // If the supplier is eBay, use the eBay product search
+  if (supplierId === 'ebay-motors-uk') {
+    return generateEbayProductUrl(productName);
+  }
+
+  // Otherwise, return the supplier's website
+  // Future iteration: Add specific referral parameters for partners like Energy Solutions or Fogstar
+  return supplierWebsite;
+}
+
 const AUTOTRADER_BASE = "https://www.autotrader.co.uk/van-search";
 
 export function generateAutotraderSearchUrl({ vehicleName }: AffiliateParams): string {

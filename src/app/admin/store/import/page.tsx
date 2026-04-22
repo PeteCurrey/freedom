@@ -15,7 +15,10 @@ export default function StoreImportPage() {
   
   const [parsedData, setParsedData] = useState<any[]>([]);
   const [headers, setHeaders] = useState<string[]>([]);
-  const [mapping, setMapping] = useState({ sku: "", name: "", price: "", brand: "" });
+  const [mapping, setMapping] = useState({ 
+    sku: "", name: "", price: "", brand: "", 
+    cost_price: "", compare_at_price: "", stock_quantity: "", weight_grams: "" 
+  });
   
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -48,7 +51,6 @@ export default function StoreImportPage() {
   };
 
   const parseCSV = (text: string) => {
-    // Basic CSV Parser (handles standard comma separation without complex escaping)
     const lines = text.split(/\r?\n/).filter(line => line.trim());
     if (lines.length < 2) return alert("Empty or invalid CSV file.");
 
@@ -56,18 +58,21 @@ export default function StoreImportPage() {
     setHeaders(rawHeaders);
     
     // Auto guess mappings
-    const guess = { sku: "", name: "", price: "", brand: "" };
+    const guess = { sku: "", name: "", price: "", brand: "", cost_price: "", compare_at_price: "", stock_quantity: "", weight_grams: "" };
     rawHeaders.forEach(h => {
       const hl = h.toLowerCase();
       if (hl.includes("sku") || hl.includes("code") || hl.includes("part no") || hl.includes("ref")) guess.sku = h;
       else if (hl.includes("name") || hl.includes("title") || hl.includes("description")) guess.name = h;
-      else if (hl.includes("price") || hl.includes("cost") || hl.includes("gbp") || hl.includes("net") || hl.includes("trade")) guess.price = h;
+      else if (hl === "price" || hl === "cost" || hl.includes("gbp") || hl.includes("net") || hl.includes("trade")) guess.price = h;
       else if (hl.includes("brand") || hl.includes("make") || hl.includes("manufacturer")) guess.brand = h;
+      else if (hl.includes("cost price") || hl.includes("wholesale")) guess.cost_price = h;
+      else if (hl.includes("rrp") || hl.includes("msrp") || hl.includes("compare")) guess.compare_at_price = h;
+      else if (hl.includes("stock") || hl.includes("qty") || hl.includes("quantity")) guess.stock_quantity = h;
+      else if (hl.includes("weight") || hl.includes("mass")) guess.weight_grams = h;
     });
     setMapping(guess);
 
     const rows = lines.slice(1).map(line => {
-      // Improved CSV split that handles quoted commas
       const values: string[] = [];
       let current = "";
       let inQuotes = false;
@@ -116,8 +121,20 @@ export default function StoreImportPage() {
           continue;
        }
 
+       // Parse optional numeric fields
+       const parseOptionalNumeric = (key: string) => {
+         if (!mapping[key as keyof typeof mapping] || !row[mapping[key as keyof typeof mapping]]) return null;
+         const val = parseFloat(row[mapping[key as keyof typeof mapping]].replace(/[^0-9.]/g, ''));
+         return isNaN(val) ? null : val;
+       };
+
+       const costPrice = parseOptionalNumeric('cost_price');
+       const comparePrice = parseOptionalNumeric('compare_at_price');
+       const stockQty = parseOptionalNumeric('stock_quantity');
+       const weight = parseOptionalNumeric('weight_grams');
+
        // Construct payload matching DB schema
-       const payload = {
+       const payload: any = {
           name: row[mapping.name],
           sku: row[mapping.sku],
           brand: mapping.brand ? row[mapping.brand] : "",
@@ -127,6 +144,11 @@ export default function StoreImportPage() {
           slug: row[mapping.name].toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
           is_active: true
        };
+
+       if (costPrice !== null) payload.cost_price = costPrice * 100;
+       if (comparePrice !== null) payload.compare_at_price = comparePrice * 100;
+       if (stockQty !== null) payload.stock_quantity = stockQty;
+       if (weight !== null) payload.weight_grams = weight; // Assuming input is already in grams or needs unit conversion in a real app
 
        try {
          // Check if exists
@@ -249,6 +271,34 @@ export default function StoreImportPage() {
                           <div>
                              <label className="block font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-2">Brand Column</label>
                              <select value={mapping.brand} onChange={e => setMapping({...mapping, brand: e.target.value})} className="w-full bg-brand-carbon p-2 text-xs border border-brand-border">
+                                <option value="">-- Ignore --</option>
+                                {headers.map(h => <option key={h} value={h}>{h}</option>)}
+                             </select>
+                          </div>
+                          <div>
+                             <label className="block font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-2">Cost Price</label>
+                             <select value={mapping.cost_price} onChange={e => setMapping({...mapping, cost_price: e.target.value})} className="w-full bg-brand-carbon p-2 text-xs border border-brand-border">
+                                <option value="">-- Ignore --</option>
+                                {headers.map(h => <option key={h} value={h}>{h}</option>)}
+                             </select>
+                          </div>
+                          <div>
+                             <label className="block font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-2">RRP / MSRP</label>
+                             <select value={mapping.compare_at_price} onChange={e => setMapping({...mapping, compare_at_price: e.target.value})} className="w-full bg-brand-carbon p-2 text-xs border border-brand-border">
+                                <option value="">-- Ignore --</option>
+                                {headers.map(h => <option key={h} value={h}>{h}</option>)}
+                             </select>
+                          </div>
+                          <div>
+                             <label className="block font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-2">Stock Qty</label>
+                             <select value={mapping.stock_quantity} onChange={e => setMapping({...mapping, stock_quantity: e.target.value})} className="w-full bg-brand-carbon p-2 text-xs border border-brand-border">
+                                <option value="">-- Ignore --</option>
+                                {headers.map(h => <option key={h} value={h}>{h}</option>)}
+                             </select>
+                          </div>
+                          <div>
+                             <label className="block font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-2">Weight (g)</label>
+                             <select value={mapping.weight_grams} onChange={e => setMapping({...mapping, weight_grams: e.target.value})} className="w-full bg-brand-carbon p-2 text-xs border border-brand-border">
                                 <option value="">-- Ignore --</option>
                                 {headers.map(h => <option key={h} value={h}>{h}</option>)}
                              </select>
