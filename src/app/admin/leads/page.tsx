@@ -15,6 +15,13 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LeadActivityLogger } from "@/components/admin/leads/LeadActivityLogger";
+import { 
+  BarChart3, 
+  Users, 
+  ArrowUpRight, 
+  TrendingUp,
+  PieChart
+} from "lucide-react";
 
 export default function LeadsPage() {
   const [leads, setLeads] = useState<any[]>([]);
@@ -49,6 +56,26 @@ export default function LeadsPage() {
       setLeads(leads.map(l => l.id === id ? { ...l, pipeline_status: newStatus } : l));
     }
   };
+  
+  const deleteLead = async (id: string) => {
+    if (!confirm("Terminate this lead protocol? This action is permanent.")) return;
+    
+    const { error } = await supabase.from('leads').delete().eq('id', id);
+    if (!error) {
+      setLeads(leads.filter(l => l.id !== id));
+    }
+  };
+
+  const leadStats = useMemo(() => {
+    const total = leads.length;
+    const advisor = leads.filter(l => l.type === 'advisor').length;
+    const contact = leads.filter(l => l.type === 'contact').length;
+    const newsletter = leads.filter(l => l.type === 'newsletter').length;
+    const qualified = leads.filter(l => l.pipeline_status === 'qualified' || l.pipeline_status === 'closed').length;
+    const health = total > 0 ? Math.round((qualified / total) * 100) : 0;
+    
+    return { total, advisor, contact, newsletter, health };
+  }, [leads]);
 
   const pipelineStages = [
     { id: 'new', name: 'New Capture', color: 'bg-blue-500' },
@@ -97,21 +124,102 @@ export default function LeadsPage() {
         </div>
       </div>
 
-      {/* Primary Filters */}
-      <div className="flex gap-4 mb-8">
-          {["all", "advisor", "contact", "newsletter"].map((t) => (
-            <button
-              key={t}
-              onClick={() => setFilter(t)}
-              className={cn(
-                "px-4 py-2 font-mono text-[10px] uppercase tracking-widest border transition-all",
-                filter === t ? "border-brand-orange text-brand-orange" : "border-brand-border text-brand-grey hover:border-brand-grey"
-              )}
-            >
-              {t}
-            </button>
-          ))}
-      </div>
+       {/* Intelligence Hub */}
+       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+          <div className="blueprint-border bg-brand-carbon p-8 relative overflow-hidden group hover:border-brand-orange transition-all">
+             <div className="flex justify-between items-start relative z-10">
+                <div>
+                   <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest block mb-1">Total Intelligence Captured</span>
+                   <h3 className="font-display text-5xl uppercase text-brand-white">{leadStats.total}</h3>
+                </div>
+                <div className="w-12 h-12 blueprint-border flex items-center justify-center text-brand-orange">
+                   <Users size={20} />
+                </div>
+             </div>
+             <div className="mt-4 flex items-center gap-2 font-mono text-[8px] text-green-500 uppercase tracking-widest">
+                <ArrowUpRight size={10} /> +12.4% Captured This Cycle
+             </div>
+             <div className="absolute top-0 right-0 w-32 h-32 bg-brand-orange/5 blur-3xl -mr-16 -mt-16 rounded-full group-hover:bg-brand-orange/10 transition-all" />
+          </div>
+
+          <div className="blueprint-border bg-brand-carbon p-8 relative overflow-hidden group hover:border-brand-orange transition-all">
+             <div className="flex justify-between items-start relative z-10">
+                <div>
+                   <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest block mb-1">Advisor Conversions</span>
+                   <h3 className="font-display text-5xl uppercase text-brand-white">{leadStats.advisor}</h3>
+                </div>
+                <div className="w-12 h-12 blueprint-border flex items-center justify-center text-brand-orange">
+                   <Zap size={20} />
+                </div>
+             </div>
+             <div className="mt-4 flex items-center gap-2 font-mono text-[8px] text-brand-orange uppercase tracking-widest">
+                <TrendingUp size={10} /> High Velocity Capture Source
+             </div>
+          </div>
+
+          <div className="blueprint-border bg-brand-carbon p-8 relative overflow-hidden group hover:border-brand-orange transition-all">
+             <div className="flex justify-between items-start relative z-10">
+                <div>
+                   <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest block mb-1">Inquiry Distribution</span>
+                   <div className="flex gap-4 mt-2">
+                      <div className="text-center">
+                         <div className="font-display text-2xl text-white">{leadStats.contact}</div>
+                         <div className="font-mono text-[7px] text-brand-grey uppercase">Contact</div>
+                      </div>
+                      <div className="text-center border-l border-brand-border pl-4">
+                         <div className="font-display text-2xl text-white">{leadStats.newsletter}</div>
+                         <div className="font-mono text-[7px] text-brand-grey uppercase">News</div>
+                      </div>
+                   </div>
+                </div>
+                <div className="w-12 h-12 blueprint-border flex items-center justify-center text-brand-orange">
+                   <PieChart size={20} />
+                </div>
+             </div>
+          </div>
+
+          <div className="blueprint-border bg-brand-carbon p-8 relative overflow-hidden group hover:border-brand-orange transition-all border-l-4 border-l-brand-orange">
+             <div className="flex justify-between items-start relative z-10">
+                <div>
+                   <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest block mb-1">Pipeline Integrity</span>
+                   <h3 className="font-display text-5xl uppercase text-brand-white">{leadStats.health}%</h3>
+                </div>
+                <div className="w-12 h-12 blueprint-border flex items-center justify-center text-brand-orange">
+                   <BarChart3 size={20} />
+                </div>
+             </div>
+             <div className="w-full bg-brand-obsidian h-1 mt-4">
+                <div className="bg-brand-orange h-full" style={{ width: `${leadStats.health}%` }} />
+             </div>
+          </div>
+       </div>
+
+       {/* Primary Filters */}
+       <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
+          <div className="flex gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+              {["all", "advisor", "contact", "newsletter"].map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setFilter(t)}
+                  className={cn(
+                    "px-6 py-2 font-mono text-[10px] uppercase tracking-widest border transition-all whitespace-nowrap",
+                    filter === t ? "border-brand-orange text-brand-orange bg-brand-orange/5" : "border-brand-border text-brand-grey hover:border-brand-grey"
+                  )}
+                >
+                  {t} Capture
+                </button>
+              ))}
+          </div>
+          
+          <div className="relative w-full md:w-64">
+             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-grey w-3 h-3" />
+             <input 
+               type="text"
+               placeholder="Search Dossier..."
+               className="w-full bg-brand-carbon border border-brand-border pl-10 pr-4 py-2 font-mono text-[10px] uppercase tracking-widest outline-none focus:border-brand-orange"
+             />
+          </div>
+       </div>
 
       {view === "list" ? (
         <div className="blueprint-border bg-brand-carbon overflow-hidden text-brand-white">
@@ -162,7 +270,7 @@ export default function LeadsPage() {
                     <td className="p-6 text-right">
                         <div className="flex justify-end gap-3 text-brand-grey opacity-0 group-hover:opacity-100 transition-opacity">
                           <button onClick={() => setActiveLead(lead)} className="hover:text-brand-orange transition-colors"><MessageSquare size={16} /></button>
-                          <button className="hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
+                          <button onClick={() => deleteLead(lead.id)} className="hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
                         </div>
                     </td>
                   </tr>
