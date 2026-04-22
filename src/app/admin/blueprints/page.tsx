@@ -24,7 +24,7 @@ import { supabase } from "@/lib/supabase";
 
 interface BlueprintBlock {
   id: string;
-  type: 'header' | 'schematic' | 'technical_specs' | 'bill_of_materials' | 'footer' | 'notes';
+  type: 'header' | 'schematic' | 'technical_specs' | 'bill_of_materials' | 'footer' | 'notes' | 'image';
   y: number;
   height?: number;
   content?: string;
@@ -51,11 +51,15 @@ export default function BlueprintEditorPage() {
       pageSize: "A4"
     },
     blocks: [
-      { id: "header", type: "header", y: 0, content: "Master Engineering Manifest", fontSize: 24 },
-      { id: "schematic", type: "schematic", y: 120, height: 300 },
-      { id: "specs", type: "technical_specs", y: 450 },
-      { id: "bom", type: "bill_of_materials", y: 600 },
-      { id: "footer", type: "footer", y: 800, content: "© 2026 Amplios Engineering" }
+      { id: "cover", type: "header", y: 0, content: "Expedition Series Blueprint", fontSize: 36 },
+      { id: "hero_img", type: "image", y: 100, content: "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?q=80&w=2070&auto=format&fit=crop", height: 400 },
+      { id: "intro_notes", type: "notes", y: 550, content: "Top-tier off-grid build tailored for extended 4-season expeditions. Features 800W solar array, 400Ah lithium bank, and advanced thermal management." },
+      { id: "specs", type: "technical_specs", y: 650 },
+      { id: "schematic_1", type: "schematic", y: 800, height: 450, content: "Electrical Architecture" },
+      { id: "schematic_2", type: "schematic", y: 1300, height: 450, content: "Plumbing & Hydronics" },
+      { id: "bom", type: "bill_of_materials", y: 1800 },
+      { id: "compliance", type: "notes", y: 2400, content: "DVLA Reclassification Compliant. Sign-off ready for independent engineer inspection." },
+      { id: "footer", type: "footer", y: 2600, content: "© 2026 Amplios Engineering // PRO-SPEC" }
     ]
   });
 
@@ -314,44 +318,84 @@ export default function BlueprintEditorPage() {
                           <h1 style={{ fontSize: `${block.fontSize}pt`, color: config.settings.secondaryColor }} className="uppercase font-bold tracking-tighter leading-none">
                             {block.content || "Master Blueprint"}
                           </h1>
-                          <p className="text-[10px] text-brand-grey font-mono uppercase tracking-widest mt-2">TECHNICAL ARCHIVE // CONFIDENTIAL</p>
+                          <p className="text-[10px] text-brand-grey font-mono uppercase tracking-widest mt-2">TECHNICAL ARCHIVE // VEHICLE CLASSIFICATION PROTOCOL</p>
                         </div>
                         <div className="text-right">
-                           <div className="w-12 h-12 bg-black flex items-center justify-center ml-auto">
-                              <span className="text-white font-display text-[8px] tracking-tighter">AMPLIOS</span>
+                           <div className="w-16 h-16 bg-brand-obsidian flex items-center justify-center ml-auto shadow-sm">
+                              <span className="text-brand-orange font-display text-[10px] tracking-tighter">AMPLIOS</span>
                            </div>
                         </div>
                       </div>
                     )}
 
-                    {block.type === 'schematic' && (
-                      <div className="bg-gray-50 border border-gray-200 flex items-center justify-center overflow-hidden" style={{ height: `${block.height}px` }}>
-                         <div className="text-center opacity-30">
-                            <Monitor className="w-12 h-12 mx-auto mb-4 text-brand-grey" />
-                            <p className="font-mono text-[10px] uppercase tracking-widest text-brand-grey">Dynamic SVG Schematic Viewport</p>
-                            <p className="font-mono text-[8px] uppercase tracking-widest text-brand-grey mt-1">(Vehicle Footprint & System Overlays)</p>
-                         </div>
-                      </div>
+                    {block.type === 'image' && (
+                       <div className="overflow-hidden border border-gray-200" style={{ height: `${block.height}px` }}>
+                          {block.content ? (
+                             <img src={block.content} alt="Blueprint Visual" className="w-full h-full object-cover" />
+                          ) : (
+                             <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                                <span className="font-mono text-xs text-gray-400">IMG_PLACEHOLDER</span>
+                             </div>
+                          )}
+                       </div>
                     )}
 
+                    {block.type === 'notes' && (
+                       <div className="bg-gray-50 border-l-4 p-6" style={{ borderLeftColor: config.settings.primaryColor }}>
+                          <h4 className="font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Engineer's Notes</h4>
+                          <p className="font-sans text-xs text-black leading-relaxed">
+                             {block.content || "Insert engineering notes or compliance statements here."}
+                          </p>
+                       </div>
+                    )}
+
+                    {block.type === 'schematic' && (() => {
+                      const imgSrc = (block.content || '').toLowerCase().includes('plumb')
+                        ? '/schematics/plumbing.png'
+                        : '/schematics/electrical.png';
+                      return (
+                        <div className="border border-gray-200 overflow-hidden relative" style={{ height: `${block.height}px` }}>
+                          <img src={imgSrc} alt={block.content} className="w-full h-full object-contain bg-gray-50" />
+                          <div className="absolute top-3 left-3 bg-white/90 border border-gray-200 px-3 py-1.5 shadow-sm">
+                            <span className="font-mono text-[8px] uppercase tracking-widest text-brand-orange font-bold">{block.content || 'System Schematic'}</span>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
                     {block.type === 'technical_specs' && (
-                      <div className="grid grid-cols-2 gap-12 py-10 border-b border-gray-100">
+                      <div className="grid grid-cols-2 gap-12 py-10 border-b border-gray-200">
                          <div>
-                            <h4 className="font-mono text-[9px] uppercase tracking-widest text-brand-grey border-b border-gray-100 pb-2 mb-4">Engineering Limits</h4>
-                            <div className="space-y-2">
-                               {[1,2,3].map(i => (
-                                 <div key={i} className="flex justify-between items-center py-1">
-                                    <span className="text-[9px] text-gray-400 uppercase">Parameter {i}</span>
-                                    <span className="text-[10px] text-black font-bold uppercase tracking-widest">--- VALUE ---</span>
-                                 </div>
-                               ))}
+                            <h4 className="font-mono text-[10px] uppercase tracking-widest text-brand-grey border-b border-gray-200 pb-2 mb-4 font-bold">Engineering Limits & Telemetry</h4>
+                            <div className="space-y-3">
+                               <div className="flex justify-between items-center py-1 border-b border-gray-50">
+                                  <span className="text-[10px] text-gray-500 uppercase font-mono">Gross Vehicle Mass (GVM)</span>
+                                  <span className="text-[11px] text-black font-bold uppercase tracking-widest">3500 KG</span>
+                               </div>
+                               <div className="flex justify-between items-center py-1 border-b border-gray-50">
+                                  <span className="text-[10px] text-gray-500 uppercase font-mono">Projected Kerb Weight</span>
+                                  <span className="text-[11px] text-black font-bold uppercase tracking-widest">2840 KG</span>
+                               </div>
+                               <div className="flex justify-between items-center py-1 border-b border-gray-50">
+                                  <span className="text-[10px] text-gray-500 uppercase font-mono">Available Payload</span>
+                                  <span className="text-[11px] text-green-600 font-bold uppercase tracking-widest">660 KG</span>
+                               </div>
+                               <div className="flex justify-between items-center py-1 border-b border-gray-50">
+                                  <span className="text-[10px] text-gray-500 uppercase font-mono">Energy Capacity (DC)</span>
+                                  <span className="text-[11px] text-black font-bold uppercase tracking-widest">4800 Wh</span>
+                               </div>
                             </div>
                          </div>
                          <div>
-                            <h4 className="font-mono text-[9px] uppercase tracking-widest text-brand-grey border-b border-gray-100 pb-2 mb-4">Load Balance Analysis</h4>
-                            <div className="h-20 bg-gray-50 border border-gray-100 flex items-center justify-center">
-                               <div className="w-1/2 h-1 bg-gray-200 relative">
-                                  <div className="absolute top-1/2 -translate-y-1/2 left-1/3 w-2 h-4 bg-brand-orange" />
+                            <h4 className="font-mono text-[10px] uppercase tracking-widest text-brand-grey border-b border-gray-200 pb-2 mb-4 font-bold">Load Balance Analysis</h4>
+                            <div className="h-24 bg-gray-50 border border-gray-200 flex flex-col items-center justify-center p-4">
+                               <div className="w-full h-2 bg-gray-200 relative rounded-full mb-3">
+                                  <div className="absolute top-1/2 -translate-y-1/2 left-[48%] w-3 h-6 bg-brand-orange rounded-sm shadow-md" />
+                               </div>
+                               <div className="flex justify-between w-full font-mono text-[8px] text-gray-400 uppercase">
+                                  <span>Rear Axle (45%)</span>
+                                  <span className="text-brand-orange font-bold">Optimal CG</span>
+                                  <span>Front Axle (55%)</span>
                                </div>
                             </div>
                          </div>
@@ -360,23 +404,47 @@ export default function BlueprintEditorPage() {
 
                     {block.type === 'bill_of_materials' && (
                       <div className="py-10">
-                         <h4 className="font-mono text-[9px] uppercase tracking-widest text-brand-grey border-b border-gray-100 pb-2 mb-6">Manifest Ledger (Hardware BOM)</h4>
+                         <h4 className="font-mono text-[10px] uppercase tracking-widest text-brand-grey border-b border-gray-200 pb-2 mb-6 font-bold">Manifest Ledger (Hardware BOM)</h4>
                          <table className="w-full text-left">
                             <thead>
-                               <tr className="text-[8px] uppercase text-gray-400 font-mono">
-                                  <th className="pb-4">Part Index</th>
-                                  <th className="pb-4">Specification</th>
-                                  <th className="pb-4 text-right">Vendor</th>
+                               <tr className="text-[9px] uppercase text-gray-500 font-mono border-b-2 border-gray-200">
+                                  <th className="pb-4 font-bold">SKU</th>
+                                  <th className="pb-4 font-bold">Component Specification</th>
+                                  <th className="pb-4 text-center font-bold">QTY</th>
+                                  <th className="pb-4 text-right font-bold">Vendor / Brand</th>
                                </tr>
                             </thead>
                             <tbody>
-                               {[1,2,3,4,5].map(i => (
-                                 <tr key={i} className="border-b border-gray-50 text-[9px]">
-                                    <td className="py-3 text-black uppercase font-bold tracking-tighter">Component Alpha-{i}</td>
-                                    <td className="py-3 text-gray-500">Standard Technical Spec Reference</td>
-                                    <td className="py-3 text-right text-gray-400 uppercase font-mono">AMPLIOS_SUPPLY_{i}</td>
-                                 </tr>
-                               ))}
+                               <tr className="border-b border-gray-100 text-[10px]">
+                                  <td className="py-4 text-gray-400 font-mono">PWR-VIC-3000</td>
+                                  <td className="py-4 text-black font-bold">Victron MultiPlus-II 12/3000/120-32 Inverter/Charger</td>
+                                  <td className="py-4 text-center text-gray-600 font-mono">1</td>
+                                  <td className="py-4 text-right text-gray-500 uppercase font-mono">Victron Energy</td>
+                               </tr>
+                               <tr className="border-b border-gray-100 text-[10px]">
+                                  <td className="py-4 text-gray-400 font-mono">BAT-RMR-400</td>
+                                  <td className="py-4 text-black font-bold">Roamer 400Ah 12V LiFePO4 Seatbase Battery</td>
+                                  <td className="py-4 text-center text-gray-600 font-mono">1</td>
+                                  <td className="py-4 text-right text-gray-500 uppercase font-mono">Roamer Batteries</td>
+                               </tr>
+                               <tr className="border-b border-gray-100 text-[10px]">
+                                  <td className="py-4 text-gray-400 font-mono">HVA-TRU-4E</td>
+                                  <td className="py-4 text-black font-bold">Truma Combi 4E CP Plus (Gas/Electric) Boiler</td>
+                                  <td className="py-4 text-center text-gray-600 font-mono">1</td>
+                                  <td className="py-4 text-right text-gray-500 uppercase font-mono">Truma</td>
+                               </tr>
+                               <tr className="border-b border-gray-100 text-[10px]">
+                                  <td className="py-4 text-gray-400 font-mono">SOL-FLX-200</td>
+                                  <td className="py-4 text-black font-bold">200W Monocrystalline Flexible Solar Panel</td>
+                                  <td className="py-4 text-center text-gray-600 font-mono">4</td>
+                                  <td className="py-4 text-right text-gray-500 uppercase font-mono">Photonic Universe</td>
+                               </tr>
+                               <tr className="border-b border-gray-100 text-[10px]">
+                                  <td className="py-4 text-gray-400 font-mono">WTR-CAF-80</td>
+                                  <td className="py-4 text-black font-bold">CAK Tanks 80L Fresh Water Underslung (Sprinter)</td>
+                                  <td className="py-4 text-center text-gray-600 font-mono">1</td>
+                                  <td className="py-4 text-right text-gray-500 uppercase font-mono">CAK Tanks</td>
+                               </tr>
                             </tbody>
                          </table>
                       </div>

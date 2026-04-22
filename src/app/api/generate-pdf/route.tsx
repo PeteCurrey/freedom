@@ -65,7 +65,13 @@ export async function POST(req: Request) {
         bom
     };
 
-    const stream = await renderToStream(<BlueprintPDF data={planData} />);
+    const stream = await renderToStream(
+      <BlueprintPDF
+        buildId={planData.buildId}
+        vehicleName={planData.vehicleName}
+        bom={planData.bom}
+      />
+    );
     
     const chunks: Uint8Array[] = [];
     for await (const chunk of stream as any) {
