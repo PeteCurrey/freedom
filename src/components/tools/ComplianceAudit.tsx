@@ -109,7 +109,10 @@ export default function ComplianceAudit() {
   const [isSaving, setIsSaving] = useState(false);
   const [authStatus, setAuthStatus] = useState<'loading' | 'unauthenticated' | 'authenticated'>('loading');
 
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
+    setIsMounted(true);
     async function loadAudit() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -361,30 +364,32 @@ export default function ComplianceAudit() {
             </div>
 
             <div className="w-full space-y-6">
-               <PDFDownloadLink
-                 document={
-                   <ComplianceReport 
-                     projectName={projectName}
-                     auditItems={AUDIT_DATA}
-                     checkedIds={checkedIds}
-                     score={auditStats.score}
-                     isCompliant={auditStats.isCompliant}
-                   />
-                 }
-                 fileName={`Freedom_Compliance_${projectName.replace(/\s+/g, '_')}.pdf`}
-                 className={cn(
-                   "w-full flex items-center justify-center gap-4 py-6 font-display text-xs uppercase tracking-widest transition-all",
-                   "bg-white text-brand-obsidian hover:bg-brand-orange hover:text-white"
-                 )}
-               >
-                 {/* @ts-ignore */}
-                 {({ loading }) => (
-                   <>
-                     {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                     Download Technical Manifest
-                   </>
-                 )}
-               </PDFDownloadLink>
+               {isMounted && (
+                 <PDFDownloadLink
+                   document={
+                     <ComplianceReport 
+                       projectName={projectName}
+                       auditItems={AUDIT_DATA}
+                       checkedIds={checkedIds}
+                       score={auditStats.score}
+                       isCompliant={auditStats.isCompliant}
+                     />
+                   }
+                   fileName={`Freedom_Compliance_${projectName.replace(/\s+/g, '_')}.pdf`}
+                   className={cn(
+                     "w-full flex items-center justify-center gap-4 py-6 font-display text-xs uppercase tracking-widest transition-all",
+                     "bg-white text-brand-obsidian hover:bg-brand-orange hover:text-white"
+                   )}
+                 >
+                   {/* @ts-ignore */}
+                   {({ loading }) => (
+                     <>
+                       {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                       Download Technical Manifest
+                     </>
+                   )}
+                 </PDFDownloadLink>
+               )}
 
                <div className="p-8 border-l-4 border-brand-orange bg-brand-obsidian/50 space-y-4 w-full">
                   <div className="flex items-center gap-3">
