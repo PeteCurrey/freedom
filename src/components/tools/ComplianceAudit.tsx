@@ -15,7 +15,9 @@ import {
   Save,
   Download,
   Loader2,
-  Lock
+  Lock,
+  Zap,
+  Activity
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";

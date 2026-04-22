@@ -62,7 +62,7 @@ export async function GET(req: Request) {
         template: activeTemplate,
         buildData: build,
         vehicleData: vehicle
-      })
+      }) as any
     );
 
     // 5. Return PDF as response

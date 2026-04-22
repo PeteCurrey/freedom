@@ -16,12 +16,13 @@ import {
   ChevronRight, ArrowLeft, ArrowRight, Download, Eye,
   Wind, Flame, Loader2, Layout, AlertTriangle,
   Sun, Shield, Sparkles, Settings, Info,
-  Search, Package, Monitor
+  Search, Package, Monitor, Activity
 } from "lucide-react";
 import Image from "next/image";
 import { vehicleData } from "@/lib/data/vehicles";
 import { systemManifests } from "@/lib/data/manifests";
 import { TechnicalBOM } from '@/components/planner/TechnicalBOM';
+import { BuildAdvisor } from "@/components/chat/BuildAdvisor";
 
 // --- CONFIGURATION DATA ---
 
@@ -195,7 +196,10 @@ export default function BuildPlanner() {
     let moment = 0; // kg*m relative to front axle
     
     const vehicle = vehicleData[selections.vehicleId];
-    if (!vehicle) return { cost: 0, weight: 0, frontAxle: 0, rearAxle: 0, cog: 0 };
+    if (!vehicle) return { 
+      cost: 0, weight: 0, frontAxle: 0, rearAxle: 0, cog: 0, 
+      totalMass: 0, gvmOver: false, frontOver: false, rearOver: false 
+    };
 
     // Sum system tiers
     Object.entries(selections.systems).forEach(([key, tierId]) => {
@@ -389,16 +393,16 @@ export default function BuildPlanner() {
                             <span className="font-display text-2xl uppercase block mb-2">{v.name}</span>
                             <div className="flex items-center gap-4 text-brand-grey font-mono text-[9px] uppercase tracking-widest">
                               <div className="flex flex-wrap gap-2 mt-8">
-                                {v.configs.map(c => (
+                                {v.configurations.map(c => (
                                   <span 
-                                    key={c}
-                                    onClick={(e) => { e.stopPropagation(); setSelections({...selections, configId: c}) }}
+                                    key={c.label}
+                                    onClick={(e) => { e.stopPropagation(); setSelections({...selections, configId: c.label}) }}
                                     className={cn(
                                       "px-3 py-1.5 border text-[9px] font-mono tracking-widest cursor-pointer transition-all",
-                                      selections.configId === c ? "border-brand-orange text-brand-orange bg-brand-orange/10" : "border-brand-border text-brand-grey hover:border-brand-white"
+                                      selections.configId === c.label ? "border-brand-orange text-brand-orange bg-brand-orange/10" : "border-brand-border text-brand-grey hover:border-brand-white"
                                     )}
                                   >
-                                    {c}
+                                    {c.label}
                                   </span>
                                 ))}
                               </div>
@@ -417,19 +421,19 @@ export default function BuildPlanner() {
                         <p className="font-sans text-brand-grey text-lg">Define the physical footprint of your conversion.</p>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {vehicleFoundations.find(v => v.id === selections.vehicleId)?.configs.map(c => (
+                        {Object.entries(vehicleData).find(([id]) => id === selections.vehicleId)?.[1].configurations.map(c => (
                           <button
-                            key={c}
-                            onClick={() => setSelections({...selections, configId: c})}
+                            key={c.label}
+                            onClick={() => setSelections({...selections, configId: c.label})}
                             className={cn(
                               "p-10 blueprint-border text-center transition-all bg-brand-obsidian/50",
-                              selections.configId === c ? "bg-brand-orange/10 border-brand-orange shadow-lg" : "border-brand-border/30 hover:border-brand-grey"
+                              selections.configId === c.label ? "bg-brand-orange/10 border-brand-orange shadow-lg" : "border-brand-border/30 hover:border-brand-grey"
                             )}
                           >
                              <div className="w-12 h-12 bg-brand-obsidian border border-brand-border flex items-center justify-center mx-auto mb-6 text-brand-grey group-hover:text-brand-orange transition-colors">
                                 <Layout className="w-6 h-6" />
                              </div>
-                             <span className="font-display text-2xl uppercase block mb-2">{c}</span>
+                             <span className="font-display text-2xl uppercase block mb-2">{c.label}</span>
                              <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Optimised Plot</span>
                           </button>
                         ))}
@@ -609,7 +613,7 @@ export default function BuildPlanner() {
                              "font-display text-3xl uppercase",
                              payloadUsagePercent > 100 ? "text-red-500" : "text-brand-orange"
                            )}>
-                             {totals.weight}kg / {payloadLimit}kg
+                             {totals.weight}kg / {selectedVehicle?.gvm || 0}kg
                            </span>
                         </div>
                       </div>
@@ -864,7 +868,7 @@ export default function BuildPlanner() {
                         </div>
                         <PDFExportPortal 
                           data={{
-                            vehicleName: vehicle?.name || "Unknown Chassis",
+                            vehicleName: selectedVehicle?.name || "Unknown Chassis",
                             configId: selections.configId,
                             buildId: clientBuildId || "PENDING",
                             tier: "Freedom Blueprint",
@@ -906,7 +910,7 @@ export default function BuildPlanner() {
       {/* AI Configurator Contextual Integration */}
       <BuildAdvisor 
         context={{
-          vehicle: vehicle?.name,
+          vehicle: selectedVehicle?.name,
           layout: layoutTemplates.find(l => l.id === selections.layoutId)?.name,
           systems: selections.systems,
           weight: totals.weight,
