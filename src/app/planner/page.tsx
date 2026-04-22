@@ -388,19 +388,20 @@ export default function BuildPlanner() {
                           >
                             <span className="font-display text-2xl uppercase block mb-2">{v.name}</span>
                             <div className="flex items-center gap-4 text-brand-grey font-mono text-[9px] uppercase tracking-widest">
-                            <div className="flex flex-wrap gap-2 mt-8">
-                              {v.configs.map(c => (
-                                <span 
-                                  key={c}
-                                  onClick={(e) => { e.stopPropagation(); setSelections({...selections, configId: c}) }}
-                                  className={cn(
-                                    "px-3 py-1.5 border text-[9px] font-mono tracking-widest cursor-pointer transition-all",
-                                    selections.configId === c ? "border-brand-orange text-brand-orange bg-brand-orange/10" : "border-brand-border text-brand-grey hover:border-brand-white"
-                                  )}
-                                >
-                                  {c}
-                                </span>
-                              ))}
+                              <div className="flex flex-wrap gap-2 mt-8">
+                                {v.configs.map(c => (
+                                  <span 
+                                    key={c}
+                                    onClick={(e) => { e.stopPropagation(); setSelections({...selections, configId: c}) }}
+                                    className={cn(
+                                      "px-3 py-1.5 border text-[9px] font-mono tracking-widest cursor-pointer transition-all",
+                                      selections.configId === c ? "border-brand-orange text-brand-orange bg-brand-orange/10" : "border-brand-border text-brand-grey hover:border-brand-white"
+                                    )}
+                                  >
+                                    {c}
+                                  </span>
+                                ))}
+                              </div>
                             </div>
                           </button>
                         ))}
