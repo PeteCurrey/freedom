@@ -83,7 +83,7 @@ const PDFExportPortal: React.FC<PDFExportPortalProps> = ({ data }) => {
         fileName={`Amplios-Blueprint-${data.buildId}.pdf`}
         className="w-full"
       >
-        {({ blob, url, loading, error }) => (
+        {(({ loading }: { loading: boolean }) => (
           <button
             disabled={loading}
             className={cn(
@@ -105,7 +105,7 @@ const PDFExportPortal: React.FC<PDFExportPortalProps> = ({ data }) => {
               </>
             )}
           </button>
-        )}
+        )) as any}
       </PDFDownloadLink>
 
       <div className="mt-4 flex items-center justify-center gap-6 font-mono text-[8px] text-brand-grey uppercase tracking-widest">

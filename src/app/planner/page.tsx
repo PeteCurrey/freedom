@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SVGSchematic, SystemTier } from "@/components/planner/SVGSchematic";
@@ -16,7 +17,7 @@ import {
   ChevronRight, ArrowLeft, ArrowRight, Download, Eye,
   Wind, Flame, Loader2, Layout, AlertTriangle,
   Sun, Shield, Sparkles, Settings, Info,
-  Search, Package, Monitor, Activity
+  Search, Package, Monitor, Activity, Crown
 } from "lucide-react";
 import Image from "next/image";
 import { vehicleData } from "@/lib/data/vehicles";
@@ -891,6 +892,49 @@ export default function BuildPlanner() {
                             )
                           }} 
                         />
+
+                        {/* Product / Kit Recommendations */}
+                        <div className="pt-8 space-y-4">
+                           <div className="flex items-center justify-between">
+                             <h4 className="font-display text-sm uppercase tracking-widest text-brand-white">Recommended Build Kits</h4>
+                             <Link href="/store" className="font-mono text-[8px] uppercase tracking-widest text-brand-orange hover:text-white transition-colors">Shop All Kits</Link>
+                           </div>
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             {/* Mock Recommended Kits based on selections */}
+                             <Link href="/store/kits/victron-electrical-bundle" className="p-4 bg-brand-obsidian border border-brand-border hover:border-brand-orange transition-all flex flex-col gap-3 group">
+                               <div className="flex justify-between items-start">
+                                 <span className="font-mono text-[8px] uppercase tracking-widest text-brand-grey bg-brand-carbon px-2 py-1">Electrical System</span>
+                                 <span className="font-mono text-[9px] text-green-500 uppercase">Save 15%</span>
+                               </div>
+                               <h5 className="font-display text-lg text-white group-hover:text-brand-orange transition-colors">Pro-Spec Victron Power Bundle</h5>
+                               <p className="font-sans text-[10px] text-brand-grey">Matches your calculated {totals.weight}kg payload profile.</p>
+                             </Link>
+                             <Link href="/store/kits/dometic-climate-bundle" className="p-4 bg-brand-obsidian border border-brand-border hover:border-brand-orange transition-all flex flex-col gap-3 group">
+                               <div className="flex justify-between items-start">
+                                 <span className="font-mono text-[8px] uppercase tracking-widest text-brand-grey bg-brand-carbon px-2 py-1">Climate System</span>
+                                 <span className="font-mono text-[9px] text-green-500 uppercase">Save 10%</span>
+                               </div>
+                               <h5 className="font-display text-lg text-white group-hover:text-brand-orange transition-colors">Dometic & Truma Comfort Kit</h5>
+                               <p className="font-sans text-[10px] text-brand-grey">Optimised for your {selectedVehicle?.name}.</p>
+                             </Link>
+                           </div>
+                        </div>
+
+                        {/* Membership Upgrade Prompt */}
+                        <div className="mt-8 p-6 border-2 border-brand-orange/30 bg-gradient-to-br from-brand-orange/10 to-transparent flex flex-col md:flex-row gap-6 items-center justify-between">
+                           <div className="space-y-2">
+                             <h4 className="font-display text-lg uppercase tracking-tight text-white flex items-center gap-2">
+                               <Crown className="w-5 h-5 text-brand-orange" /> Amplios PRO Membership
+                             </h4>
+                             <p className="font-sans text-[11px] text-brand-grey max-w-sm">
+                               Unlock unlimited saved builds, exclusive 3D CAD files, and an extra 5% off all build kits in the store.
+                             </p>
+                           </div>
+                           <Link href="/account/upgrade" className="px-6 py-3 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-colors whitespace-nowrap">
+                             Upgrade to PRO
+                           </Link>
+                        </div>
+
                       </div>
                     )}
                   </div>

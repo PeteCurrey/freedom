@@ -19,7 +19,10 @@ import {
   FileText,
   Sun,
   Moon,
-  Truck
+  Truck,
+  Crown,
+  Camera,
+  Map
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -36,8 +39,11 @@ const menuItems = [
   { name: "Content / CMS", href: "/admin/cms", icon: Monitor },
   { name: "Blueprint Templates", href: "/admin/blueprints", icon: FileText },
   { name: "User Admin", href: "/admin/users", icon: Users },
+  { name: "Memberships", href: "/admin/memberships", icon: Crown },
+  { name: "Showcase", href: "/admin/showcase", icon: Camera },
   { name: "API Settings", href: "/admin/settings", icon: Settings },
   { name: "My Profile", href: "/admin/profile", icon: UserCircle },
+  { name: "Roadmap", href: "/admin/roadmap", icon: Map },
 ];
 
 interface AdminSidebarProps {
