@@ -15,15 +15,17 @@ import { cn } from "@/lib/utils";
 export default function AdminDashboardPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
-  const [stats, setStats] = useState({ revenue: 0, orders: 0, products: 0, leads: 0 });
+  const [stats, setStats] = useState({ revenue: 0, orders: 0, products: 0, leads: 0, activeSubs: 0, mrr: 0, pendingShowcase: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
-      const [prodRes, orderRes, leadRes] = await Promise.all([
+      const [prodRes, orderRes, leadRes, subsRes, showcaseRes] = await Promise.all([
         supabase.from('products').select('*, product_categories(name)').order('created_at', { ascending: false }).limit(5),
         supabase.from('blueprint_purchases').select('*, build_plans(name)').order('created_at', { ascending: false }).limit(5),
-        supabase.from('leads').select('*', { count: 'exact' })
+        supabase.from('leads').select('*', { count: 'exact' }),
+        supabase.from('profiles').select('subscription_tier, subscription_status').eq('subscription_status', 'active'),
+        supabase.from('showcase_builds').select('*', { count: 'exact' }).eq('status', 'pending')
       ]);
 
       setProducts(prodRes.data || []);
@@ -34,11 +36,17 @@ export default function AdminDashboardPage() {
          return acc + (prices[curr.tier] || 0);
       }, 0);
 
+      const tierMRR: Record<string, number> = { pro: 9, elite: 19 };
+      const mrr = (subsRes.data || []).reduce((acc, s) => acc + (tierMRR[s.subscription_tier] || 0), 0);
+
       setStats({
         revenue: totalRev,
         orders: orderRes.data?.length || 0,
         products: prodRes.data?.length || 0,
-        leads: leadRes.count || 0
+        leads: leadRes.count || 0,
+        activeSubs: subsRes.data?.length || 0,
+        mrr,
+        pendingShowcase: showcaseRes.count || 0,
       });
       setLoading(false);
     }
@@ -57,12 +65,21 @@ export default function AdminDashboardPage() {
       ]
     },
     {
+      title: "Membership",
+      description: "Subscriptions & Community",
+      links: [
+        { name: "Member Plans", href: "/admin/memberships", icon: Users, color: "text-blue-500" },
+        { name: "Showcase Moderation", href: "/admin/showcase", icon: Monitor, color: "text-brand-orange" },
+        { name: "Roadmap & Ideas", href: "/admin/roadmap", icon: Globe, color: "text-purple-500" },
+      ]
+    },
+    {
       title: "Content & Build",
       description: "Editorial & Static Nodes",
       links: [
         { name: "Journal Library", href: "/admin/journal", icon: FileText, color: "text-brand-orange" },
         { name: "Blueprint Designer", href: "/admin/blueprints", icon: LayoutDashboard, color: "text-blue-500" },
-        { name: "Modular CMS", href: "/admin/cms", icon: Monitor, color: "text-purple-500" },
+        { name: "Build Kits", href: "/admin/store/kits", icon: Layers, color: "text-green-500" },
       ]
     },
     {
@@ -91,10 +108,14 @@ export default function AdminDashboardPage() {
       {/* Stats Summary Area */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
         {[
-          { label: "Lifetime Revenue", value: `£${stats.revenue}`, icon: TrendingUp, color: "text-green-500" },
+                { label: "Lifetime Blueprint Revenue", value: `£${stats.revenue}`, icon: TrendingUp, color: "text-green-500" },
           { label: "Active SKUs", value: stats.products, icon: ShoppingBag, color: "text-brand-orange" },
-          { label: "Total Leads", value: stats.leads, icon: Users, color: "text-blue-500" },
-          { label: "Sales Nodes", value: stats.orders, icon: CheckCircle, color: "text-brand-orange" },
+          { label: "Active Subscriptions", value: stats.activeSubs, icon: Users, color: "text-blue-500" },
+          { label: "Subscription MRR", value: `£${stats.mrr}/mo`, icon: CheckCircle, color: "text-brand-orange" },
+          { label: "Total Leads", value: stats.leads, icon: Database, color: "text-purple-500" },
+          { label: "Blueprint Sales", value: stats.orders, icon: Activity, color: "text-green-500" },
+          { label: "Pending Showcase", value: stats.pendingShowcase, icon: AlertCircle, color: stats.pendingShowcase > 0 ? "text-yellow-500" : "text-brand-grey" },
+          { label: "Build Kit SKUs", value: "Live", icon: Layers, color: "text-brand-orange" },
         ].map((stat, i) => (
           <div key={i} className="blueprint-border p-6 bg-brand-carbon/50 group hover:border-brand-orange transition-all">
             <div className="flex justify-between items-start mb-4">

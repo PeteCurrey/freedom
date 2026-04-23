@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { 
   User, Package, FileText, Settings, 
   ChevronRight, LogOut, ArrowRight, Activity, 
-  Download, ShoppingBag, Wrench
+  Download, ShoppingBag, Wrench, Crown, CreditCard, CheckCircle
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 
 export default function AccountDashboard() {
   const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
   const [plans, setPlans] = useState<any[]>([]);
   const [purchases, setPurchases] = useState<any[]>([]);
   const [builds, setBuilds] = useState<any[]>([]);
@@ -32,15 +33,17 @@ export default function AccountDashboard() {
       setUser(user);
       
       // Fetch user data
-      const [plansRes, purchasesRes, buildsRes] = await Promise.all([
+      const [plansRes, purchasesRes, buildsRes, profileRes] = await Promise.all([
         supabase.from('build_plans').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
         supabase.from('blueprint_purchases').select('*, build_plans(*)').eq('user_id', user.id).order('created_at', { ascending: false }),
-        supabase.from('showcase_builds').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
+        supabase.from('showcase_builds').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
+        supabase.from('profiles').select('*').eq('id', user.id).single()
       ]);
 
       setPlans(plansRes.data || []);
       setPurchases(purchasesRes.data || []);
       setBuilds(buildsRes.data || []);
+      setProfile(profileRes.data || null);
       setLoading(false);
     };
 
@@ -91,6 +94,7 @@ export default function AccountDashboard() {
                <nav className="space-y-1">
                   {[
                     { id: "plans", name: "My Build Plans", icon: Activity, count: plans.length },
+                    { id: "membership", name: "Membership", icon: Crown },
                     { id: "showcase", name: "My Showcase Builds", icon: Wrench, count: builds.length },
                     { id: "purchases", name: "Purchase History", icon: ShoppingBag, count: purchases.length },
                     { id: "settings", name: "Account Settings", icon: Settings },
@@ -112,6 +116,64 @@ export default function AccountDashboard() {
             {/* Main Dashboard */}
             <div className="lg:col-span-9 space-y-12">
                
+               {/* Membership Tab */}
+               {activeTab === "membership" && (
+                 <div>
+                   <h3 className="font-display text-3xl uppercase mb-8">Membership Status</h3>
+                   {profile?.subscription_tier && profile.subscription_tier !== 'free' ? (
+                     <div className="blueprint-border bg-brand-carbon p-8 space-y-8">
+                       <div className="flex items-center justify-between">
+                         <div className="flex items-center gap-4">
+                           <div className="w-14 h-14 bg-brand-orange/10 border border-brand-orange flex items-center justify-center">
+                             <Crown className="w-7 h-7 text-brand-orange" />
+                           </div>
+                           <div>
+                             <h4 className="font-display text-2xl uppercase">{profile.subscription_tier?.toUpperCase()} Member</h4>
+                             <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest mt-1">
+                               Status: <span className="text-green-400">{profile.subscription_status}</span>
+                             </p>
+                           </div>
+                         </div>
+                         <span className="bg-brand-orange text-white font-mono text-[8px] uppercase tracking-widest px-3 py-1">
+                           Active
+                         </span>
+                       </div>
+                       <div className="grid grid-cols-2 gap-6 pt-6 border-t border-brand-border">
+                         <div>
+                           <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-1">Renewal Date</p>
+                           <p className="font-display text-lg">
+                             {profile.current_period_end ? new Date(profile.current_period_end).toLocaleDateString('en-GB') : 'N/A'}
+                           </p>
+                         </div>
+                         <div>
+                           <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-1">Billing</p>
+                           <p className="font-display text-lg">{profile.cancel_at_period_end ? 'Cancels at period end' : 'Auto-renews'}</p>
+                         </div>
+                       </div>
+                       <div className="flex gap-4 pt-2">
+                         <a href="https://billing.stripe.com/p/login" target="_blank" rel="noopener noreferrer"
+                           className="px-6 py-3 border border-brand-border font-mono text-[10px] uppercase tracking-widest text-brand-grey hover:border-brand-orange hover:text-white transition-all flex items-center gap-2">
+                           <CreditCard className="w-4 h-4" /> Manage Billing
+                         </a>
+                       </div>
+                     </div>
+                   ) : (
+                     <div className="blueprint-border bg-brand-carbon p-10 flex flex-col items-center text-center gap-6">
+                       <Crown className="w-12 h-12 text-brand-orange/40" />
+                       <div>
+                         <h4 className="font-display text-2xl uppercase mb-2">Free Tier</h4>
+                         <p className="font-sans text-brand-grey text-sm max-w-sm">
+                           Upgrade to Pro or Elite to unlock unlimited saved builds, premium downloads, kit discounts, and more.
+                         </p>
+                       </div>
+                       <Link href="/account/upgrade" className="px-8 py-4 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2">
+                         <Crown className="w-4 h-4" /> Upgrade Membership
+                       </Link>
+                     </div>
+                   )}
+                 </div>
+               )}
+
                {/* Saved Plans */}
                {activeTab === "plans" && (
                  <div>
