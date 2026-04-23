@@ -23,6 +23,7 @@ import { vehicleData } from "@/lib/data/vehicles";
 import { systemManifests } from "@/lib/data/manifests";
 import { TechnicalBOM } from '@/components/planner/TechnicalBOM';
 import { BuildAdvisor } from "@/components/chat/BuildAdvisor";
+import { supabase } from "@/lib/supabase";
 
 // --- CONFIGURATION DATA ---
 
@@ -284,6 +285,18 @@ export default function BuildPlanner() {
     try {
       const planId = savedPlanId || await savePlan();
       if (!planId) throw new Error("Could not save build plan.");
+
+      // Developer Bypass: Auto-unlock for Pete
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.email === 'petecurrey@gmail.com' || user?.email === 'pete@avorria.com') {
+        console.log("Developer Bypass: Granting access to " + tier);
+        // We could manually insert a record into blueprint_purchases here if needed,
+        // but for testing the planner, just staying on the page and letting 
+        // PDFExportPortal handle the unlock is enough.
+        // However, let's redirect to a success-like state or just alert for now.
+        alert("Developer Access Granted: " + tier.toUpperCase());
+        return;
+      }
 
       const response = await fetch("/api/stripe/checkout-session", {
         method: "POST",
