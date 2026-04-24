@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Download, Lock, Loader2, Sparkles } from "lucide-react";
+import Link from "next/link";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { BlueprintPDF } from "@/components/blueprint/BlueprintPDF";
 import { supabase } from "@/lib/supabase";
+import { useMembership } from "@/hooks/useMembership";
 import { cn } from "@/lib/utils";
 
 interface PDFExportPortalProps {
@@ -19,21 +21,24 @@ interface PDFExportPortalProps {
 }
 
 const PDFExportPortal: React.FC<PDFExportPortalProps> = ({ data }) => {
-  const [isUnlocked, setIsUnlocked] = useState(false);
+  const { isPro, isAdmin, loading: membershipLoading } = useMembership();
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    async function checkAuth() {
+    async function getUser() {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
-      
-      // Developer Bypass: Auto-unlock for Pete
-      if (user?.email === 'petecurrey@gmail.com' || user?.email === 'pete@avorria.com') {
-        setIsUnlocked(true);
-      }
     }
-    checkAuth();
+    getUser();
   }, []);
+
+  const isUnlocked = isPro || isAdmin || user?.email === 'petecurrey@gmail.com' || user?.email === 'pete@avorria.com';
+
+  if (membershipLoading) {
+    return (
+      <div className="w-full h-12 bg-brand-obsidian/50 animate-pulse border border-brand-border/50" />
+    );
+  }
 
   if (!isUnlocked) {
     return (
@@ -43,13 +48,13 @@ const PDFExportPortal: React.FC<PDFExportPortalProps> = ({ data }) => {
            <span>Portfolio Locked</span>
         </div>
         <div className="flex items-center gap-4">
-           <span className="group-hover:text-brand-white transition-colors">Requires Master Tier Access</span>
-           <button 
-             onClick={() => setIsUnlocked(true)}
-             className="text-brand-orange hover:text-white flex items-center gap-1 bg-brand-orange/10 px-2 py-1 rounded"
+           <span className="hidden sm:inline opacity-50">Requires Pro Tier Access</span>
+           <Link 
+             href="/account/upgrade"
+             className="text-brand-orange hover:text-white flex items-center gap-2 bg-brand-orange/10 px-3 py-1.5 border border-brand-orange/30 hover:border-brand-orange transition-all"
            >
-             <Sparkles className="w-3 h-3" /> Dev Unlock
-           </button>
+             <Sparkles className="w-3 h-3" /> Upgrade to Pro
+           </Link>
         </div>
       </div>
     );

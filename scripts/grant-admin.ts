@@ -10,12 +10,7 @@ const supabase = createClient(
 );
 
 async function main() {
-  // Step 1: Add is_admin column if it doesn't exist (safe to run multiple times)
-  await supabase.rpc('exec_sql', {
-    sql: `ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS is_admin boolean DEFAULT false;`
-  }).catch(() => null); // ignore if rpc doesn't exist, we'll use raw SQL below
-
-  // Step 2: Find the user by email
+  // Find the user by email
   const email = 'petercurrey@me.com';
   const { data: users, error } = await supabase.auth.admin.listUsers();
   
