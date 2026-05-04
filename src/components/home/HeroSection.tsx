@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { MoveDown } from "lucide-react";
@@ -9,31 +9,14 @@ interface HeroSectionProps {
   title?: string;
   subtitle?: string;
   backgroundImage?: string;
-  backgroundImages?: string[];
 }
 
-const DEFAULT_IMAGES = [
-  "/images/hero-background.png",
-  "/images/community-showcase.png",
-  "/images/interior-showcase.png",
-  "/images/systems-showcase.png",
-];
-
-export function HeroSection({ title, subtitle, backgroundImage, backgroundImages }: HeroSectionProps) {
+export function HeroSection({ title, subtitle, backgroundImage = "/images/bespoke-sprinter.png" }: HeroSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-  const slidesRef = useRef<(HTMLDivElement | null)[]>([]);
-  
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  // Combine single backgroundImage with backgroundImages array, fallback to DEFAULT_IMAGES
-  const images = backgroundImages 
-    ? backgroundImages 
-    : backgroundImage 
-      ? [backgroundImage, ...DEFAULT_IMAGES.filter(img => img !== backgroundImage)]
-      : DEFAULT_IMAGES;
+  const bgRef = useRef<HTMLDivElement>(null);
 
   const displayTitle = title || "BUILD YOUR WORLD";
   const displaySubtitle = subtitle || "The UK's premier resource for serious off-grid motorhome builds. Guides. Gear. Community. Engineering.";
@@ -74,71 +57,35 @@ export function HeroSection({ title, subtitle, backgroundImage, backgroundImages
         { y: 0, opacity: 1 },
         "-=1.2"
       );
+
+      // 2. Cinematic Background Zoom (Ken Burns)
+      if (bgRef.current) {
+        gsap.fromTo(bgRef.current, 
+          { scale: 1 }, 
+          { scale: 1.1, duration: 20, ease: "none", repeat: -1, yoyo: true }
+        );
+      }
     }, containerRef);
 
-    // 2. Background Slideshow Loop
-    let slideInterval: NodeJS.Timeout;
-    
-    const startSlideshow = () => {
-      slideInterval = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % images.length);
-      }, 7000);
-    };
-
-    startSlideshow();
-
-    return () => {
-      ctx.revert();
-      clearInterval(slideInterval);
-    };
-  }, [displayTitle, images.length]);
-
-  // Handle slide transitions and Ken Burns effect
-  useEffect(() => {
-    slidesRef.current.forEach((slide, index) => {
-      if (!slide) return;
-      
-      if (index === currentSlide) {
-        // Fade in and start zoom
-        gsap.to(slide, {
-          opacity: 1,
-          duration: 2,
-          ease: "power2.inOut",
-        });
-        gsap.fromTo(slide, 
-          { scale: 1 }, 
-          { scale: 1.1, duration: 8, ease: "none" }
-        );
-      } else {
-        // Fade out
-        gsap.to(slide, {
-          opacity: 0,
-          duration: 2,
-          ease: "power2.inOut",
-        });
-      }
-    });
-  }, [currentSlide]);
+    return () => ctx.revert();
+  }, [displayTitle]);
 
   return (
     <section
       ref={containerRef}
       className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-brand-obsidian"
     >
-      {/* Background Slideshow (The "Video Loop" Effect) */}
+      {/* Background Layer */}
       <div className="absolute inset-0 z-0">
-        {images.map((img, i) => (
-          <div
-            key={img}
-            ref={(el) => { slidesRef.current[i] = el; }}
-            className="absolute inset-0 opacity-0 will-change-transform"
-            style={{ 
-              backgroundImage: `url(${img})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
-        ))}
+        <div
+          ref={bgRef}
+          className="absolute inset-0 will-change-transform grayscale-[0.2]"
+          style={{ 
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
         
         {/* Overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-brand-obsidian/40 via-transparent to-brand-obsidian z-10" />
@@ -192,4 +139,5 @@ export function HeroSection({ title, subtitle, backgroundImage, backgroundImages
     </section>
   );
 }
+
 

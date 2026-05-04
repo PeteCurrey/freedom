@@ -82,7 +82,7 @@ export default function Home() {
       <HeroSection 
         title={cmsConfig?.hero?.title} 
         subtitle={cmsConfig?.hero?.subtitle} 
-        backgroundImage={cmsConfig?.hero?.image} 
+        backgroundImage="/images/bespoke-sprinter.png" 
       />
 
       {/* Section 2 — Why We Exist */}
