@@ -210,7 +210,7 @@ export function Navbar() {
       <div className="container mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="group flex flex-col items-center w-fit mt-1">
-            <span className="font-display text-[26px] leading-none text-white tracking-[0.1em] flex items-end ml-[0.1em]">
+            <span className="font-display text-[26px] leading-none text-white tracking-[0.25em] flex items-end ml-[0.25em]">
               AMPLIOS<span className="text-brand-orange leading-[0.5] mb-[0.15em] -ml-1">.</span>
             </span>
             <span className="font-mono text-[8px] text-brand-grey tracking-[0.5em] pl-[0.5em] uppercase whitespace-nowrap w-full text-center mt-1.5">
