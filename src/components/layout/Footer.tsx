@@ -69,10 +69,18 @@ export function Footer() {
               conversions. Engineering excellence for the road ahead.
             </p>
             <div className="flex space-x-4">
-              {[Instagram, Facebook, Twitter, Youtube].map((Icon, i) => (
+              {[
+                { Icon: Instagram, href: "https://instagram.com/ampliosuk", label: "Amplios on Instagram" },
+                { Icon: Facebook, href: "https://facebook.com/ampliosuk", label: "Amplios on Facebook" },
+                { Icon: Twitter, href: "https://twitter.com/ampliosuk", label: "Amplios on X / Twitter" },
+                { Icon: Youtube, href: "https://youtube.com/ampliosuk", label: "Amplios on YouTube" },
+              ].map(({ Icon, href, label }) => (
                 <Link
-                  key={i}
-                  href="#"
+                  key={href}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
                   className="w-10 h-10 rounded-full border border-brand-border flex items-center justify-center text-brand-grey hover:text-brand-orange hover:border-brand-orange transition-all"
                 >
                   <Icon className="w-5 h-5" />

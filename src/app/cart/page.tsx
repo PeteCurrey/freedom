@@ -29,7 +29,7 @@ export default function CartPage() {
 
   useEffect(() => {
     setMounted(true);
-    const stored = localStorage.getItem("diym_cart");
+    const stored = localStorage.getItem("amplios_cart");
     if (stored) {
       try {
         setCartItems(JSON.parse(stored));
@@ -71,7 +71,7 @@ export default function CartPage() {
 
   const updateCart = (items: CartItem[]) => {
     setCartItems(items);
-    localStorage.setItem("diym_cart", JSON.stringify(items));
+    localStorage.setItem("amplios_cart", JSON.stringify(items));
     // Dispatch event so nav badge updates
     window.dispatchEvent(new Event("cart-updated"));
   };
@@ -89,7 +89,7 @@ export default function CartPage() {
 
   const applyPromo = () => {
     setPromoError("");
-    if (promoCode.toUpperCase() === "DIYM10") {
+    if (promoCode.toUpperCase() === "AMPLIOS10") {
       setPromoApplied(true);
     } else {
       setPromoError("Invalid or expired promo code.");
@@ -239,7 +239,7 @@ export default function CartPage() {
                         type="text"
                         value={promoCode}
                         onChange={(e) => { setPromoCode(e.target.value); setPromoError(""); }}
-                        placeholder="DIYM10"
+                        placeholder="AMPLIOS10"
                         className="flex-1 bg-brand-obsidian p-4 font-mono text-xs text-brand-white focus:outline-none placeholder:text-brand-grey/30"
                       />
                       <button

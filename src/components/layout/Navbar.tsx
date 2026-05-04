@@ -104,7 +104,7 @@ export function Navbar() {
 
   useEffect(() => {
     const updateCartCount = () => {
-      const stored = localStorage.getItem("diym_cart");
+      const stored = localStorage.getItem("amplios_cart");
       const cart = stored ? JSON.parse(stored) : [];
       const count = cart.reduce((acc: number, item: any) => acc + item.quantity, 0);
       setCartCount(count);
@@ -363,7 +363,7 @@ export function Navbar() {
             </p>
             <div className="flex space-x-6 text-[#F5F5F0]/60 text-sm">
               <Link href="/about">About</Link>
-              <Link href="/contact">Contact</Link>
+              <Link href="/about">Contact</Link>
               <Link href="/terms">Terms</Link>
             </div>
           </div>

@@ -24,7 +24,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
       return;
     }
 
-    const stored = localStorage.getItem("diym_cart");
+    const stored = localStorage.getItem("amplios_cart");
     const cart = stored ? JSON.parse(stored) : [];
 
     const existing = cart.find((item: any) => item.id === product.id);
@@ -42,7 +42,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
       });
     }
 
-    localStorage.setItem("diym_cart", JSON.stringify(cart));
+    localStorage.setItem("amplios_cart", JSON.stringify(cart));
     window.dispatchEvent(new Event("cart-updated"));
 
     setAdded(true);

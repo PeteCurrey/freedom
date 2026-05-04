@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { MoveDown } from "lucide-react";
@@ -9,26 +9,44 @@ interface HeroSectionProps {
   title?: string;
   subtitle?: string;
   backgroundImage?: string;
+  backgroundImages?: string[];
 }
 
-export function HeroSection({ title, subtitle, backgroundImage }: HeroSectionProps) {
+const DEFAULT_IMAGES = [
+  "/images/hero-background.png",
+  "/images/community-showcase.png",
+  "/images/interior-showcase.png",
+  "/images/systems-showcase.png",
+];
+
+export function HeroSection({ title, subtitle, backgroundImage, backgroundImages }: HeroSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
+  const slidesRef = useRef<(HTMLDivElement | null)[]>([]);
+  
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Combine single backgroundImage with backgroundImages array, fallback to DEFAULT_IMAGES
+  const images = backgroundImages 
+    ? backgroundImages 
+    : backgroundImage 
+      ? [backgroundImage, ...DEFAULT_IMAGES.filter(img => img !== backgroundImage)]
+      : DEFAULT_IMAGES;
 
   const displayTitle = title || "BUILD YOUR WORLD";
   const displaySubtitle = subtitle || "The UK's premier resource for serious off-grid motorhome builds. Guides. Gear. Community. Engineering.";
 
   useEffect(() => {
+    // 1. Text & UI Animations
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "expo.out", duration: 1.5 } });
 
-      // Heading staggered letters reveal
       if (headingRef.current) {
         const text = headingRef.current.innerText;
-        const chars = text.split("");
-        headingRef.current.innerHTML = chars
+        headingRef.current.innerHTML = text
+          .split("")
           .map((char) => `<span class="inline-block translate-y-[100%] opacity-0">${char === " " ? "&nbsp;" : char}</span>`)
           .join("");
 
@@ -43,7 +61,6 @@ export function HeroSection({ title, subtitle, backgroundImage }: HeroSectionPro
         );
       }
 
-      // Subheading & CTA fade up
       tl.fromTo(
         subRef.current,
         { y: 30, opacity: 0 },
@@ -59,30 +76,81 @@ export function HeroSection({ title, subtitle, backgroundImage }: HeroSectionPro
       );
     }, containerRef);
 
-    return () => ctx.revert();
-  }, [displayTitle]); // Re-run animation if title changes
+    // 2. Background Slideshow Loop
+    let slideInterval: NodeJS.Timeout;
+    
+    const startSlideshow = () => {
+      slideInterval = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % images.length);
+      }, 7000);
+    };
+
+    startSlideshow();
+
+    return () => {
+      ctx.revert();
+      clearInterval(slideInterval);
+    };
+  }, [displayTitle, images.length]);
+
+  // Handle slide transitions and Ken Burns effect
+  useEffect(() => {
+    slidesRef.current.forEach((slide, index) => {
+      if (!slide) return;
+      
+      if (index === currentSlide) {
+        // Fade in and start zoom
+        gsap.to(slide, {
+          opacity: 1,
+          duration: 2,
+          ease: "power2.inOut",
+        });
+        gsap.fromTo(slide, 
+          { scale: 1 }, 
+          { scale: 1.1, duration: 8, ease: "none" }
+        );
+      } else {
+        // Fade out
+        gsap.to(slide, {
+          opacity: 0,
+          duration: 2,
+          ease: "power2.inOut",
+        });
+      }
+    });
+  }, [currentSlide]);
 
   return (
     <section
       ref={containerRef}
-      className="relative h-screen w-full flex items-center justify-center overflow-hidden"
+      className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-brand-obsidian"
     >
-      {/* Background Video / Overlay */}
+      {/* Background Slideshow (The "Video Loop" Effect) */}
       <div className="absolute inset-0 z-0">
-        <img
-          src={backgroundImage || "/images/hero-background.png"}
-          alt="Luxury off-grid adventure motorhome at dusk"
-          className="h-full w-full object-cover grayscale-[0.2]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-obsidian/40 via-transparent to-brand-obsidian" />
-        <div className="absolute inset-0 bg-brand-obsidian/20" />
+        {images.map((img, i) => (
+          <div
+            key={img}
+            ref={(el) => { slidesRef.current[i] = el; }}
+            className="absolute inset-0 opacity-0 will-change-transform"
+            style={{ 
+              backgroundImage: `url(${img})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+        ))}
+        
+        {/* Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-obsidian/40 via-transparent to-brand-obsidian z-10" />
+        <div className="absolute inset-0 bg-brand-obsidian/20 z-10" />
+        <div className="absolute inset-0 blueprint-grid opacity-10 z-10" />
       </div>
 
       {/* Content */}
-      <div className="container relative z-10 px-6 text-center">
+      <div className="container relative z-20 px-6 text-center">
         <h1
           ref={headingRef}
-          key={displayTitle} // Force re-mount for animation loop if title changes
+          key={displayTitle}
           className="font-display text-[9vw] lg:text-[7vw] leading-[0.8] tracking-tighter text-brand-white mb-8 whitespace-nowrap"
         >
           {displayTitle}
@@ -115,7 +183,7 @@ export function HeroSection({ title, subtitle, backgroundImage }: HeroSectionPro
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 animate-bounce opacity-40">
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 animate-bounce opacity-40 z-20">
         <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-grey rotate-90 origin-center mb-4">
           Scroll
         </span>
@@ -124,3 +192,4 @@ export function HeroSection({ title, subtitle, backgroundImage }: HeroSectionPro
     </section>
   );
 }
+
