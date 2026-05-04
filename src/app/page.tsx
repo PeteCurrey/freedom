@@ -27,6 +27,7 @@ interface System {
   slug: string;
   icon: React.ElementType;
   description: string;
+  image: string;
 }
 
 export default function Home() {
@@ -283,21 +284,37 @@ function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
 function SystemCard({ system }: { system: System }) {
   const Icon = system.icon;
   return (
-    <Link href={`/systems/${system.slug}`} className="group blueprint-border p-10 bg-brand-surface hover:bg-brand-graphite transition-all duration-500 hover:-translate-y-2">
-      <div className="flex items-center justify-between mb-12">
-        <div className="w-16 h-16 bg-brand-obsidian border border-brand-border flex items-center justify-center text-brand-orange group-hover:scale-110 transition-transform">
-          <Icon className="w-8 h-8" />
-        </div>
-        <div className="font-mono text-[10px] text-brand-grey">
-          0{system.index} /
-        </div>
+    <Link 
+      href={`/systems/${system.slug}`} 
+      className="group relative blueprint-border p-10 bg-brand-surface overflow-hidden transition-all duration-500 hover:-translate-y-2"
+    >
+      {/* Hover Background Image */}
+      <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+        <Image
+          src={system.image}
+          alt={system.name}
+          fill
+          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100"
+        />
+        <div className="absolute inset-0 bg-brand-obsidian/80 group-hover:bg-brand-obsidian/60 transition-colors" />
       </div>
-      <h3 className="font-display text-2xl mb-4">{system.name}</h3>
-      <p className="font-sans text-brand-grey text-sm leading-relaxed mb-6">
-        {system.description}
-      </p>
-      <div className="flex items-center text-brand-orange font-mono text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-        Explore Deep-Dive →
+
+      <div className="relative z-10">
+        <div className="flex items-center justify-between mb-12">
+          <div className="w-16 h-16 bg-brand-obsidian border border-brand-border flex items-center justify-center text-brand-orange group-hover:border-brand-orange transition-transform duration-500">
+            <Icon className="w-8 h-8" />
+          </div>
+          <div className="font-mono text-[10px] text-brand-grey group-hover:text-brand-orange transition-colors">
+            0{system.index} /
+          </div>
+        </div>
+        <h3 className="font-display text-2xl mb-4 group-hover:text-white transition-colors">{system.name}</h3>
+        <p className="font-sans text-brand-grey text-sm leading-relaxed mb-6 group-hover:text-brand-white/80 transition-colors">
+          {system.description}
+        </p>
+        <div className="flex items-center text-brand-orange font-mono text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+          Explore Deep-Dive →
+        </div>
       </div>
     </Link>
   );
@@ -315,12 +332,12 @@ const vehicles = [
 ];
 
 const systems = [
-  { index: 1, name: "ELECTRICAL & SOLAR", slug: "electrical-solar", icon: Zap, description: "Victron-powered off-grid power systems including Lithium monitoring and solar arrays." },
-  { index: 2, name: "HEATING & HOT WATER", slug: "heating-hot-water", icon: Thermometer, description: "Truma, Webasto and Eberspächer air and water heating solutions for all climates." },
-  { index: 3, name: "WATER & PLUMBING", slug: "water-plumbing", icon: Droplets, description: "Fresh and waste water management, pressurized systems and luxury wet-room design." },
-  { index: 4, name: "INSULATION & VENT", slug: "insulation-ventilation", icon: Layers, description: "Advanced insulation materials, sound deadening and MaxxAir ventilation systems." },
-  { index: 5, name: "GAS & LPG", slug: "gas-lpg", icon: Shield, description: "EIL certified gas lockers, underslung tanks and manifold distribution systems." },
-  { index: 6, name: "INTERIOR & FURNITURE", slug: "interior-furniture", icon: Layout, description: "Precision CNC cabinetry, lightweight birch ply and premium finishing materials." },
+  { index: 1, name: "ELECTRICAL & SOLAR", slug: "electrical-solar", icon: Zap, description: "Victron-powered off-grid power systems including Lithium monitoring and solar arrays.", image: "/images/tech-electrical.png" },
+  { index: 2, name: "HEATING & HOT WATER", slug: "heating-hot-water", icon: Thermometer, description: "Truma, Webasto and Eberspächer air and water heating solutions for all climates.", image: "/images/heating-system-technical.png" },
+  { index: 3, name: "WATER & PLUMBING", slug: "water-plumbing", icon: Droplets, description: "Fresh and waste water management, pressurized systems and luxury wet-room design.", image: "/images/tech-water.png" },
+  { index: 4, name: "INSULATION & VENT", slug: "insulation-ventilation", icon: Layers, description: "Advanced insulation materials, sound deadening and MaxxAir ventilation systems.", image: "/images/insulation-technical.png" },
+  { index: 5, name: "GAS & LPG", slug: "gas-lpg", icon: Shield, description: "EIL certified gas lockers, underslung tanks and manifold distribution systems.", image: "/images/gas-lpg-technical.png" },
+  { index: 6, name: "INTERIOR & FURNITURE", slug: "interior-furniture", icon: Layout, description: "Precision CNC cabinetry, lightweight birch ply and premium finishing materials.", image: "/images/tech-interior.png" },
 ];
 
 const featuredProducts = [
