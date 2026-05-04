@@ -287,8 +287,8 @@ export function Navbar() {
             href="/planner" 
             className="hidden xl:flex items-center gap-2 bg-brand-orange/10 border border-brand-orange/30 px-5 py-2 group/cta transition-all hover:bg-brand-orange"
           >
-            <span className="font-display text-[9px] uppercase tracking-widest text-brand-orange group-hover/cta:text-white transition-colors">Build Planner</span>
-            <ArrowRight className="w-3 h-3 text-brand-orange group-hover/cta:text-white transition-colors" />
+            <span className="font-display text-[9px] uppercase tracking-widest text-white group-hover/cta:text-white transition-colors">Build Planner</span>
+            <ArrowRight className="w-3 h-3 text-white group-hover/cta:text-white transition-colors" />
           </Link>
           <button className="hover:text-brand-orange transition-colors">
             <Search className="w-5 h-5" />
