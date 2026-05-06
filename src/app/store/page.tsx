@@ -41,12 +41,12 @@ export default async function StoreHub() {
   };
 
   const systems = [
-    { name: "Power Systems", slug: "power", image: "/images/electrical-technical.png", count: 42, links: "Inverters · Batteries · Solar" },
-    { name: "Climate Control", slug: "climate", image: "/images/heating-system-technical.png", count: 28, links: "Diesel heaters · Combi · Air con" },
-    { name: "Water & Plumbing", slug: "plumbing", image: "/images/water-plumbing-technical.png", count: 35, links: "Tanks · Pumps · Filtration" },
-    { name: "Insulation & Build", slug: "insulation", image: "/images/insulation-technical.png", count: 18, links: "Celotex · Dodo Mat · Vapour" },
-    { name: "Windows & Vent", slug: "windows-ventilation", image: "/images/insulation-technical.png", count: 12, links: "MaxxFan · Dometic S4 · Bonded" },
-    { name: "Exterior Equipment", slug: "exterior-accessories", image: "/images/exterior-equipment-technical.png", count: 24, links: "Awnings · Ladders · Tyres" },
+    { name: "Power Systems", slug: "electrical", image: "/images/cat-power.png", count: 42, links: "Inverters · Batteries · Solar" },
+    { name: "Climate Control", slug: "climate", image: "/images/cat-climate.png", count: 28, links: "Diesel heaters · Combi · Air con" },
+    { name: "Plumbing", slug: "plumbing", image: "/images/cat-water.png", count: 35, links: "Tanks · Pumps · Filtration" },
+    { name: "Insulation & Build", slug: "insulation", image: "/images/cat-insulation.png", count: 18, links: "Celotex · Dodo Mat · Vapour" },
+    { name: "Windows & Vent", slug: "windows-ventilation", image: "/images/sprinter.png", count: 12, links: "MaxxFan · Dometic S4 · Bonded" },
+    { name: "Exterior & Accessories", slug: "exterior-accessories", image: "/images/exterior-equipment-technical.png", count: 24, links: "Awnings · Ladders · Tyres" },
   ];
 
   return (
@@ -235,7 +235,7 @@ export default async function StoreHub() {
                 <span className="font-mono text-xs text-brand-grey uppercase leading-loose mb-8">MultiPlus-II · 400Ah LiFePO4 · 400W Solar</span>
                 <div className="mt-auto flex items-center justify-between pt-6 border-t border-brand-border">
                   <span className="font-display text-3xl">£3,450</span>
-                  <Link href="/store/kits/full-autonomy" className="font-mono text-[10px] uppercase text-white hover:text-brand-orange flex items-center gap-2">View Kit <ArrowRight size={14}/></Link>
+                  <Link href="/store/product/full-autonomy-electrical-kit" className="font-mono text-[10px] uppercase text-white hover:text-brand-orange flex items-center gap-2">View Kit <ArrowRight size={14}/></Link>
                 </div>
               </div>
             </div>
@@ -251,7 +251,7 @@ export default async function StoreHub() {
                 <span className="font-mono text-xs text-brand-grey uppercase leading-loose mb-8">Truma Combi 4E · CP Plus · Ducting Kit</span>
                 <div className="mt-auto flex items-center justify-between pt-6 border-t border-brand-border">
                   <span className="font-display text-3xl">£2,100</span>
-                  <Link href="/store/kits/four-season-climate" className="font-mono text-[10px] uppercase text-white hover:text-brand-orange flex items-center gap-2">View Kit <ArrowRight size={14}/></Link>
+                  <Link href="/store/product/four-season-climate-kit" className="font-mono text-[10px] uppercase text-white hover:text-brand-orange flex items-center gap-2">View Kit <ArrowRight size={14}/></Link>
                 </div>
               </div>
             </div>
@@ -267,7 +267,7 @@ export default async function StoreHub() {
                 <span className="font-mono text-xs text-brand-grey uppercase leading-loose mb-8">Whale Pump · 80L Fresh · Mixer Shower</span>
                 <div className="mt-auto flex items-center justify-between pt-6 border-t border-brand-border">
                   <span className="font-display text-3xl">£850</span>
-                  <Link href="/store/kits/premium-wetroom" className="font-mono text-[10px] uppercase text-white hover:text-brand-orange flex items-center gap-2">View Kit <ArrowRight size={14}/></Link>
+                  <Link href="/store/product/premium-wetroom-kit" className="font-mono text-[10px] uppercase text-white hover:text-brand-orange flex items-center gap-2">View Kit <ArrowRight size={14}/></Link>
                 </div>
               </div>
             </div>

@@ -62,10 +62,12 @@ const navLinks: NavLink[] = [
     href: "/store", 
     mega: true,
     items: [
-      { name: "Power Systems", href: "/store/power", tagline: "Victron, Lithium, Solar", image: "/images/systems-showcase.png" },
+      { name: "Power Systems", href: "/store/electrical", tagline: "Victron, Lithium, Solar", image: "/images/systems-showcase.png" },
       { name: "Climate Control", href: "/store/climate", tagline: "Heaters, AC, Fans", image: "/images/interior-showcase.png" },
       { name: "Plumbing", href: "/store/plumbing", tagline: "Tanks, Pumps, Filtration", image: "/images/hero-background.png" },
-      { name: "Hardware", href: "/store/hardware", tagline: "Fixings, Latches, Rails", image: "/images/sprinter.png" },
+      { name: "Insulation & Build", href: "/store/insulation", tagline: "The Foundation", image: "/images/cat-insulation.png" },
+      { name: "Windows & Vent", href: "/store/windows-ventilation", tagline: "Dometic, MaxxFan", image: "/images/sprinter.png" },
+      { name: "Exterior & Accessories", href: "/store/exterior-accessories", tagline: "Racks, Ladders, Awnings", image: "/images/exterior-equipment-technical.png" },
       { name: "Build Kits", href: "/store/kits", tagline: "Bundled System Packs", image: "/images/community-showcase.png" },
     ]
   },
@@ -139,14 +141,15 @@ export function Navbar() {
       ];
 
       const imageMap: Record<string, string> = {
-        'power-systems': '/images/cat-power.png',
-        'climate-control': '/images/cat-climate.png',
-        'water-plumbing': '/images/cat-water.png',
-        'insulation-build': '/images/cat-insulation.png',
+        'electrical': '/images/cat-power.png',
+        'climate': '/images/cat-climate.png',
+        'plumbing': '/images/cat-water.png',
+        'insulation': '/images/cat-insulation.png',
         'gas-lpg': '/images/cat-gas.png',
-        'interior-hardware': '/images/cat-interior.png',
-        'chassis-exterior': '/images/tech-water.png',
-        'security-monitoring': '/images/tech-electrical.png'
+        'interior-furniture': '/images/cat-interior.png',
+        'windows-ventilation': '/images/cat-windows.png',
+        'exterior-accessories': '/images/tech-water.png',
+        'kits': '/images/community-showcase.png'
       };
         
       if (data || EXPANSION_CATEGORIES) {
@@ -246,7 +249,7 @@ export function Navbar() {
                   hoveredNav === link.name ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
                 )}>
                   <div className="container mx-auto px-6 py-12">
-                    <div className="grid grid-cols-6 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
                       {link.items.map((item) => (
                         <Link 
                           key={item.name} 

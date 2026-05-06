@@ -103,13 +103,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const categorySlug = product.product_categories?.slug || "";
   const fallbackImage = fallbackImageMap[categorySlug] || "/images/hero-background.png";
 
+  // 4. Price and Fallback Logic
   const priceExVat = product.price_gbp / 1.2;
-
-  // "Works well with" static data for flagships
-  let worksWellWith: string[] = [];
-  if (slug === "victron-multiplus-3000") worksWellWith = ["SmartSolar MPPT", "SmartShunt", "Cerbo GX"];
-  else if (slug === "dometic-cfx3-55im") worksWellWith = ["Victron MultiPlus", "Fogstar Drift 200Ah battery"];
-  else if (slug === "truma-combi-4e-kit") worksWellWith = ["CP Plus iNet X upgrade", "Ducting kit", "Truma VarioHeat"];
 
   return (
     <main className="bg-brand-obsidian min-h-screen">
@@ -317,31 +312,42 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   </div>
                 )}
 
-                {/* Works Well With Section */}
-                {worksWellWith.length > 0 && (
-                  <div className="my-16 border-l-2 border-brand-orange pl-8 py-2">
-                    <h4 className="font-display text-xl uppercase mb-4 text-white">Works Well With</h4>
-                    <ul className="space-y-3">
-                      {worksWellWith.map(item => (
-                        <li key={item} className="flex items-center gap-3 font-mono text-sm text-brand-grey">
-                           <Plus className="w-4 h-4 text-brand-orange" /> {item}
-                        </li>
+                {/* Works Well With (Related Products) */}
+                {related && related.length > 0 && (
+                  <div className="my-24 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+                    <div className="flex items-center gap-4 mb-12">
+                      <div className="w-12 h-12 bg-brand-orange/10 flex items-center justify-center text-brand-orange rounded-full">
+                        <Plus className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <span className="font-mono text-[10px] text-brand-orange uppercase tracking-widest block">System Synergy</span>
+                        <h3 className="font-display text-3xl uppercase text-white">Works Well With</h3>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {related.slice(0, 4).map((item) => (
+                        <Link 
+                          key={item.id} 
+                          href={`/store/product/${item.slug}`}
+                          className="group/rel flex items-center gap-6 p-6 bg-brand-carbon/50 blueprint-border hover:bg-brand-carbon transition-all"
+                        >
+                          <div className="w-20 h-20 bg-brand-obsidian relative overflow-hidden flex items-center justify-center p-2">
+                            <img 
+                              src={item.images?.[0] || "/images/electrical-technical.png"} 
+                              className="w-full h-full object-contain grayscale group-hover/rel:grayscale-0 transition-all" 
+                            />
+                          </div>
+                          <div>
+                            <span className="block font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-1">{item.brand}</span>
+                            <span className="block font-display text-sm uppercase group-hover/rel:text-brand-orange transition-colors">{item.name}</span>
+                            <span className="block font-mono text-[10px] text-brand-orange mt-2">£{(item.price_gbp / 100).toLocaleString()}</span>
+                          </div>
+                        </Link>
                       ))}
-                    </ul>
+                    </div>
                   </div>
                 )}
-
-                <div className="my-16 blueprint-border p-12 bg-brand-obsidian/30 relative">
-                  <div className="absolute top-0 right-0 p-6 opacity-10"><Terminal size={64} /></div>
-                  <h3 className="font-display text-2xl uppercase mb-6 flex items-center gap-4 italic">
-                    <Info className="text-brand-orange" /> Technical Integration Note
-                  </h3>
-                  <p className="italic text-base">
-                    This {product.name} satisfies the safety requirements for RCD (Recreational Craft Directive) and BS EN standards. 
-                    Calculated for deployment within {product.system_tier?.replace(/-/g, ' ')} architecture. 
-                    Ensure all connections are torqued to manufacturer specifications.
-                  </p>
-                </div>
               </div>
             </div>
             
