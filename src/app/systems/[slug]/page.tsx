@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@supabase/supabase-js";
+import { ProductCard } from "@/components/store/ProductCard";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
@@ -46,6 +47,24 @@ export default async function SystemSlugPage({ params }: { params: Promise<{ slu
 
   const tiers = system.tiers || {};
   const mistakes = system.common_mistakes || [];
+
+  // Fetch 3 relevant products for CTA
+  let ctaProducts: any[] = [];
+  const { data: catData } = await supabaseAdmin
+    .from('product_categories')
+    .select('id')
+    .eq('slug', slug === 'electrical-solar' ? 'power' : slug === 'heating-hot-water' ? 'climate' : slug === 'water-plumbing' ? 'plumbing' : slug === 'interior-furniture' ? 'hardware' : slug)
+    .single();
+
+  if (catData) {
+     const { data: prods } = await supabaseAdmin
+       .from('products')
+       .select('*')
+       .eq('category_id', catData.id)
+       .eq('is_active', true)
+       .limit(4);
+     if (prods) ctaProducts = prods;
+  }
 
   return (
     <main className="bg-brand-obsidian">
@@ -202,14 +221,34 @@ export default async function SystemSlugPage({ params }: { params: Promise<{ slu
             <p className="font-sans text-brand-grey text-xl max-w-2xl mx-auto mb-16">
               Shop the exact same professional-grade components used in the blueprints. Tested, verified, and ready for your build.
             </p>
-            <div className="flex flex-col md:flex-row gap-6 justify-center">
-               <Link href="/store" className="bg-brand-orange px-12 py-5 font-display text-sm uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all">
+            <div className="flex flex-col md:flex-row gap-6 justify-center mb-24">
+               <Link href={`/store/${slug === 'electrical-solar' ? 'power' : slug === 'heating-hot-water' ? 'climate' : slug === 'water-plumbing' ? 'plumbing' : slug === 'interior-furniture' ? 'hardware' : slug}`} className="bg-brand-orange px-12 py-5 font-display text-sm uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all">
                   Visit the Online Store
                </Link>
                <Link href="/planner" className="blueprint-border px-12 py-5 font-display text-sm uppercase tracking-widest hover:bg-brand-orange transition-all">
                   Spec Your {system.name}
                </Link>
             </div>
+
+            {ctaProducts.length > 0 && (
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+                 {ctaProducts.map(p => (
+                   <ProductCard 
+                     key={p.id}
+                     id={p.id}
+                     name={p.name}
+                     brand={p.brand}
+                     price={p.price_gbp}
+                     compareAtPrice={p.compare_at_price}
+                     image={p.images?.[0] || p.image_url}
+                     slug={p.slug}
+                     specLine={p.spec_line}
+                     badge={p.badge}
+                     systemTier={p.system_tier}
+                   />
+                 ))}
+               </div>
+            )}
          </div>
       </section>
 

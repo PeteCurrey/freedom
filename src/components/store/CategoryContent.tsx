@@ -172,21 +172,23 @@ export function CategoryContent({ category, initialProducts, editorsPick }: Cate
         </div>
       </section>
 
-      {/* 2. ADVISOR STRIP */}
-      <div className="container mx-auto px-6 -mt-12 relative z-20">
-         <div className="blueprint-border p-8 bg-brand-carbon flex flex-col md:flex-row items-center justify-between gap-8 backdrop-blur-xl bg-opacity-90 shadow-2xl">
-            <div className="flex items-center gap-6">
-               <div className="w-12 h-12 bg-brand-orange/10 border border-brand-orange/30 flex items-center justify-center text-brand-orange rounded-full">
-                  <Icon className="w-6 h-6" />
-               </div>
-               <div>
-                  <span className="font-mono text-[9px] text-brand-orange uppercase tracking-widest block mb-1 font-bold">Expert Registry Advice</span>
-                  <p className="font-sans text-sm text-brand-grey italic">"{metadata.advice}"</p>
-               </div>
+      {/* 2. CONTEXTUAL GUIDE CTA */}
+      <div className="container mx-auto px-6 py-6 border-b border-brand-border/30">
+         <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 border border-brand-border/50 bg-brand-carbon/30">
+            <div className="flex items-center gap-4">
+               <Icon className="w-5 h-5 text-brand-orange" />
+               <span className="font-display text-lg uppercase">Not sure what you need?</span>
             </div>
-            <Link href="/planner" className="px-10 py-4 bg-brand-orange text-white font-display text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-obsidian transition-all shadow-xl shadow-brand-orange/20 whitespace-nowrap">
-               Initialize Build Planner →
-            </Link>
+            <div className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-widest text-brand-grey">
+               <Link href={`/systems/${category.slug}`} className="text-white hover:text-brand-orange underline underline-offset-4 transition-colors">
+                 Read our {category.name} guide
+               </Link>
+               <span className="opacity-50">or use the</span>
+               <Link href="/planner" className="text-white hover:text-brand-orange underline underline-offset-4 transition-colors">
+                 Build Planner
+               </Link>
+               <span className="opacity-50">to spec your exact setup</span>
+            </div>
          </div>
       </div>
 

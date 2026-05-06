@@ -91,7 +91,25 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     .contains('related_product_ids', [product.id])
     .limit(2);
 
+  // Cinematic Asset Map for Fallback Images
+  const fallbackImageMap: Record<string, string> = {
+    "power": "/images/electrical-technical.png",
+    "climate": "/images/heating-system-technical.png",
+    "plumbing": "/images/water-plumbing-technical.png",
+    "insulation": "/images/insulation-technical.png",
+    "hardware": "/images/interior-showcase.png",
+    "exterior-accessories": "/images/exterior-equipment-technical.png"
+  };
+  const categorySlug = product.product_categories?.slug || "";
+  const fallbackImage = fallbackImageMap[categorySlug] || "/images/hero-background.png";
+
   const priceExVat = product.price_gbp / 1.2;
+
+  // "Works well with" static data for flagships
+  let worksWellWith: string[] = [];
+  if (slug === "victron-multiplus-3000") worksWellWith = ["SmartSolar MPPT", "SmartShunt", "Cerbo GX"];
+  else if (slug === "dometic-cfx3-55im") worksWellWith = ["Victron MultiPlus", "Fogstar Drift 200Ah battery"];
+  else if (slug === "truma-combi-4e-kit") worksWellWith = ["CP Plus iNet X upgrade", "Ducting kit", "Truma VarioHeat"];
 
   return (
     <main className="bg-brand-obsidian min-h-screen">
@@ -117,7 +135,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <div className="aspect-[16/10] bg-brand-carbon blueprint-border relative overflow-hidden group">
                 <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
                 <Image 
-                  src={product.images?.[0] || "/images/hero-background.png"} 
+                  src={product.images?.[0] || fallbackImage} 
                   alt={product.name} 
                   fill 
                   className="object-contain p-12 transition-transform duration-700 group-hover:scale-105" 
@@ -286,7 +304,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                            src={product.video_url} 
                            controls 
                            className="w-full h-full relative z-10"
-                           poster={product.images?.[0]}
+                           poster={product.images?.[0] || fallbackImage}
                          />
                        )}
                     </div>
@@ -296,6 +314,20 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                          {product.video_description}
                       </p>
                     )}
+                  </div>
+                )}
+
+                {/* Works Well With Section */}
+                {worksWellWith.length > 0 && (
+                  <div className="my-16 border-l-2 border-brand-orange pl-8 py-2">
+                    <h4 className="font-display text-xl uppercase mb-4 text-white">Works Well With</h4>
+                    <ul className="space-y-3">
+                      {worksWellWith.map(item => (
+                        <li key={item} className="flex items-center gap-3 font-mono text-sm text-brand-grey">
+                           <Plus className="w-4 h-4 text-brand-orange" /> {item}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 )}
 
