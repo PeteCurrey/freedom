@@ -148,7 +148,7 @@ export function Navbar() {
         'gas-lpg': '/images/cat-gas.png',
         'interior-furniture': '/images/cat-interior.png',
         'windows-ventilation': '/images/cat-windows.png',
-        'exterior-accessories': '/images/tech-water.png',
+        'exterior-accessories': '/images/exterior-equipment-technical.png',
         'kits': '/images/community-showcase.png'
       };
         
