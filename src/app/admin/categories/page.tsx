@@ -23,7 +23,12 @@ export default function CategoriesPage() {
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
-  const [newCategory, setNewCategory] = useState({
+  const [newCategory, setNewCategory] = useState<{
+    name: string;
+    slug: string;
+    description: string;
+    parent_id: string | null;
+  }>({
     name: "",
     slug: "",
     description: "",

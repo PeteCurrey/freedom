@@ -15,7 +15,8 @@ import {
   Edit3,
   AlertCircle,
   Clock,
-  Sparkles
+  Sparkles,
+  CheckCircle2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
