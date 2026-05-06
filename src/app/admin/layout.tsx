@@ -99,7 +99,10 @@ export default function AdminLayout({
       isLightMode ? "admin-light bg-brand-obsidian" : "bg-brand-obsidian"
     )}>
       <AdminSidebar isLightMode={isLightMode} onToggleTheme={toggleTheme} />
-      <main data-lenis-prevent className="flex-1 overflow-y-auto overflow-x-hidden pt-6 custom-scrollbar text-brand-white">
+      <main data-lenis-prevent className={cn(
+        "flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar",
+        isLightMode ? "text-gray-900 bg-gray-50" : "text-brand-white bg-brand-obsidian pt-6"
+      )}>
         {children}
       </main>
     </div>
