@@ -35,7 +35,9 @@ import {
   Bell,
   Monitor,
   Layout,
-  ShoppingBag
+  ShoppingBag,
+  Link2,
+  MousePointerClick
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -54,22 +56,41 @@ const navGroups = [
     items: [
       { name: "Products", href: "/admin/products", icon: Package },
       { name: "Build Kits", href: "/admin/kits", icon: Box },
+      { name: "Categories", href: "/admin/categories", icon: Layers },
+      { name: "Brands", href: "/admin/brands", icon: Tag },
       { name: "Suppliers", href: "/admin/suppliers", icon: Truck },
+      { name: "Bulk Import", href: "/admin/products/import", icon: Upload },
+      { name: "Inventory", href: "/admin/inventory", icon: Receipt },
+    ]
+  },
+  {
+    label: "AFFILIATE",
+    items: [
+      { name: "Affiliate Products", href: "/admin/affiliate/products", icon: Link2 },
+      { name: "Market Links", href: "/admin/affiliate/market-links", icon: Share2 },
+      { name: "Affiliate Clicks", href: "/admin/affiliate/clicks", icon: MousePointerClick },
+    ]
+  },
+  {
+    label: "COMMERCE",
+    items: [
+      { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
+      { name: "Customers", href: "/admin/customers", icon: Users },
+      { name: "Discounts", href: "/admin/discounts", icon: Percent },
     ]
   },
   {
     label: "REVENUE HUB",
     items: [
       { name: "Build Plans", href: "/admin/build-plans", icon: Layout },
-      { name: "Quote Requests", href: "/admin/quote-requests", icon: Magnet },
-      { name: "PDF Orders", href: "/admin/pdf-orders", icon: Receipt },
-      { name: "Affiliate Clicks", href: "/admin/affiliate-clicks", icon: Share2 },
+      { name: "Quote Requests", href: "/admin/quotes", icon: Magnet },
+      { name: "PDF Orders", href: "/admin/pdf-orders", icon: FileText },
     ]
   },
   {
     label: "MARKETING",
     items: [
-      { name: "Channels", href: "/admin/channels", icon: ShoppingBag },
+      { name: "Channels", href: "/admin/channels", icon: Monitor },
       { name: "SEO Commander", href: "/admin/seo", icon: Search },
       { name: "Newsletter", href: "/admin/newsletter", icon: Mail },
       { name: "AI Studio", href: "/admin/ai-studio", icon: Sparkles },
@@ -78,8 +99,8 @@ const navGroups = [
   {
     label: "SYSTEM",
     items: [
-      { name: "Integrations", href: "/admin/settings/integrations", icon: Share2 },
-      { name: "Settings", href: "/admin/settings", icon: Settings },
+      { name: "Settings & Integrations", href: "/admin/settings", icon: Settings },
+      { name: "Team", href: "/admin/team", icon: Users },
     ]
   },
 ];

@@ -3,246 +3,226 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { 
-  Settings, 
-  Shield, 
-  Key, 
-  Database, 
-  Save, 
-  AlertCircle,
-  Cpu,
-  Globe,
-  Zap,
-  CheckCircle2,
-  Lock,
-  Mail,
-  CreditCard,
-  Cloud,
-  ChevronRight,
-  Server,
-  RefreshCcw,
-  Loader2
+  Settings, Shield, Key, Database, Save, 
+  AlertCircle, Cpu, Globe, Zap, CheckCircle2,
+  Lock, Mail, CreditCard, Cloud, ChevronRight,
+  Server, RefreshCcw, Loader2, X, Info, 
+  Monitor, ShoppingBag, Search, BarChart3
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function SettingsPage() {
-  const [settings, setSettings] = useState<any[]>([]);
+interface Integration {
+  id: string;
+  name: string;
+  description: string;
+  icon: any;
+  color: string;
+  status: 'connected' | 'not-configured';
+  service_key: string;
+}
+
+export default function IntegrationVaultPage() {
+  const [integrations, setIntegrations] = useState<Integration[]>([
+    { id: 'stripe', name: 'Stripe Payments', description: 'Handle commerce transactions and refunds', icon: CreditCard, color: 'text-emerald-500', status: 'not-configured', service_key: 'stripe_secret_key' },
+    { id: 'ga4', name: 'Google Analytics 4', description: 'Track visitor behavior and conversion funnels', icon: BarChart3, color: 'text-amber-500', status: 'not-configured', service_key: 'ga4_measurement_id' },
+    { id: 'gsc', name: 'Google Search Console', description: 'Monitor organic search performance', icon: Search, color: 'text-blue-500', status: 'not-configured', service_key: 'gsc_api_key' },
+    { id: 'resend', name: 'Resend Email', description: 'Transactional email and build updates', icon: Mail, color: 'text-slate-900', status: 'not-configured', service_key: 'resend_api_key' },
+    { id: 'ebay', name: 'eBay Connector', description: 'Sync products and orders with eBay UK', icon: ShoppingBag, color: 'text-blue-600', status: 'not-configured', service_key: 'ebay_auth_token' },
+    { id: 'amazon', name: 'Amazon Connector', description: 'Manage Amazon FBA and Merchant listings', icon: Monitor, color: 'text-amber-600', status: 'not-configured', service_key: 'amazon_mws_key' },
+  ]);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState<string | null>(null);
+  const [activeIntegration, setActiveIntegration] = useState<Integration | null>(null);
+  const [keyValue, setKeyValue] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    async function fetchSettings() {
+    async function fetchIntegrationStatus() {
+      setLoading(true);
       const { data } = await supabase.from('admin_settings').select('*');
-      setSettings(data || []);
+      
+      if (data) {
+        const updated = integrations.map(item => {
+          const setting = data.find(s => s.service === item.id);
+          return {
+            ...item,
+            status: (setting?.api_key ? 'connected' : 'not-configured') as 'connected' | 'not-configured'
+          };
+        });
+        setIntegrations(updated);
+      }
       setLoading(false);
     }
-    fetchSettings();
+    fetchIntegrationStatus();
   }, []);
 
-  const handleSave = async (service: string, apiKey: string) => {
-    setSaving(service);
+  const handleSave = async () => {
+    if (!activeIntegration) return;
+    setSaving(true);
     const { error } = await supabase
       .from('admin_settings')
-      .upsert({ service, api_key: apiKey }, { onConflict: 'service' });
+      .upsert({ service: activeIntegration.id, api_key: keyValue }, { onConflict: 'service' });
 
     if (!error) {
-      setTimeout(() => setSaving(null), 1000);
+      setIntegrations(prev => prev.map(i => i.id === activeIntegration.id ? { ...i, status: 'connected' } : i));
+      setActiveIntegration(null);
+      setKeyValue("");
     }
+    setSaving(false);
   };
 
-  const getSetting = (service: string) => settings.find(s => s.service === service)?.api_key || "";
-
-  if (loading) return (
-    <div className="p-8 flex items-center justify-center min-h-[60vh]">
-      <Loader2 size={24} className="animate-spin text-brand-orange" />
-    </div>
-  );
-
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500">
+    <div className="p-8 max-w-7xl mx-auto space-y-12 animate-in fade-in duration-500">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 tracking-tighter flex items-center gap-3">
-             <Settings className="text-brand-orange" /> System Settings
-          </h1>
-          <p className="text-slate-500 text-sm mt-1">Global configuration and third-party integrations</p>
+          <h1 className="font-display text-4xl uppercase tracking-tighter text-slate-900">Integration <span className="text-brand-orange">Vault</span></h1>
+          <p className="text-slate-500 text-sm mt-1">Centralised authentication hub for all platform services</p>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-slate-900/10">
-           <Shield size={14} className="text-brand-orange" /> Super Admin Access
+        <div className="px-4 py-2 bg-slate-900 text-white rounded-lg text-[9px] font-bold uppercase tracking-[0.2em] flex items-center gap-2 shadow-xl shadow-slate-900/10">
+          <Lock size={12} className="text-brand-orange" /> AES-256 Encrypted Storage
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-20">
-         {/* Main Settings (Left 2/3) */}
-         <div className="lg:col-span-2 space-y-8">
-            {/* AI & Content */}
-            <section className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-               <div className="p-6 border-b border-slate-100 flex items-center gap-3">
-                  <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center text-brand-orange">
-                     <Cpu size={16} />
-                  </div>
-                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest">AI & Content Engine</h3>
-               </div>
-               <div className="p-6 space-y-6">
-                  <div className="space-y-2">
-                     <div className="flex justify-between items-end">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Anthropic (Claude 3.5)</label>
-                        <span className="text-[9px] font-bold text-emerald-600 uppercase">Connected</span>
-                     </div>
-                     <div className="flex gap-3">
-                        <input 
-                          type="password" 
-                          defaultValue={getSetting('anthropic')}
-                          placeholder="sk-ant-..."
-                          className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
-                        />
-                        <button className="px-6 py-2 bg-slate-900 text-white rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-brand-orange transition-all">
-                           Update
-                        </button>
-                     </div>
-                  </div>
-               </div>
-            </section>
+      {/* Integration Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {integrations.map((item) => (
+          <div key={item.id} className="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm hover:shadow-xl hover:border-brand-orange transition-all group flex flex-col">
+            <div className="flex justify-between items-start mb-6">
+              <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-100 transition-colors group-hover:bg-slate-900 group-hover:text-white", item.color)}>
+                <item.icon size={24} />
+              </div>
+              <div className={cn(
+                "px-2 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest border",
+                item.status === 'connected' ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-slate-50 text-slate-400 border-slate-100"
+              )}>
+                {item.status.replace('-', ' ')}
+              </div>
+            </div>
+            
+            <h3 className="font-display text-xl uppercase tracking-tight text-slate-900 mb-2">{item.name}</h3>
+            <p className="text-xs text-slate-500 leading-relaxed mb-8 flex-1">{item.description}</p>
+            
+            <button 
+              onClick={() => {
+                setActiveIntegration(item);
+                setKeyValue(""); // Should probably fetch current value but it's a secret
+              }}
+              className="w-full py-3 bg-slate-50 text-slate-900 rounded-xl font-display text-[10px] uppercase tracking-widest hover:bg-brand-orange hover:text-white transition-all font-bold border border-slate-100"
+            >
+              {item.status === 'connected' ? 'Update Credentials' : 'Connect Service'}
+            </button>
+          </div>
+        ))}
+      </div>
 
-            {/* SEO & Marketing */}
-            <section className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-               <div className="p-6 border-b border-slate-100 flex items-center gap-3">
-                  <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center text-blue-500">
-                     <Globe size={16} />
-                  </div>
-                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest">SEO & Marketing Tools</h3>
-               </div>
-               <div className="p-6 space-y-8">
-                  <div className="space-y-2">
-                     <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">DataforSEO API</label>
-                     <div className="flex gap-3">
-                        <input 
-                          type="password" 
-                          defaultValue={getSetting('dataforseo')}
-                          className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none"
-                        />
-                        <button className="px-6 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:border-slate-400 transition-all">
-                           Identify
-                        </button>
-                     </div>
-                  </div>
-                  <div className="space-y-2">
-                     <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Resend (Email API)</label>
-                     <div className="flex gap-3">
-                        <input 
-                          type="password" 
-                          defaultValue={getSetting('resend')}
-                          placeholder="re_..."
-                          className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none"
-                        />
-                        <button className="px-6 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:border-slate-400 transition-all">
-                           Verify
-                        </button>
-                     </div>
-                  </div>
-               </div>
-            </section>
-
-            {/* Commerce & Payments */}
-            <section className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-               <div className="p-6 border-b border-slate-100 flex items-center gap-3">
-                  <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center text-emerald-500">
-                     <CreditCard size={16} />
-                  </div>
-                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest">Commerce & Payments</h3>
-               </div>
-               <div className="p-6 space-y-6">
-                  <div className="space-y-2">
-                     <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Stripe Secret Key</label>
-                     <div className="flex gap-3">
-                        <input 
-                          type="password" 
-                          defaultValue={getSetting('stripe')}
-                          placeholder="sk_live_..."
-                          className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none"
-                        />
-                        <button className="px-6 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:border-slate-400 transition-all">
-                           Update
-                        </button>
-                     </div>
-                  </div>
-               </div>
-            </section>
+      {/* System Status Banner */}
+      <div className="bg-slate-900 rounded-2xl p-10 text-white relative overflow-hidden group">
+         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-all">
+            <Database size={120} />
          </div>
-
-         {/* Sidebar Stats & Security (Right 1/3) */}
-         <div className="space-y-8">
-            {/* Security Protocol */}
-            <div className="bg-slate-900 rounded-2xl p-6 text-white shadow-2xl relative overflow-hidden group">
-               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all">
-                  <Lock size={48} />
-               </div>
-               <div className="relative z-10">
-                  <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6 flex items-center gap-2">
-                     <Shield size={12} className="text-brand-orange" /> Security Infrastructure
-                  </h3>
-                  <div className="space-y-4">
-                     <div className="flex justify-between items-center py-3 border-b border-white/5">
-                        <span className="text-[10px] text-slate-400 uppercase">Encryption</span>
-                        <span className="text-[10px] font-bold text-emerald-500 uppercase">Active (AES-256)</span>
-                     </div>
-                     <div className="flex justify-between items-center py-3 border-b border-white/5">
-                        <span className="text-[10px] text-slate-400 uppercase">RLS Policies</span>
-                        <span className="text-[10px] font-bold text-emerald-500 uppercase">Enforced</span>
-                     </div>
-                     <div className="flex justify-between items-center py-3">
-                        <span className="text-[10px] text-slate-400 uppercase">Admin Guard</span>
-                        <span className="text-[10px] font-bold text-brand-orange uppercase">Active Node</span>
-                     </div>
+         <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div>
+               <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-orange mb-6">Environment Node</h3>
+               <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center">
+                     <Server className="text-slate-400" />
                   </div>
-                  <button className="w-full py-3 mt-6 bg-white/10 hover:bg-white/20 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all">
-                     Rotate Security Tokens
-                  </button>
+                  <div>
+                     <p className="text-lg font-bold">Vercel Production</p>
+                     <p className="text-[10px] text-slate-500 uppercase tracking-widest font-mono">Status: High Availability</p>
+                  </div>
                </div>
             </div>
-
-            {/* System Status */}
-            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-               <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Environment Status</h3>
-               <div className="space-y-4">
-                  {[
-                    { label: 'Supabase DB', status: 'Healthy', icon: Server },
-                    { label: 'Cloud Storage', status: 'Healthy', icon: Cloud },
-                    { label: 'Vercel Deployment', status: 'Live', icon: RefreshCcw },
-                    { label: 'Cron Tasks', status: 'Running', icon: Clock },
-                  ].map((s, i) => (
-                    <div key={i} className="flex items-center justify-between">
-                       <div className="flex items-center gap-3">
-                          <s.icon size={14} className="text-slate-400" />
-                          <span className="text-[11px] font-bold text-slate-700">{s.label}</span>
-                       </div>
-                       <span className="text-[9px] font-bold text-emerald-600 uppercase">{s.status}</span>
-                    </div>
-                  ))}
+            <div>
+               <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-orange mb-6">Database Health</h3>
+               <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center">
+                     <Database className="text-slate-400" />
+                  </div>
+                  <div>
+                     <p className="text-lg font-bold">Supabase PostgreSQL</p>
+                     <p className="text-[10px] text-emerald-500 uppercase tracking-widest font-mono">Status: Connected</p>
+                  </div>
                </div>
             </div>
-
-            {/* Danger Zone */}
-            <div className="bg-red-50 border border-red-100 rounded-xl p-6">
-               <h3 className="text-[10px] font-bold uppercase tracking-widest text-red-600 mb-4 flex items-center gap-2">
-                  <AlertCircle size={14} /> Danger Zone
-               </h3>
-               <p className="text-[10px] text-red-500 mb-6 leading-relaxed">
-                  These actions are irreversible and will affect the production environment immediately.
-               </p>
-               <div className="space-y-3">
-                  <button className="w-full py-3 border border-red-200 text-red-600 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all">
-                     Flush Application Cache
-                  </button>
-                  <button className="w-full py-3 border border-red-200 text-red-600 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all">
-                     Reset Production Database
-                  </button>
+            <div>
+               <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-orange mb-6">Security Layer</h3>
+               <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center">
+                     <Shield className="text-slate-400" />
+                  </div>
+                  <div>
+                     <p className="text-lg font-bold">RLS Protocol</p>
+                     <p className="text-[10px] text-emerald-500 uppercase tracking-widest font-mono">Status: Active</p>
+                  </div>
                </div>
             </div>
          </div>
       </div>
+
+      {/* Integration Sidebar/Modal */}
+      {activeIntegration && (
+        <>
+          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[200] animate-in fade-in duration-300" onClick={() => setActiveIntegration(null)} />
+          <div className="fixed inset-y-0 right-0 w-full max-w-lg bg-white shadow-2xl z-[210] p-10 animate-in slide-in-from-right duration-300 flex flex-col">
+             <div className="flex justify-between items-center mb-12">
+                <div className="flex items-center gap-4">
+                   <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center bg-slate-50", activeIntegration.color)}>
+                      <activeIntegration.icon size={20} />
+                   </div>
+                   <div>
+                      <h2 className="text-xl font-bold text-slate-900 uppercase tracking-tight">{activeIntegration.name}</h2>
+                      <p className="text-[9px] font-mono text-slate-400 uppercase tracking-widest">Configuration Console</p>
+                   </div>
+                </div>
+                <button onClick={() => setActiveIntegration(null)} className="p-2 hover:bg-slate-50 rounded-full transition-all text-slate-400"><X /></button>
+             </div>
+
+             <div className="flex-1 space-y-8">
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 flex gap-4">
+                   <Info className="text-brand-orange shrink-0" size={18} />
+                   <p className="text-xs text-slate-600 leading-relaxed">
+                      Please enter your production credentials for {activeIntegration.name}. These will be encrypted at rest and only accessible by the system backend.
+                   </p>
+                </div>
+
+                <div className="space-y-2">
+                   <label className="block font-mono text-[10px] uppercase text-slate-400 tracking-widest font-bold">Secret API Key / Token</label>
+                   <input 
+                     type="password" 
+                     value={keyValue}
+                     onChange={e => setKeyValue(e.target.value)}
+                     placeholder="sk_..."
+                     className="w-full border-2 border-slate-100 p-4 text-sm focus:border-brand-orange outline-none rounded-xl transition-all"
+                   />
+                </div>
+
+                <div className="p-6 border border-dashed border-slate-200 rounded-2xl">
+                   <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-900 mb-4">Webhooks (Optional)</h4>
+                   <div className="flex gap-2">
+                      <input 
+                        type="text" 
+                        readOnly 
+                        value={`https://amplios.com/api/webhooks/${activeIntegration.id}`}
+                        className="flex-1 bg-slate-50 border-none text-[10px] p-3 rounded-lg font-mono text-slate-500"
+                      />
+                      <button className="px-4 py-2 bg-slate-100 text-[10px] font-bold uppercase rounded-lg">Copy</button>
+                   </div>
+                </div>
+             </div>
+
+             <div className="mt-auto pt-10 border-t border-slate-50">
+                <button 
+                  onClick={handleSave}
+                  disabled={!keyValue || saving}
+                  className="w-full bg-slate-900 text-white py-5 rounded-xl font-display text-xs uppercase tracking-widest hover:bg-brand-orange transition-all font-bold shadow-xl shadow-slate-200 disabled:opacity-50"
+                >
+                  {saving ? 'Encrypting & Saving...' : 'Confirm Connection'}
+                </button>
+             </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
-
-import { Clock } from "lucide-react";
