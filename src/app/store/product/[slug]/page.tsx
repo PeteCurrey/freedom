@@ -127,15 +127,17 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
             {/* Gallery Panel */}
-            <div className="lg:col-span-12 xl:col-span-7 space-y-6">
-              <div className="aspect-square max-w-[600px] mx-auto bg-brand-carbon blueprint-border relative overflow-hidden group">
-                <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
+            <div className="lg:col-span-12 xl:col-span-7 space-y-8">
+              <div className="aspect-square max-w-[600px] mx-auto bg-white blueprint-border rounded-2xl relative overflow-hidden group shadow-2xl">
+                <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-10" />
                 <Image 
                   src={primaryImage} 
                   alt={product.name} 
                   fill 
                   className="object-contain p-12 transition-transform duration-700 group-hover:scale-105" 
+                  priority
                 />
+              </div>
                 
                 {/* Product Meta Badge */}
                 <div className="absolute top-8 left-8 flex flex-col gap-2">
