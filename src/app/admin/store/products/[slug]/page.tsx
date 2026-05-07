@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { use } from "react";
 
-import { updateProductAction } from "../actions";
+import { updateProductAction } from "../../actions";
 
 export default function EditProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const router = useRouter();
