@@ -77,7 +77,7 @@ const navLinks: NavLink[] = [
     mega: true,
     items: [
       { name: "Technical Guides", href: "/guides", tagline: "Engineering Library", image: "/images/hero-background.png" },
-      { name: "Build Journey", href: "/journey", tagline: "Track Your Node", image: "/images/sprinter.png" },
+      { name: "Control Centre", href: "/client-portal", tagline: "Manage Your Build", image: "/images/sprinter.png" },
       { name: "Document Library", href: "/resources", tagline: "Manuals & Specs", image: "/images/man-tge-hero.png" },
     ]
   },
@@ -106,10 +106,17 @@ export function Navbar() {
 
   useEffect(() => {
     const updateCartCount = () => {
-      const stored = localStorage.getItem("amplios_cart");
-      const cart = stored ? JSON.parse(stored) : [];
-      const count = cart.reduce((acc: number, item: any) => acc + item.quantity, 0);
-      setCartCount(count);
+      try {
+        const stored = localStorage.getItem("amplios-cart");
+        const cart = stored ? JSON.parse(stored) : [];
+        const count = Array.isArray(cart) 
+          ? cart.reduce((acc: number, item: any) => acc + (item.quantity || 0), 0)
+          : 0;
+        setCartCount(count);
+      } catch (error) {
+        console.error("Failed to parse cart count:", error);
+        setCartCount(0);
+      }
     };
     updateCartCount();
     window.addEventListener("cart-updated", updateCartCount);
@@ -271,11 +278,11 @@ export function Navbar() {
         {/* Utility Nav */}
         <div className="flex items-center space-x-6 text-brand-white/80">
           <Link 
-            href="/journey" 
+            href="/client-portal" 
             className="hidden lg:flex items-center gap-2 border border-brand-border px-5 py-2 group/journey transition-all hover:border-brand-orange"
           >
             <Shield className="w-3 h-3 text-brand-orange" />
-            <span className="font-display text-[9px] uppercase tracking-widest text-brand-grey group-hover/journey:text-white transition-colors">Track Build</span>
+            <span className="font-display text-[9px] uppercase tracking-widest text-brand-grey group-hover/journey:text-white transition-colors">Command Centre</span>
           </Link>
           <Link 
             href="/planner" 

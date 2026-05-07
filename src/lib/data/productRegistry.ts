@@ -2,7 +2,19 @@
 
 export type SupplierType = 'internal' | 'affiliate' | 'quote' | 'preOrder' | 'referral' | 'digital';
 export type PriceType = 'fixed' | 'from' | 'quote' | 'affiliate';
-export type InstallStage = 'Stage 1: Base vehicle prep' | 'Stage 2: Insulation' | 'Stage 3: First fix electrical' | 'Stage 4: Plumbing' | 'Stage 5: Heating' | 'Stage 6: Interior fit-out' | 'Stage 7: Finishing/compliance';
+export type InstallStage = 
+  | 'Stage 1: Planning & safety' 
+  | 'Stage 2: Vehicle preparation' 
+  | 'Stage 3: Insulation & sound deadening' 
+  | 'Stage 4: First fix electrical' 
+  | 'Stage 5: Solar & charging' 
+  | 'Stage 6: Heating & ventilation' 
+  | 'Stage 7: Water & plumbing' 
+  | 'Stage 8: Gas/cooking' 
+  | 'Stage 9: Interior fit-out' 
+  | 'Stage 10: Security & finishing' 
+  | 'Stage 11: Compliance review' 
+  | 'Stage 12: Final upgrades';
 
 export interface Product {
   id: string;
@@ -40,6 +52,76 @@ export interface Product {
   seoTitle?: string;
   seoDescription?: string;
   image?: string;
+}
+
+export type PurchaseStatus = 'not_purchased' | 'selected' | 'purchased' | 'already_owned' | 'quote_requested' | 'removed';
+export type RequiredStatus = 'required' | 'recommended' | 'optional';
+
+export interface BasketItem {
+  id: string;
+  productId: string;
+  buildPlanId: string;
+  stage: InstallStage;
+  stageOrder: number;
+  requiredStatus: RequiredStatus;
+  purchaseStatus: PurchaseStatus;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+  supplierType: SupplierType;
+  affiliateUrl?: string;
+  quoteRequired?: boolean;
+  reasonRecommended?: string;
+  alternativeProductIds?: string[];
+  complianceNotes?: string;
+}
+
+export interface BuildPlan {
+  id: string;
+  userId: string;
+  buildName: string;
+  vehicle: string;
+  wheelbase?: string;
+  roofHeight?: string;
+  usageType: string;
+  buildGoal: string;
+  offGridLevel: string;
+  budgetRange: string;
+  experienceLevel: string;
+  createdAt: string;
+  updatedAt: string;
+  status: 'planning' | 'in-progress' | 'completed';
+  progressPercentage: number;
+  currentStage: InstallStage;
+  estimatedTotalCost: number;
+  purchasedValue: number;
+  remainingValue: number;
+  payloadEstimateKg: number;
+  complianceFlags: string[];
+}
+
+export interface BuildBasket {
+  id: string;
+  buildPlanId: string;
+  lockedAt?: string;
+  totalValue: number;
+  items: BasketItem[];
+}
+
+export interface QuoteRequest {
+  id: string;
+  buildPlanId: string;
+  quoteType: string;
+  requestedItems: string[];
+  customerName: string;
+  email: string;
+  phone: string;
+  location?: string;
+  timeframe?: string;
+  notes?: string;
+  status: 'draft' | 'submitted' | 'awaiting_review' | 'quoted' | 'accepted' | 'declined' | 'expired';
+  createdAt: string;
+  updatedAt: string;
 }
 
 // Analytics Event Placeholders
@@ -80,9 +162,9 @@ export const CATEGORIES = [
 export const PRODUCTS: Product[] = [
   // --- ELECTRICAL CORE ---
   {
-    id: 'victron-multi-3000',
-    slug: 'victron-multiplus-ii-3000va-inverter-charger',
-    name: 'MultiPlus-II 12/3000/120-32 230V',
+    id: 'victron-multiplus-ii-12-3000-120-32',
+    slug: 'victron-multiplus-ii-12-3000-120-32',
+    name: 'MultiPlus-II 12/3000/120-32 230V Inverter/Charger',
     brand: 'Victron Energy',
     category: 'electrical-core',
     subcategory: 'Inverter Chargers',
@@ -90,15 +172,16 @@ export const PRODUCTS: Product[] = [
     priceType: 'fixed',
     supplierType: 'internal',
     stockStatus: 'in-stock',
-    shortDescription: 'The gold standard for vanlife power. Combined inverter and charger in one elegant package.',
-    keyFeatures: ['PowerControl', 'PowerAssist', 'UPS functionality', 'VE.Bus integration'],
+    shortDescription: 'The next generation of high-performance inverter/chargers. Professional-grade 3000VA pure sine wave inverter with integrated 120A adaptive charger and ultra-fast 32A transfer switch.',
+    longDescription: 'The MultiPlus-II combines the functions of the MultiPlus and the MultiGrid. It has all the features of the MultiPlus, plus an external current transformer option to implement PowerControl and PowerAssist and to optimize self-consumption with external current sensing (max. 32A). It also has all the features of the MultiGrid with built-in anti-islanding and an increasingly long list of country approvals.',
+    keyFeatures: ['PowerControl & PowerAssist', '32A Transfer Switch', 'Lithium Optimized Charging', 'Parallel & Three-Phase Operation', 'ESS Ready'],
     compatibleVehicles: ['all'],
-    compatibleBuildTypes: ['off-grid', 'full-time'],
+    compatibleBuildTypes: ['off-grid', 'full-time', 'expedition'],
     installDifficulty: 'advanced',
-    installStage: 'Stage 3: First fix electrical',
+    installStage: 'Stage 4: First fix electrical',
     payloadWeightKg: 18.0,
-    complianceNotes: 'Requires 230V certification by a qualified professional for insurance compliance.',
-    image: '/images/products/victron-multiplus.jpg'
+    complianceNotes: 'G98/G99 compliant. Requires 230V certification.',
+    image: '/images/products/victron-multiplus-ii-front.png'
   },
   {
     id: 'roamer-460',
@@ -117,7 +200,7 @@ export const PRODUCTS: Product[] = [
     compatibleVehicles: ['sprinter', 'crafter', 'tge', 'transit'],
     compatibleBuildTypes: ['off-grid', 'full-time'],
     installDifficulty: 'intermediate',
-    installStage: 'Stage 3: First fix electrical',
+    installStage: 'Stage 4: First fix electrical',
     payloadWeightKg: 42.0,
     image: '/images/products/roamer-460.jpg'
   },
@@ -139,7 +222,7 @@ export const PRODUCTS: Product[] = [
     compatibleVehicles: ['all'],
     compatibleBuildTypes: ['weekend', 'off-grid', 'full-time'],
     installDifficulty: 'intermediate',
-    installStage: 'Stage 2: Insulation',
+    installStage: 'Stage 5: Solar & charging',
     payloadWeightKg: 10.5,
     image: '/images/products/renogy-175.jpg'
   },
@@ -161,7 +244,7 @@ export const PRODUCTS: Product[] = [
     compatibleVehicles: ['all'],
     compatibleBuildTypes: ['all'],
     installDifficulty: 'advanced',
-    installStage: 'Stage 5: Heating',
+    installStage: 'Stage 6: Heating & ventilation',
     payloadWeightKg: 3.5,
     complianceNotes: 'Ensure fuel pick-up installation follows manufacturer guidelines to avoid warranty issues.',
     image: '/images/products/autoterm-2d.jpg'
@@ -184,7 +267,7 @@ export const PRODUCTS: Product[] = [
     compatibleVehicles: ['sprinter'],
     compatibleBuildTypes: ['full-time', 'off-grid'],
     installDifficulty: 'advanced',
-    installStage: 'Stage 3: First fix electrical',
+    installStage: 'Stage 4: First fix electrical',
     payloadWeightKg: 65.0,
     image: '/images/products/sprinter-kit.jpg'
   }

@@ -5,6 +5,7 @@ import { LenisProvider } from "@/components/layout/LenisProvider";
 import { GSAPInit } from "@/components/layout/GSAPInit";
 import { StructuredData, generateOrganizationSchema } from "@/components/seo/StructuredData";
 import { PromotionBanner } from "@/components/layout/PromotionBanner";
+import { BuildProvider } from "@/hooks/useBuild";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -65,7 +66,9 @@ export default function RootLayout({
         <StructuredData data={generateOrganizationSchema()} />
         <GSAPInit />
         <LenisProvider>
-          {children}
+          <BuildProvider>
+            {children}
+          </BuildProvider>
         </LenisProvider>
       </body>
     </html>

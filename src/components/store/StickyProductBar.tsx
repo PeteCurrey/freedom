@@ -39,7 +39,7 @@ export function StickyProductBar({ product }: StickyProductBarProps) {
       return;
     }
 
-    const stored = localStorage.getItem("amplios_cart");
+    const stored = localStorage.getItem("amplios-cart");
     let cart = stored ? JSON.parse(stored) : [];
     
     const existing = cart.find((item: any) => item.id === product.id);
@@ -57,7 +57,7 @@ export function StickyProductBar({ product }: StickyProductBarProps) {
       });
     }
     
-    localStorage.setItem("amplios_cart", JSON.stringify(cart));
+    localStorage.setItem("amplios-cart", JSON.stringify(cart));
     window.dispatchEvent(new Event("cart-updated"));
   };
 

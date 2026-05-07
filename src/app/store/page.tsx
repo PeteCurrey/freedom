@@ -47,7 +47,7 @@ export default function StoreHub() {
                 <p className="font-sans text-brand-grey text-base">Select a system category to view technical specifications and compatible hardware bundles.</p>
              </div>
              <div className="hidden lg:flex items-center gap-4">
-                <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">Total Registry Depth: 12 Hubs / 400+ SKUs</span>
+                 <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">Registry architecture expanding across 12 specialist build hubs.</span>
              </div>
           </div>
 

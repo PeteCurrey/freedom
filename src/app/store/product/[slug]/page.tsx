@@ -15,7 +15,7 @@ import { ProductHistoryTracker } from "@/components/store/ProductHistoryTracker"
 import { StickyProductBar } from "@/components/store/StickyProductBar";
 import { ProductTabs } from "@/components/store/ProductTabs";
 
-import { Metadata } from "next";
+import { PRODUCTS, getProductBySlug } from "@/lib/data/productRegistry";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
@@ -47,11 +47,27 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const { slug } = await params;
 
   // 1. Fetch main product details
-  const { data: product } = await supabaseAdmin
+  let { data: product } = await supabaseAdmin
     .from('products')
     .select('*, product_categories(name, slug)')
     .eq('slug', slug)
     .single();
+
+  // Fallback to local registry if DB fails or product not found
+  if (!product) {
+    const registryProduct = getProductBySlug(slug);
+    if (registryProduct) {
+      product = {
+        ...registryProduct,
+        price_gbp: registryProduct.price,
+        image_url: registryProduct.image,
+        product_categories: {
+          name: registryProduct.category.replace(/-/g, ' '),
+          slug: registryProduct.category
+        }
+      } as any;
+    }
+  }
 
   if (!product) {
     return (
@@ -106,7 +122,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const primaryImage = product.images?.[0] || fallbackImage;
 
   // 4. Price and Fallback Logic
-  const priceExVat = product.price_gbp / 1.2;
+  const priceExVat = Math.round(product.price_gbp / 1.2);
 
   return (
     <main className="bg-brand-obsidian min-h-screen">
@@ -176,15 +192,16 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 <p className="font-mono text-xs text-brand-orange uppercase tracking-[0.3em] mb-4">{product.brand}</p>
                 <h1 className="font-display text-4xl lg:text-5xl uppercase leading-[0.9] mb-8">{product.name}</h1>
                 
-                <div className="flex flex-col gap-2 mb-10">
-                  <div className="flex items-baseline gap-4">
-                    <span className="font-display text-5xl text-white">£{(product.price_gbp / 100).toLocaleString()}</span>
-                    <span className="font-mono text-[10px] text-brand-grey uppercase">inc. VAT</span>
+                  <div className="flex flex-col gap-2 mb-10">
+                    <div className="flex items-baseline gap-4">
+                      <span className="font-display text-5xl text-white">£{(product.price_gbp / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">inc. VAT</span>
+                    </div>
+                    <div className="font-mono text-xs text-brand-grey uppercase tracking-widest flex items-center gap-2">
+                      <span>£{(priceExVat / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span className="text-[10px] opacity-60">ex. VAT</span>
+                    </div>
                   </div>
-                  <div className="font-mono text-xs text-brand-grey uppercase tracking-widest">
-                    £{(priceExVat / 100).toFixed(2)} <span className="text-[10px] opacity-60">ex. VAT</span>
-                  </div>
-                </div>
 
                 <p className="font-sans text-brand-grey text-lg leading-relaxed mb-6">
                   {product.short_description || "High-performance component verified for professional building standards."}

@@ -5,57 +5,92 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { generateBuildBasket } from "@/lib/data/plannerRecommendations";
 import { PDF_TIERS, COMPLIANCE_WARNINGS } from "@/lib/data/pdfCompliance";
-import { getProductCTA } from "@/lib/data/productRegistry";
+import { getProductCTA, InstallStage, BasketItem } from "@/lib/data/productRegistry";
+import { useBuild } from "@/hooks/useBuild";
 import Link from "next/link";
 import { 
   CheckCircle2, AlertTriangle, ShieldAlert, FileText, 
   Settings, ArrowRight, Check, Package, Zap, ExternalLink,
-  Loader2, Info, Scale, Gauge, ShieldCheck, Download
+  Loader2, Info, Scale, Gauge, ShieldCheck, Download,
+  Lock, Save, ShoppingCart, User
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+const ALL_STAGES: InstallStage[] = [
+  'Stage 1: Planning & safety',
+  'Stage 2: Vehicle preparation',
+  'Stage 3: Insulation & sound deadening',
+  'Stage 4: First fix electrical',
+  'Stage 5: Solar & charging',
+  'Stage 6: Heating & ventilation',
+  'Stage 7: Water & plumbing',
+  'Stage 8: Gas/cooking',
+  'Stage 9: Interior fit-out',
+  'Stage 10: Security & finishing',
+  'Stage 11: Compliance review',
+  'Stage 12: Final upgrades'
+];
 
 export default function PlannerResultsPage() {
   const [mounted, setMounted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    notes: ''
-  });
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const { saveBuild } = useBuild();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Mock plan state - in production this would be fetched from DB or state management
   const basket = generateBuildBasket({ vehicleType: "Mercedes Sprinter L3H2" });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  const handleSaveBuild = () => {
+    const planId = crypto.randomUUID();
+    const plan = {
+      id: planId,
+      userId: 'user_123', // Mock
+      buildName: `My ${basket.summary.vehicleType} Build`,
+      vehicle: basket.summary.vehicleType,
+      usageType: 'Off-Grid / Full-Time',
+      buildGoal: 'High-End Engineering',
+      offGridLevel: 'Maximum',
+      budgetRange: '£15k - £25k',
+      experienceLevel: 'Intermediate',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      status: 'planning' as const,
+      progressPercentage: 5,
+      currentStage: 'Stage 1: Planning & safety' as InstallStage,
+      estimatedTotalCost: basket.summary.estimatedCost,
+      purchasedValue: 0,
+      remainingValue: basket.summary.estimatedCost,
+      payloadEstimateKg: basket.summary.estimatedPayloadImpactKg,
+      complianceFlags: basket.complianceFlags.map(f => f.title)
+    };
 
-  const handleQuoteSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      const response = await fetch('/api/quotes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, basket: basket.summary })
+    const items: BasketItem[] = [];
+    Object.entries(basket.basket).forEach(([stage, stageItems]) => {
+      stageItems.forEach((item: any) => {
+        items.push({
+          id: crypto.randomUUID(),
+          productId: item.product.id,
+          buildPlanId: planId,
+          stage: stage as InstallStage,
+          stageOrder: 0,
+          requiredStatus: 'required',
+          purchaseStatus: 'not_purchased',
+          quantity: item.quantity,
+          unitPrice: item.product.price,
+          totalPrice: item.product.price * item.quantity,
+          supplierType: item.product.supplierType,
+          reasonRecommended: item.whyRecommended
+        });
       });
-      const data = await response.json();
-      if (data.success) {
-        setSubmitSuccess(true);
-      }
-    } catch (err) {
-      alert("Submission failed. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    });
+
+    saveBuild(plan, items);
+    setSaveSuccess(true);
+    setTimeout(() => setSaveSuccess(false), 3000);
   };
 
   if (!mounted) return null;
@@ -70,10 +105,14 @@ export default function PlannerResultsPage() {
         <div className="container mx-auto px-6 relative z-10">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-12">
             <div>
-              <span className="font-mono text-[10px] text-brand-orange uppercase tracking-[0.2em] mb-4 block animate-pulse">// Technical Specification Generated</span>
+              <div className="flex items-center gap-3 mb-4">
+                 <span className="font-mono text-[10px] text-brand-orange uppercase tracking-[0.2em] animate-pulse">// Technical Specification Generated</span>
+                 <div className="h-px w-12 bg-brand-orange/30" />
+                 <span className="font-mono text-[10px] text-brand-grey uppercase tracking-[0.2em]">Revision 1.0.4</span>
+              </div>
               <h1 className="font-display text-5xl lg:text-8xl uppercase tracking-tighter mb-8 leading-none">Build <span className="text-brand-orange">Architecture</span></h1>
               <p className="font-sans text-brand-grey text-xl max-w-2xl leading-relaxed">
-                Personalized project pack for your <span className="text-white font-bold">{basket.summary.vehicleType}</span>. Every component has been selected for electrical parity and physical fitment.
+                Your build operating system is ready. This specification represents a fully optimized <span className="text-white font-bold">{basket.summary.vehicleType}</span> environment, engineered for maximum off-grid performance and long-term compliance.
               </p>
             </div>
             
@@ -107,7 +146,40 @@ export default function PlannerResultsPage() {
         </div>
       </section>
 
-      {/* 2. SYSTEM STACK SUMMARY */}
+      {/* 2. TRUST MESSAGING & FLEXIBILITY */}
+      <section className="py-12 bg-brand-orange/5 border-b border-brand-orange/20">
+         <div className="container mx-auto px-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+               <div className="flex items-center gap-6">
+                  <div className="w-12 h-12 rounded-full bg-brand-orange/10 flex items-center justify-center border border-brand-orange/20">
+                     <Lock className="text-brand-orange w-5 h-5" />
+                  </div>
+                  <div>
+                     <h4 className="font-display text-lg uppercase tracking-tight text-white">Locked Technical Specification</h4>
+                     <p className="font-sans text-brand-grey text-sm">Every component below is cross-referenced for electrical parity and structural fitment.</p>
+                  </div>
+               </div>
+               <div className="flex gap-4">
+                  <button 
+                    onClick={handleSaveBuild}
+                    className="px-8 py-3 bg-brand-orange text-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all shadow-xl font-bold flex items-center gap-2"
+                  >
+                    {saveSuccess ? <Check className="w-3 h-3" /> : <Save className="w-3 h-3" />}
+                    {saveSuccess ? "Build Saved" : "Save Build to Portal"}
+                  </button>
+                  <Link 
+                    href="/client-portal"
+                    className="px-8 py-3 border border-brand-border text-white font-mono text-[10px] uppercase tracking-widest hover:bg-brand-carbon transition-all font-bold flex items-center gap-2"
+                  >
+                    <User className="w-3 h-3" />
+                    Open Client Portal
+                  </Link>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      {/* 3. SYSTEM STACK SUMMARY */}
       <section className="py-20 border-b border-brand-border/40 bg-[#080808]">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-px bg-brand-border border border-brand-border">
@@ -121,203 +193,170 @@ export default function PlannerResultsPage() {
         </div>
       </section>
 
-      {/* 3. THE BUILD BOM (Grouped by Stage) */}
+      {/* 4. THE STAGED BUILD ROADMAP */}
       <section className="py-32 bg-brand-obsidian">
          <div className="container mx-auto px-6">
             <div className="flex flex-col lg:flex-row justify-between items-end mb-24 gap-8">
                <div className="max-w-2xl">
-                  <h2 className="font-display text-5xl lg:text-7xl uppercase tracking-tighter mb-6">The Build <span className="text-brand-orange">BOM</span></h2>
-                  <p className="font-sans text-brand-grey text-lg italic">"Every component below is cross-referenced for thermal stability and electrical parity within your specific vehicle platform."</p>
+                  <h2 className="font-display text-5xl lg:text-7xl uppercase tracking-tighter mb-6">Build <span className="text-brand-orange">Stages</span></h2>
+                  <p className="font-sans text-brand-grey text-lg leading-relaxed">
+                     A professional campervan build is a marathon, not a sprint. We have broken your build into 12 engineering phases. Buy what you need now, save the rest for later.
+                  </p>
                </div>
-               <div className="flex items-center gap-4 bg-brand-carbon border border-brand-border px-6 py-4">
-                  <Download className="w-4 h-4 text-brand-orange" />
-                  <span className="font-mono text-[10px] text-white uppercase tracking-widest">Export Bill of Materials (.CSV)</span>
+               <div className="flex flex-col items-end gap-4">
+                  <div className="flex items-center gap-4 bg-brand-carbon border border-brand-border px-6 py-4">
+                     <Download className="w-4 h-4 text-brand-orange" />
+                     <span className="font-mono text-[10px] text-white uppercase tracking-widest">Full Specification (.PDF)</span>
+                  </div>
+                  <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Revision: May 2026</p>
                </div>
             </div>
 
-            <div className="space-y-32">
-               {Object.entries(basket.basket).map(([stage, items]) => (
-                 <div key={stage} className="relative">
-                    <div className="sticky top-24 z-20 bg-brand-obsidian py-6 border-b border-brand-border flex justify-between items-end mb-12">
-                       <div className="flex items-center gap-6">
-                          <div className="w-3 h-10 bg-brand-orange" />
-                          <h3 className="font-display text-3xl uppercase tracking-widest">{stage}</h3>
-                       </div>
-                       <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Calculated Node Subtotal: <span className="text-white text-lg ml-2 font-bold">£{items.reduce((sum, i) => sum + (i.product.price * i.quantity), 0).toLocaleString()}</span></span>
-                    </div>
+            <div className="space-y-40">
+               {ALL_STAGES.map((stage) => {
+                 const items = basket.basket[stage] || [];
+                 const hasItems = items.length > 0;
+                 const stageTotal = items.reduce((sum, i: any) => sum + (i.product.price * i.quantity), 0);
 
-                    <div className="grid grid-cols-1 gap-px bg-brand-border border border-brand-border shadow-2xl">
-                       {items.map((item) => (
-                         <div key={item.product.id} className="bg-brand-carbon/30 p-10 flex flex-col lg:flex-row gap-12 group hover:bg-brand-carbon transition-all">
-                            <div className="w-full lg:w-56 aspect-square bg-brand-obsidian border border-brand-border p-8 flex items-center justify-center relative overflow-hidden">
-                               <div className="absolute inset-0 blueprint-grid opacity-5" />
-                               <Package className="w-16 h-16 text-brand-orange/10 group-hover:scale-110 transition-transform duration-700" />
-                               <div className="absolute top-4 left-4">
-                                  <span className="font-mono text-[8px] text-brand-orange/50 uppercase tracking-[0.2em]">{item.product.brand}</span>
-                               </div>
-                            </div>
-
-                            <div className="flex-1 space-y-6">
-                               <div className="flex items-center gap-4">
-                                  <span className="font-mono text-[9px] bg-brand-orange text-white px-3 py-1 uppercase tracking-widest font-bold">Required System Hardware</span>
-                                  <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest italic">// engineering justification</span>
-                               </div>
-                               <h4 className="font-display text-4xl uppercase tracking-tighter text-white">{item.product.name}</h4>
-                               <p className="font-sans text-base text-brand-grey leading-relaxed max-w-3xl border-l-2 border-brand-orange/30 pl-8 italic">
-                                  "{item.whyRecommended}"
-                               </p>
-                               <div className="flex flex-wrap gap-3">
-                                  <span className="font-mono text-[8px] border border-brand-border px-3 py-1.5 text-brand-grey uppercase tracking-widest">{item.product.payloadWeightKg}kg Payload</span>
-                                  <span className="font-mono text-[8px] border border-brand-border px-3 py-1.5 text-brand-grey uppercase tracking-widest">{item.product.installDifficulty} Install</span>
-                               </div>
-                            </div>
-
-                            <div className="lg:w-72 text-right flex flex-col justify-between items-end">
-                               <div className="text-right">
-                                  <span className="font-display text-4xl block text-white">£{item.product.price.toLocaleString()}</span>
-                                  <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest mt-1 block">Quantity: {item.quantity}</span>
-                               </div>
-                               <div className="w-full space-y-3 mt-8">
-                                  <button className="w-full bg-brand-white text-brand-obsidian font-display text-[10px] uppercase tracking-widest py-4 hover:bg-brand-orange hover:text-white transition-all font-bold">
-                                     {getProductCTA(item.product)}
-                                  </button>
-                                  {item.product.supplierType === 'affiliate' && (
-                                    <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest text-center block">Sold via {item.product.brand} Partner</span>
-                                  )}
-                               </div>
+                 return (
+                   <div key={stage} className={cn("relative", !hasItems && "opacity-40 grayscale")}>
+                      <div className="sticky top-24 z-20 bg-brand-obsidian/90 backdrop-blur-md py-6 border-b border-brand-border flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
+                         <div className="flex items-center gap-6">
+                            <div className={cn("w-3 h-10", hasItems ? "bg-brand-orange" : "bg-brand-grey")} />
+                            <div>
+                               <h3 className="font-display text-3xl uppercase tracking-widest">{stage}</h3>
+                               {!hasItems && <span className="font-mono text-[8px] text-brand-orange uppercase tracking-widest mt-1 block">No products currently required for this phase</span>}
                             </div>
                          </div>
-                       ))}
-                    </div>
-                 </div>
-               ))}
+                         {hasItems && (
+                           <div className="flex flex-col items-end">
+                              <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-1">Stage Hardware Total</span>
+                              <span className="font-display text-2xl text-white">£{stageTotal.toLocaleString()}</span>
+                           </div>
+                         )}
+                      </div>
+
+                      {hasItems ? (
+                        <div className="grid grid-cols-1 gap-px bg-brand-border border border-brand-border shadow-2xl">
+                           {items.map((item: any) => (
+                             <div key={item.product.id} className="bg-brand-carbon/30 p-10 flex flex-col lg:flex-row gap-12 group hover:bg-brand-carbon transition-all">
+                                <div className="w-full lg:w-56 aspect-square bg-brand-obsidian border border-brand-border p-8 flex items-center justify-center relative overflow-hidden">
+                                   <div className="absolute inset-0 blueprint-grid opacity-5" />
+                                   <Package className="w-16 h-16 text-brand-orange/10 group-hover:scale-110 transition-transform duration-700" />
+                                   <div className="absolute top-4 left-4">
+                                      <span className="font-mono text-[8px] text-brand-orange/50 uppercase tracking-[0.2em]">{item.product.brand}</span>
+                                   </div>
+                                </div>
+
+                                <div className="flex-1 space-y-6">
+                                   <div className="flex items-center gap-4">
+                                      <span className="font-mono text-[9px] bg-brand-orange text-white px-3 py-1 uppercase tracking-widest font-bold">Recommended hardware</span>
+                                      <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest italic">// engineering justification</span>
+                                   </div>
+                                   <h4 className="font-display text-4xl uppercase tracking-tighter text-white">{item.product.name}</h4>
+                                   <p className="font-sans text-base text-brand-grey leading-relaxed max-w-3xl border-l-2 border-brand-orange/30 pl-8 italic">
+                                      "{item.whyRecommended}"
+                                   </p>
+                                   <div className="flex flex-wrap gap-3">
+                                      <span className="font-mono text-[8px] border border-brand-border px-3 py-1.5 text-brand-grey uppercase tracking-widest">{item.product.payloadWeightKg}kg Payload</span>
+                                      <span className="font-mono text-[8px] border border-brand-border px-3 py-1.5 text-brand-grey uppercase tracking-widest">{item.product.installDifficulty} Install</span>
+                                      <span className="font-mono text-[8px] border border-brand-border px-3 py-1.5 text-brand-grey uppercase tracking-widest">Qty: {item.quantity}</span>
+                                   </div>
+                                </div>
+
+                                <div className="lg:w-72 text-right flex flex-col justify-between items-end">
+                                   <div className="text-right">
+                                      <span className="font-display text-4xl block text-white">£{item.product.price.toLocaleString()}</span>
+                                      <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest mt-1 block">Unit Price</span>
+                                   </div>
+                                   <div className="w-full space-y-3 mt-8">
+                                      <button className="w-full bg-brand-white text-brand-obsidian font-display text-[10px] uppercase tracking-widest py-4 hover:bg-brand-orange hover:text-white transition-all font-bold">
+                                         {getProductCTA(item.product)}
+                                      </button>
+                                      <div className="flex gap-2">
+                                         <button className="flex-1 border border-brand-border py-2 font-mono text-[8px] uppercase tracking-widest text-brand-grey hover:text-white transition-colors">
+                                            Mark as owned
+                                         </button>
+                                         <button className="flex-1 border border-brand-border py-2 font-mono text-[8px] uppercase tracking-widest text-brand-grey hover:text-white transition-colors">
+                                            Alternative
+                                         </button>
+                                      </div>
+                                   </div>
+                                </div>
+                             </div>
+                           ))}
+                        </div>
+                      ) : (
+                        <div className="bg-brand-carbon/20 border border-dashed border-brand-border p-20 text-center">
+                           <Info className="w-8 h-8 text-brand-grey/30 mx-auto mb-4" />
+                           <p className="font-mono text-[10px] text-brand-grey uppercase tracking-[0.2em]">Detailed specification for this phase pending build complexity review.</p>
+                        </div>
+                      )}
+                   </div>
+                 );
+               })}
             </div>
          </div>
       </section>
 
-      {/* 4. DIGITAL PRODUCT TIERS (PDF Compliance Packs) */}
-      <section className="py-40 bg-[#050505] border-y border-brand-border">
-         <div className="container mx-auto px-6">
-            <div className="text-center max-w-3xl mx-auto mb-24">
-               <span className="font-mono text-[10px] text-brand-orange uppercase tracking-[0.4em] mb-6 block animate-pulse">// Engineering Documentation</span>
-               <h2 className="font-display text-5xl lg:text-7xl uppercase tracking-tighter mb-8">Build <span className="text-brand-orange">Packs</span></h2>
-               <p className="font-sans text-brand-grey text-lg leading-relaxed">
-                  Convert your AI results into professional build dossiers. Eliminate installation guesswork and ensure long-term habitation compliance.
-               </p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-               {PDF_TIERS.map((tier) => (
-                 <div key={tier.id} className={cn(
-                   "bg-brand-carbon border p-12 flex flex-col group transition-all",
-                   tier.id === 'detailed' ? "border-brand-orange shadow-2xl shadow-brand-orange/10 scale-105 z-10" : "border-brand-border hover:border-brand-orange/40"
-                 )}>
-                    {tier.id === 'detailed' && (
-                       <span className="bg-brand-orange text-white font-mono text-[8px] uppercase tracking-widest px-3 py-1 self-start mb-8 rounded-full">Recommended</span>
-                    )}
-                    <h3 className="font-display text-2xl uppercase tracking-tight mb-4">{tier.name}</h3>
-                    <p className="font-sans text-xs text-brand-grey leading-relaxed mb-8 h-12">{tier.description}</p>
-                    <div className="flex items-baseline gap-2 mb-12">
-                       <span className="font-display text-5xl text-white">£{tier.price}</span>
-                       <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">One-time purchase</span>
-                    </div>
-                    
-                    <div className="flex-1 space-y-4 mb-16">
-                       {tier.features.map((f, i) => (
-                         <div key={i} className="flex gap-4 border-b border-brand-border/30 pb-4">
-                            <CheckCircle2 className={cn("w-4 h-4 shrink-0 mt-1", tier.id === 'detailed' ? "text-brand-orange" : "text-brand-grey")} />
-                            <span className="font-mono text-[9px] text-white uppercase tracking-widest leading-normal">{f}</span>
-                         </div>
-                       ))}
-                    </div>
-
-                    <button className={cn(
-                      "w-full py-5 font-display text-[10px] uppercase tracking-widest transition-all shadow-xl font-bold",
-                      tier.id === 'detailed' ? "bg-brand-orange text-white" : "bg-brand-white text-brand-obsidian hover:bg-brand-orange hover:text-white"
-                    )}>
-                       Download Build Pack
-                    </button>
-                 </div>
-               ))}
-            </div>
-         </div>
-      </section>
-
-      {/* 5. COMPLIANCE & RISK (Realistic UK Warnings) */}
-      <section className="py-24 bg-brand-obsidian">
-         <div className="container mx-auto px-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-brand-carbon border border-brand-border p-12 relative overflow-hidden">
-               <div className="absolute top-0 right-0 p-12 opacity-5 text-brand-orange">
-                  <ShieldAlert className="w-48 h-48" />
+      {/* 5. COMMERCIAL REASSURANCE */}
+      <section className="py-24 bg-brand-orange">
+         <div className="container mx-auto px-6 text-center">
+            <h3 className="font-display text-4xl lg:text-6xl uppercase tracking-tighter text-brand-obsidian mb-8">Build at your <span className="italic">own pace.</span></h3>
+            <p className="font-sans text-brand-obsidian text-xl max-w-3xl mx-auto mb-12 font-medium">
+               "We specify your entire build on day one, so you don't make mistakes on day fifty. Buy the stages when you're ready, we'll keep your plan locked and secure."
+            </p>
+            <div className="flex flex-wrap justify-center gap-8">
+               <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-brand-obsidian" />
+                  <span className="font-mono text-[10px] uppercase tracking-widest font-bold text-brand-obsidian">No pressure checkout</span>
                </div>
-               <div className="space-y-12">
-                  <h3 className="font-display text-3xl uppercase tracking-tighter italic text-brand-orange">// Compliance Protocol</h3>
-                  <div className="space-y-8">
-                     {COMPLIANCE_WARNINGS.map((warn, i) => (
-                       <div key={i} className="space-y-2 border-l-2 border-brand-orange/30 pl-6">
-                          <h4 className="font-display text-sm uppercase tracking-widest text-white">{warn.title}</h4>
-                          <p className="font-sans text-[11px] text-brand-grey leading-relaxed">{warn.content}</p>
-                       </div>
-                     ))}
-                  </div>
+               <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-brand-obsidian" />
+                  <span className="font-mono text-[10px] uppercase tracking-widest font-bold text-brand-obsidian">Stage-by-stage purchasing</span>
                </div>
-               <div className="bg-brand-obsidian p-12 border border-brand-border flex flex-col justify-center items-center text-center">
-                  <div className="bg-brand-orange/10 p-6 border border-brand-orange/20 mb-8">
-                     <Info className="w-12 h-12 text-brand-orange" />
-                  </div>
-                  <h4 className="font-display text-2xl uppercase tracking-tight mb-4">Engineering Support</h4>
-                  <p className="font-sans text-brand-grey text-sm mb-12">Every build plan includes a 30-day technical support window for installation queries and product compatibility sign-off.</p>
-                  <button className="font-mono text-[10px] text-brand-orange uppercase tracking-widest border border-brand-orange/30 px-10 py-5 hover:bg-brand-orange hover:text-white transition-all">
-                     Contact Engineering Desk
-                  </button>
+               <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-brand-obsidian" />
+                  <span className="font-mono text-[10px] uppercase tracking-widest font-bold text-brand-obsidian">Price-lock guarantee (30 days)</span>
                </div>
             </div>
          </div>
       </section>
 
-      {/* 6. QUOTE REQUEST (Captured for Lead Gen) */}
+      {/* 6. QUOTE REQUEST */}
       <section className="py-40 bg-[#0a0a0a]">
          <div className="container mx-auto px-6 max-w-4xl">
             <div className="bg-brand-obsidian p-16 border border-brand-border relative shadow-2xl">
                <div className="absolute top-0 left-0 w-full h-1 bg-brand-orange" />
                <div className="text-center mb-16">
-                  <h3 className="font-display text-4xl uppercase tracking-tighter mb-4">Formal Project Quote</h3>
+                  <h3 className="font-display text-4xl uppercase tracking-tighter mb-4">Request Staged Quote</h3>
                   <p className="font-sans text-brand-grey leading-relaxed">
-                     Submit your full build basket to our specialized tech team. We will review your schematic, verify stock availability, and apply bulk project discounts.
+                     Need a professional to review your full technical stack? Submit your specification for a human audit. We will verify stock, check compatibility, and provide a formal project quote.
                   </p>
                </div>
                
-               {submitSuccess ? (
-                  <div className="py-12 text-center animate-in zoom-in duration-500">
-                     <CheckCircle2 className="w-16 h-16 text-brand-orange mx-auto mb-6" />
-                     <h4 className="font-display text-2xl uppercase mb-4 text-white">Transmission Successful</h4>
-                     <p className="font-sans text-brand-grey">Your build reference has been sent to our engineering team. Expect a response within 48 hours.</p>
-                  </div>
-               ) : (
-                  <form className="space-y-8" onSubmit={handleQuoteSubmit}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <div className="space-y-2">
-                        <label className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">First Name</label>
-                        <input required name="firstName" value={formData.firstName} onChange={handleInputChange} type="text" className="w-full bg-brand-carbon border border-brand-border p-5 text-sm font-mono text-white focus:border-brand-orange outline-none transition-all" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Last Name</label>
-                        <input required name="lastName" value={formData.lastName} onChange={handleInputChange} type="text" className="w-full bg-brand-carbon border border-brand-border p-5 text-sm font-mono text-white focus:border-brand-orange outline-none transition-all" />
-                      </div>
+               <form className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                      <label className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">First Name</label>
+                      <input required type="text" className="w-full bg-brand-carbon border border-brand-border p-5 text-sm font-mono text-white focus:border-brand-orange outline-none transition-all" />
                     </div>
                     <div className="space-y-2">
-                      <label className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Email Address</label>
-                      <input required name="email" value={formData.email} onChange={handleInputChange} type="email" className="w-full bg-brand-carbon border border-brand-border p-5 text-sm font-mono text-white focus:border-brand-orange outline-none transition-all" />
+                      <label className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Last Name</label>
+                      <input required type="text" className="w-full bg-brand-carbon border border-brand-border p-5 text-sm font-mono text-white focus:border-brand-orange outline-none transition-all" />
                     </div>
-                    <button 
-                      disabled={isSubmitting}
-                      type="submit" 
-                      className="w-full bg-brand-orange text-white font-display text-base uppercase tracking-widest py-6 hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-4 shadow-2xl font-bold"
-                    >
-                      {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin" /> : <>Generate Formal Quote <ArrowRight className="w-5 h-5" /></>}
-                    </button>
-                  </form>
-               )}
+                  </div>
+                  <div className="space-y-2">
+                    <label className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Email Address</label>
+                    <input required type="email" className="w-full bg-brand-carbon border border-brand-border p-5 text-sm font-mono text-white focus:border-brand-orange outline-none transition-all" />
+                  </div>
+                  <button 
+                    type="submit" 
+                    className="w-full bg-brand-orange text-white font-display text-base uppercase tracking-widest py-6 hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-4 shadow-2xl font-bold"
+                  >
+                    Generate Formal Quote <ArrowRight className="w-5 h-5" />
+                  </button>
+               </form>
             </div>
          </div>
       </section>
@@ -331,18 +370,23 @@ export default function PlannerResultsPage() {
             </div>
             <div className="h-8 w-px bg-brand-border/40 hidden lg:block" />
             <div className="flex flex-col">
-               <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Calculated Hardware Value</span>
+               <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Total Build Value</span>
                <span className="font-display text-2xl text-brand-orange leading-none">£{basket.summary.estimatedCost.toLocaleString()}</span>
             </div>
          </div>
          
          <div className="flex gap-4 w-full md:w-auto">
-            <button className="flex-1 md:flex-none px-12 py-4 border border-brand-border text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-obsidian transition-all font-bold">
-               Save Build State
+            <button 
+               onClick={handleSaveBuild}
+               className="flex-1 md:flex-none px-12 py-4 border border-brand-border text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-obsidian transition-all font-bold flex items-center gap-2 justify-center"
+            >
+               {saveSuccess ? <Check className="w-3 h-3" /> : <Save className="w-3 h-3" />}
+               {saveSuccess ? "Saved" : "Save Build"}
             </button>
-            <Link href="/planner" className="flex-1 md:flex-none px-12 py-4 bg-brand-carbon text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-brand-border transition-all text-center font-bold">
-               Edit Parameters
-            </Link>
+            <button className="flex-1 md:flex-none px-12 py-4 bg-brand-orange text-brand-white font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all text-center font-bold flex items-center gap-2 justify-center shadow-lg shadow-brand-orange/20">
+               <ShoppingCart className="w-3 h-3" />
+               Checkout Stage 1
+            </button>
          </div>
       </div>
 

@@ -117,50 +117,67 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
                   </div>
                </div>
 
-               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-brand-border border border-brand-border shadow-2xl">
-                  {products.map((p) => (
-                    <div key={p.id} className="bg-brand-obsidian p-8 flex flex-col group hover:bg-brand-carbon/30 transition-all">
-                       <div className="aspect-square bg-brand-carbon border border-brand-border/40 mb-8 relative overflow-hidden flex items-center justify-center p-8">
-                          <div className="absolute inset-0 blueprint-grid opacity-5" />
-                          <Package className="w-16 h-16 text-brand-orange/10 group-hover:scale-110 transition-transform duration-700" />
-                          <div className="absolute top-4 left-4">
-                             <span className="font-mono text-[8px] bg-brand-obsidian border border-brand-border px-2 py-1 text-brand-grey uppercase tracking-widest">{p.brand}</span>
-                          </div>
-                          {p.stockStatus === 'low-stock' && (
-                             <div className="absolute bottom-4 right-4">
-                                <span className="font-mono text-[8px] text-yellow-500 uppercase tracking-widest animate-pulse">Low Stock</span>
-                             </div>
-                          )}
-                       </div>
-                       
-                       <div className="flex-1 space-y-4">
-                          <div className="flex justify-between items-start gap-4">
-                             <h3 className="font-display text-xl uppercase tracking-tight group-hover:text-brand-orange transition-colors h-14 overflow-hidden">{p.name}</h3>
-                             <div className="text-right shrink-0">
-                                <span className="font-display text-2xl block">£{p.price.toLocaleString()}</span>
-                                <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">{p.priceType}</span>
-                             </div>
-                          </div>
-                          
-                          <p className="font-sans text-xs text-brand-grey leading-relaxed line-clamp-2">{p.shortDescription}</p>
-                          
-                          <div className="flex flex-wrap gap-2 pt-4">
-                             <span className="font-mono text-[8px] border border-brand-border px-2 py-1 text-brand-grey uppercase tracking-widest">{p.installDifficulty}</span>
-                             <span className="font-mono text-[8px] border border-brand-border px-2 py-1 text-brand-grey uppercase tracking-widest">{p.payloadWeightKg}kg</span>
-                          </div>
-                       </div>
+                {products.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-brand-border border border-brand-border shadow-2xl">
+                    {products.map((p) => (
+                      <div key={p.id} className="bg-brand-obsidian p-8 flex flex-col group hover:bg-brand-carbon/30 transition-all">
+                        <div className="aspect-square bg-brand-carbon border border-brand-border/40 mb-8 relative overflow-hidden flex items-center justify-center p-8">
+                            <div className="absolute inset-0 blueprint-grid opacity-5" />
+                            <Package className="w-16 h-16 text-brand-orange/10 group-hover:scale-110 transition-transform duration-700" />
+                            <div className="absolute top-4 left-4">
+                              <span className="font-mono text-[8px] bg-brand-obsidian border border-brand-border px-2 py-1 text-brand-grey uppercase tracking-widest">{p.brand}</span>
+                            </div>
+                            {p.stockStatus === 'low-stock' && (
+                              <div className="absolute bottom-4 right-4">
+                                  <span className="font-mono text-[8px] text-yellow-500 uppercase tracking-widest animate-pulse">Low Stock</span>
+                              </div>
+                            )}
+                        </div>
+                        
+                        <div className="flex-1 space-y-4">
+                            <div className="flex justify-between items-start gap-4">
+                              <h3 className="font-display text-xl uppercase tracking-tight group-hover:text-brand-orange transition-colors h-14 overflow-hidden">{p.name}</h3>
+                              <div className="text-right shrink-0">
+                                  <span className="font-display text-2xl block">£{p.price.toLocaleString()}</span>
+                                  <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">{p.priceType}</span>
+                              </div>
+                            </div>
+                            
+                            <p className="font-sans text-xs text-brand-grey leading-relaxed line-clamp-2">{p.shortDescription}</p>
+                            
+                            <div className="flex flex-wrap gap-2 pt-4">
+                              <span className="font-mono text-[8px] border border-brand-border px-2 py-1 text-brand-grey uppercase tracking-widest">{p.installDifficulty}</span>
+                              <span className="font-mono text-[8px] border border-brand-border px-2 py-1 text-brand-grey uppercase tracking-widest">{p.payloadWeightKg}kg</span>
+                            </div>
+                        </div>
 
-                       <div className="mt-10 space-y-3">
-                          <button className="w-full bg-brand-white text-brand-obsidian font-display text-[10px] uppercase tracking-[0.2em] py-4 hover:bg-brand-orange hover:text-white transition-all shadow-xl font-bold">
-                             {getProductCTA(p)}
-                          </button>
-                          <button className="w-full border border-brand-border text-brand-grey font-mono text-[8px] uppercase tracking-widest py-3 hover:border-brand-orange hover:text-white transition-all">
-                             Add to Build Plan
-                          </button>
+                        <div className="mt-10 space-y-3">
+                            <button className="w-full bg-brand-white text-brand-obsidian font-display text-[10px] uppercase tracking-[0.2em] py-4 hover:bg-brand-orange hover:text-white transition-all shadow-xl font-bold">
+                              {getProductCTA(p)}
+                            </button>
+                            <button className="w-full border border-brand-border text-brand-grey font-mono text-[8px] uppercase tracking-widest py-3 hover:border-brand-orange hover:text-white transition-all">
+                              Add to Build Plan
+                            </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="bg-brand-carbon border border-brand-border p-20 text-center relative overflow-hidden">
+                    <div className="absolute inset-0 blueprint-grid opacity-5 pointer-events-none" />
+                    <div className="relative z-10">
+                       <Package className="w-16 h-16 text-brand-orange/20 mx-auto mb-8" />
+                       <h3 className="font-display text-4xl uppercase tracking-tighter mb-4 text-white">Registry <span className="text-brand-orange">Expanding</span></h3>
+                       <p className="font-sans text-brand-grey text-lg max-w-xl mx-auto mb-12">
+                          Our engineering team is currently auditing and cross-referencing {category.name} hardware for the technical registry.
+                       </p>
+                       <div className="flex flex-col sm:flex-row justify-center gap-6">
+                          <Link href="/request-build-quote" className="bg-brand-orange text-white px-12 py-5 font-display text-[10px] uppercase tracking-widest font-bold hover:bg-white hover:text-brand-orange transition-all">Request Component Spec</Link>
+                          <Link href="/store" className="border border-brand-border text-white px-12 py-5 font-mono text-[10px] uppercase tracking-widest font-bold hover:bg-brand-carbon transition-all">Browse Active Hubs</Link>
                        </div>
                     </div>
-                  ))}
-               </div>
+                  </div>
+                )}
             </div>
 
           </div>

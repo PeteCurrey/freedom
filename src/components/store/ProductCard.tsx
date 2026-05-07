@@ -55,7 +55,7 @@ export function ProductCard({
       return;
     }
     
-    const stored = localStorage.getItem("amplios_cart");
+    const stored = localStorage.getItem("amplios-cart");
     let cart = stored ? JSON.parse(stored) : [];
     
     const existingIndex = cart.findIndex((item: any) => item.id === id);
@@ -73,7 +73,7 @@ export function ProductCard({
       });
     }
     
-    localStorage.setItem("amplios_cart", JSON.stringify(cart));
+    localStorage.setItem("amplios-cart", JSON.stringify(cart));
     window.dispatchEvent(new Event("cart-updated"));
   };
 

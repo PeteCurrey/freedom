@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ArrowLeft, Tag, ChevronRight, ShieldCheck, Loader2 } from "lucide-react";
@@ -29,20 +28,30 @@ export default function CartPage() {
 
   useEffect(() => {
     setMounted(true);
-    const stored = localStorage.getItem("amplios_cart");
-    if (stored) {
+    const updateCart = () => {
       try {
-        setCartItems(JSON.parse(stored));
-      } catch {
+        const stored = localStorage.getItem("amplios-cart");
+        if (stored) {
+          setCartItems(JSON.parse(stored));
+        } else {
+          setCartItems([]);
+        }
+      } catch (err) {
+        console.error("Cart parse error:", err);
         setCartItems([]);
       }
-    }
+    };
+
+    updateCart();
+    window.addEventListener("cart-updated", updateCart);
 
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
     };
     checkUser();
+
+    return () => window.removeEventListener("cart-updated", updateCart);
   }, []);
 
   const handleCheckout = async () => {
@@ -69,22 +78,21 @@ export default function CartPage() {
     }
   };
 
-  const updateCart = (items: CartItem[]) => {
+  const syncCart = (items: CartItem[]) => {
     setCartItems(items);
-    localStorage.setItem("amplios_cart", JSON.stringify(items));
-    // Dispatch event so nav badge updates
+    localStorage.setItem("amplios-cart", JSON.stringify(items));
     window.dispatchEvent(new Event("cart-updated"));
   };
 
   const updateQuantity = (id: string, delta: number) => {
     const updated = cartItems
-      .map(item => item.id === id ? { ...item, quantity: item.quantity + delta } : item)
+      .map(item => item.id === id ? { ...item, quantity: Math.max(0, item.quantity + delta) } : item)
       .filter(item => item.quantity > 0);
-    updateCart(updated);
+    syncCart(updated);
   };
 
   const removeItem = (id: string) => {
-    updateCart(cartItems.filter(item => item.id !== id));
+    syncCart(cartItems.filter(item => item.id !== id));
   };
 
   const applyPromo = () => {
@@ -112,7 +120,7 @@ export default function CartPage() {
           {/* Editorial Header */}
           <div className="mb-20">
             <div className="flex items-center gap-4 font-mono text-[10px] text-brand-orange uppercase mb-6 tracking-[0.3em]">
-               <div className="w-2 h-2 bg-brand-orange animate-pulse" /> Registry Buffer // {cartItems.length} Nodes
+               <div className="w-2 h-2 bg-brand-orange animate-pulse" /> Registry Buffer // {cartItems.length} Nodes Identified
             </div>
             <h1 className="font-display text-7xl lg:text-9xl uppercase leading-[0.8] tracking-tighter">
               BUILDING <br />
@@ -125,7 +133,7 @@ export default function CartPage() {
             <div className="py-48 text-center bg-brand-carbon blueprint-border relative overflow-hidden max-w-4xl mx-auto">
               <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
               <ShoppingBag className="w-20 h-20 text-brand-grey mx-auto mb-8 opacity-20" />
-              <h2 className="font-display text-4xl uppercase mb-6">Buffer Empty</h2>
+              <h2 className="font-display text-4xl uppercase mb-6">Your cart is empty</h2>
               <p className="font-sans text-brand-grey text-lg mb-12 max-w-md mx-auto">
                 Your build registry is currently empty. Initialize your system by adding hardware components from the store.
               </p>
@@ -133,7 +141,7 @@ export default function CartPage() {
                 href="/store"
                 className="inline-flex items-center gap-4 bg-brand-orange px-12 py-5 font-display text-xs uppercase tracking-[0.2em] text-white hover:bg-white hover:text-brand-obsidian transition-all shadow-[0_0_40px_rgba(255,107,0,0.2)]"
               >
-                Enter Store <ArrowRight className="w-4 h-4" />
+                Browse the Store <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           ) : (
@@ -142,7 +150,7 @@ export default function CartPage() {
               <div className="lg:col-span-8 space-y-6">
                 <div className="flex items-center justify-between font-mono text-[10px] text-brand-grey uppercase tracking-widest border-b border-brand-border pb-4 mb-4">
                    <span>Component Description</span>
-                   <div className="flex gap-12 pr-16">
+                   <div className="hidden md:flex gap-12 pr-16">
                       <span>Quantity</span>
                       <span>Node Total</span>
                    </div>
@@ -151,9 +159,9 @@ export default function CartPage() {
                 {cartItems.map((item) => (
                   <div key={item.id} className="group relative bg-brand-carbon blueprint-border p-8 flex flex-col md:flex-row gap-8 items-center transition-all hover:bg-brand-graphite">
                     {/* Thumbnail Node */}
-                    <div className="w-24 h-24 bg-brand-obsidian blueprint-border flex items-center justify-center shrink-0 overflow-hidden relative p-4">
+                    <div className="w-24 h-24 bg-white blueprint-border flex items-center justify-center shrink-0 overflow-hidden relative p-4">
                       {item.image ? (
-                        <img src={item.image} alt={item.name} className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500" />
+                        <img src={item.image} alt={item.name} className="w-full h-full object-contain transition-all duration-500" />
                       ) : (
                         <ShoppingBag className="w-8 h-8 text-brand-grey/20" />
                       )}
@@ -165,14 +173,16 @@ export default function CartPage() {
                         <span className="font-mono text-[8px] text-brand-orange uppercase tracking-widest px-2 py-0.5 border border-brand-orange/30">{item.brand}</span>
                         <span className="font-mono text-[8px] text-brand-grey uppercase">ID: {item.id.substring(0, 8)}</span>
                       </div>
-                      <h3 className="font-display text-xl uppercase truncate group-hover:text-brand-orange transition-colors mb-2">{item.name}</h3>
+                      <h3 className="font-display text-xl uppercase truncate group-hover:text-brand-orange transition-colors mb-2">
+                        <Link href={`/store/product/${item.slug}`}>{item.name}</Link>
+                      </h3>
                       <p className="font-mono text-[10px] text-brand-grey uppercase italic">
-                         Registry Rate: £{(item.price / 100).toLocaleString()} <span className="text-[8px] opacity-50">inc. VAT</span>
+                         Unit Price: £{(item.price / 100).toLocaleString()} <span className="text-[8px] opacity-50 font-sans not-italic ml-1">inc. VAT</span>
                       </p>
                     </div>
 
                     {/* Operational Controls */}
-                    <div className="flex items-center gap-12 shrink-0">
+                    <div className="flex items-center gap-8 md:gap-12 shrink-0 w-full md:w-auto justify-between md:justify-end">
                        <div className="flex items-center border border-brand-border h-12">
                           <button
                             onClick={() => updateQuantity(item.id, -1)}
@@ -180,7 +190,7 @@ export default function CartPage() {
                           >
                             <Minus size={12} />
                           </button>
-                          <div className="w-12 h-full flex items-center justify-center font-display text-base border-x border-brand-border">
+                          <div className="w-12 h-full flex items-center justify-center font-display text-base border-x border-brand-border text-white">
                             {item.quantity}
                           </div>
                           <button
@@ -192,7 +202,7 @@ export default function CartPage() {
                        </div>
 
                        <div className="w-28 text-right">
-                          <span className="font-display text-2xl">£{((item.price * item.quantity) / 100).toLocaleString()}</span>
+                          <span className="font-display text-2xl text-white">£{((item.price * item.quantity) / 100).toLocaleString()}</span>
                        </div>
 
                        <button
@@ -214,19 +224,19 @@ export default function CartPage() {
                     href="/store"
                     className="group inline-flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.3em] text-brand-grey hover:text-white transition-all"
                   >
-                    <ArrowLeft className="w-3 h-3 group-hover:-translate-x-2 transition-transform" /> Re-enter Catalog Registry
+                    <ArrowLeft className="w-3 h-3 group-hover:-translate-x-2 transition-transform" /> Continue Shopping →
                   </Link>
                 </div>
               </div>
 
-              {/* Commission Summary */}
+              {/* Order Summary */}
               <div className="lg:col-span-4">
                 <div className="bg-brand-carbon blueprint-border p-10 sticky top-32 space-y-10">
                   <div className="flex items-center gap-4 mb-2">
                      <div className="w-10 h-10 bg-brand-orange/10 flex items-center justify-center">
                         <Tag className="text-brand-orange w-5 h-5" />
                      </div>
-                     <h2 className="font-display text-2xl uppercase italic">COMMISSION</h2>
+                     <h2 className="font-display text-2xl uppercase italic">SUMMARY</h2>
                   </div>
 
                   {/* Promo Input Node */}
@@ -256,23 +266,23 @@ export default function CartPage() {
                   {/* Ledger Breakdown */}
                   <div className="space-y-5 pt-8 border-t border-brand-border">
                     <div className="flex justify-between font-mono text-[11px] uppercase tracking-widest">
-                      <span className="text-brand-grey italic">Subtotal ledger</span>
+                      <span className="text-brand-grey italic">Subtotal</span>
                       <span>£{(subtotal / 100).toLocaleString()}</span>
                     </div>
                     {promoApplied && (
                       <div className="flex justify-between font-mono text-[11px] uppercase tracking-widest text-green-500">
-                        <span className="italic">Token rebate</span>
+                        <span className="italic">Discount</span>
                         <span>-£{(discount / 100).toLocaleString()}</span>
                       </div>
                     )}
                     <div className="flex justify-between font-mono text-[11px] uppercase tracking-widest text-brand-grey">
-                      <span className="italic">Taxation (VAT 20%)</span>
+                      <span className="italic">VAT (20%)</span>
                       <span>£{(vat / 100).toLocaleString()}</span>
                     </div>
                     
                     <div className="pt-8 border-t-2 border-brand-orange/30">
                        <div className="flex justify-between items-baseline mb-2">
-                          <span className="font-display text-4xl uppercase">Balance</span>
+                          <span className="font-display text-4xl uppercase">Total</span>
                           <span className="font-display text-5xl text-brand-orange">£{(total / 100).toLocaleString()}</span>
                        </div>
                        <div className="font-mono text-[10px] text-brand-grey uppercase tracking-widest text-right">
@@ -281,28 +291,25 @@ export default function CartPage() {
                     </div>
                   </div>
 
-                  {/* Operational Controls */}
+                  {/* Checkout Action */}
                   <div className="space-y-4 pt-8">
-                    {user ? (
-                      <button 
-                        onClick={handleCheckout}
-                        disabled={loading}
-                        className="w-full py-6 bg-brand-orange text-white font-display text-xs uppercase tracking-[0.2em] hover:bg-white hover:text-brand-obsidian transition-all flex items-center justify-center gap-4 disabled:opacity-50 relative group overflow-hidden"
-                      >
-                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none" />
-                        {loading ? (
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                        ) : (
-                          <>Initialize Checkout Registry <ChevronRight className="w-4 h-4" /></>
-                        )}
-                      </button>
-                    ) : (
-                      <Link 
-                        href="/account/login?redirect=/cart"
-                        className="w-full py-6 border border-brand-orange text-brand-orange font-display text-xs uppercase tracking-[0.2em] hover:bg-brand-orange hover:text-white transition-all flex items-center justify-center gap-4"
-                      >
-                        Authorize Node to Checkout <ChevronRight className="w-4 h-4" />
-                      </Link>
+                    <button 
+                      onClick={handleCheckout}
+                      disabled={loading}
+                      className="w-full py-6 bg-brand-orange text-white font-display text-xs uppercase tracking-[0.2em] hover:bg-white hover:text-brand-obsidian transition-all flex items-center justify-center gap-4 disabled:opacity-50 relative group overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none" />
+                      {loading ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : (
+                        <>Proceed to Checkout →</>
+                      )}
+                    </button>
+                    
+                    {!user && (
+                      <p className="font-sans text-[10px] text-brand-grey text-center uppercase tracking-widest">
+                        Guest Checkout Active // <Link href="/account/login" className="text-brand-orange hover:underline">Sign in</Link> to save registry
+                      </p>
                     )}
                   </div>
 

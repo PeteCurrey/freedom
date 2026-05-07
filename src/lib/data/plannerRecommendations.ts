@@ -19,11 +19,9 @@ export interface BuildBasket {
 
 export function generateBuildBasket(userAnswers: any): BuildBasket {
   // Logic to map user answers to registry products
-  // For Phase 1, we return a structured set based on typical 'pro' electrical answers
-  
   const selectedProducts: { product: Product; quantity: number; whyRecommended: string }[] = [
     {
-      product: PRODUCTS.find(p => p.id === 'victron-multi-3000')!,
+      product: PRODUCTS.find(p => p.id === 'victron-multiplus-ii-12-3000-120-32')!,
       quantity: 1,
       whyRecommended: "Highest reliability for 230V systems. Required for induction cooking and heavy off-grid usage."
     },
