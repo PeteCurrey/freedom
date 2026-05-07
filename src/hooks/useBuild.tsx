@@ -1,13 +1,13 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { BuildPlan, BuildBasket, BasketItem, InstallStage } from '@/lib/data/productRegistry';
+import { BuildPlan, BuildBasket, BasketItem, InstallStage, PurchaseStatus } from '@/lib/data/productRegistry';
 
 interface BuildContextType {
   activeBuild: BuildPlan | null;
   basket: BuildBasket | null;
   saveBuild: (plan: BuildPlan, basketItems: BasketItem[]) => void;
-  updateItemStatus: (itemId: string, status: any) => void;
+  updateItemStatus: (itemId: string, status: PurchaseStatus) => void;
   markAsOwned: (itemId: string) => void;
   removeItem: (itemId: string) => void;
   replaceItem: (itemId: string, newProductId: string) => void;
@@ -43,12 +43,12 @@ export function BuildProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('amplios_active_basket', JSON.stringify(newBasket));
   };
 
-  const updateItemStatus = (itemId: string, status: any) => {
+  const updateItemStatus = (itemId: string, status: PurchaseStatus) => {
     if (!basket) return;
-    const newItems = basket.items.map(item => 
+    const newItems: BasketItem[] = basket.items.map(item => 
       item.id === itemId ? { ...item, purchaseStatus: status } : item
     );
-    const newBasket = { ...basket, items: newItems };
+    const newBasket: BuildBasket = { ...basket, items: newItems };
     setBasket(newBasket);
     localStorage.setItem('amplios_active_basket', JSON.stringify(newBasket));
   };
@@ -59,10 +59,10 @@ export function BuildProvider({ children }: { children: React.ReactNode }) {
   const replaceItem = (itemId: string, newProductId: string) => {
     // Mock replacement logic
     if (!basket) return;
-    const newItems = basket.items.map(item => 
-      item.id === itemId ? { ...item, productId: newProductId, purchaseStatus: 'not_purchased' } : item
+    const newItems: BasketItem[] = basket.items.map(item => 
+      item.id === itemId ? { ...item, productId: newProductId, purchaseStatus: 'not_purchased' as PurchaseStatus } : item
     );
-    const newBasket = { ...basket, items: newItems };
+    const newBasket: BuildBasket = { ...basket, items: newItems };
     setBasket(newBasket);
     localStorage.setItem('amplios_active_basket', JSON.stringify(newBasket));
   };
