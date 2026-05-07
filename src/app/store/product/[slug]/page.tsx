@@ -15,6 +15,7 @@ import { ProductHistoryTracker } from "@/components/store/ProductHistoryTracker"
 import { StickyProductBar } from "@/components/store/StickyProductBar";
 import { ProductTabs } from "@/components/store/ProductTabs";
 
+import { Metadata } from "next";
 import { PRODUCTS, getProductBySlug } from "@/lib/data/productRegistry";
 
 const supabaseAdmin = createClient(
