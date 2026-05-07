@@ -19,7 +19,8 @@ export default function AdminLayout({
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("admin_theme");
-    if (savedTheme === "light") setIsLightMode(true);
+    if (savedTheme === "dark") setIsLightMode(false);
+    else setIsLightMode(true); // Default to light
   }, []);
 
   const toggleTheme = () => {
@@ -96,12 +97,12 @@ export default function AdminLayout({
   return (
     <div className={cn(
       "flex h-screen overflow-hidden transition-colors duration-300",
-      isLightMode ? "admin-light bg-brand-obsidian" : "bg-brand-obsidian"
+      isLightMode ? "admin-light bg-[#f9fafb]" : "bg-brand-obsidian"
     )}>
       <AdminSidebar isLightMode={isLightMode} onToggleTheme={toggleTheme} />
       <main data-lenis-prevent className={cn(
-        "flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar",
-        isLightMode ? "text-gray-900 bg-gray-50" : "text-brand-white bg-brand-obsidian pt-6"
+        "flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar pb-24",
+        isLightMode ? "text-slate-900 bg-[#f9fafb]" : "text-brand-white bg-brand-obsidian pt-6"
       )}>
         {children}
       </main>

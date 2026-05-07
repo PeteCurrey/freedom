@@ -9,7 +9,9 @@ import {
   User, 
   CheckCircle2,
   Trash2,
-  Send
+  Send,
+  Loader2,
+  Plus
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +27,7 @@ export function LeadActivityLogger({ leadId }: LeadActivityProps) {
 
   useEffect(() => {
     async function fetchActivity() {
+      setLoading(true);
       const { data } = await supabase
         .from('lead_activity')
         .select('*')
@@ -59,56 +62,63 @@ export function LeadActivityLogger({ leadId }: LeadActivityProps) {
     setSaving(false);
   };
 
-  if (loading) return null;
-
   return (
     <div className="space-y-8">
       {/* New Activity Input */}
-      <div className="blueprint-border p-4 bg-brand-obsidian">
+      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm focus-within:ring-2 focus-within:ring-brand-orange/20 transition-all">
          <textarea 
            value={newNote}
            onChange={(e) => setNewNote(e.target.value)}
-           placeholder="Log tactical update or expert build note..."
-           className="w-full bg-transparent border-none outline-none font-mono text-[10px] text-brand-white focus:ring-0 min-h-[80px]"
+           placeholder="Log a call, email summary or project note..."
+           className="w-full bg-transparent border-none outline-none p-4 text-sm text-slate-700 focus:ring-0 min-h-[100px] resize-none"
          />
-         <div className="flex justify-between items-center mt-4 pt-4 border-t border-brand-border">
-            <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest italic">Drafting Chronological Note</span>
+         <div className="flex justify-between items-center px-4 py-3 bg-slate-50 border-t border-slate-100">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Internal Update</span>
             <button 
               onClick={addNote}
               disabled={saving || !newNote.trim()}
-              className="px-6 py-2 bg-brand-orange text-white font-mono text-[9px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center gap-2"
+              className="px-4 py-1.5 bg-slate-900 text-white rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-brand-orange transition-all flex items-center gap-2 disabled:opacity-30"
             >
-               {saving ? "Syncing..." : <><Send size={12} /> Sync Log</>}
+               {saving ? <Loader2 size={12} className="animate-spin" /> : <Plus size={14} />} 
+               {saving ? "Syncing..." : "Add Note"}
             </button>
          </div>
       </div>
 
       {/* Activity Timeline */}
-      <div className="relative space-y-6 pl-8">
+      <div className="relative space-y-8 pl-8">
          {/* Vertical line */}
-         <div className="absolute left-3 top-2 bottom-2 w-px bg-brand-border" />
+         <div className="absolute left-3.5 top-0 bottom-0 w-px bg-slate-100" />
          
-         {activities.map((act) => (
-           <div key={act.id} className="relative group">
-              {/* Timeline Dot */}
-              <div className="absolute -left-[2.35rem] top-1 w-2.5 h-2.5 rounded-full bg-brand-orange border-2 border-brand-carbon z-10" />
-              
-              <div className="blueprint-border p-5 bg-brand-obsidian group-hover:border-brand-grey transition-all">
-                 <div className="flex justify-between items-start mb-3">
-                    <div className="flex items-center gap-2 font-mono text-[8px] uppercase tracking-widest text-brand-orange">
-                       <FileEdit size={10} /> {act.activity_type}
-                    </div>
-                    <span className="font-mono text-[8px] text-brand-grey uppercase">{new Date(act.created_at).toLocaleString()}</span>
-                 </div>
-                 <p className="font-sans text-xs text-brand-grey leading-relaxed">{act.content}</p>
-              </div>
-           </div>
-         ))}
-
-         {activities.length === 0 && (
-           <div className="py-12 text-center">
-              <span className="font-mono text-[8px] text-brand-grey uppercase tracking-[0.3em]">No operational history detected.</span>
-           </div>
+         {loading ? (
+            <div className="py-12 text-center text-slate-300">
+               <Loader2 size={24} className="animate-spin mx-auto" />
+            </div>
+         ) : activities.length === 0 ? (
+            <div className="py-12 text-center">
+               <p className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em]">No Activity Logged</p>
+            </div>
+         ) : (
+           activities.map((act) => (
+             <div key={act.id} className="relative group animate-in slide-in-from-left-2 duration-300">
+                {/* Timeline Dot */}
+                <div className="absolute -left-[1.85rem] top-1.5 w-3 h-3 rounded-full bg-white border-2 border-slate-200 group-hover:border-brand-orange transition-colors z-10" />
+                
+                <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm group-hover:border-slate-300 transition-all">
+                   <div className="flex justify-between items-start mb-3">
+                      <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-orange">
+                         {act.activity_type === 'note' ? <FileEdit size={12} /> : <MessageSquare size={12} />} 
+                         {act.activity_type}
+                      </div>
+                      <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400 uppercase">
+                         <Clock size={10} />
+                         {new Date(act.created_at).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
+                      </div>
+                   </div>
+                   <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">{act.content}</p>
+                </div>
+             </div>
+           ))
          )}
       </div>
     </div>

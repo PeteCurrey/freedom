@@ -11,17 +11,31 @@ import {
   Calendar,
   Filter,
   User as UserIcon,
-  Zap
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { LeadActivityLogger } from "@/components/admin/leads/LeadActivityLogger";
-import { 
+  Zap,
   BarChart3, 
   Users, 
   ArrowUpRight, 
   TrendingUp,
-  PieChart
+  PieChart,
+  ChevronRight,
+  Layout,
+  List,
+  Clock,
+  MoreVertical,
+  X,
+  Send,
+  Phone,
+  Tag
 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { LeadActivityLogger } from "@/components/admin/leads/LeadActivityLogger";
+
+const pipelineStages = [
+  { id: 'new', name: 'New Inquiries', color: 'bg-blue-500', border: 'border-blue-100' },
+  { id: 'contacted', name: 'Contacted', color: 'bg-amber-500', border: 'border-amber-100' },
+  { id: 'qualified', name: 'Qualified', color: 'bg-purple-500', border: 'border-purple-100' },
+  { id: 'converted', name: 'Converted', color: 'bg-emerald-500', border: 'border-emerald-100' },
+];
 
 export default function LeadsPage() {
   const [leads, setLeads] = useState<any[]>([]);
@@ -29,24 +43,22 @@ export default function LeadsPage() {
   const [filter, setFilter] = useState("all");
   const [view, setView] = useState<"list" | "pipeline">("list");
   const [activeLead, setActiveLead] = useState<any>(null);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function fetchLeads() {
+      setLoading(true);
       let query = supabase.from('leads').select('*').order('created_at', { ascending: false });
       
-      if (filter !== "all") {
-        query = query.eq('type', filter);
-      }
-
       const { data } = await query;
       setLeads(data || []);
       setLoading(false);
     }
 
     fetchLeads();
-  }, [filter]);
+  }, []);
 
-  const updatePipelineStatus = async (id: string, newStatus: string) => {
+  const updateStatus = async (id: string, newStatus: string) => {
     const { error } = await supabase
       .from('leads')
       .update({ pipeline_status: newStatus })
@@ -56,266 +68,210 @@ export default function LeadsPage() {
       setLeads(leads.map(l => l.id === id ? { ...l, pipeline_status: newStatus } : l));
     }
   };
-  
+
   const deleteLead = async (id: string) => {
-    if (!confirm("Terminate this lead protocol? This action is permanent.")) return;
-    
+    if (!confirm("Delete this lead? This action is permanent.")) return;
     const { error } = await supabase.from('leads').delete().eq('id', id);
     if (!error) {
       setLeads(leads.filter(l => l.id !== id));
+      if (activeLead?.id === id) setActiveLead(null);
     }
   };
 
-  const leadStats = useMemo(() => {
-    const total = leads.length;
-    const advisor = leads.filter(l => l.type === 'advisor').length;
-    const contact = leads.filter(l => l.type === 'contact').length;
-    const newsletter = leads.filter(l => l.type === 'newsletter').length;
-    const qualified = leads.filter(l => l.pipeline_status === 'qualified' || l.pipeline_status === 'closed').length;
-    const health = total > 0 ? Math.round((qualified / total) * 100) : 0;
-    
-    return { total, advisor, contact, newsletter, health };
-  }, [leads]);
-
-  const pipelineStages = [
-    { id: 'new', name: 'New Capture', color: 'bg-blue-500' },
-    { id: 'review', name: 'Expert Review', color: 'bg-brand-orange' },
-    { id: 'qualified', name: 'Qualified', color: 'bg-purple-500' },
-    { id: 'closed', name: 'Closed', color: 'bg-green-500' },
-  ];
-
-  if (loading) return null;
+  const filteredLeads = useMemo(() => {
+    return leads.filter(l => {
+      const matchesSearch = l.email.toLowerCase().includes(search.toLowerCase());
+      const matchesStatus = filter === 'all' || l.pipeline_status === filter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [leads, search, filter]);
 
   return (
-    <div className="p-8 pb-32">
+    <div className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500 relative">
       {/* Header */}
-      <div className="mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4">
-            <MessageSquare size={12} /> Intelligence Node: leads.crm
-          </div>
-          <h2 className="font-display text-2xl uppercase tracking-tighter text-brand-white">
-            System <span className="text-brand-orange">Verification</span>
-          </h2>
-          <h1 className="font-display text-5xl uppercase tracking-tighter text-brand-white">
-            Lead <span className="text-brand-orange">Pipeline</span>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tighter flex items-center gap-3">
+             <Users className="text-brand-orange" /> Lead Management
           </h1>
+          <p className="text-slate-500 text-sm mt-1">Acquisition pipeline and customer inquiries</p>
         </div>
         
-        <div className="flex bg-brand-carbon border border-brand-border p-1">
-           <button 
-             onClick={() => setView("list")}
-             className={cn(
-               "px-6 py-2 font-mono text-[10px] uppercase tracking-widest transition-all",
-               view === "list" ? "bg-brand-orange text-brand-white" : "text-brand-grey hover:text-brand-white"
-             )}
-           >
-             Table View
-           </button>
-           <button 
-             onClick={() => setView("pipeline")}
-             className={cn(
-               "px-6 py-2 font-mono text-[10px] uppercase tracking-widest transition-all",
-               view === "pipeline" ? "bg-brand-orange text-brand-white" : "text-brand-grey hover:text-brand-white"
-             )}
-           >
-             CRM Pipeline
-           </button>
+        <div className="flex items-center gap-3">
+           <div className="flex bg-white border border-slate-200 p-1 rounded-lg">
+              <button 
+                onClick={() => setView("list")}
+                className={cn(
+                  "p-2 rounded-md transition-all",
+                  view === "list" ? "bg-slate-900 text-white shadow-sm" : "text-slate-400 hover:text-slate-600"
+                )}
+              >
+                <List size={16} />
+              </button>
+              <button 
+                onClick={() => setView("pipeline")}
+                className={cn(
+                  "p-2 rounded-md transition-all",
+                  view === "pipeline" ? "bg-slate-900 text-white shadow-sm" : "text-slate-400 hover:text-slate-600"
+                )}
+              >
+                <Layout size={16} />
+              </button>
+           </div>
         </div>
       </div>
 
-       {/* Intelligence Hub */}
-       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-          <div className="blueprint-border bg-brand-carbon p-8 relative overflow-hidden group hover:border-brand-orange transition-all">
-             <div className="flex justify-between items-start relative z-10">
-                <div>
-                   <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest block mb-1">Total Intelligence Captured</span>
-                   <h3 className="font-display text-5xl uppercase text-brand-white">{leadStats.total}</h3>
-                </div>
-                <div className="w-12 h-12 blueprint-border flex items-center justify-center text-brand-orange">
-                   <Users size={20} />
-                </div>
-             </div>
-             <div className="mt-4 flex items-center gap-2 font-mono text-[8px] text-green-500 uppercase tracking-widest">
-                <ArrowUpRight size={10} /> +12.4% Captured This Cycle
-             </div>
-             <div className="absolute top-0 right-0 w-32 h-32 bg-brand-orange/5 blur-3xl -mr-16 -mt-16 rounded-full group-hover:bg-brand-orange/10 transition-all" />
-          </div>
+      {/* Stats Bar */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+         {[
+           { label: 'Total Leads', value: leads.length, change: '+12%', icon: Users },
+           { label: 'Qualified (MTD)', value: leads.filter(l => l.pipeline_status === 'qualified').length, change: '15% conv', icon: Zap },
+           { label: 'Uncontacted', value: leads.filter(l => !l.pipeline_status || l.pipeline_status === 'new').length, change: 'urgent', icon: Clock },
+           { label: 'Converted', value: leads.filter(l => l.pipeline_status === 'converted').length, change: '+5 today', icon: TrendingUp },
+         ].map((s, i) => (
+           <div key={i} className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
+              <div className="flex justify-between items-start mb-2">
+                 <p className="text-[9px] font-mono uppercase tracking-widest text-slate-400">{s.label}</p>
+                 <s.icon size={12} className="text-slate-300" />
+              </div>
+              <div className="flex items-baseline gap-2">
+                 <p className="text-xl font-bold text-slate-900">{s.value}</p>
+                 <span className="text-[10px] font-bold text-emerald-600">{s.change}</span>
+              </div>
+           </div>
+         ))}
+      </div>
 
-          <div className="blueprint-border bg-brand-carbon p-8 relative overflow-hidden group hover:border-brand-orange transition-all">
-             <div className="flex justify-between items-start relative z-10">
-                <div>
-                   <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest block mb-1">Advisor Conversions</span>
-                   <h3 className="font-display text-5xl uppercase text-brand-white">{leadStats.advisor}</h3>
-                </div>
-                <div className="w-12 h-12 blueprint-border flex items-center justify-center text-brand-orange">
-                   <Zap size={20} />
-                </div>
-             </div>
-             <div className="mt-4 flex items-center gap-2 font-mono text-[8px] text-brand-orange uppercase tracking-widest">
-                <TrendingUp size={10} /> High Velocity Capture Source
-             </div>
-          </div>
+      {/* Toolbar */}
+      <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col md:flex-row items-center gap-4">
+         <div className="relative flex-1 group">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-orange transition-colors" />
+            <input 
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search leads by email..."
+              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-brand-orange/20 transition-all"
+            />
+         </div>
+         <div className="flex gap-2">
+            {['all', 'new', 'contacted', 'qualified', 'converted'].map(s => (
+               <button 
+                 key={s}
+                 onClick={() => setFilter(s)}
+                 className={cn(
+                   "px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase tracking-widest transition-all",
+                   filter === s ? "bg-slate-900 text-white border-slate-900" : "bg-white text-slate-400 border-slate-200 hover:border-slate-400"
+                 )}
+               >
+                  {s}
+               </button>
+            ))}
+         </div>
+      </div>
 
-          <div className="blueprint-border bg-brand-carbon p-8 relative overflow-hidden group hover:border-brand-orange transition-all">
-             <div className="flex justify-between items-start relative z-10">
-                <div>
-                   <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest block mb-1">Inquiry Distribution</span>
-                   <div className="flex gap-4 mt-2">
-                      <div className="text-center">
-                         <div className="font-display text-2xl text-white">{leadStats.contact}</div>
-                         <div className="font-mono text-[7px] text-brand-grey uppercase">Contact</div>
-                      </div>
-                      <div className="text-center border-l border-brand-border pl-4">
-                         <div className="font-display text-2xl text-white">{leadStats.newsletter}</div>
-                         <div className="font-mono text-[7px] text-brand-grey uppercase">News</div>
-                      </div>
-                   </div>
-                </div>
-                <div className="w-12 h-12 blueprint-border flex items-center justify-center text-brand-orange">
-                   <PieChart size={20} />
-                </div>
-             </div>
-          </div>
-
-          <div className="blueprint-border bg-brand-carbon p-8 relative overflow-hidden group hover:border-brand-orange transition-all border-l-4 border-l-brand-orange">
-             <div className="flex justify-between items-start relative z-10">
-                <div>
-                   <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest block mb-1">Pipeline Integrity</span>
-                   <h3 className="font-display text-5xl uppercase text-brand-white">{leadStats.health}%</h3>
-                </div>
-                <div className="w-12 h-12 blueprint-border flex items-center justify-center text-brand-orange">
-                   <BarChart3 size={20} />
-                </div>
-             </div>
-             <div className="w-full bg-brand-obsidian h-1 mt-4">
-                <div className="bg-brand-orange h-full" style={{ width: `${leadStats.health}%` }} />
-             </div>
-          </div>
-       </div>
-
-       {/* Primary Filters */}
-       <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
-          <div className="flex gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
-              {["all", "advisor", "contact", "newsletter"].map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setFilter(t)}
-                  className={cn(
-                    "px-6 py-2 font-mono text-[10px] uppercase tracking-widest border transition-all whitespace-nowrap",
-                    filter === t ? "border-brand-orange text-brand-orange bg-brand-orange/5" : "border-brand-border text-brand-grey hover:border-brand-grey"
-                  )}
-                >
-                  {t} Capture
-                </button>
-              ))}
-          </div>
-          
-          <div className="relative w-full md:w-64">
-             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-grey w-3 h-3" />
-             <input 
-               type="text"
-               placeholder="Search Dossier..."
-               className="w-full bg-brand-carbon border border-brand-border pl-10 pr-4 py-2 font-mono text-[10px] uppercase tracking-widest outline-none focus:border-brand-orange"
-             />
-          </div>
-       </div>
-
-      {view === "list" ? (
-        <div className="blueprint-border bg-brand-carbon overflow-hidden text-brand-white">
-          <table className="w-full text-left">
-            <thead>
-                <tr className="bg-brand-obsidian border-b border-brand-border font-mono text-[10px] uppercase tracking-widest text-brand-grey">
-                  <th className="p-6">Origin / Date</th>
-                  <th className="p-6">Contact Intel</th>
-                  <th className="p-6">Project Metadata</th>
-                  <th className="p-6">Pipeline Status</th>
-                  <th className="p-6 text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody className="font-sans text-xs">
-                {leads.map((lead) => (
-                  <tr key={lead.id} className="border-b border-brand-border/50 hover:bg-brand-obsidian transition-colors group">
-                    <td className="p-6">
-                        <div className="flex items-center gap-3 mb-1">
-                          <span className={cn(
-                            "w-2 h-2 rounded-full",
-                            lead.type === 'advisor' ? "bg-blue-500" : "bg-brand-orange"
-                          )} />
-                          <span className="font-display text-[11px] uppercase text-brand-white">{lead.type} Capture</span>
-                        </div>
-                        <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">{new Date(lead.created_at).toLocaleString()}</span>
-                    </td>
-                    <td className="p-6">
-                        <div className="flex items-center gap-2 text-brand-white mb-1">
-                          <Mail size={12} className="text-brand-orange" />
-                          <span className="font-medium">{lead.email}</span>
-                        </div>
-                        {lead.user_id && <span className="font-mono text-[8px] text-brand-grey uppercase italic">Registered Node</span>}
-                    </td>
-                    <td className="p-6">
-                        <div className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap text-brand-grey font-mono text-[10px]">
-                          {typeof lead.content === 'object' ? JSON.stringify(lead.content).substring(0, 50) + "..." : lead.content}
-                        </div>
-                    </td>
-                    <td className="p-6">
-                        <select 
-                          value={lead.pipeline_status || 'new'}
-                          onChange={(e) => updatePipelineStatus(lead.id, e.target.value)}
-                          className="bg-brand-obsidian border border-brand-border p-2 font-mono text-[8px] uppercase tracking-widest text-brand-grey outline-none focus:border-brand-orange"
-                        >
-                          {pipelineStages.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-                        </select>
-                    </td>
-                    <td className="p-6 text-right">
-                        <div className="flex justify-end gap-3 text-brand-grey opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button onClick={() => setActiveLead(lead)} className="hover:text-brand-orange transition-colors"><MessageSquare size={16} /></button>
-                          <button onClick={() => deleteLead(lead.id)} className="hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
-                        </div>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+      {/* Main View */}
+      {view === 'list' ? (
+        <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+           <table className="w-full text-left">
+              <thead>
+                 <tr className="bg-slate-50/50 border-b border-slate-100">
+                    <th className="px-6 py-4 text-[10px] font-mono uppercase tracking-widest text-slate-400">Lead</th>
+                    <th className="px-6 py-4 text-[10px] font-mono uppercase tracking-widest text-slate-400">Captured</th>
+                    <th className="px-6 py-4 text-[10px] font-mono uppercase tracking-widest text-slate-400">Type</th>
+                    <th className="px-6 py-4 text-[10px] font-mono uppercase tracking-widest text-slate-400">Status</th>
+                    <th className="px-6 py-4 text-[10px] font-mono uppercase tracking-widest text-slate-400 text-right">Actions</th>
+                 </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                 {loading ? (
+                   <tr><td colSpan={5} className="py-20 text-center"><Loader2 className="animate-spin mx-auto text-brand-orange" /></td></tr>
+                 ) : filteredLeads.length === 0 ? (
+                   <tr><td colSpan={5} className="py-20 text-center text-slate-400 italic">No leads found</td></tr>
+                 ) : (
+                   filteredLeads.map(lead => (
+                     <tr key={lead.id} className="hover:bg-slate-50/50 transition-colors group cursor-pointer" onClick={() => setActiveLead(lead)}>
+                        <td className="px-6 py-4">
+                           <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                                 <UserIcon size={14} />
+                              </div>
+                              <div className="flex flex-col">
+                                 <span className="text-sm font-bold text-slate-900 truncate max-w-[200px]">{lead.email}</span>
+                                 <span className="text-[10px] text-slate-400 uppercase font-mono tracking-tight">{lead.id.substring(0, 8)}</span>
+                              </div>
+                           </div>
+                        </td>
+                        <td className="px-6 py-4">
+                           <div className="flex items-center gap-2 text-slate-500">
+                              <Clock size={12} />
+                              <span className="text-[11px] font-mono">{new Date(lead.created_at).toLocaleDateString()}</span>
+                           </div>
+                        </td>
+                        <td className="px-6 py-4">
+                           <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600 bg-slate-100 px-2 py-1 rounded">
+                              {lead.type || 'Inquiry'}
+                           </span>
+                        </td>
+                        <td className="px-6 py-4">
+                           <div className={cn(
+                             "inline-flex items-center gap-1.5 px-2 py-1 rounded-full border text-[9px] font-bold uppercase tracking-widest",
+                             pipelineStages.find(s => s.id === (lead.pipeline_status || 'new'))?.border,
+                             pipelineStages.find(s => s.id === (lead.pipeline_status || 'new'))?.color.replace('bg-', 'text-')
+                           )}>
+                              <div className={cn("w-1 h-1 rounded-full", pipelineStages.find(s => s.id === (lead.pipeline_status || 'new'))?.color)} />
+                              {lead.pipeline_status || 'new'}
+                           </div>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                           <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button className="p-2 text-slate-400 hover:text-brand-orange hover:bg-slate-100 rounded-lg transition-all">
+                                 <Send size={14} />
+                              </button>
+                              <button className="p-2 text-slate-400 hover:text-red-500 hover:bg-slate-100 rounded-lg transition-all" onClick={(e) => { e.stopPropagation(); deleteLead(lead.id); }}>
+                                 <Trash2 size={14} />
+                              </button>
+                              <ChevronRight size={14} className="text-slate-300 ml-2" />
+                           </div>
+                        </td>
+                     </tr>
+                   ))
+                 )}
+              </tbody>
+           </table>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
-           {pipelineStages.map((stage) => (
-             <div key={stage.id} className="space-y-6">
-                <div className="flex items-center justify-between border-b border-brand-border pb-4">
-                   <h3 className="font-display text-sm uppercase tracking-widest text-brand-white">
-                     {stage.name.split(' ')[0]} <span className="text-brand-orange">{stage.name.split(' ').slice(1).join(' ')}</span>
-                   </h3>
-                   <span className="font-mono text-[10px] text-brand-grey">{leads.filter(l => (l.pipeline_status || 'new') === stage.id).length}</span>
+           {pipelineStages.map(stage => (
+             <div key={stage.id} className="space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                   <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-900">{stage.name}</h3>
+                   <span className="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                      {leads.filter(l => (l.pipeline_status || 'new') === stage.id).length}
+                   </span>
                 </div>
-                
-                <div className="space-y-4">
-                   {leads.filter(l => (l.pipeline_status || 'new') === stage.id).map((lead) => (
+                <div className="space-y-3 min-h-[400px]">
+                   {leads.filter(l => (l.pipeline_status || 'new') === stage.id).map(lead => (
                      <div 
                        key={lead.id} 
-                       draggable
                        onClick={() => setActiveLead(lead)}
-                       className="blueprint-border p-5 bg-brand-carbon hover:border-brand-orange transition-all cursor-pointer group"
+                       className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm hover:border-brand-orange transition-all cursor-pointer group"
                      >
-                        <div className="flex justify-between items-start mb-4">
-                           <span className={cn("w-1 h-3", stage.color)} />
-                           <span className="font-mono text-[8px] text-brand-grey uppercase">{new Date(lead.created_at).toLocaleDateString()}</span>
+                        <div className="flex justify-between items-start mb-3">
+                           <span className={cn("w-1 h-3 rounded-full", stage.color)} />
+                           <span className="text-[9px] font-mono text-slate-400 uppercase">{new Date(lead.created_at).toLocaleDateString()}</span>
                         </div>
-                        <p className="font-display text-xs text-brand-white mb-2 uppercase break-all">{lead.email.split('@')[0]}</p>
-                        <div className="flex items-center gap-2 text-brand-grey mb-4">
-                           <Mail size={10} />
-                           <span className="font-mono text-[8px] truncate">{lead.email}</span>
-                        </div>
-                        <div className="flex gap-2">
-                           <span className="px-1.5 py-0.5 border border-brand-border font-mono text-[7px] text-brand-grey uppercase">
-                              {lead.type}
-                           </span>
+                        <p className="text-sm font-bold text-slate-900 truncate mb-1">{lead.email.split('@')[0]}</p>
+                        <p className="text-[10px] text-slate-400 lowercase truncate mb-4">{lead.email}</p>
+                        <div className="flex justify-between items-center">
+                           <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest bg-slate-50 px-1.5 py-0.5 rounded">{lead.type}</span>
+                           <MoreVertical size={12} className="text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity" />
                         </div>
                      </div>
                    ))}
                    {leads.filter(l => (l.pipeline_status || 'new') === stage.id).length === 0 && (
-                     <div className="p-8 border border-dashed border-brand-border text-center">
-                        <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Sector Empty</span>
+                     <div className="py-12 border-2 border-dashed border-slate-100 rounded-xl flex items-center justify-center">
+                        <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">No Leads</span>
                      </div>
                    )}
                 </div>
@@ -324,96 +280,77 @@ export default function LeadsPage() {
         </div>
       )}
 
-      {/* Lead Detail / Activity Modal Placeholder */}
+      {/* Side Detail Panel */}
       {activeLead && (
-        <div className="fixed inset-y-0 right-0 w-full max-w-xl bg-brand-carbon border-l border-brand-border z-[100] p-12 shadow-2xl overflow-y-auto">
-           <button 
-             onClick={() => setActiveLead(null)}
-             className="absolute top-8 right-8 text-brand-grey hover:text-brand-white"
-           >
-             Close Protocol
-           </button>
-           
-           <div className="mb-12">
-              <span className="font-mono text-[10px] text-brand-orange uppercase tracking-widest mb-2 block">Tactical Dossier</span>
-              <h2 className="font-display text-4xl uppercase text-brand-white break-all mb-2">
-                <span className="text-brand-white text-3xl opacity-50 block mb-2 font-mono tracking-widest">Identified Entity:</span>
-                <span className="text-brand-orange">{activeLead.email.split('@')[0]}</span>
-                <span className="text-brand-white opacity-40">@{activeLead.email.split('@')[1]}</span>
-              </h2>
-              <span className="font-mono text-[10px] text-brand-grey uppercase tracking-[0.3em]">ID: {activeLead.id.substring(0, 12)}</span>
-           </div>
+        <>
+          <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-[100] animate-in fade-in duration-300" onClick={() => setActiveLead(null)} />
+          <div className="fixed inset-y-0 right-0 w-full max-w-xl bg-white shadow-2xl z-[110] p-8 animate-in slide-in-from-right duration-300 overflow-y-auto">
+             <div className="flex justify-between items-center mb-12">
+                <div className="flex items-center gap-3">
+                   <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-white">
+                      <UserIcon size={20} />
+                   </div>
+                   <div>
+                      <h2 className="text-xl font-bold text-slate-900 truncate max-w-[300px]">{activeLead.email}</h2>
+                      <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">Captured Lead Dossier</p>
+                   </div>
+                </div>
+                <button onClick={() => setActiveLead(null)} className="p-2 hover:bg-slate-100 rounded-full transition-all text-slate-400">
+                   <X size={20} />
+                </button>
+             </div>
 
-           <div className="space-y-12">
-              <section className="space-y-4">
-                 <h4 className="font-mono text-[10px] text-brand-white uppercase tracking-widest border-b border-brand-border pb-2">
-                    Captured <span className="text-brand-orange">Intelligence</span>
-                 </h4>
-                 <div className="blueprint-border p-6 bg-brand-obsidian font-mono text-[10px] text-brand-grey overflow-x-auto">
-                    <pre>{typeof activeLead.content === 'object' ? JSON.stringify(activeLead.content, null, 2) : activeLead.content}</pre>
-                 </div>
-              </section>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                   <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Status</p>
+                   <select 
+                     value={activeLead.pipeline_status || 'new'}
+                     onChange={(e) => updateStatus(activeLead.id, e.target.value)}
+                     className="w-full bg-transparent text-sm font-bold text-slate-900 border-none p-0 focus:ring-0 cursor-pointer"
+                   >
+                     {pipelineStages.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                   </select>
+                </div>
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                   <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Source</p>
+                   <p className="text-sm font-bold text-slate-900 uppercase">{activeLead.type || 'Inquiry'}</p>
+                </div>
+             </div>
 
-              <section className="space-y-6">
-                 <h4 className="font-mono text-[10px] text-brand-white uppercase tracking-widest border-b border-brand-border pb-2">
-                    Activity <span className="text-brand-orange">Log</span>
-                 </h4>
-                 <LeadActivityLogger leadId={activeLead.id} />
-              </section>
+             <div className="space-y-12 pb-20">
+                <section>
+                   <div className="flex items-center gap-2 mb-4">
+                      <Tag size={14} className="text-brand-orange" />
+                      <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-900">Lead Intel</h4>
+                   </div>
+                   <div className="bg-slate-900 rounded-xl p-6 text-slate-300 font-mono text-xs overflow-x-auto border border-slate-800 shadow-inner">
+                      <pre className="whitespace-pre-wrap">{typeof activeLead.content === 'object' ? JSON.stringify(activeLead.content, null, 2) : activeLead.content}</pre>
+                   </div>
+                </section>
 
-              {activeLead.type === 'advisor' && (
-                  <section className="pt-8 border-t border-brand-border">
-                     <button 
-                       onClick={async () => {
-                         const displayId = `AM-${Math.floor(100 + Math.random() * 900)}`;
-                         const content = activeLead.content || {};
-                         
-                         // 1. Create the Project
-                         const { data: project, error: pError } = await supabase
-                           .from('build_projects')
-                           .insert({
-                             display_id: displayId,
-                             client_name: activeLead.email.split('@')[0].toUpperCase(),
-                             vehicle_name: content.chassis || "Bespoke Platform",
-                             vehicle_slug: content.chassis?.toLowerCase().replace('_', '-'),
-                             current_stage: 'DESIGN'
-                           })
-                           .select()
-                           .single();
+                <section>
+                   <div className="flex items-center gap-2 mb-4">
+                      <MessageSquare size={14} className="text-brand-orange" />
+                      <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-900">Activity & Notes</h4>
+                   </div>
+                   <LeadActivityLogger leadId={activeLead.id} />
+                </section>
 
-                         if (pError) {
-                           alert("Registry Handshake Failed: " + pError.message);
-                           return;
-                         }
-
-                         // 2. Add System Nodes from configuration
-                         if (content.systems && Array.isArray(content.systems)) {
-                           const nodes = content.systems.map((s: string) => ({
-                             project_id: project.id,
-                             component_name: s,
-                             status: 'PENDING'
-                           }));
-                           await supabase.from('project_installations').insert(nodes);
-                         }
-
-                         // 3. Update Lead Status
-                         await supabase.from('leads').update({ pipeline_status: 'qualified' }).eq('id', activeLead.id);
-
-                         alert(`Protocol Initialized: Project ${displayId} is now live in the Registry.`);
-                         window.location.href = `/admin/projects/${project.id}`;
-                       }}
-                       className="w-full py-6 bg-brand-orange text-white font-display text-xs uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all flex items-center justify-center gap-3 group"
-                     >
-                        <Zap className="w-4 h-4" /> Initialize Build Node
-                     </button>
-                     <p className="mt-4 font-mono text-[8px] text-brand-grey text-center uppercase tracking-widest italic opacity-50">
-                        This will provision a secure build node and synchronize metadata.
-                     </p>
-                  </section>
-               )}
-           </div>
-        </div>
+                <div className="flex gap-4">
+                   <button className="flex-1 py-4 bg-slate-900 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-brand-orange transition-all flex items-center justify-center gap-2">
+                      <Mail size={14} /> Send Inquiry Response
+                   </button>
+                   <button className="p-4 border border-slate-200 rounded-xl text-slate-400 hover:text-slate-900 hover:border-slate-400 transition-all">
+                      <Phone size={14} />
+                   </button>
+                </div>
+             </div>
+          </div>
+        </>
       )}
     </div>
   );
 }
+
+import { Loader2 } from "lucide-react";
+import { XCircle } from "lucide-react";
