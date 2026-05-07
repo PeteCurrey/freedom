@@ -150,10 +150,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     </span>
                   )}
                 </div>
-              </div>
 
-              {/* Thumbnails */}
-              <div className="grid grid-cols-4 gap-4">
+                {/* Thumbnails */}
+                <div className="grid grid-cols-4 gap-4 mt-8">
                  {(product.images as (string | null)[] || (product.image_url ? [product.image_url] : [])).slice(0, 4).map((img: string | null, i: number) => (
                    <div key={i} className={cn(
                      "aspect-square bg-brand-carbon blueprint-border transition-all cursor-pointer group flex items-center justify-center p-4",
