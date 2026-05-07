@@ -35,7 +35,7 @@ export function ProductTabs({ product, related, fallbackImage }: ProductTabsProp
       <div className="prose prose-invert max-w-none text-brand-grey text-lg leading-relaxed">
         {activeTab === "Overview" && (
           <div className="animate-in fade-in duration-500">
-            <p className="whitespace-pre-line">{product.full_description || product.description || "No detailed description provided for this component."}</p>
+            <p className="whitespace-pre-line">{product.description || product.short_description || "No detailed description provided for this component."}</p>
             
             {/* 4. PRODUCT VIDEO SYSTEM */}
             {product.video_enabled && product.video_url && (
