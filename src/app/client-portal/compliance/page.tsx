@@ -4,7 +4,7 @@ import { useBuild } from "@/hooks/useBuild";
 import { 
   ShieldCheck, AlertTriangle, CheckCircle2, 
   Scale, Zap, Gauge, Info, ClipboardCheck,
-  FileText, ExternalLink
+  FileText, ExternalLink, Download
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
