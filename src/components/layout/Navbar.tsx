@@ -62,13 +62,13 @@ const navLinks: NavLink[] = [
     href: "/store", 
     mega: true,
     items: [
-      { name: "Power Systems", href: "/store/electrical", tagline: "Victron, Lithium, Solar", image: "/images/cat-power.png" },
-      { name: "Climate Control", href: "/store/climate", tagline: "Heaters, AC, Fans", image: "/images/cat-climate.png" },
-      { name: "Plumbing", href: "/store/plumbing", tagline: "Tanks, Pumps, Filtration", image: "/images/cat-water.png" },
-      { name: "Insulation & Build", href: "/store/insulation", tagline: "The Foundation", image: "/images/cat-insulation.png" },
-      { name: "Windows & Vent", href: "/store/windows-ventilation", tagline: "Dometic, MaxxFan", image: "/images/cat-windows.png" },
-      { name: "Exterior & Accessories", href: "/store/exterior-accessories", tagline: "Racks, Ladders, Awnings", image: "/images/exterior-equipment-technical.png" },
-      { name: "Build Kits", href: "/store/kits", tagline: "Bundled System Packs", image: "/images/community-showcase.png" },
+      { name: "Electrical Core", href: "/store/electrical-core", tagline: "Batteries & Charging", image: "/images/cat-power.png" },
+      { name: "Solar & Roof", href: "/store/solar-roof", tagline: "Panels & Mounting", image: "/images/solar-technical.png" },
+      { name: "Heating & Climate", href: "/store/heating-climate", tagline: "Diesel & Combi", image: "/images/cat-climate.png" },
+      { name: "Water & Plumbing", href: "/store/water-plumbing", tagline: "Tanks & Pumps", image: "/images/cat-water.png" },
+      { name: "Gas & Cooking", href: "/store/gas-cooking", tagline: "Lockers & Hobs", image: "/images/gas-lpg-technical.png" },
+      { name: "Toilets & Washroom", href: "/store/toilets-washroom", tagline: "Composting & Tubs", image: "/images/cat-windows.png" },
+      { name: "Complete Kits", href: "/store/complete-kits", tagline: "System Bundles", image: "/images/community-showcase.png" },
     ]
   },
   { 
@@ -76,8 +76,9 @@ const navLinks: NavLink[] = [
     href: "/resources",
     mega: true,
     items: [
-      { name: "The Journey", href: "/journey", tagline: "Track Your Build Node", image: "/images/hero-background.png" },
-      { name: "Document Library", href: "/resources", tagline: "Manuals & Guides", image: "/images/sprinter.png" },
+      { name: "Technical Guides", href: "/guides", tagline: "Engineering Library", image: "/images/hero-background.png" },
+      { name: "Build Journey", href: "/journey", tagline: "Track Your Node", image: "/images/sprinter.png" },
+      { name: "Document Library", href: "/resources", tagline: "Manuals & Specs", image: "/images/man-tge-hero.png" },
     ]
   },
   { 
@@ -85,11 +86,10 @@ const navLinks: NavLink[] = [
     href: "/tools", 
     mega: true,
     items: [
-      { name: "Payload & Balance", href: "/tools/payload-balancer", tagline: "GVM & Axle Loading", image: "/images/bespoke-iveco.png" },
-      { name: "Cable Sizing", href: "/tools/cable-calculator", tagline: "Amps, Voltage, Run", image: "/images/systems-showcase.png" },
-      { name: "Cost Estimator", href: "/advisor", tagline: "Project Budgeting", image: "/images/interior-showcase.png" },
-      { name: "Build Matcher", href: "/advisor", tagline: "Chassis Discovery", image: "/images/hero-background.png" },
-      { name: "Tech Standards", href: "/resources", tagline: "BS EN / RCD Rules", image: "/images/sprinter.png" },
+      { name: "AI Build Planner", href: "/planner", tagline: "Spec Your Build", image: "/images/systems-showcase.png" },
+      { name: "Payload & Balance", href: "/tools/payload-balancer", tagline: "GVM Audit", image: "/images/bespoke-iveco.png" },
+      { name: "Cable Sizing", href: "/tools/cable-calculator", tagline: "Electrical Logic", image: "/images/systems-showcase.png" },
+      { name: "Build Plan PDF", href: "/planner/results", tagline: "Paid Build Dossier", image: "/images/hero-background.png" },
     ]
   },
   { name: "Showcase", href: "/showcase" },
@@ -128,6 +128,7 @@ export function Navbar() {
     setTimeoutId(id);
   };
 
+  /* 
   useEffect(() => {
     async function fetchStoreCategories() {
       const { data } = await supabase
@@ -170,6 +171,7 @@ export function Navbar() {
     }
     fetchStoreCategories();
   }, []);
+  */
 
   useEffect(() => {
     const handleScroll = () => {

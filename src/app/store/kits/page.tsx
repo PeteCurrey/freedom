@@ -11,10 +11,16 @@ const supabaseAdmin = createClient(
 );
 
 export default async function BuildKitsPage() {
+  const { data: categoryData } = await supabaseAdmin
+    .from('product_categories')
+    .select('id')
+    .eq('slug', 'kits')
+    .single();
+
   const { data: kits } = await supabaseAdmin
     .from('products')
     .select('*')
-    .eq('type', 'kit')
+    .eq('category_id', categoryData?.id)
     .eq('is_active', true);
 
   return (

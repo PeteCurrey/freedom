@@ -17,7 +17,7 @@ import {
   ChevronRight, ArrowLeft, ArrowRight, Download, Eye,
   Wind, Flame, Loader2, Layout, AlertTriangle,
   Sun, Shield, Sparkles, Settings, Info,
-  Search, Package, Monitor, Activity, Crown
+  Search, Package, Monitor, Activity, Crown, FileText
 } from "lucide-react";
 import Image from "next/image";
 import { vehicleData } from "@/lib/data/vehicles";
@@ -546,6 +546,17 @@ export default function BuildPlanner() {
                             </div>
                             <h2 className="font-display text-5xl lg:text-7xl uppercase mb-4 tracking-tighter leading-none">{steps[currentStep]}</h2>
                             <p className="font-sans text-brand-grey text-xl leading-relaxed italic">{systemData.guidance}</p>
+                            
+                            {/* MONETIZATION CTA */}
+                            <div className="bg-brand-orange/5 border border-brand-orange/20 p-4 mt-8 flex items-center gap-4">
+                               <div className="bg-brand-orange/10 p-2 border border-brand-orange/30">
+                                  <Package className="w-5 h-5 text-brand-orange" />
+                               </div>
+                               <div>
+                                  <p className="font-mono text-[9px] text-brand-orange uppercase tracking-[0.2em] font-bold">Direct Hardware Mapping</p>
+                                  <p className="font-sans text-[10px] text-brand-grey uppercase tracking-widest mt-1">Your choice here will generate a verified parts list in your Build Basket.</p>
+                               </div>
+                            </div>
                           </div>
                           
                           <div className="w-full md:w-64 space-y-6 shrink-0">
@@ -696,33 +707,34 @@ export default function BuildPlanner() {
                         </div>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12 border-t border-brand-border/40">
-                        {[
-                          { tier: "Starter", price: 29, pages: "15-25", desc: "Essential system schematics and full Bill of Materials (BOM)." },
-                          { tier: "Full", price: 79, pages: "40-60", desc: "Professional blueprint, install guides, and technical sequence.", popular: true },
-                          { tier: "Master", price: 149, pages: "80+", desc: "Exhaustive details, 3D wiring views, and priority support." }
-                        ].map((t) => (
-                          <div key={t.tier} className={cn(
-                            "blueprint-border p-10 bg-brand-obsidian/80 flex flex-col items-center text-center transition-all",
-                            t.popular ? "border-brand-orange scale-105 shadow-2xl shadow-brand-orange/20 relative z-20" : "opacity-60 border-brand-border/40"
-                          )}>
-                             {t.popular && <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-orange text-white font-mono text-[10px] px-6 py-2 uppercase tracking-widest font-bold">Recommended Solution</div>}
-                             <h3 className="font-display text-3xl mb-4 uppercase">{t.tier}</h3>
-                             <div className="font-display text-6xl mb-6 font-bold leading-none">£{t.price}</div>
-                             <p className="font-mono text-[10px] text-brand-grey uppercase tracking-[0.2em] mb-10">{t.pages} Page Technical PDF Portolio</p>
-                             <p className="font-sans text-xs text-brand-grey leading-relaxed mb-12 flex-1">{t.desc}</p>
-                             <button 
-                                disabled={isProcessing}
-                                onClick={() => handleCheckout(t.tier.toLowerCase())}
-                                className={cn(
-                                  "w-full py-5 font-display text-xs uppercase tracking-widest transition-all mt-auto flex items-center justify-center gap-3",
-                                  t.popular ? "bg-brand-orange text-white hover:bg-white hover:text-brand-orange" : "border border-brand-border text-white hover:border-brand-orange"
-                                )}
-                              >
-                                {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Select {t.tier} <ChevronRight className="w-4 h-4" /></>}
-                              </button>
+                      {/* GENERATE BUILD BASKET CTA */}
+                      <div className="bg-brand-carbon/80 border border-brand-orange/30 p-12 text-center max-w-3xl mx-auto shadow-2xl relative overflow-hidden">
+                        <div className="blueprint-grid absolute inset-0 opacity-5 pointer-events-none" />
+                        <div className="relative z-10">
+                          <span className="font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] mb-4 block animate-pulse">Analysis Complete // Project Ready</span>
+                          <h3 className="font-display text-4xl lg:text-5xl uppercase tracking-tighter mb-6">Build Logic Initialized</h3>
+                          <p className="font-sans text-brand-grey text-lg mb-10 max-w-xl mx-auto">
+                            We have mapped your selections to a professional hardware registry. Proceed to your locked Build Basket to view your parts list, compliance checks, and kit quote.
+                          </p>
+                          <Link 
+                            href="/planner/results"
+                            className="inline-flex items-center gap-4 bg-brand-orange text-white px-12 py-6 font-display text-sm uppercase tracking-widest hover:bg-brand-white hover:text-brand-obsidian transition-all group"
+                          >
+                            Generate My Build Basket & Quote <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                          </Link>
+                          
+                          <div className="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-4 opacity-50 grayscale hover:grayscale-0 transition-all duration-700">
+                             <div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-widest text-brand-grey">
+                                <Package className="w-3 h-3 text-brand-orange" /> Parts List Verified
+                             </div>
+                             <div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-widest text-brand-grey">
+                                <Shield className="w-3 h-3 text-brand-orange" /> Compliance Audited
+                             </div>
+                             <div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-widest text-brand-grey">
+                                <FileText className="w-3 h-3 text-brand-orange" /> PDF Pack Ready
+                             </div>
                           </div>
-                        ))}
+                        </div>
                       </div>
                     </div>
                   )}

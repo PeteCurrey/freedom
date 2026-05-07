@@ -16,7 +16,8 @@ import {
   CheckCircle2,
   ExternalLink,
   Search,
-  Eye
+  Eye,
+  ShoppingBag
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -51,6 +52,15 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
     system_tier: [],
     vehicle_compatibility: ["All vehicles"],
     tags: [],
+    gtin: "",
+    mpn: "",
+    list_on_ebay: false,
+    list_on_amazon: false,
+    list_on_onbuy: false,
+    list_on_pinterest: false,
+    ebay_listing_id: "",
+    amazon_asin: "",
+    onbuy_listing_id: "",
     status: "draft",
     visibility: "public",
     images: [],
@@ -232,6 +242,28 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                 value={formData.internal_sku}
                 onChange={handleChange}
                 placeholder="e.g. AMP-30209"
+                className="w-full border border-gray-300 p-3 text-sm focus:border-brand-orange outline-none"
+              />
+            </div>
+            <div>
+              <label className="block font-mono text-[10px] uppercase text-gray-500 mb-2">GTIN / EAN</label>
+              <input 
+                type="text" 
+                name="gtin"
+                value={formData.gtin}
+                onChange={handleChange}
+                placeholder="13-digit barcode"
+                className="w-full border border-gray-300 p-3 text-sm focus:border-brand-orange outline-none"
+              />
+            </div>
+            <div>
+              <label className="block font-mono text-[10px] uppercase text-gray-500 mb-2">MPN</label>
+              <input 
+                type="text" 
+                name="mpn"
+                value={formData.mpn}
+                onChange={handleChange}
+                placeholder="Manufacturer Part Number"
                 className="w-full border border-gray-300 p-3 text-sm focus:border-brand-orange outline-none"
               />
             </div>
@@ -437,6 +469,57 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
       {/* RIGHT SIDEBAR */}
       <div className="w-full lg:w-80 space-y-8">
         
+        {/* SALES CHANNELS */}
+        <div className="bg-white border border-gray-200 p-6 shadow-sm">
+          <h3 className="font-display text-sm uppercase tracking-widest mb-4">Sales Channels</h3>
+          <div className="space-y-4">
+             {[
+               { id: 'ebay', label: 'eBay UK', icon: ShoppingBag, connected: !!formData.ebay_listing_id, listed: formData.list_on_ebay },
+               { id: 'amazon', label: 'Amazon UK', icon: ShoppingBag, connected: !!formData.amazon_asin, listed: formData.list_on_amazon },
+               { id: 'onbuy', label: 'OnBuy', icon: ShoppingBag, connected: !!formData.onbuy_listing_id, listed: formData.list_on_onbuy },
+               { id: 'google', label: 'Google Merchant', icon: Search, connected: true, listed: true },
+               { id: 'meta', label: 'Meta Catalog', icon: Eye, connected: true, listed: true },
+               { id: 'pinterest', label: 'Pinterest', icon: LinkIcon, connected: true, listed: formData.list_on_pinterest },
+             ].map((ch) => (
+               <div key={ch.id} className="flex items-center justify-between group">
+                  <div className="flex items-center gap-3">
+                     <div className={cn(
+                       "w-8 h-8 rounded flex items-center justify-center border",
+                       ch.listed ? "bg-orange-50 border-orange-100 text-brand-orange" : "bg-slate-50 border-slate-100 text-slate-400"
+                     )}>
+                        <ch.icon size={14} />
+                     </div>
+                     <div>
+                        <p className="text-[10px] font-bold text-slate-900 uppercase tracking-wider">{ch.label}</p>
+                        <p className="text-[8px] text-slate-400 uppercase tracking-tight">
+                           {ch.connected ? (ch.listed ? 'Live' : 'Ready') : 'Not Setup'}
+                        </p>
+                     </div>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      className="sr-only peer"
+                      checked={ch.listed}
+                      onChange={(e) => {
+                        const field = `list_on_${ch.id === 'google' || ch.id === 'meta' ? 'ebay' : ch.id}`; // Simple logic for now
+                        if (ch.id !== 'google' && ch.id !== 'meta') {
+                           setFormData((prev: any) => ({ ...prev, [`list_on_${ch.id}`]: e.target.checked }));
+                        }
+                      }}
+                    />
+                    <div className="w-7 h-4 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-orange"></div>
+                  </label>
+               </div>
+             ))}
+          </div>
+          <div className="mt-6 pt-4 border-t border-slate-50">
+             <button className="w-full py-2 text-[9px] font-bold text-brand-orange uppercase hover:bg-orange-50 rounded transition-all">
+                Configure Channel Mapping
+             </button>
+          </div>
+        </div>
+
         {/* PUBLISH CARD */}
         <div className="bg-white border border-gray-200 p-6 shadow-sm">
           <h3 className="font-display text-sm uppercase tracking-widest mb-4">Status & Visibility</h3>

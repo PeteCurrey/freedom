@@ -34,7 +34,8 @@ import {
   Settings,
   Bell,
   Monitor,
-  Layout
+  Layout,
+  ShoppingBag
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -57,16 +58,18 @@ const navGroups = [
     ]
   },
   {
-    label: "COMMERCE",
+    label: "REVENUE HUB",
     items: [
-      { name: "Orders", href: "/admin/orders", icon: Receipt },
-      { name: "Leads", href: "/admin/leads", icon: Magnet },
-      { name: "Customers", href: "/admin/customers", icon: User },
+      { name: "Build Plans", href: "/admin/build-plans", icon: Layout },
+      { name: "Quote Requests", href: "/admin/quote-requests", icon: Magnet },
+      { name: "PDF Orders", href: "/admin/pdf-orders", icon: Receipt },
+      { name: "Affiliate Clicks", href: "/admin/affiliate-clicks", icon: Share2 },
     ]
   },
   {
     label: "MARKETING",
     items: [
+      { name: "Channels", href: "/admin/channels", icon: ShoppingBag },
       { name: "SEO Commander", href: "/admin/seo", icon: Search },
       { name: "Newsletter", href: "/admin/newsletter", icon: Mail },
       { name: "AI Studio", href: "/admin/ai-studio", icon: Sparkles },
@@ -75,6 +78,7 @@ const navGroups = [
   {
     label: "SYSTEM",
     items: [
+      { name: "Integrations", href: "/admin/settings/integrations", icon: Share2 },
       { name: "Settings", href: "/admin/settings", icon: Settings },
     ]
   },

@@ -46,7 +46,7 @@ export default function CartPage() {
   }, []);
 
   const handleCheckout = async () => {
-    if (cartItems.length === 0 || !user) return;
+    if (cartItems.length === 0) return;
     setLoading(true);
 
     try {
@@ -55,7 +55,7 @@ export default function CartPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           cart: cartItems,
-          userId: user.id
+          userId: user?.id || 'guest'
         })
       });
 

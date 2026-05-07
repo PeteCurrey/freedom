@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { 
   BarChart3, 
@@ -14,7 +14,20 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   PieChart as PieChartIcon,
-  Layout
+  Layout,
+  Lock,
+  Zap,
+  CreditCard,
+  Target,
+  MousePointer2,
+  Activity,
+  Package,
+  ExternalLink,
+  Info,
+  ShieldCheck,
+  CheckCircle2,
+  Clock,
+  Eye
 } from "lucide-react";
 import { 
   LineChart, 
@@ -34,39 +47,60 @@ import {
 } from 'recharts';
 import { cn } from "@/lib/utils";
 
-const COLORS = ['#f97316', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
-
-const trafficData = [
-  { name: 'Organic', value: 45 },
-  { name: 'Direct', value: 25 },
-  { name: 'Referral', value: 15 },
-  { name: 'Social', value: 10 },
-  { name: 'Email', value: 5 },
-];
-
-const revenueTrend = [
-  { name: 'Mon', revenue: 4200, orders: 12 },
-  { name: 'Tue', revenue: 3800, orders: 10 },
-  { name: 'Wed', revenue: 5100, orders: 15 },
-  { name: 'Thu', revenue: 4600, orders: 14 },
-  { name: 'Fri', revenue: 6200, orders: 18 },
-  { name: 'Sat', revenue: 7500, orders: 22 },
-  { name: 'Sun', revenue: 6800, orders: 19 },
-];
-
-const topProductsData = [
-  { name: 'MultiPlus-II', value: 14400 },
-  { name: 'Fogstar 400Ah', value: 12000 },
-  { name: 'Climate Kit', value: 8500 },
-  { name: 'MaxxFan', value: 6400 },
-  { name: 'Solar 400W', value: 5200 },
-];
-
 export default function AnalyticsPage() {
   const [activeTab, setActiveTab] = useState('Overview');
   const [dateRange, setDateRange] = useState('30D');
+  const [integrations, setIntegrations] = useState({
+    stripe: false,
+    ga4: false,
+    gsc: false,
+    ebay: false
+  });
 
-  const tabs = ['Overview', 'Revenue', 'Traffic', 'Products', 'Customers', 'SEO Performance'];
+  const tabs = ['Overview', 'Revenue', 'Traffic', 'SEO Performance', 'Customers', 'Channels', 'Products'];
+
+  const MetricCard = ({ label, value, sub, trend, trendValue, icon: Icon, connected = true }: any) => (
+    <div className="bg-white border border-slate-200 p-5 rounded-xl shadow-sm relative overflow-hidden group">
+      {!connected && (
+        <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center">
+           <Link href="/admin/settings/integrations" className="text-[9px] font-bold bg-slate-900 text-white px-3 py-1.5 rounded uppercase tracking-widest shadow-xl hover:bg-brand-orange transition-all">Setup Required</Link>
+        </div>
+      )}
+      <div className="flex justify-between items-start mb-4">
+         <p className="text-[10px] font-mono uppercase tracking-widest text-slate-400">{label}</p>
+         <Icon size={14} className="text-slate-300 group-hover:text-brand-orange transition-colors" />
+      </div>
+      <div className="flex items-baseline gap-2">
+        <span className="text-2xl font-bold text-slate-900">{connected ? value : '—'}</span>
+        {connected && trend && (
+          <span className={cn(
+            "text-[10px] font-bold flex items-center gap-0.5",
+            trend === 'up' ? "text-emerald-600" : "text-red-500"
+          )}>
+            {trend === 'up' ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
+            {trendValue}
+          </span>
+        )}
+      </div>
+      <p className="text-[10px] text-slate-400 mt-1">{sub}</p>
+    </div>
+  );
+
+  const EmptyState = ({ platform, icon: Icon, title, description }: { platform: string, icon: any, title: string, description: string }) => (
+    <div className="flex-1 flex flex-col items-center justify-center p-12 text-center bg-white border border-slate-100 rounded-xl min-h-[400px]">
+       <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center text-slate-200 mb-4">
+          <Icon size={32} />
+       </div>
+       <h4 className="text-sm font-bold text-slate-900">{title}</h4>
+       <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">{description}</p>
+       <Link 
+         href="/admin/settings/integrations" 
+         className="mt-6 px-4 py-2 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-md hover:bg-brand-orange transition-all flex items-center gap-2 shadow-lg shadow-slate-200"
+       >
+         Connect {platform} <Zap size={12} />
+       </Link>
+    </div>
+  );
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500">
@@ -74,9 +108,9 @@ export default function AnalyticsPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900 tracking-tighter flex items-center gap-3">
-             <BarChart3 className="text-brand-orange" /> Business Intelligence
+             <BarChart3 className="text-brand-orange" /> Business <span className="text-brand-orange underline decoration-brand-orange/20">Intelligence</span>
           </h1>
-          <p className="text-slate-500 text-sm mt-1">Full platform analytics and growth metrics</p>
+          <p className="text-slate-500 text-sm mt-1">Real-time platform analytics from integrated data sources</p>
         </div>
         
         <div className="flex items-center gap-2 bg-white border border-slate-200 p-1 rounded-lg self-start md:self-end">
@@ -92,10 +126,6 @@ export default function AnalyticsPage() {
                {range}
              </button>
            ))}
-           <div className="h-4 w-px bg-slate-200 mx-1" />
-           <button className="px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
-              <Calendar size={12} /> Custom
-           </button>
         </div>
       </div>
 
@@ -117,179 +147,189 @@ export default function AnalyticsPage() {
         ))}
       </div>
 
-      {activeTab === 'Overview' && (
-        <div className="space-y-8 animate-in slide-in-from-bottom-2 duration-300">
-           {/* METRICS ROW */}
-           <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-              {[
-                { label: 'Revenue', value: '£42,840', change: '+12.5%', trend: 'up' },
-                { label: 'Orders', value: '184', change: '+4.2%', trend: 'up' },
-                { label: 'AOV', value: '£232.82', change: '-1.2%', trend: 'down' },
-                { label: 'Conv. Rate', value: '3.24%', change: '+0.4%', trend: 'up' },
-                { label: 'New Customers', value: '42', change: '+18%', trend: 'up' },
-                { label: 'Returning', value: '28%', change: '+2%', trend: 'up' },
-              ].map((m, i) => (
-                <div key={i} className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
-                   <p className="text-[9px] font-mono uppercase tracking-widest text-slate-400 mb-1">{m.label}</p>
-                   <p className="text-xl font-bold text-slate-900">{m.value}</p>
-                   <div className={cn(
-                     "flex items-center gap-1 text-[10px] font-bold mt-1",
-                     m.trend === 'up' ? "text-emerald-600" : "text-red-500"
-                   )}>
-                      {m.trend === 'up' ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
-                      {m.change}
+      <div className="space-y-8 animate-in slide-in-from-bottom-2 duration-300">
+         {activeTab === 'Overview' && (
+           <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                 <MetricCard label="Revenue MTD" value="£0" sub="vs £0 last month" trend="up" trendValue="0%" icon={CreditCard} connected={integrations.stripe} />
+                 <MetricCard label="Total Sessions" value="0" sub="Sessions today" trend="up" trendValue="0%" icon={Users} connected={integrations.ga4} />
+                 <MetricCard label="Avg Position" value="—" sub="Keywords from GSC" icon={Target} connected={integrations.gsc} />
+                 <MetricCard label="Conversion" value="0%" sub="Sessions to orders" icon={MousePointer2} connected={integrations.stripe && integrations.ga4} />
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                 {!integrations.stripe ? (
+                   <EmptyState 
+                     platform="Stripe" 
+                     icon={TrendingUp} 
+                     title="Revenue analysis hidden" 
+                     description="Connect your Stripe account to see real-time revenue performance, order trends, and average order value." 
+                   />
+                 ) : (
+                   <div className="h-[400px] bg-white border border-slate-200 rounded-xl p-6 flex flex-col items-center justify-center">
+                      <p className="text-sm text-slate-400 italic">No revenue data available for this period.</p>
                    </div>
-                </div>
-              ))}
-           </div>
+                 )}
 
-           {/* CHARTS ROW 1 */}
-           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Revenue Over Time */}
-              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                 <div className="flex justify-between items-end mb-8">
-                    <div>
-                       <h3 className="text-sm font-bold text-slate-900">Revenue Over Time</h3>
-                       <p className="text-[10px] text-slate-400 uppercase tracking-tight">Daily sales vs order count</p>
-                    </div>
-                    <div className="flex items-center gap-4 text-[10px] font-mono uppercase tracking-widest">
-                       <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-brand-orange" /> Revenue</div>
-                       <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-blue-500" /> Orders</div>
-                    </div>
-                 </div>
-                 <div className="h-[300px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                       <AreaChart data={revenueTrend}>
-                          <defs>
-                             <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#f97316" stopOpacity={0.1}/>
-                                <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
-                             </linearGradient>
-                          </defs>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                          <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} />
-                          <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} />
-                          <Tooltip />
-                          <Area type="monotone" dataKey="revenue" stroke="#f97316" fillOpacity={1} fill="url(#colorRev)" strokeWidth={3} />
-                       </AreaChart>
-                    </ResponsiveContainer>
-                 </div>
+                 {!integrations.ga4 ? (
+                   <EmptyState 
+                     platform="Google Analytics 4" 
+                     icon={Globe} 
+                     title="Traffic analysis hidden" 
+                     description="Connect GA4 to track sessions, bounce rates, and traffic sources for your store and resource pages." 
+                   />
+                 ) : (
+                   <div className="h-[400px] bg-white border border-slate-200 rounded-xl p-6 flex flex-col items-center justify-center">
+                      <p className="text-sm text-slate-400 italic">No traffic data available for this period.</p>
+                   </div>
+                 )}
               </div>
+           </>
+         )}
 
-              {/* Traffic Sources */}
-              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                 <div className="flex justify-between items-end mb-8">
-                    <div>
-                       <h3 className="text-sm font-bold text-slate-900">Traffic Distribution</h3>
-                       <p className="text-[10px] text-slate-400 uppercase tracking-tight">Acquisition channels performance</p>
-                    </div>
-                    <PieChartIcon className="text-slate-200" size={24} />
-                 </div>
-                 <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
-                    <div className="h-[250px]">
-                       <ResponsiveContainer width="100%" height="100%">
-                          <PieChart>
-                             <Pie
-                                data={trafficData}
-                                innerRadius={60}
-                                outerRadius={80}
-                                paddingAngle={5}
-                                dataKey="value"
-                             >
-                                {trafficData.map((entry, index) => (
-                                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                             </Pie>
-                             <Tooltip />
-                          </PieChart>
-                       </ResponsiveContainer>
-                    </div>
-                    <div className="space-y-4">
-                       {trafficData.map((t, i) => (
-                          <div key={i} className="flex items-center justify-between">
-                             <div className="flex items-center gap-3">
-                                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[i] }} />
-                                <span className="text-[11px] font-bold text-slate-600 uppercase tracking-widest">{t.name}</span>
-                             </div>
-                             <span className="text-sm font-bold text-slate-900">{t.value}%</span>
-                          </div>
-                       ))}
-                    </div>
-                 </div>
-              </div>
-           </div>
+         {activeTab === 'Revenue' && (
+            <>
+               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                  <MetricCard label="Revenue Today" value="£0" sub="Real-time" icon={TrendingUp} connected={integrations.stripe} />
+                  <MetricCard label="This Month" value="£0" sub="MTD Performance" icon={Calendar} connected={integrations.stripe} />
+                  <MetricCard label="AOV" value="£0" sub="Average Order Value" icon={ShoppingCart} connected={integrations.stripe} />
+                  <MetricCard label="Orders" value="0" sub="Total orders" icon={Package} connected={integrations.stripe} />
+                  <MetricCard label="Refund Rate" value="0%" sub="Post-sale health" icon={Activity} connected={integrations.stripe} />
+               </div>
 
-           {/* CHARTS ROW 2 */}
-           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Top 10 Products */}
-              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                 <div className="flex justify-between items-end mb-8">
-                    <div>
-                       <h3 className="text-sm font-bold text-slate-900">Top Products by Revenue</h3>
-                       <p className="text-[10px] text-slate-400 uppercase tracking-tight">Performance of leading SKUs</p>
+               <div className="min-h-[500px] flex flex-col">
+                  {!integrations.stripe ? (
+                    <EmptyState 
+                      platform="Stripe" 
+                      icon={ShoppingCart} 
+                      title="Revenue analytics requires Stripe" 
+                      description="Once connected, you'll see a detailed breakdown of sales, refunds, and growth across all channels." 
+                    />
+                  ) : (
+                    <div className="bg-white border border-slate-200 rounded-xl p-8 flex-1 flex items-center justify-center">
+                       <p className="text-sm text-slate-400 italic">Connected to Stripe. Waiting for first transaction data...</p>
                     </div>
-                    <Link href="/admin/products" className="text-[10px] font-bold text-brand-orange uppercase">Manage Catalog</Link>
-                 </div>
-                 <div className="h-[300px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                       <BarChart layout="vertical" data={topProductsData}>
-                          <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
-                          <XAxis type="number" hide />
-                          <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontStyle: 'bold', fill: '#475569' }} width={100} />
-                          <Tooltip cursor={{ fill: '#f8fafc' }} />
-                          <Bar dataKey="value" fill="#f97316" radius={[0, 4, 4, 0]} barSize={20} />
-                       </BarChart>
-                    </ResponsiveContainer>
-                 </div>
-              </div>
+                  )}
+               </div>
+            </>
+         )}
 
-              {/* Conversion Funnel */}
-              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm overflow-hidden">
-                 <div className="mb-8">
-                    <h3 className="text-sm font-bold text-slate-900">Conversion Funnel</h3>
-                    <p className="text-[10px] text-slate-400 uppercase tracking-tight">User journey from visitor to buyer</p>
-                 </div>
-                 <div className="space-y-6">
-                    {[
-                      { step: 'Visitors', value: '42,400', pct: 100 },
-                      { step: 'Product Views', value: '18,200', pct: 43 },
-                      { step: 'Add to Cart', value: '2,450', pct: 6 },
-                      { step: 'Checkout', value: '1,820', pct: 4 },
-                      { step: 'Purchase', value: '1,372', pct: 3.2 },
-                    ].map((step, i) => (
-                      <div key={i} className="relative">
-                         <div className="flex justify-between items-end mb-2">
-                            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">{step.step}</span>
-                            <span className="text-sm font-bold text-slate-900">{step.value} <span className="text-[10px] text-slate-400 font-normal">({step.pct}%)</span></span>
-                         </div>
-                         <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                            <div 
-                              className="h-full bg-brand-orange transition-all duration-1000" 
-                              style={{ width: `${step.pct}%`, opacity: 1 - (i * 0.15) }}
-                            />
-                         </div>
-                      </div>
-                    ))}
-                 </div>
-              </div>
-           </div>
-        </div>
-      )}
+         {activeTab === 'Traffic' && (
+            <>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <MetricCard label="Live Visitors" value="0" sub="Real-time (polling)" icon={Activity} connected={integrations.ga4} />
+                  <MetricCard label="Sessions" value="0" sub="Total for period" icon={Users} connected={integrations.ga4} />
+                  <MetricCard label="Bounce Rate" value="0%" sub="Interaction health" icon={MousePointer2} connected={integrations.ga4} />
+                  <MetricCard label="Avg Duration" value="0s" sub="Engagement time" icon={Clock} connected={integrations.ga4} />
+               </div>
 
-      {/* Placeholder for other tabs */}
-      {activeTab !== 'Overview' && (
-        <div className="py-20 text-center bg-white border border-slate-200 rounded-xl">
-           <Layout className="mx-auto text-slate-200 mb-4" size={48} />
-           <h3 className="text-lg font-bold text-slate-900">{activeTab} Analytics</h3>
-           <p className="text-sm text-slate-500 mt-2 max-w-sm mx-auto">This intelligence node is currently gathering data. Detailed {activeTab.toLowerCase()} metrics will be available in the next sync.</p>
-           <button 
-             onClick={() => setActiveTab('Overview')}
-             className="mt-8 px-6 py-3 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-brand-orange transition-all"
-           >
-             Return to Overview
-           </button>
-        </div>
-      )}
+               <div className="min-h-[500px] flex flex-col">
+                  {!integrations.ga4 ? (
+                    <EmptyState 
+                      platform="Google Analytics 4" 
+                      icon={Users} 
+                      title="Traffic analytics requires GA4" 
+                      description="Understand where your visitors are coming from and which pages are performing best." 
+                    />
+                  ) : (
+                    <div className="bg-white border border-slate-200 rounded-xl p-8 flex-1 flex items-center justify-center">
+                       <p className="text-sm text-slate-400 italic">Connected to GA4. Waiting for session data...</p>
+                    </div>
+                  )}
+               </div>
+            </>
+         )}
+
+         {activeTab === 'SEO Performance' && (
+            <>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <MetricCard label="Impressions" value="0" sub="Search visibility" icon={Eye} connected={integrations.gsc} />
+                  <MetricCard label="Clicks" value="0" sub="Traffic from search" icon={MousePointer2} connected={integrations.gsc} />
+                  <MetricCard label="Avg CTR" value="0%" sub="Click-through rate" icon={TrendingUp} connected={integrations.gsc} />
+                  <MetricCard label="Indexed Pages" value="0" sub="Google coverage" icon={CheckCircle2} connected={integrations.gsc} />
+               </div>
+
+               <div className="min-h-[500px] flex flex-col">
+                  {!integrations.gsc ? (
+                    <EmptyState 
+                      platform="Google Search Console" 
+                      icon={Search} 
+                      title="SEO analytics requires Search Console" 
+                      description="Connect to see your real keyword rankings, impressions, and CTR data directly in your dashboard." 
+                    />
+                  ) : (
+                    <div className="bg-white border border-slate-200 rounded-xl p-8 flex-1 flex items-center justify-center">
+                       <p className="text-sm text-slate-400 italic">Connected to GSC. Fetching indexing data...</p>
+                    </div>
+                  )}
+               </div>
+            </>
+         )}
+
+         {activeTab === 'Customers' && (
+            <div className="min-h-[500px] flex flex-col">
+               {!integrations.stripe ? (
+                  <EmptyState 
+                    platform="Stripe" 
+                    icon={Users} 
+                    title="Customer analytics requires sales data" 
+                    description="Connect Stripe to see LTV, retention rates, and acquisition segments." 
+                  />
+               ) : (
+                  <div className="bg-white border border-slate-200 rounded-xl p-8 flex-1 flex items-center justify-center">
+                    <p className="text-sm text-slate-400 italic">Aggregating customer segments from Supabase and Stripe...</p>
+                  </div>
+               )}
+            </div>
+         )}
+
+         {activeTab === 'Channels' && (
+            <div className="min-h-[500px] flex flex-col">
+               <div className="flex-1 flex flex-col items-center justify-center p-12 text-center bg-white border border-slate-100 rounded-xl">
+                  <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center text-slate-200 mb-4">
+                     <ShoppingCart size={32} />
+                  </div>
+                  <h4 className="text-sm font-bold text-slate-900">Multi-Channel Profitability</h4>
+                  <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">Compare sales and margins across eBay, Amazon, and OnBuy. Requires marketplace credentials.</p>
+                  <Link 
+                    href="/admin/channels" 
+                    className="mt-6 px-4 py-2 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-md hover:bg-brand-orange transition-all"
+                  >
+                    Manage Channels
+                  </Link>
+               </div>
+            </div>
+         )}
+
+         {activeTab === 'Products' && (
+            <div className="min-h-[500px] flex flex-col">
+               <div className="flex-1 flex flex-col items-center justify-center p-12 text-center bg-white border border-slate-100 rounded-xl">
+                  <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center text-slate-200 mb-4">
+                     <Package size={32} />
+                  </div>
+                  <h4 className="text-sm font-bold text-slate-900">SKU Performance Leaderboard</h4>
+                  <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">Identify high-margin winners and low-converting products. Connect Stripe and GA4 to populate.</p>
+               </div>
+            </div>
+         )}
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 mt-12 border border-slate-800 relative overflow-hidden">
+         <div className="absolute top-0 right-0 p-8 opacity-10">
+            <ShieldCheck size={120} className="text-white" />
+         </div>
+         <div className="relative z-10 max-w-xl">
+            <h3 className="text-xl font-bold text-white mb-2">Platform-Wide Data Sync</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Your analytics are updated every 60 minutes via background workers. 
+              Real-time revenue reflects Stripe webhooks, while traffic and search data are polled from Google APIs.
+            </p>
+         </div>
+         <div className="relative z-10 flex items-center gap-3">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest">System Operational</span>
+         </div>
+      </div>
     </div>
   );
 }

@@ -101,12 +101,21 @@ export function ProductCard({
 
       {/* Image Container */}
       <Link href={`/store/product/${slug}`} className="block relative aspect-square overflow-hidden bg-brand-obsidian p-8">
-        <Image
-          src={image || "/images/hero-background.png"}
-          alt={name}
-          fill
-          className="object-contain transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100"
-        />
+        {image ? (
+          <Image
+            src={image}
+            alt={name}
+            fill
+            className="object-contain transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+          />
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-brand-obsidian">
+            <span className="font-display text-5xl text-brand-border/40 uppercase tracking-tighter">
+              {brand?.slice(0, 2) || "??"}
+            </span>
+            <span className="font-mono text-[8px] text-brand-border/30 uppercase tracking-widest mt-2">No Image</span>
+          </div>
+        )}
         
         {/* Tier Tag Overlay (Bottom Left) */}
         {systemTier && (
