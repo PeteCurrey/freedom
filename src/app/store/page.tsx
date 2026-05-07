@@ -32,12 +32,12 @@ export default async function StoreHub() {
     .limit(8);
 
   const featuredProduct = editorsPick?.[0] || {
-    id: "victron-multiplus-3000",
+    id: "victron-multiplus-ii-12-3000-120-32",
     name: "Victron MultiPlus-II 12/3000/120-32",
     brand: "VICTRON ENERGY",
     price_gbp: 124500,
     images: ["/images/systems-showcase.png"],
-    slug: "victron-multiplus-3000"
+    slug: "victron-multiplus-ii-12-3000-120-32"
   };
 
   const systems = [

@@ -342,18 +342,18 @@ const systems = [
 
 const featuredProducts = [
   { 
-    id: "1", 
-    name: "Victron MultiPlus 12/3000/120-16", 
+    id: "victron-multiplus-ii-12-3000-120-32", 
+    name: "Victron MultiPlus-II 12/3000/120-32", 
     brand: "VICTRON ENERGY", 
     price: 124500, 
     image: "/images/electrical-system-technical.png", 
-    slug: "victron-multiplus-3000",
+    slug: "victron-multiplus-ii-12-3000-120-32",
     specLine: "12V | 3000VA | 120A",
     badge: "Bestseller",
     systemTier: "off-grid"
   },
   { 
-    id: "2", 
+    id: "dometic-cfx3-55im", 
     name: "Dometic CFX3 55IM Fridge", 
     brand: "DOMETIC", 
     price: 89900, 
@@ -364,7 +364,7 @@ const featuredProducts = [
     systemTier: "adventure"
   },
   { 
-    id: "3", 
+    id: "truma-combi-4e-kit", 
     name: "Truma Combi 4E Kit", 
     brand: "TRUMA", 
     price: 185000, 
