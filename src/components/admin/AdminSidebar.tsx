@@ -37,7 +37,8 @@ import {
   Layout,
   ShoppingBag,
   Link2,
-  MousePointerClick
+  MousePointerClick,
+  Shield
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -80,7 +81,7 @@ const navGroups = [
     ]
   },
   {
-    label: "REVENUE HUB",
+    label: "REVENUE",
     items: [
       { name: "Build Plans", href: "/admin/build-plans", icon: Layout },
       { name: "Quote Requests", href: "/admin/quotes", icon: Magnet },
@@ -99,7 +100,8 @@ const navGroups = [
   {
     label: "SYSTEM",
     items: [
-      { name: "Settings & Integrations", href: "/admin/settings", icon: Settings },
+      { name: "Settings", href: "/admin/settings", icon: Settings },
+      { name: "Integration Vault", href: "/admin/integrations", icon: Shield },
       { name: "Team", href: "/admin/team", icon: Users },
     ]
   },

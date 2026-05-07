@@ -65,18 +65,34 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
        post.slug = post.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
     }
 
-    const payload = {
-      ...post,
+    // Check for slug uniqueness if it's a new post or slug changed
+    if (id === 'new' || post.slug !== post.old_slug) {
+       const { data: existing } = await supabase
+         .from('journal_posts')
+         .select('id')
+         .eq('slug', post.slug)
+         .single();
+       
+       if (existing && existing.id !== id) {
+          alert("Tactical Error: This slug is already claimed by another node.");
+          setSaving(false);
+          return;
+       }
+    }
+
+    const { old_slug, ...payload } = post; // Remove helper field
+    const finalPayload = {
+      ...payload,
       updated_at: new Date().toISOString(),
       published_at: post.status === 'published' && !post.published_at ? new Date().toISOString() : post.published_at
     };
 
     let error;
     if (id === 'new') {
-       const { error: err } = await supabase.from('journal_posts').insert([payload]);
+       const { error: err } = await supabase.from('journal_posts').insert([finalPayload]);
        error = err;
     } else {
-       const { error: err } = await supabase.from('journal_posts').update(payload).eq('id', id);
+       const { error: err } = await supabase.from('journal_posts').update(finalPayload).eq('id', id);
        error = err;
     }
 
@@ -88,12 +104,16 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     }
   };
 
+  const selectAsset = (url: string) => {
+    setPost({ ...post, featured_image: url });
+  };
+
   if (loading) return null;
 
   return (
     <div className="p-8 pb-32 bg-brand-obsidian min-h-screen text-brand-white">
       <div className="max-w-6xl mx-auto">
-        {/* Top Navigation */}
+        {/* ... existing header ... */}
         <div className="flex justify-between items-center mb-12">
           <Link href="/admin/journal" className="flex items-center gap-2 font-mono text-[10px] text-brand-orange uppercase tracking-[0.3em] hover:text-brand-white transition-colors">
             <ArrowLeft size={12} /> Return to Hub
@@ -259,17 +279,28 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                             <ImageIcon size={48} />
                          </div>
                       )}
-                      <div className="absolute inset-0 bg-brand-obsidian/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                         <button className="px-4 py-2 border border-white font-mono text-[8px] uppercase tracking-widest">Replace Asset</button>
+                      <div className="absolute inset-0 bg-brand-obsidian/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-wrap gap-2 items-center justify-center p-4">
+                         {['/images/man-tge-hero.png', '/images/sprinter.png', '/images/hero-background.png'].map(img => (
+                            <button 
+                              key={img}
+                              onClick={() => selectAsset(img)}
+                              className="w-12 h-12 border border-white/20 hover:border-brand-orange transition-all overflow-hidden"
+                            >
+                               <img src={img} className="w-full h-full object-cover" />
+                            </button>
+                         ))}
                       </div>
                    </div>
-                   <input 
-                     type="text" 
-                     value={post.featured_image}
-                     onChange={(e) => setPost({ ...post, featured_image: e.target.value })}
-                     className="w-full bg-brand-obsidian border border-brand-border p-3 font-mono text-[8px] text-brand-grey outline-none focus:border-brand-orange"
-                     placeholder="/images/hero-background.png"
-                   />
+                   <div className="space-y-2">
+                      <label className="block font-mono text-[8px] text-brand-grey uppercase tracking-widest">Asset URL Path</label>
+                      <input 
+                        type="text" 
+                        value={post.featured_image}
+                        onChange={(e) => setPost({ ...post, featured_image: e.target.value })}
+                        className="w-full bg-brand-obsidian border border-brand-border p-3 font-mono text-[8px] text-brand-grey outline-none focus:border-brand-orange"
+                        placeholder="/images/hero-background.png"
+                      />
+                   </div>
                 </div>
              </div>
           </div>

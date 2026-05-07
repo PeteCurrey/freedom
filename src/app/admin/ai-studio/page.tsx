@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import { 
   Sparkles, 
   Layers, 
   Zap, 
   Settings2, 
-  ChevronRight, 
   Plus, 
   Eye, 
   RefreshCcw, 
@@ -15,27 +15,53 @@ import {
   Globe, 
   CheckCircle2, 
   AlertCircle,
-  X,
-  Send,
   Loader2,
-  MoreVertical,
-  Magnet,
   Maximize2,
   Trash2,
   Volume2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const enrichmentQueue = [
-  { id: 1, type: 'Product', name: 'Victron Orion XS 12/12-50A', issue: 'Missing Full Description', completeness: 45 },
-  { id: 2, type: 'Product', name: 'Fogstar 400Ah Lithium Battery', issue: 'No Specs found', completeness: 62 },
-  { id: 3, type: 'Resource', name: 'Winter Insulation Guide', issue: 'SEO Gaps detected', completeness: 78 },
-  { id: 4, type: 'Product', name: 'Dometic S4 Window 900x500', issue: 'Low resolution images', completeness: 30 },
-];
+interface QueueItem {
+  id: string;
+  type: string;
+  name: string;
+  sku: string;
+  issue: string;
+  completeness: number;
+}
 
 export default function AIStudioPage() {
   const [selectedStyle, setSelectedStyle] = useState('Premium');
   const [processing, setProcessing] = useState(false);
+  const [enrichmentQueue, setEnrichmentQueue] = useState<QueueItem[]>([]);
+  const [selectedItem, setSelectedItem] = useState<QueueItem | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchQueue() {
+      setLoading(true);
+      const { data } = await supabase
+        .from('products')
+        .select('id, name, slug, description')
+        .order('created_at', { ascending: false });
+
+      if (data) {
+        const queue = data.filter(p => !p.description || p.description.length < 50).map(p => ({
+          id: p.id,
+          type: 'Product',
+          name: p.name,
+          sku: p.slug,
+          issue: !p.description ? 'Missing Full Description' : 'Description too short',
+          completeness: !p.description ? 30 : 60
+        }));
+        setEnrichmentQueue(queue);
+        if (queue.length > 0) setSelectedItem(queue[0]);
+      }
+      setLoading(false);
+    }
+    fetchQueue();
+  }, []);
 
   const styles = [
     { name: 'Premium', desc: 'Editorial, high-end, authoritative' },
@@ -76,27 +102,42 @@ export default function AIStudioPage() {
            </div>
            
            <div className="space-y-3">
-              {enrichmentQueue.map(item => (
-                <div key={item.id} className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm hover:border-brand-orange transition-all group cursor-pointer">
-                   <div className="flex justify-between items-start mb-3">
-                      <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-slate-400">
-                         {item.type === 'Product' ? <ShoppingBag size={10} /> : <FileText size={10} />}
-                         {item.type}
-                      </div>
-                      <div className="flex items-center gap-1 text-[10px] font-bold text-red-500">
-                         <AlertCircle size={10} /> {item.completeness}%
-                      </div>
-                   </div>
-                   <h4 className="text-sm font-bold text-slate-900 mb-1 group-hover:text-brand-orange transition-colors">{item.name}</h4>
-                   <p className="text-[10px] text-slate-500 italic mb-4">{item.issue}</p>
-                   <div className="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
-                      <div className="h-full bg-slate-200" style={{ width: `${item.completeness}%` }} />
-                   </div>
-                </div>
-              ))}
-              <button className="w-full py-4 border-2 border-dashed border-slate-100 text-slate-400 hover:text-slate-600 hover:border-slate-300 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all">
-                 <Plus size={14} className="mx-auto mb-1" /> Add to Queue
-              </button>
+              {loading ? (
+                <div className="p-8 flex justify-center"><Loader2 className="animate-spin text-slate-300" /></div>
+              ) : enrichmentQueue.length === 0 ? (
+                <div className="p-8 text-center text-slate-400 text-sm font-mono">Queue is empty.</div>
+              ) : (
+                enrichmentQueue.map(item => (
+                  <div 
+                    key={item.id} 
+                    onClick={() => setSelectedItem(item)}
+                    className={cn(
+                      "border p-4 rounded-xl shadow-sm transition-all group cursor-pointer",
+                      selectedItem?.id === item.id 
+                        ? "bg-slate-50 border-brand-orange" 
+                        : "bg-white border-slate-200 hover:border-brand-orange/50"
+                    )}
+                  >
+                     <div className="flex justify-between items-start mb-3">
+                        <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-slate-400">
+                           {item.type === 'Product' ? <ShoppingBag size={10} /> : <FileText size={10} />}
+                           {item.type}
+                        </div>
+                        <div className="flex items-center gap-1 text-[10px] font-bold text-red-500">
+                           <AlertCircle size={10} /> {item.completeness}%
+                        </div>
+                     </div>
+                     <h4 className={cn(
+                       "text-sm font-bold mb-1 transition-colors",
+                       selectedItem?.id === item.id ? "text-brand-orange" : "text-slate-900 group-hover:text-brand-orange"
+                     )}>{item.name}</h4>
+                     <p className="text-[10px] text-slate-500 italic mb-4">{item.issue}</p>
+                     <div className="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
+                        <div className="h-full bg-slate-200" style={{ width: `${item.completeness}%` }} />
+                     </div>
+                  </div>
+                ))
+              )}
            </div>
         </div>
 
@@ -118,16 +159,22 @@ export default function AIStudioPage() {
 
                  <div className="space-y-4">
                     <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 px-1">Selected Target</label>
-                    <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                       <div className="w-12 h-12 bg-white rounded-lg border border-slate-200 flex items-center justify-center text-brand-orange">
-                          <ShoppingBag size={20} />
-                       </div>
-                       <div>
-                          <p className="text-sm font-bold text-slate-900">Victron Orion XS 12/12-50A</p>
-                          <p className="text-[10px] text-slate-400 uppercase tracking-widest font-mono">SKU: VIC-ORI-XS-50</p>
-                       </div>
-                       <button className="ml-auto text-[10px] font-bold text-brand-orange uppercase hover:underline">Change</button>
-                    </div>
+                    {selectedItem ? (
+                      <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                         <div className="w-12 h-12 bg-white rounded-lg border border-slate-200 flex items-center justify-center text-brand-orange">
+                            <ShoppingBag size={20} />
+                         </div>
+                         <div>
+                            <p className="text-sm font-bold text-slate-900">{selectedItem.name}</p>
+                            <p className="text-[10px] text-slate-400 uppercase tracking-widest font-mono">SKU: {selectedItem.sku}</p>
+                         </div>
+                         <button className="ml-auto text-[10px] font-bold text-brand-orange uppercase hover:underline">Change</button>
+                      </div>
+                    ) : (
+                      <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 text-center text-slate-400 text-sm">
+                        No target selected.
+                      </div>
+                    )}
                  </div>
 
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -174,8 +221,8 @@ export default function AIStudioPage() {
                  <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row items-center gap-4">
                     <button 
                       onClick={handleGenerate}
-                      disabled={processing}
-                      className="w-full md:flex-1 py-4 bg-brand-orange text-white rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-slate-900 transition-all flex items-center justify-center gap-3 shadow-xl shadow-brand-orange/20"
+                      disabled={processing || !selectedItem}
+                      className="w-full md:flex-1 py-4 bg-brand-orange text-white rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-slate-900 transition-all flex items-center justify-center gap-3 shadow-xl shadow-brand-orange/20 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                        {processing ? <Loader2 size={18} className="animate-spin" /> : <Sparkles size={18} />}
                        {processing ? 'Processing Intelligence...' : 'Initialize Generation'}
@@ -186,8 +233,8 @@ export default function AIStudioPage() {
                  </div>
               </div>
 
-              {/* Output Preview (only shows if something was generated, mocked here as fixed for demo) */}
-              <div className="bg-slate-50 p-8 border-t border-slate-200 relative">
+              {/* Output Preview */}
+              <div className={cn("bg-slate-50 p-8 border-t border-slate-200 relative transition-all duration-500", selectedItem ? "opacity-100" : "opacity-50 blur-sm pointer-events-none")}>
                  <div className="absolute top-4 right-8 flex items-center gap-2">
                     <span className="text-[9px] font-mono text-slate-400 uppercase">Preview</span>
                     <div className="flex bg-white rounded border border-slate-200 p-1">
@@ -198,40 +245,13 @@ export default function AIStudioPage() {
                  
                  <div className="prose prose-sm max-w-none prose-slate">
                     <h3 className="text-slate-900 font-bold">Generated Description</h3>
-                    <p className="text-slate-600 italic">"The Victron Orion XS 12/12-50A is the next evolution in DC-to-DC charging technology. Engineered for the professional van builder, this compact powerhouse delivers a sustained 50A charge while maintaining peak efficiency in even the most constrained engine bays..."</p>
-                    <ul className="text-slate-600 text-xs mt-4">
-                       <li>Efficiency: 98.5%</li>
-                       <li>Dimensions: Compact 120x80x40mm</li>
-                       <li>Smart Alternator Compatible: Yes</li>
-                    </ul>
+                    <p className="text-slate-600 italic">"The {selectedItem?.name || "Product"} is the next evolution in its category. Engineered for the professional builder, it delivers sustained performance while maintaining peak efficiency..."</p>
                  </div>
                  
                  <div className="mt-8 flex justify-end gap-3">
                     <button className="px-6 py-2 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-100 transition-all flex items-center gap-2">
                        <CheckCircle2 size={14} /> Commit to Live Store
                     </button>
-                 </div>
-              </div>
-           </div>
-
-           {/* Batch Processing Status */}
-           <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                 <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400">
-                    <Layers size={18} />
-                 </div>
-                 <div>
-                    <h3 className="text-sm font-bold text-slate-900">Batch Processing Status</h3>
-                    <p className="text-xs text-slate-500 mt-0.5">Automated enrichment running for "Electrical" category</p>
-                 </div>
-              </div>
-              <div className="flex items-center gap-6">
-                 <div className="text-right">
-                    <p className="text-[9px] font-mono text-slate-400 uppercase mb-1">Items Processed</p>
-                    <p className="text-sm font-bold text-slate-900">42 / 128</p>
-                 </div>
-                 <div className="w-32 h-2 bg-slate-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-brand-orange" style={{ width: '32%' }} />
                  </div>
               </div>
            </div>

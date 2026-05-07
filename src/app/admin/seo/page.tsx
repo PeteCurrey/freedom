@@ -83,41 +83,45 @@ export default function SEOCommanderPage() {
          {/* AUDIT & META TAB */}
          {activeTab === 'Audit & Meta' && (
            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                 <div className="p-6 flex items-center justify-between border-b border-slate-100">
-                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest">Metadata Issues</h3>
-                    <span className="text-[10px] font-bold text-amber-500 uppercase flex items-center gap-1"><AlertCircle size={12} /> 18 Pages Flagged</span>
+              <div className="lg:col-span-2 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col h-full min-h-[500px]">
+                 <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 gap-4">
+                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                      <Globe2 size={16} className="text-brand-orange" /> Route Metadata
+                    </h3>
+                    <button className="text-[10px] font-bold text-white uppercase flex items-center gap-1 bg-brand-orange hover:bg-slate-900 transition-colors px-4 py-2 rounded-lg">
+                      <Plus size={12} /> Add Route
+                    </button>
                  </div>
-                 <div className="overflow-x-auto">
+                 <div className="overflow-x-auto flex-1">
                     <table className="w-full text-left">
                        <thead>
                           <tr className="bg-slate-50 border-b border-slate-100">
-                             <th className="px-6 py-4 text-[9px] font-mono uppercase tracking-widest text-slate-400">Page / Route</th>
-                             <th className="px-6 py-4 text-[9px] font-mono uppercase tracking-widest text-slate-400">Missing Elements</th>
-                             <th className="px-6 py-4 text-[9px] font-mono uppercase tracking-widest text-slate-400">Impact</th>
+                             <th className="px-6 py-4 text-[9px] font-mono uppercase tracking-widest text-slate-400">Path</th>
+                             <th className="px-6 py-4 text-[9px] font-mono uppercase tracking-widest text-slate-400">Title Tag</th>
+                             <th className="px-6 py-4 text-[9px] font-mono uppercase tracking-widest text-slate-400">Status</th>
                              <th className="px-6 py-4 text-[9px] font-mono uppercase tracking-widest text-slate-400 text-right">Actions</th>
                           </tr>
                        </thead>
                        <tbody className="divide-y divide-slate-100">
                           {[
-                            { route: '/store/products/victron-orion-xs', missing: 'Meta Description, OG Image', impact: 'High' },
-                            { route: '/store/kits/weekend-warrior', missing: 'Title Tag too short', impact: 'Medium' },
-                            { route: '/guides/winter-insulation', missing: 'Meta Description', impact: 'Medium' },
-                            { route: '/about-us', missing: 'Canonical Tag', impact: 'Low' },
+                            { path: '/', title: 'Amplios | DIY Motorhome & Campervan Builds', status: 'Optimized' },
+                            { path: '/store', title: 'Components Store | Amplios', status: 'Missing Meta' },
+                            { path: '/store/electrical-core', title: 'Electrical Core Systems | Amplios', status: 'Optimized' },
+                            { path: '/planner', title: 'AI Build Planner', status: 'Missing OG Image' },
                           ].map((k, i) => (
-                             <tr key={i} className="hover:bg-slate-50/50 transition-colors">
-                                <td className="px-6 py-4 text-xs font-mono text-slate-600">{k.route}</td>
+                             <tr key={i} className="hover:bg-slate-50/50 transition-colors group">
+                                <td className="px-6 py-4 text-xs font-mono text-slate-600 font-bold">{k.path}</td>
                                 <td className="px-6 py-4">
-                                   <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded">{k.missing}</span>
+                                   <span className="text-sm text-slate-900">{k.title}</span>
                                 </td>
                                 <td className="px-6 py-4">
                                    <span className={cn(
-                                     "text-[10px] font-bold uppercase",
-                                     k.impact === 'High' ? "text-red-500" : "text-amber-500"
-                                   )}>{k.impact}</span>
+                                     "text-[9px] font-bold uppercase px-2 py-1 rounded-full border",
+                                     k.status === 'Optimized' ? "text-emerald-500 bg-emerald-50 border-emerald-200" : "text-amber-500 bg-amber-50 border-amber-200"
+                                   )}>{k.status}</span>
                                 </td>
                                 <td className="px-6 py-4 text-right">
-                                   <button className="text-[10px] font-bold uppercase text-brand-orange hover:underline">Fix Now</button>
+                                   <button className="text-[10px] font-bold uppercase text-slate-400 hover:text-brand-orange transition-colors opacity-0 group-hover:opacity-100">Edit</button>
                                 </td>
                              </tr>
                           ))}

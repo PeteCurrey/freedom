@@ -14,14 +14,11 @@ import Link from "next/link";
 interface Order {
   id: string;
   created_at: string;
-  customer_name: string;
   customer_email: string;
-  total_gbp: number;
+  total_amount_gbp: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-  payment_status: 'paid' | 'unpaid' | 'refunded';
-  payment_method: string;
-  channel: 'store' | 'ebay' | 'amazon' | 'manual';
-  items_count: number;
+  shipping_address?: any;
+  metadata?: any;
 }
 
 export default function AdminOrdersPage() {
@@ -46,9 +43,25 @@ export default function AdminOrdersPage() {
     fetchOrders();
   }, []);
 
+  const getCustomerName = (order: Order) => {
+    if (order.shipping_address?.name) return order.shipping_address.name;
+    if (order.metadata?.customer_name) return order.metadata.customer_name;
+    if (order.customer_email) return order.customer_email.split('@')[0];
+    return 'Unknown Customer';
+  };
+
+  const getPaymentMethod = (order: Order) => {
+    return 'STRIPE'; // Defaulting to Stripe for now as it's the primary integration
+  };
+
+  const getChannel = (order: Order) => {
+    return order.metadata?.source || 'Store';
+  };
+
   const filteredOrders = useMemo(() => {
     return orders.filter(o => {
-      const matchesSearch = o.customer_name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      const customerName = getCustomerName(o);
+      const matchesSearch = customerName.toLowerCase().includes(searchTerm.toLowerCase()) || 
                            o.id.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesTab = activeTab === 'all' || o.status === activeTab;
       return matchesSearch && matchesTab;
@@ -57,7 +70,7 @@ export default function AdminOrdersPage() {
 
   const stats = {
     total: orders.length,
-    revenue: orders.filter(o => o.payment_status === 'paid').reduce((sum, o) => sum + o.total_gbp, 0),
+    revenue: orders.reduce((sum, o) => sum + (o.total_amount_gbp || 0), 0),
     pending: orders.filter(o => o.status === 'pending').length,
     shipped: orders.filter(o => o.status === 'shipped').length,
   };
@@ -176,31 +189,31 @@ export default function AdminOrdersPage() {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                          <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 font-display text-[10px]">
-                            {o.customer_name?.charAt(0) || <User size={14} />}
+                            {getCustomerName(o).charAt(0) || <User size={14} />}
                          </div>
                          <div className="flex flex-col">
-                           <span className="text-sm font-bold text-slate-900">{o.customer_name}</span>
+                           <span className="text-sm font-bold text-slate-900">{getCustomerName(o)}</span>
                            <span className="text-[10px] text-slate-400 lowercase truncate max-w-[150px]">{o.customer_email}</span>
                          </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                        <div className="flex items-center gap-2">
-                          {getChannelIcon(o.channel)}
-                          <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{o.channel || 'Store'}</span>
+                          {getChannelIcon(getChannel(o))}
+                          <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{getChannel(o)}</span>
                        </div>
                     </td>
                     <td className="px-6 py-4">
                        <div className="flex items-center gap-2 text-slate-500">
                           <CreditCard size={12} />
-                          <span className="text-[10px] font-mono uppercase">{o.payment_method || 'STRIPE'}</span>
+                          <span className="text-[10px] font-mono uppercase">{getPaymentMethod(o)}</span>
                        </div>
                     </td>
                     <td className="px-6 py-4">
                        {getStatusBadge(o.status)}
                     </td>
                     <td className="px-6 py-4">
-                       <span className="text-base font-bold text-slate-900">£{(o.total_gbp / 100).toLocaleString()}</span>
+                       <span className="text-base font-bold text-slate-900">£{(o.total_amount_gbp / 100).toLocaleString()}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
