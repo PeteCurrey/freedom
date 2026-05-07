@@ -42,7 +42,7 @@ export default async function BuildKitsPage() {
               <div key={kit.id} className="bg-brand-carbon group flex flex-col xl:flex-row min-h-[500px]">
                 <div className="xl:w-[45%] relative overflow-hidden bg-brand-obsidian p-12 border-r border-brand-border flex items-center justify-center">
                   <div className="blueprint-grid absolute inset-0 opacity-5" />
-                   <img src={kit.images?.[0] || "/images/electrical-technical.png"} className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-700 p-8" />
+                  <img src={kit.images?.[0] || kit.image_url || "/images/electrical-technical.png"} className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-700 p-8" />
                    <div className="absolute top-8 left-8">
                      <span className="font-mono text-[10px] bg-brand-orange text-white px-3 py-1 uppercase tracking-widest">{kit.badge || 'Kit Saving'}</span>
                    </div>

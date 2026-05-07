@@ -29,6 +29,7 @@ const footerLinks = [
     title: "About",
     links: [
       { name: "Our Story", href: "/about" },
+      { name: "Contact Us", href: "/about#contact" },
       { name: "Community Showcase", href: "/showcase" },
       { name: "Engineering Tools", href: "/tools/cable-calculator" },
       { name: "Privacy Policy", href: "/privacy" },

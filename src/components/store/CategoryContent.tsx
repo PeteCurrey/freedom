@@ -99,40 +99,35 @@ export function CategoryContent({ category, initialProducts, editorsPick }: Cate
 
   // Cinematic Asset Map
   const assetMap: Record<string, { image: string; icon: any; advice: string }> = {
-    "power-systems": { 
+    "electrical": { 
       image: "/images/electrical-system-technical.png", 
       icon: Zap,
       advice: "Prioritise lithium density if planning more than 3 days of winter induction cooking."
     },
-    "climate-control": { 
+    "climate": { 
       image: "/images/heating-system-technical.png", 
       icon: Flame,
       advice: "Combine diesel heating with high-altitude kits if aiming for alpine deployments."
     },
-    "water-plumbing": { 
+    "plumbing": { 
       image: "/images/water-plumbing-technical.png", 
       icon: Droplet,
       advice: "UV-C filtration is mandatory for reliable off-grid water safety from natural sources."
     },
-    "insulation-build": { 
+    "insulation": { 
       image: "/images/insulation-technical.png", 
       icon: Shield,
       advice: "Vapour barrier integrity determines the lifespan of your structural chassis."
     },
-    "gas-lpg": { 
-      image: "/images/gas-lpg-technical.png", 
+    "windows-ventilation": { 
+      image: "/images/cat-windows.png", 
+      icon: Wind,
+      advice: "Cross-ventilation is essential for humidity control and sleep quality."
+    },
+    "exterior-accessories": { 
+      image: "/images/exterior-equipment-technical.png", 
       icon: Sparkles,
-      advice: "Use refillable LPG systems to scale your autonomy across international borders."
-    },
-    "lighting": { 
-      image: "/images/step_lighting_cinematic_1776674939507.png", 
-      icon: Zap,
-      advice: "Layered lighting (Ambient + Task) is essential for small-space ergonomics."
-    },
-    "security-monitoring": { 
-      image: "/images/step_security_cinematic_1776675013013.png", 
-      icon: Shield,
-      advice: "Physical deterrence is only effective when coupled with live telemetry tracking."
+      advice: "External storage solutions must account for dynamic axle load distribution."
     }
   };
 
@@ -180,7 +175,7 @@ export function CategoryContent({ category, initialProducts, editorsPick }: Cate
                <span className="font-display text-lg uppercase">Not sure what you need?</span>
             </div>
             <div className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-widest text-brand-grey">
-               <Link href={`/systems/${category.slug}`} className="text-white hover:text-brand-orange underline underline-offset-4 transition-colors">
+               <Link href={`/systems/${category.slug === 'electrical' ? 'electrical-solar' : category.slug}`} className="text-white hover:text-brand-orange underline underline-offset-4 transition-colors">
                  Read our {category.name} guide
                </Link>
                <span className="opacity-50">or use the</span>
@@ -249,10 +244,10 @@ export function CategoryContent({ category, initialProducts, editorsPick }: Cate
                     brand={product.brand}
                     price={product.price_gbp}
                     compareAtPrice={product.compare_at_price}
-                    image={product.images?.[0]}
+                    image={product.images?.[0] || (product as any).image_url || '/images/hero-background.png'}
                     slug={product.slug}
                     specLine={product.spec_line}
-                    badge={product.is_editor_pick ? "Editor's Pick" : undefined}
+                    badge={product.is_editor_pick ? "Editor's Pick" : product.badge}
                     systemTier={product.system_tier}
                   />
                 ))}

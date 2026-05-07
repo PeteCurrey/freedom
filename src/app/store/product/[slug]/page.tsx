@@ -91,17 +91,18 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     .contains('related_product_ids', [product.id])
     .limit(2);
 
-  // Cinematic Asset Map for Fallback Images
-  const fallbackImageMap: Record<string, string> = {
-    "power": "/images/electrical-technical.png",
+  const categorySlug = product.product_categories?.slug || "";
+  const categoryImageMap: Record<string, string> = {
+    "electrical": "/images/electrical-technical.png",
     "climate": "/images/heating-system-technical.png",
     "plumbing": "/images/water-plumbing-technical.png",
     "insulation": "/images/insulation-technical.png",
-    "hardware": "/images/interior-showcase.png",
-    "exterior-accessories": "/images/exterior-equipment-technical.png"
+    "windows-ventilation": "/images/insulation-technical.png",
+    "exterior-accessories": "/images/exterior-equipment-technical.png",
+    "kits": "/images/systems-showcase.png"
   };
-  const categorySlug = product.product_categories?.slug || "";
-  const fallbackImage = fallbackImageMap[categorySlug] || "/images/hero-background.png";
+  const fallbackImage = product.image_url || categoryImageMap[categorySlug] || "/images/hero-background.png";
+  const primaryImage = product.images?.[0] || fallbackImage;
 
   // 4. Price and Fallback Logic
   const priceExVat = product.price_gbp / 1.2;
@@ -127,10 +128,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
             {/* Gallery Panel */}
             <div className="lg:col-span-12 xl:col-span-7 space-y-6">
-              <div className="aspect-[16/10] bg-brand-carbon blueprint-border relative overflow-hidden group">
+              <div className="aspect-square max-w-[600px] mx-auto bg-brand-carbon blueprint-border relative overflow-hidden group">
                 <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
                 <Image 
-                  src={product.images?.[0] || fallbackImage} 
+                  src={primaryImage} 
                   alt={product.name} 
                   fill 
                   className="object-contain p-12 transition-transform duration-700 group-hover:scale-105" 
@@ -151,7 +152,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
               {/* Thumbnails */}
               <div className="grid grid-cols-4 gap-4">
-                 {(product.images as (string | null)[] || [null, null, null, null]).slice(0, 4).map((img: string | null, i: number) => (
+                 {(product.images as (string | null)[] || (product.image_url ? [product.image_url] : [])).slice(0, 4).map((img: string | null, i: number) => (
                    <div key={i} className={cn(
                      "aspect-square bg-brand-carbon blueprint-border transition-all cursor-pointer group flex items-center justify-center p-4",
                      i === 0 ? "border-brand-orange" : "opacity-40 hover:opacity-100"
@@ -179,7 +180,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     <span className="font-mono text-[10px] text-brand-grey uppercase">inc. VAT</span>
                   </div>
                   <div className="font-mono text-xs text-brand-grey uppercase tracking-widest">
-                    £{(priceExVat / 100).toLocaleString()} <span className="text-[10px] opacity-60">ex. VAT</span>
+                    £{(priceExVat / 100).toFixed(2)} <span className="text-[10px] opacity-60">ex. VAT</span>
                   </div>
                 </div>
 
@@ -232,13 +233,13 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 ))}
                 <div className="bg-brand-carbon p-6">
                   <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-[0.2em] mb-1">Weight</span>
-                  <span className="block font-mono text-xs text-white uppercase">{product.weight_grams ? (product.weight_grams / 1000).toFixed(1) + 'kg' : 'N/A'}</span>
+                  <span className="block font-mono text-xs text-white uppercase">{product.weight_kg ? product.weight_kg + 'kg' : 'N/A'}</span>
                 </div>
                 <div className="bg-brand-carbon p-6">
                   <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-[0.2em] mb-1">Status</span>
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                    <span className="font-mono text-xs text-white uppercase">{product.stock_quantity > 0 ? 'Registry Stocked' : 'Pre-Order'}</span>
+                    <span className="font-mono text-xs text-white uppercase">{product.stock_quantity > 0 ? 'In Stock' : 'Pre-Order'}</span>
                   </div>
                 </div>
               </div>
@@ -387,7 +388,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   <span className="font-mono text-[9px] text-brand-orange uppercase block mb-4">Educational Bridge</span>
                   <h4 className="font-display text-sm uppercase mb-4 leading-tight">Used in our {product.product_categories?.name} Guide</h4>
                   <p className="font-sans text-xs text-brand-grey mb-6">Learn how to correctly integrated this {product.brand} component into your build systems.</p>
-                  <Link href={`/systems/${product.product_categories?.slug}`} className="font-mono text-[10px] uppercase text-white hover:text-brand-orange flex items-center gap-2">
+                  <Link href={`/systems/${product.product_categories?.slug === 'electrical' ? 'electrical-solar' : product.product_categories?.slug}`} className="font-mono text-[10px] uppercase text-white hover:text-brand-orange flex items-center gap-2">
                      Read Guide <ArrowRight size={12} />
                   </Link>
                </div>

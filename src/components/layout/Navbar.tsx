@@ -62,11 +62,11 @@ const navLinks: NavLink[] = [
     href: "/store", 
     mega: true,
     items: [
-      { name: "Power Systems", href: "/store/electrical", tagline: "Victron, Lithium, Solar", image: "/images/systems-showcase.png" },
-      { name: "Climate Control", href: "/store/climate", tagline: "Heaters, AC, Fans", image: "/images/interior-showcase.png" },
-      { name: "Plumbing", href: "/store/plumbing", tagline: "Tanks, Pumps, Filtration", image: "/images/hero-background.png" },
+      { name: "Power Systems", href: "/store/electrical", tagline: "Victron, Lithium, Solar", image: "/images/cat-power.png" },
+      { name: "Climate Control", href: "/store/climate", tagline: "Heaters, AC, Fans", image: "/images/cat-climate.png" },
+      { name: "Plumbing", href: "/store/plumbing", tagline: "Tanks, Pumps, Filtration", image: "/images/cat-water.png" },
       { name: "Insulation & Build", href: "/store/insulation", tagline: "The Foundation", image: "/images/cat-insulation.png" },
-      { name: "Windows & Vent", href: "/store/windows-ventilation", tagline: "Dometic, MaxxFan", image: "/images/sprinter.png" },
+      { name: "Windows & Vent", href: "/store/windows-ventilation", tagline: "Dometic, MaxxFan", image: "/images/cat-windows.png" },
       { name: "Exterior & Accessories", href: "/store/exterior-accessories", tagline: "Racks, Ladders, Awnings", image: "/images/exterior-equipment-technical.png" },
       { name: "Build Kits", href: "/store/kits", tagline: "Bundled System Packs", image: "/images/community-showcase.png" },
     ]
@@ -132,45 +132,34 @@ export function Navbar() {
     async function fetchStoreCategories() {
       const { data } = await supabase
         .from('product_categories')
-        .select('name, slug, subcategories')
+        .select('name, slug, description')
         .order('sort_order', { ascending: true });
         
-      const EXPANSION_CATEGORIES = [
-        { name: 'Chassis & Exterior', slug: 'chassis-exterior', subcategories: [] },
-        { name: 'Security & Monitoring', slug: 'security-monitoring', subcategories: [] }
-      ];
-
       const imageMap: Record<string, string> = {
         'electrical': '/images/cat-power.png',
         'climate': '/images/cat-climate.png',
         'plumbing': '/images/cat-water.png',
         'insulation': '/images/cat-insulation.png',
-        'gas-lpg': '/images/cat-gas.png',
-        'interior-furniture': '/images/cat-interior.png',
         'windows-ventilation': '/images/cat-windows.png',
         'exterior-accessories': '/images/exterior-equipment-technical.png',
         'kits': '/images/community-showcase.png'
       };
         
-      if (data || EXPANSION_CATEGORIES) {
+      if (data) {
+        // Filter to only included categories
+        const includedSlugs = ['electrical', 'climate', 'plumbing', 'insulation', 'windows-ventilation', 'exterior-accessories', 'kits'];
+        const filteredCats = data.filter(c => includedSlugs.includes(c.slug));
+
         setLinks(currentLinks => {
           const newLinks = [...currentLinks];
           const storeIndex = newLinks.findIndex(l => l.name === 'Store');
           if (storeIndex !== -1) {
-            // Merge DB and Expansion
-            const allCats = [...(data || [])];
-            EXPANSION_CATEGORIES.forEach(exp => {
-              if (!allCats.find(c => c.slug === exp.slug)) allCats.push(exp as any);
-            });
-
             newLinks[storeIndex] = {
               ...newLinks[storeIndex],
-              items: allCats.map(cat => ({
+              items: filteredCats.map(cat => ({
                 name: cat.name,
                 href: `/store/${cat.slug}`,
-                tagline: Array.isArray(cat.subcategories) && cat.subcategories.length > 0
-                  ? cat.subcategories.slice(0, 3).map((s: any) => s.name).join(' · ')
-                  : "Technical Registry",
+                tagline: cat.description || "Technical Registry",
                 image: imageMap[cat.slug] || "/images/hero-background.png" 
               }))
             };
@@ -366,7 +355,7 @@ export function Navbar() {
             </p>
             <div className="flex space-x-6 text-[#F5F5F0]/60 text-sm">
               <Link href="/about">About</Link>
-              <Link href="/about">Contact</Link>
+              <Link href="/about#contact">Contact</Link>
               <Link href="/terms">Terms</Link>
             </div>
           </div>
