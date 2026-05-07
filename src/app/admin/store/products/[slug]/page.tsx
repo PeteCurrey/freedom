@@ -14,6 +14,7 @@ import {
   AlignLeft,
   Settings,
   Trash2,
+  Plus,
   Monitor,
   TrendingUp,
   Play,
