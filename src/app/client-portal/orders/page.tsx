@@ -62,7 +62,7 @@ export default function OrdersPage() {
          <div className="flex items-center gap-4">
             <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Sort:</span>
             <select className="bg-brand-obsidian border border-brand-border py-3 px-6 text-[9px] font-mono text-white uppercase tracking-widest outline-none focus:border-brand-orange">
-               <Recent RecentOption value="recent">Recent First</RecentOption>
+               <RecentOption value="recent">Recent First</RecentOption>
                <RecentOption value="value">Highest Value</RecentOption>
             </select>
          </div>
