@@ -33,6 +33,7 @@ interface System {
 export default function Home() {
   const whyRef = useRef<HTMLDivElement>(null);
   const [cmsConfig, setCmsConfig] = useState<any>(null);
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
 
   useEffect(() => {
     async function fetchCms() {
@@ -75,6 +76,27 @@ export default function Home() {
     });
 
     return () => ctx.revert();
+  }, []);
+
+  useEffect(() => {
+    async function fetchFeatured() {
+      const { data } = await supabase
+        .from('products')
+        .select('*')
+        .in('slug', [
+          'victron-multiplus-ii-12-3000-120-32',
+          'dometic-cfx3-55im',
+          'truma-combi-4e-kit'
+        ]);
+      
+      if (data) {
+        // Sort to maintain original order
+        const order = ['victron-multiplus-ii-12-3000-120-32', 'dometic-cfx3-55im', 'truma-combi-4e-kit'];
+        const sorted = data.sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug));
+        setFeaturedProducts(sorted);
+      }
+    }
+    fetchFeatured();
   }, []);
 
   return (
@@ -176,7 +198,17 @@ export default function Home() {
       <HorizontalScroll title="GEAR THAT GOES THE DISTANCE">
         {featuredProducts.map((product) => (
           <div key={product.id} className="w-[350px]">
-            <ProductCard {...product} />
+            <ProductCard 
+              id={product.id}
+              name={product.name}
+              brand={product.brand}
+              price={product.price_gbp}
+              image={product.images?.[0] || product.image_url}
+              slug={product.slug}
+              specLine={product.spec_line}
+              badge={product.badge}
+              systemTier={product.system_tier}
+            />
           </div>
         ))}
         <div className="w-[400px] h-full flex items-center justify-center p-12">
