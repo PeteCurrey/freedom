@@ -71,6 +71,7 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
       if (prodData) {
         setProduct({
           ...prodData,
+          image_url: prodData.images?.[0] || "",
           supplier_id: prodData.supplier_id || "",
           affiliate_id: prodData.affiliate_id || "",
           price_gbp: prodData.price_gbp / 100 // Convert pence back to gbp for editing
@@ -89,8 +90,10 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
     setSaving(true);
     
     // Process form
+    const { image_url, ...rest } = product;
     const updateData = {
-      ...product,
+      ...rest,
+      images: image_url ? [image_url] : [],
       price_gbp: Math.floor(Number(product.price_gbp) * 100), // convert to pence
     };
 

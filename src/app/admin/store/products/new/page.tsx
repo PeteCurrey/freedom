@@ -71,8 +71,10 @@ export default function NewProductPage() {
     setSaving(true);
     
     // Process form
+    const { image_url, ...rest } = product;
     const newProductData = {
-      ...product,
+      ...rest,
+      images: image_url ? [image_url] : [],
       price_gbp: Math.floor(Number(product.price_gbp) * 100), // convert to pence if saving as £
     };
 

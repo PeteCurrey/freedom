@@ -21,6 +21,7 @@ export default function StoreManagerPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [lowStockCount, setLowStockCount] = useState(0);
+  const [featuredCount, setFeaturedCount] = useState(0);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -30,8 +31,10 @@ export default function StoreManagerPage() {
         .order('created_at', { ascending: false });
       
       const count = (data || []).filter((p: any) => p.stock_quantity < 5).length;
+      const featured = (data || []).filter((p: any) => p.is_featured).length;
       setProducts(data || []);
       setLowStockCount(count);
+      setFeaturedCount(featured);
       setLoading(false);
     }
     fetchProducts();
@@ -67,7 +70,7 @@ export default function StoreManagerPage() {
          {[
            { label: "Total SKUs", value: products.length, icon: ShoppingBag },
            { label: "Low Stock Alerts", value: lowStockCount, icon: TrendingDown, color: lowStockCount > 0 ? "text-red-500" : "text-brand-grey" },
-           { label: "Featured Items", value: 5, icon: Briefcase, color: "text-brand-orange" },
+           { label: "Featured Items", value: featuredCount, icon: Briefcase, color: "text-brand-orange" },
            { label: "Avg. Margin", value: "32%", icon: TrendingUp, color: "text-green-500" },
          ].map((stat, i) => (
            <div key={i} className="blueprint-border p-6 bg-brand-carbon">
@@ -114,7 +117,7 @@ export default function StoreManagerPage() {
                    <td className="p-6">
                       <div className="flex items-center gap-4">
                          <div className="w-12 h-12 bg-brand-obsidian border border-brand-border flex items-center justify-center overflow-hidden grayscale group-hover:grayscale-0 transition-all">
-                            <img src={p.image_url || "/images/systems-showcase.png"} className="w-full h-full object-cover" />
+                            <img src={p.images?.[0] || p.image_url || "/images/electrical-technical.png"} className="w-full h-full object-contain" />
                          </div>
                          <div>
                             <span className="block font-display text-sm uppercase text-brand-white">{p.name}</span>
