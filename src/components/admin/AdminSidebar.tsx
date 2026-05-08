@@ -38,7 +38,9 @@ import {
   ShoppingBag,
   Link2,
   MousePointerClick,
-  Shield
+  Shield,
+  ShieldCheck,
+  Zap
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -91,10 +93,17 @@ const navGroups = [
   {
     label: "MARKETING",
     items: [
+      { name: "Automations", href: "/admin/marketing/automations", icon: Zap },
       { name: "Channels", href: "/admin/channels", icon: Monitor },
       { name: "SEO Commander", href: "/admin/seo", icon: Search },
       { name: "Newsletter", href: "/admin/newsletter", icon: Mail },
       { name: "AI Studio", href: "/admin/ai-studio", icon: Sparkles },
+    ]
+  },
+  {
+    label: "SERVICE",
+    items: [
+      { name: "Customer Support", href: "/admin/support", icon: ShieldCheck },
     ]
   },
   {
