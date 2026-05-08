@@ -43,12 +43,22 @@ const categoryIcons: Record<string, any> = {
 };
 
 export function TechnicalBOM({ selections, isPreview = false }: TechnicalBOMProps) {
+  const [mounted, setMounted] = React.useState(false);
   const [expandedSystems, setExpandedSystems] = useState<string[]>(Object.keys(selections.systems));
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleSystem = (system: string) => {
     setExpandedSystems(prev => 
       prev.includes(system) ? prev.filter(s => s !== system) : [...prev, system]
     );
+  };
+
+  const formatCurrency = (val: number) => {
+    if (!mounted) return `£${val}`;
+    return `£${val.toLocaleString()}`;
   };
 
   const activeSystems = Object.entries(selections.systems).filter(([_, tierId]) => tierId !== 'none');
@@ -122,7 +132,7 @@ export function TechnicalBOM({ selections, isPreview = false }: TechnicalBOMProp
                 <div className="flex items-center gap-6">
                   <div className="hidden md:block text-right">
                     <span className="font-mono text-[9px] text-brand-grey uppercase block mb-1">Est. System Cost</span>
-                    <span className="font-display text-white italic">£{items.reduce((sum, i) => sum + (i.approxPrice || 0), 0).toLocaleString()}</span>
+                    <span className="font-display text-white italic">{formatCurrency(items.reduce((sum, i) => sum + (i.approxPrice || 0), 0))}</span>
                   </div>
                   {isExpanded ? <ChevronUp className="w-5 h-5 text-brand-grey" /> : <ChevronDown className="w-5 h-5 text-brand-grey" />}
                 </div>

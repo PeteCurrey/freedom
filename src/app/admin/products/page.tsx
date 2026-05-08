@@ -34,42 +34,54 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     async function fetchProducts() {
-      setLoading(true);
-      // In a real app, we'd query the products table
-      // For now, we'll fetch what we have or show an empty state if it doesn't exist
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-      if (data) {
-        setProducts(data as AdminProduct[]);
+        if (error) throw error;
+        setProducts(data || []);
+      } catch (err) {
+        console.error("Failed to fetch products:", err);
+        setProducts([]);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     fetchProducts();
   }, []);
 
   const filteredProducts = useMemo(() => {
+    if (!Array.isArray(products)) return [];
     return products.filter(p => {
-      const matchesSearch = (p.name?.toLowerCase() || "").includes(searchTerm.toLowerCase()) || 
-                           (p.sku?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-                           (p.brand?.toLowerCase() || "").includes(searchTerm.toLowerCase());
+      if (!p) return false;
+      const name = p.name?.toLowerCase() || "";
+      const sku = p.sku?.toLowerCase() || "";
+      const brand = p.brand?.toLowerCase() || "";
+      const search = searchTerm.toLowerCase();
+      
+      const matchesSearch = name.includes(search) || sku.includes(search) || brand.includes(search);
       const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
       return matchesSearch && matchesStatus;
     });
   }, [products, searchTerm, statusFilter]);
 
-  const stats = {
-    total: products.length,
-    active: products.filter(p => p.status === 'active').length,
-    draft: products.filter(p => p.status === 'draft').length,
-    oos: products.filter(p => p.stock_status === 'out-of-stock').length,
-  };
+  const stats = useMemo(() => {
+    const list = Array.isArray(products) ? products : [];
+    return {
+      total: list.length,
+      active: list.filter(p => p?.status === 'active').length,
+      draft: list.filter(p => p?.status === 'draft').length,
+      oos: list.filter(p => p?.stock_status === 'out-of-stock').length,
+    };
+  }, [products]);
 
   const calculateMargin = (price: number, cost: number | undefined) => {
-    if (!cost) return null;
+    if (!cost || !price) return null;
     const priceExVat = price / 1.2;
+    if (priceExVat <= 0) return null;
     return ((priceExVat - cost) / priceExVat) * 100;
   };
 
@@ -80,10 +92,11 @@ export default function AdminProductsPage() {
     return "text-emerald-500";
   };
 
-  const getStockBadge = (status: string, qty: number) => {
+  const getStockBadge = (status: string | undefined, qty: number | undefined) => {
+    const stockQty = qty || 0;
     switch (status) {
-      case 'in-stock': return <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-full text-[9px] font-bold uppercase">{qty} IN STOCK</span>;
-      case 'low-stock': return <span className="px-2 py-0.5 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-full text-[9px] font-bold uppercase">{qty} LOW</span>;
+      case 'in-stock': return <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-full text-[9px] font-bold uppercase">{stockQty} IN STOCK</span>;
+      case 'low-stock': return <span className="px-2 py-0.5 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-full text-[9px] font-bold uppercase">{stockQty} LOW</span>;
       default: return <span className="px-2 py-0.5 bg-red-500/10 text-red-500 border border-red-500/20 rounded-full text-[9px] font-bold uppercase">OUT OF STOCK</span>;
     }
   };
@@ -117,8 +130,8 @@ export default function AdminProductsPage() {
           { label: 'All Products', count: stats.total, filter: 'all', color: 'bg-slate-900' },
           { label: 'Active', count: stats.active, filter: 'active', color: 'bg-emerald-500' },
           { label: 'Drafts', count: stats.draft, filter: 'draft', color: 'bg-amber-500' },
-          { label: 'Low Stock', count: products.filter(p => p.stock_status === 'low-stock').length, filter: 'low', color: 'bg-orange-500' },
-          { label: 'No Image', count: products.filter(p => !p.image).length, filter: 'no-image', color: 'bg-red-500' },
+          { label: 'Low Stock', count: (Array.isArray(products) ? products : []).filter(p => p?.stock_status === 'low-stock').length, filter: 'low', color: 'bg-orange-500' },
+          { label: 'No Image', count: (Array.isArray(products) ? products : []).filter(p => !p?.image).length, filter: 'no-image', color: 'bg-red-500' },
         ].map((q) => (
           <button 
             key={q.filter}
@@ -232,8 +245,8 @@ export default function AdminProductsPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-col">
-                          <span className="text-sm font-bold text-slate-900">£{product.price.toLocaleString()}</span>
-                          <span className="text-[9px] text-slate-400 font-mono">COST: £{product.cost_price?.toLocaleString() || '—'}</span>
+                          <span className="text-sm font-bold text-slate-900">£{(product.price || 0).toLocaleString()}</span>
+                          <span className="text-[9px] text-slate-400 font-mono">COST: £{(product.cost_price || 0).toLocaleString() || '—'}</span>
                           {margin !== null && (
                             <span className={cn("text-[9px] font-bold mt-1", getMarginColor(margin))}>
                               {margin.toFixed(1)}% MARGIN

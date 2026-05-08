@@ -248,8 +248,24 @@ export default function BuildPlanner() {
     };
   }, [selections.systems, selections.sleepingId, selections.vehicleId]);
 
-  const selectedVehicle = vehicleData[selections.vehicleId];
-  const payloadUsagePercent = selectedVehicle ? Math.round((totals.totalMass / selectedVehicle.gvm) * 100) : 0;
+  const selectedVehicle = useMemo(() => {
+    return selections.vehicleId ? vehicleData[selections.vehicleId] : null;
+  }, [selections.vehicleId]);
+
+  const payloadUsagePercent = useMemo(() => {
+    if (!selectedVehicle || !selectedVehicle.gvm || selectedVehicle.gvm === 0) return 0;
+    return Math.round((totals.totalMass / selectedVehicle.gvm) * 100);
+  }, [totals.totalMass, selectedVehicle]);
+
+  const formatCurrency = (val: number) => {
+    if (!mounted) return `£${val || 0}`;
+    return `£${(val || 0).toLocaleString()}`;
+  };
+
+  const formatWeight = (val: number) => {
+    if (!mounted) return `${val || 0}kg`;
+    return `${(val || 0).toLocaleString()}kg`;
+  };
 
   const nextStep = () => setCurrentStep((s) => Math.min(s + 1, steps.length - 1));
   const prevStep = () => setCurrentStep((s) => Math.max(s - 1, 0));
@@ -525,8 +541,8 @@ export default function BuildPlanner() {
                                 </div>
                              </div>
                              <div className="text-right shrink-0">
-                                <div className="font-display text-4xl text-brand-white">£{s.price.toLocaleString()}</div>
-                                <div className="font-mono text-[10px] text-brand-grey uppercase tracking-widest mt-1">+{s.weight}kg Impact</div>
+                                <div className="font-display text-4xl text-brand-white">{formatCurrency(s.price)}</div>
+                                <div className="font-mono text-[10px] text-brand-grey uppercase tracking-widest mt-1">+{formatWeight(s.weight)} Impact</div>
                              </div>
                            </button>
                         ))}
@@ -604,8 +620,8 @@ export default function BuildPlanner() {
                                 </div>
                               </div>
                               <div className="text-right shrink-0">
-                                <div className="font-display text-4xl text-brand-white">£{config.price.toLocaleString()}</div>
-                                <div className="font-mono text-[10px] text-brand-grey uppercase tracking-widest mt-1">+{config.weight}kg Weight</div>
+                                <div className="font-display text-4xl text-brand-white">{formatCurrency(config.price)}</div>
+                                <div className="font-mono text-[10px] text-brand-grey uppercase tracking-widest mt-1">+{formatWeight(config.weight)} Weight</div>
                               </div>
                             </button>
                           ))}
@@ -661,7 +677,7 @@ export default function BuildPlanner() {
                                  </div>
                                  <div>
                                     <h4 className="font-display text-lg uppercase text-white mb-1">Energy Intelligence</h4>
-                                    <p className="font-sans text-brand-grey text-xs">Calculated total daily consumption at {totals.weight * 0.8}Wh with 20% safety margin.</p>
+                                    <p className="font-sans text-brand-grey text-xs">Calculated total daily consumption at {Math.round(totals.weight * 0.8)}Wh with 20% safety margin.</p>
                                  </div>
                               </div>
                               <div className="flex items-start gap-4">
@@ -684,7 +700,7 @@ export default function BuildPlanner() {
                              </div>
                              <SVGSchematic 
                                masterSelections={selections.systems} 
-                               vehicleLength={selectedVehicle?.wheelbase ? selectedVehicle.wheelbase * 1500 : 6000} 
+                               vehicleLength={selectedVehicle?.wheelbase ? selectedVehicle.wheelbase * 1.5 : 6000} 
                                vehicleWidth={1800}
                                className="w-full opacity-80"
                              />
@@ -783,7 +799,7 @@ export default function BuildPlanner() {
                       <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-2 flex items-center gap-2">
                          <Layout className="w-3 h-3" /> selected foundation
                       </p>
-                      <p className="font-display text-2xl uppercase leading-none text-white">{selectedVehicle?.name}</p>
+                      <p className="font-display text-2xl uppercase leading-none text-white">{selectedVehicle?.name || 'No Vehicle'}</p>
                       <p className="font-mono text-[10px] text-brand-orange uppercase mt-2 tracking-widest">{selections.configId}</p>
                     </div>
                     
@@ -793,7 +809,7 @@ export default function BuildPlanner() {
                           <PoundSterling className="w-4 h-4 text-brand-grey" />
                           <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">hardware subtotal</span>
                         </div>
-                        <span className="font-display text-3xl text-white">£{totals.cost.toLocaleString()}</span>
+                        <span className="font-display text-3xl text-white">{formatCurrency(totals.cost)}</span>
                       </div>
                       
                       {/* GVM GAUGE */}
@@ -806,7 +822,7 @@ export default function BuildPlanner() {
                            <span className={cn(
                              "font-display text-3xl",
                              totals.gvmOver ? "text-red-500" : "text-white"
-                           )}>{Math.round(totals.totalMass)}kg</span>
+                           )}>{formatWeight(Math.round(totals.totalMass))}</span>
                         </div>
                         <div className="h-1 bg-brand-carbon relative overflow-hidden">
                            <div 
@@ -818,8 +834,8 @@ export default function BuildPlanner() {
                            />
                         </div>
                         <div className="flex justify-between font-mono text-[8px] uppercase tracking-widest text-brand-grey">
-                           <span>Base Net {selectedVehicle?.unladenMass}kg</span>
-                           <span className={totals.gvmOver ? "text-red-500 font-bold" : ""}>PL Limit: {selectedVehicle?.gvm}kg</span>
+                           <span>Base Net {formatWeight(selectedVehicle?.unladenMass || 0)}</span>
+                           <span className={totals.gvmOver ? "text-red-500 font-bold" : ""}>PL Limit: {formatWeight(selectedVehicle?.gvm || 0)}</span>
                         </div>
                       </div>
 
@@ -834,7 +850,7 @@ export default function BuildPlanner() {
                         <div className="space-y-2">
                           <div className="flex justify-between items-end">
                              <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Front Axle Hub</span>
-                             <span className={cn("font-display text-lg", totals.frontOver ? "text-red-500" : "text-white")}>{Math.round(totals.frontAxle)}kg</span>
+                             <span className={cn("font-display text-lg", totals.frontOver ? "text-red-500" : "text-white")}>{formatWeight(Math.round(totals.frontAxle))}</span>
                           </div>
                           <div className="h-0.5 bg-brand-carbon">
                              <div 
@@ -848,7 +864,7 @@ export default function BuildPlanner() {
                         <div className="space-y-2">
                           <div className="flex justify-between items-end">
                              <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Rear Axle Hub</span>
-                             <span className={cn("font-display text-lg", totals.rearOver ? "text-red-500" : "text-white")}>{Math.round(totals.rearAxle)}kg</span>
+                             <span className={cn("font-display text-lg", totals.rearOver ? "text-red-500" : "text-white")}>{formatWeight(Math.round(totals.rearAxle))}</span>
                           </div>
                           <div className="h-0.5 bg-brand-carbon">
                              <div 
