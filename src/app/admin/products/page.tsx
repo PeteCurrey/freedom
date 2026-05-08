@@ -221,23 +221,23 @@ export default function AdminProductsPage() {
                         />
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-slate-100 border border-slate-200 rounded-lg overflow-hidden flex items-center justify-center shrink-0">
+                        <Link href={`/admin/products/${product.id}`} className="flex items-center gap-4 group/link">
+                          <div className="w-12 h-12 bg-slate-100 border border-slate-200 rounded-lg overflow-hidden flex items-center justify-center shrink-0 group-hover/link:border-brand-orange transition-colors">
                             {product.image ? (
-                              <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                              <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover/link:scale-110 transition-transform" />
                             ) : (
-                              <Package size={20} className="text-slate-300" />
+                              <Package size={20} className="text-slate-300 group-hover/link:text-brand-orange" />
                             )}
                           </div>
                           <div>
-                            <p className="text-sm font-bold text-slate-900 leading-tight">{product.name}</p>
+                            <p className="text-sm font-bold text-slate-900 leading-tight group-hover/link:text-brand-orange transition-colors">{product.name}</p>
                             <div className="flex items-center gap-2 mt-1">
                               <span className="text-[10px] font-mono text-slate-400 uppercase">{product.brand}</span>
                               <span className="text-slate-200">•</span>
                               <span className="text-[10px] font-mono text-slate-400">{product.sku || 'NO SKU'}</span>
                             </div>
                           </div>
-                        </div>
+                        </Link>
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest bg-slate-100 px-2 py-1 rounded">

@@ -45,7 +45,8 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
           installDifficulty: p.install_difficulty || 'intermediate',
           payloadWeightKg: p.weight_kg || 0,
           supplierType: p.supplier_type || 'internal',
-          image: p.images?.[0] || '/images/placeholders/product.png'
+          image: p.images?.[0] || '/images/placeholders/product.png',
+          slug: p.slug
         }));
 
         setProducts(mappedProducts);
@@ -169,9 +170,13 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-brand-border border border-brand-border shadow-2xl">
                     {products.map((p) => (
                       <div key={p.id} className="bg-brand-obsidian p-8 flex flex-col group hover:bg-brand-carbon/30 transition-all">
-                        <div className="aspect-square bg-brand-carbon border border-brand-border/40 mb-8 relative overflow-hidden flex items-center justify-center p-8">
+                        <Link href={`/store/product/${p.slug}`} className="aspect-square bg-brand-carbon border border-brand-border/40 mb-8 relative overflow-hidden flex items-center justify-center p-8 group/img">
                             <div className="absolute inset-0 blueprint-grid opacity-5" />
-                            <Package className="w-16 h-16 text-brand-orange/10 group-hover:scale-110 transition-transform duration-700" />
+                            {p.image && p.image !== '/images/placeholders/product.png' ? (
+                              <img src={p.image} alt={p.name} className="w-full h-full object-contain transition-transform duration-700 group-hover/img:scale-110" />
+                            ) : (
+                              <Package className="w-16 h-16 text-brand-orange/10 group-hover/img:scale-110 transition-transform duration-700" />
+                            )}
                             <div className="absolute top-4 left-4">
                               <span className="font-mono text-[8px] bg-brand-obsidian border border-brand-border px-2 py-1 text-brand-grey uppercase tracking-widest">{p.brand}</span>
                             </div>
@@ -180,11 +185,13 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
                                   <span className="font-mono text-[8px] text-yellow-500 uppercase tracking-widest animate-pulse">Low Stock</span>
                               </div>
                             )}
-                        </div>
+                        </Link>
                         
                         <div className="flex-1 space-y-4">
                             <div className="flex justify-between items-start gap-4">
-                              <h3 className="font-display text-xl uppercase tracking-tight group-hover:text-brand-orange transition-colors h-14 overflow-hidden">{p.name}</h3>
+                              <Link href={`/store/product/${p.slug}`}>
+                                <h3 className="font-display text-xl uppercase tracking-tight hover:text-brand-orange transition-colors h-14 overflow-hidden">{p.name}</h3>
+                              </Link>
                               <div className="text-right shrink-0">
                                   <span className="font-display text-2xl block">£{p.price.toLocaleString()}</span>
                                   <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">{p.priceType}</span>
