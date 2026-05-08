@@ -25,7 +25,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
   const [newBrand, setNewBrand] = useState({ name: "", website: "", logo: "", country: "" });
   const [aiGenerating, setAiGenerating] = useState(false);
   
-  const [formData, setFormData] = useState(initialData || {
+  const defaults = {
     name: "",
     brand_id: "",
     supplier_id: "",
@@ -72,6 +72,17 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
     related_products: [],
     is_featured: false,
     is_editor_pick: false
+  };
+
+  const [formData, setFormData] = useState({
+    ...defaults,
+    ...initialData,
+    dimensions: initialData?.dimensions || defaults.dimensions,
+    images: initialData?.images || defaults.images,
+    specs: initialData?.specs || defaults.specs,
+    system_tier: initialData?.system_tier || defaults.system_tier,
+    vehicle_compatibility: initialData?.vehicle_compatibility || defaults.vehicle_compatibility,
+    tags: initialData?.tags || defaults.tags,
   });
 
   const [categories, setCategories] = useState<any[]>([]);
@@ -95,7 +106,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target as HTMLInputElement;
-    const val = type === "checkbox" ? (e.target as HTMLInputElement).checked : value;
+    const val = type === "checkbox" ? (e.target as any).checked : value;
     setFormData((prev: any) => ({ ...prev, [name]: val }));
   };
 

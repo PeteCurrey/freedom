@@ -1,12 +1,13 @@
 "use client";
 
-import { use } from "react";
-import { CATEGORIES, PRODUCTS, getProductsByCategory, getProductCTA } from "@/lib/data/productRegistry";
+import { use, useEffect, useState } from "react";
+import { CATEGORIES, getProductCTA } from "@/lib/data/productRegistry";
+import { supabase } from "@/lib/supabase";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { 
   Package, Filter, ChevronRight, Info, CheckCircle2, 
-  ArrowRight, ShieldCheck, Zap, Truck
+  ArrowRight, ShieldCheck, Zap, Truck, Loader2
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -15,7 +16,47 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
   const resolvedParams = use(params);
   const categoryId = resolvedParams.category;
   const category = CATEGORIES.find(c => c.id === categoryId);
-  const products = getProductsByCategory(categoryId);
+  
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      if (!categoryId) return;
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('category_id', categoryId) // Assuming category_id matches the slug from productRegistry
+          .eq('status', 'active');
+
+        if (error) throw error;
+
+        // Map Supabase fields to the UI expected structure
+        const mappedProducts = (data || []).map(p => ({
+          id: p.id,
+          name: p.name,
+          brand: p.brand || 'Premium Component',
+          price: (p.price_gbp || 0) / 100,
+          priceType: 'fixed', // Default
+          stockStatus: p.stock_status || 'in-stock',
+          shortDescription: p.short_description || p.description?.substring(0, 100) + '...',
+          installDifficulty: p.install_difficulty || 'intermediate',
+          payloadWeightKg: p.weight_kg || 0,
+          supplierType: p.supplier_type || 'internal',
+          image: p.images?.[0] || '/images/placeholders/product.png'
+        }));
+
+        setProducts(mappedProducts);
+      } catch (err) {
+        console.error("Failed to fetch store products:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProducts();
+  }, [categoryId]);
 
   if (!category) {
     return (
@@ -106,7 +147,9 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
             {/* PRODUCT GRID */}
             <div className="flex-1">
                <div className="flex justify-between items-center mb-10">
-                  <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">Showing {products.length} Professional Grade Products</span>
+                  <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">
+                    {loading ? "Scanning Registry..." : `Showing ${products.length} Professional Grade Products`}
+                  </span>
                   <div className="flex items-center gap-4">
                      <span className="font-mono text-[10px] text-brand-grey uppercase">Sort By:</span>
                      <select className="bg-transparent border-none font-mono text-[10px] text-white uppercase tracking-widest outline-none cursor-pointer">
@@ -117,7 +160,12 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
                   </div>
                </div>
 
-                {products.length > 0 ? (
+                {loading ? (
+                  <div className="flex flex-col items-center justify-center py-32 bg-brand-carbon/20 border border-brand-border">
+                    <Loader2 className="w-12 h-12 text-brand-orange animate-spin mb-6" />
+                    <p className="font-mono text-[10px] uppercase text-brand-grey tracking-widest animate-pulse">Syncing Registry Data...</p>
+                  </div>
+                ) : products.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-brand-border border border-brand-border shadow-2xl">
                     {products.map((p) => (
                       <div key={p.id} className="bg-brand-obsidian p-8 flex flex-col group hover:bg-brand-carbon/30 transition-all">

@@ -17,7 +17,7 @@ interface AdminProduct {
   supplier_sku?: string;
   brand: string;
   category: string;
-  price: number;
+  price_gbp: number; // Updated from price to price_gbp to match DB
   cost_price?: number;
   stock_quantity: number;
   stock_status: 'in-stock' | 'low-stock' | 'out-of-stock';
@@ -80,9 +80,10 @@ export default function AdminProductsPage() {
 
   const calculateMargin = (price: number, cost: number | undefined) => {
     if (!cost || !price) return null;
-    const priceExVat = price / 1.2;
+    const priceExVat = (price / 100) / 1.2;
+    const costInPounds = cost / 100;
     if (priceExVat <= 0) return null;
-    return ((priceExVat - cost) / priceExVat) * 100;
+    return ((priceExVat - costInPounds) / priceExVat) * 100;
   };
 
   const getMarginColor = (margin: number | null) => {
@@ -206,7 +207,7 @@ export default function AdminProductsPage() {
                 </tr>
               ) : (
                 filteredProducts.map((product) => {
-                  const margin = calculateMargin(product.price, product.cost_price);
+                  const margin = calculateMargin(product.price_gbp, product.cost_price);
                   return (
                     <tr key={product.id} className="hover:bg-slate-50/50 transition-colors group">
                       <td className="px-6 py-4">
@@ -245,8 +246,8 @@ export default function AdminProductsPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-col">
-                          <span className="text-sm font-bold text-slate-900">£{(product.price || 0).toLocaleString()}</span>
-                          <span className="text-[9px] text-slate-400 font-mono">COST: £{(product.cost_price || 0).toLocaleString() || '—'}</span>
+                          <span className="text-sm font-bold text-slate-900">£{(product.price_gbp / 100 || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                          <span className="text-[9px] text-slate-400 font-mono">COST: £{((product.cost_price || 0) / 100).toLocaleString(undefined, { minimumFractionDigits: 2 }) || '—'}</span>
                           {margin !== null && (
                             <span className={cn("text-[9px] font-bold mt-1", getMarginColor(margin))}>
                               {margin.toFixed(1)}% MARGIN
