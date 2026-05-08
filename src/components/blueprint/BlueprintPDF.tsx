@@ -259,12 +259,12 @@ export const BlueprintPDF = ({ buildId = 'EXP-900X', vehicleName = 'Mercedes-Ben
           <Text style={[s.tableHeaderCell, { width: '26%', textAlign: 'right' }]}>Vendor</Text>
         </View>
 
-        {bom.map((item) => (
-          <View key={item.sku} style={s.tableRow}>
-            <Text style={s.cellSku}>{item.sku}</Text>
-            <Text style={s.cellName}>{item.name}</Text>
-            <Text style={s.cellQty}>{item.qty}</Text>
-            <Text style={s.cellVendor}>{item.vendor}</Text>
+        {bom.map((item, idx) => (
+          <View key={item.sku || idx} style={s.tableRow}>
+            <Text style={s.cellSku}>{String(item.sku || 'N/A')}</Text>
+            <Text style={s.cellName}>{String(item.name || 'Unknown Component')}</Text>
+            <Text style={s.cellQty}>{String(item.qty || 1)}</Text>
+            <Text style={s.cellVendor}>{String(item.vendor || 'Various')}</Text>
           </View>
         ))}
         <PageFooter page="5 of 6" ref={refCode} />

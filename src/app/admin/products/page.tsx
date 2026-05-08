@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { 
   Plus, Search, Filter, MoreVertical, Edit2, 
   Trash2, Download, Upload, AlertCircle, CheckCircle2,
-  Package, ExternalLink, Archive, ChevronRight
+  Package, ExternalLink, Archive, ChevronRight, X, Sparkles
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -52,9 +52,9 @@ export default function AdminProductsPage() {
 
   const filteredProducts = useMemo(() => {
     return products.filter(p => {
-      const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                           p.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           p.brand.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = (p.name?.toLowerCase() || "").includes(searchTerm.toLowerCase()) || 
+                           (p.sku?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+                           (p.brand?.toLowerCase() || "").includes(searchTerm.toLowerCase());
       const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
       return matchesSearch && matchesStatus;
     });
@@ -309,5 +309,3 @@ export default function AdminProductsPage() {
     </div>
   );
 }
-
-import { X, Sparkles } from "lucide-react";

@@ -157,23 +157,24 @@ const ElectricalLayer = ({ tier, viewWidth, viewHeight, isMaster }: { tier: Syst
 };
 
 const PlumbingLayer = ({ tier, viewWidth, viewHeight, isMaster }: { tier: SystemTier, viewWidth: number, viewHeight: number, isMaster: boolean }) => {
+  const yOffset = isMaster ? -15 : 0; 
   return (
     <g>
       {/* Fresh Tank */}
-      <rect x="380" y="15" width="80" height="40" fill="rgba(0,180,255,0.15)" stroke="#00B4FF" strokeWidth="1.5" />
-      <text x="390" y="32" fill="#00B4FF" fontSize="6" className="font-mono font-bold">FRESH</text>
-      <text x="390" y="42" fill="rgba(255,255,255,0.7)" fontSize="4" className="font-mono">{tier === 'pro' ? '120L' : tier === 'mid' ? '80L' : '40L'}</text>
+      <rect x="380" y={15 + yOffset} width="80" height="40" fill="rgba(0,180,255,0.15)" stroke="#00B4FF" strokeWidth="1.5" />
+      <text x="390" y={32 + yOffset} fill="#00B4FF" fontSize="6" className="font-mono font-bold">FRESH</text>
+      <text x="390" y={42 + yOffset} fill="rgba(255,255,255,0.7)" fontSize="4" className="font-mono">{tier === 'pro' ? '120L' : tier === 'mid' ? '80L' : '40L'}</text>
       
       {/* Water Lines */}
       {(tier === 'mid' || tier === 'pro') && (
-        <path d={`M 420 55 L 420 100 L 250 100`} stroke="#00B4FF" strokeWidth="1.5" fill="none" filter="url(#glow-blue)" />
+        <path d={`M 420 ${55 + yOffset} L 420 ${100 + yOffset} L 250 ${100 + yOffset}`} stroke="#00B4FF" strokeWidth="1.5" fill="none" filter="url(#glow-blue)" />
       )}
 
       {/* Multi-Fixtures (Pro) */}
       {tier === 'pro' && (
          <g>
-           <rect x="200" y="70" width="50" height="50" fill="rgba(0,180,255,0.05)" stroke="#00B4FF" strokeDasharray="1,2" />
-           <text x="210" y="95" fill="white" fontSize="4" className="font-mono">WET ROOM</text>
+           <rect x="200" y={70 + yOffset} width="50" height="50" fill="rgba(0,180,255,0.05)" stroke="#00B4FF" strokeDasharray="1,2" />
+           <text x="210" y={95 + yOffset} fill="white" fontSize="4" className="font-mono">WET ROOM</text>
          </g>
       )}
 
@@ -181,27 +182,28 @@ const PlumbingLayer = ({ tier, viewWidth, viewHeight, isMaster }: { tier: System
       <rect x="380" y={viewHeight - 15} width="60" height="10" fill="rgba(100,100,100,0.3)" stroke="#646464" strokeWidth="1" />
       <text x="390" y={viewHeight - 8} fill="white" fontSize="4" className="font-mono">GREY MT (EXT)</text>
       {/* Drain Line */}
-      <path d={`M 250 110 L 250 160 L 380 160 L 380 185`} stroke="#646464" strokeWidth="1" fill="none" strokeDasharray="2,2"/>
+      <path d={`M 250 ${110 + yOffset} L 250 160 L 380 160 L 380 185`} stroke="#646464" strokeWidth="1" fill="none" strokeDasharray="2,2"/>
     </g>
   );
 };
 
 const HeatingLayer = ({ tier, viewWidth, viewHeight, isMaster }: { tier: SystemTier, viewWidth: number, viewHeight: number, isMaster: boolean }) => {
+  const yOffset = isMaster ? 10 : 0;
   return (
     <g>
       {/* Heater Unit */}
-      <rect x={280} y={viewHeight - 60} width="35" height="25" fill="rgba(255,50,50,0.15)" stroke="#FF3232" strokeWidth="1.5" />
-      <text x={285} y={viewHeight - 45} fill="#FF3232" fontSize="6" className="font-mono font-bold">HVAC</text>
+      <rect x={280} y={viewHeight - 60 - yOffset} width="35" height="25" fill="rgba(255,50,50,0.15)" stroke="#FF3232" strokeWidth="1.5" />
+      <text x={285} y={viewHeight - 45 - yOffset} fill="#FF3232" fontSize="6" className="font-mono font-bold">HVAC</text>
       
       {/* Ducting Network */}
-      <path d={`M 315 ${viewHeight - 45} L 450 ${viewHeight - 45}`} stroke="#FF3232" strokeWidth="3" strokeDasharray="3,1" fill="none" opacity="0.8" />
-      <circle cx={450} cy={viewHeight - 45} r="4" fill="#FF3232" />
+      <path d={`M 315 ${viewHeight - 45 - yOffset} L 450 ${viewHeight - 45 - yOffset}`} stroke="#FF3232" strokeWidth="3" strokeDasharray="3,1" fill="none" opacity="0.8" />
+      <circle cx={450} cy={viewHeight - 45 - yOffset} r="4" fill="#FF3232" />
       
       {/* Pro Tier (Dual Fuel/Water Heating) */}
       {tier === 'pro' && (
          <g>
-            <path d={`M 285 ${viewHeight - 60} L 285 25 L 380 25`} stroke="#FF3232" strokeWidth="1" strokeDasharray="2,2" fill="none" />
-            <text x={285} y={20} fill="#FF3232" fontSize="4" className="font-mono">GLYCOL RADIATOR LOOP</text>
+            <path d={`M 285 ${viewHeight - 60 - yOffset} L 285 ${25 + yOffset} L 380 ${25 + yOffset}`} stroke="#FF3232" strokeWidth="1" strokeDasharray="2,2" fill="none" />
+            <text x={285} y={20 + yOffset} fill="#FF3232" fontSize="4" className="font-mono">GLYCOL RADIATOR LOOP</text>
          </g>
       )}
     </g>
@@ -210,13 +212,14 @@ const HeatingLayer = ({ tier, viewWidth, viewHeight, isMaster }: { tier: SystemT
 
 const GasLayer = ({ tier, viewWidth, viewHeight, isMaster }: { tier: SystemTier, viewWidth: number, viewHeight: number, isMaster: boolean }) => {
   if (tier === 'none') return null;
+  const xOffset = isMaster ? -30 : 0;
   return (
     <g>
-      <circle cx="500" cy="150" r="15" fill="rgba(0,255,0,0.1)" stroke="#00FF00" strokeWidth="1" />
-      {tier === 'pro' && <circle cx="480" cy="150" r="15" fill="rgba(0,255,0,0.1)" stroke="#00FF00" strokeWidth="1" />}
-      <text x={tier === 'pro' ? "465" : "485"} y="170" fill="#00FF00" fontSize="5" className="font-mono font-bold">LPG LOCKER</text>
+      <circle cx={500 + xOffset} cy="150" r="15" fill="rgba(0,255,0,0.1)" stroke="#00FF00" strokeWidth="1" />
+      {tier === 'pro' && <circle cx={480 + xOffset} cy="150" r="15" fill="rgba(0,255,0,0.1)" stroke="#00FF00" strokeWidth="1" />}
+      <text x={tier === 'pro' ? (465 + xOffset) : (485 + xOffset)} y="170" fill="#00FF00" fontSize="5" className="font-mono font-bold">LPG LOCKER</text>
       {/* Hard pipe to appliances */}
-      <path d="M 500 135 L 500 60 L 450 60" stroke="#00FF00" strokeWidth="1.5" fill="none" />
+      <path d={`M ${500 + xOffset} 135 L ${500 + xOffset} 60 L ${450 + xOffset} 60`} stroke="#00FF00" strokeWidth="1.5" fill="none" />
     </g>
   );
 };
