@@ -56,6 +56,12 @@ export default function SupportPortal() {
     setLoading(false);
   };
 
+  const stats = {
+    new: tickets.filter(t => t.status === 'new').length,
+    total: tickets.length,
+    resolution: 92 // Mock for now until we have 'resolved' status logic
+  };
+
   const filteredTickets = tickets.filter(t => {
     const matchesSearch = t.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                          t.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -90,13 +96,13 @@ export default function SupportPortal() {
           <div className="flex gap-4">
              <div className="bg-brand-carbon border border-brand-border p-6 flex items-center gap-4">
                 <div className="text-right">
-                   <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Avg Response</p>
-                   <p className="font-display text-2xl">4.2h</p>
+                   <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">New Requests</p>
+                   <p className="font-display text-2xl text-brand-orange">{stats.new}</p>
                 </div>
                 <div className="w-px h-8 bg-brand-border" />
                 <div className="text-right">
                    <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Resolution</p>
-                   <p className="font-display text-2xl text-emerald-500">92%</p>
+                   <p className="font-display text-2xl text-emerald-500">{stats.resolution}%</p>
                 </div>
              </div>
           </div>

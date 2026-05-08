@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import { 
   Zap, 
   Plus, 
@@ -23,11 +24,39 @@ import { cn } from "@/lib/utils";
 
 export default function AutomationsPage() {
   const [flows, setFlows] = useState([
-    { id: 1, name: "Abandoned Cart Recovery", status: "active", trigger: "Cart Abandoned", audience: "All Visitors", conversions: "12.4%", sent: 1240 },
-    { id: 2, name: "Welcome Series (Build Kit)", status: "active", trigger: "Newsletter Signup", audience: "Kit Interested", conversions: "8.2%", sent: 850 },
-    { id: 3, name: "Post-Purchase Review", status: "paused", trigger: "Order Shipped", audience: "Customers", conversions: "5.1%", sent: 320 },
-    { id: 4, name: "T3 Build Nurture", status: "active", trigger: "Quote Requested", audience: "High Intent", conversions: "18.5%", sent: 145 }
+    { id: 1, name: "Abandoned Cart Recovery", status: "active", trigger: "Cart Abandoned", audience: "All Visitors", conversions: "12.4%", sent: 0 },
+    { id: 2, name: "Welcome Series (Build Kit)", status: "active", trigger: "Newsletter Signup", audience: "Kit Interested", conversions: "8.2%", sent: 0 },
+    { id: 3, name: "Post-Purchase Review", status: "paused", trigger: "Order Shipped", audience: "Customers", conversions: "5.1%", sent: 0 },
+    { id: 4, name: "T3 Build Nurture", status: "active", trigger: "Quote Requested", audience: "High Intent", conversions: "18.5%", sent: 0 }
   ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchLiveFlowStats();
+  }, []);
+
+  const fetchLiveFlowStats = async () => {
+    setLoading(true);
+    // 1. Fetch Abandoned Carts (Pending orders > 1h old)
+    const oneHourAgo = new Date(Date.now() - 3600000).toISOString();
+    const { count: abandonedCount } = await supabase
+      .from('orders')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'pending')
+      .lt('created_at', oneHourAgo);
+
+    // 2. Fetch Quote Requests (Nurture flow context)
+    const { count: quotesCount } = await supabase
+      .from('quote_requests')
+      .select('*', { count: 'exact', head: true });
+
+    setFlows(prev => prev.map(f => {
+       if (f.id === 1) return { ...f, sent: abandonedCount || 0 };
+       if (f.id === 4) return { ...f, sent: quotesCount || 0 };
+       return f;
+    }));
+    setLoading(false);
+  };
 
   const toggleStatus = (id: number) => {
     setFlows(flows.map(f => f.id === id ? { ...f, status: f.status === 'active' ? 'paused' : 'active' } : f));

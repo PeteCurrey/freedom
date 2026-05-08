@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 import { 
   BarChart3, 
   TrendingUp, 
@@ -50,6 +51,13 @@ import { cn } from "@/lib/utils";
 export default function AnalyticsPage() {
   const [activeTab, setActiveTab] = useState('Overview');
   const [dateRange, setDateRange] = useState('30D');
+  const [stats, setStats] = useState({
+    revenue: 0,
+    orders: 0,
+    leads: 0,
+    conversion: 0
+  });
+  const [loading, setLoading] = useState(true);
   const [integrations, setIntegrations] = useState({
     stripe: true,
     ga4: true,
@@ -57,7 +65,38 @@ export default function AnalyticsPage() {
     ebay: false
   });
 
-  const tabs = ['Overview', 'Revenue', 'Traffic', 'SEO Performance', 'Customers', 'Channels', 'Products'];
+  useEffect(() => {
+    fetchRealStats();
+  }, [dateRange]);
+
+  const fetchRealStats = async () => {
+    setLoading(true);
+    // 1. Fetch Orders & Revenue
+    const { data: orders } = await supabase
+      .from('orders')
+      .select('total_amount_gbp');
+    
+    const totalRevenue = (orders || []).reduce((acc, curr) => acc + (curr.total_amount_gbp || 0), 0) / 100;
+    const totalOrders = orders?.length || 0;
+
+    // 2. Fetch Leads
+    const { count: leadsCount } = await supabase
+      .from('leads')
+      .select('*', { count: 'exact', head: true });
+
+    // 3. Fetch Quote Requests (Conversion context)
+    const { count: quotesCount } = await supabase
+      .from('quote_requests')
+      .select('*', { count: 'exact', head: true });
+
+    setStats({
+      revenue: totalRevenue,
+      orders: totalOrders,
+      leads: leadsCount || 0,
+      conversion: quotesCount ? ((totalOrders / quotesCount) * 100) : 0
+    });
+    setLoading(false);
+  };
 
   const MetricCard = ({ label, value, sub, trend, trendValue, icon: Icon, connected = true }: any) => (
     <div className="bg-white border border-slate-200 p-5 rounded-xl shadow-sm relative overflow-hidden group">
@@ -86,9 +125,17 @@ export default function AnalyticsPage() {
     </div>
   );
 
+  const tabs = ['Overview', 'Revenue', 'Traffic', 'SEO Performance', 'Customers', 'Channels', 'Products'];
+  
+  if (loading) return (
+     <div className="flex h-screen items-center justify-center bg-brand-obsidian">
+        <Loader2 className="w-12 h-12 text-brand-orange animate-spin" />
+     </div>
+  );
+
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500">
-      {/* Header */}
+      {/* ... header unchanged ... */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900 tracking-tighter flex items-center gap-3">
@@ -135,10 +182,10 @@ export default function AnalyticsPage() {
          {activeTab === 'Overview' && (
             <>
                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <MetricCard label="Revenue MTD" value="£4,250" sub="vs £0 last month" trend="up" trendValue="100%" icon={CreditCard} connected={true} />
-                  <MetricCard label="Total Sessions" value="2,555" sub="Sessions today" trend="up" trendValue="12%" icon={Users} connected={true} />
-                  <MetricCard label="Avg Position" value="12.4" sub="Keywords from GSC" icon={Target} connected={true} />
-                  <MetricCard label="Conversion" value="11.0%" sub="Sessions to orders" icon={MousePointer2} connected={true} />
+                  <MetricCard label="Revenue MTD" value={`£${stats.revenue.toLocaleString()}`} sub="Live from Stripe" trend="up" trendValue="100%" icon={CreditCard} connected={true} />
+                  <MetricCard label="Total Leads" value={stats.leads.toLocaleString()} sub="Pending inquiries" trend="up" trendValue="12%" icon={Users} connected={true} />
+                  <MetricCard label="Paid Orders" value={stats.orders.toString()} sub="Lifetime total" icon={ShoppingCart} connected={true} />
+                  <MetricCard label="Conv. Rate" value={`${stats.conversion.toFixed(1)}%`} sub="Quotes to Orders" icon={MousePointer2} connected={true} />
                </div>
 
                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

@@ -116,7 +116,7 @@ export async function POST(req: Request) {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                from: 'Amplios <orders@avorria.co.uk>',
+                from: 'Amplios <support@amplios.co.uk>',
                 to: [customerEmail],
                 subject: `Order Secured: #${session.id.slice(-8).toUpperCase()}`,
                 html: `
