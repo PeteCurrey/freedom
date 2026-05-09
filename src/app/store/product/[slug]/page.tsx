@@ -247,7 +247,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
       {/* Detail Tabs */}
       <section className="border-t border-brand-border bg-white pt-12">
-        <ProductTabs product={product} />
+        <ProductTabs product={product} related={related} fallbackImage={primaryImage || '/images/hero-background.png'} />
       </section>
 
       {/* Compatible Systems Block */}

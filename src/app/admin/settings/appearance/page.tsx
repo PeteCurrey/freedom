@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { Save, Loader2, Image as ImageIcon } from "lucide-react";
-import { toast } from "sonner";
 import { CATEGORIES } from "@/lib/data/productRegistry";
 
 interface StoreConfig {
@@ -32,7 +31,7 @@ export default function StoreAppearanceAdmin() {
       setConfigs(configMap);
     } catch (err) {
       console.error("Failed to load store configs", err);
-      toast.error("Failed to load appearance settings.");
+      alert("Failed to load appearance settings.");
     } finally {
       setLoading(false);
     }
@@ -50,10 +49,10 @@ export default function StoreAppearanceAdmin() {
       const { error } = await supabase.from('store_config').upsert(updates);
       if (error) throw error;
       
-      toast.success("Appearance settings saved successfully.");
+      alert("Appearance settings saved successfully.");
     } catch (err) {
       console.error("Failed to save store configs", err);
-      toast.error("Failed to save settings.");
+      alert("Failed to save settings.");
     } finally {
       setSaving(false);
     }

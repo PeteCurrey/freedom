@@ -73,7 +73,7 @@ export default async function StoreHub() {
     if (popular && popular.length > 0) popularProducts = popular;
   } catch (e) {
     // fallback to registry
-    popularProducts = PRODUCTS.filter(p => p.systemTier === 'Performance').slice(0, 8);
+    popularProducts = PRODUCTS.slice(0, 8);
   }
 
   // Map category images from config
