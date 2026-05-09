@@ -21,6 +21,22 @@
   --ease-expo-out: cubic-bezier(0.19, 1, 0.22, 1);
 }
 
+/* Hybrid Store Light Theme */
+.store-light {
+  --color-brand-obsidian: #FFFFFF;
+  --color-brand-carbon: #F8F8F6;
+  --color-brand-graphite: #FFFFFF; /* Using white for card backgrounds */
+  --color-brand-white: #111111;
+  --color-brand-grey: #666666;
+  --color-brand-border: #E5E5E5;
+  --color-brand-surface: #F8F8F6;
+  
+  /* Additional text colors */
+  --text-primary: #111111;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+}
+
 /* Admin Light Mode Overrides */
 .admin-light {
   --color-brand-obsidian: #F8F9FA;

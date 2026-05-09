@@ -14,7 +14,6 @@ import { ProductCard } from "@/components/store/ProductCard";
 import { ProductHistoryTracker } from "@/components/store/ProductHistoryTracker";
 import { StickyProductBar } from "@/components/store/StickyProductBar";
 import { ProductTabs } from "@/components/store/ProductTabs";
-
 import { Metadata } from "next";
 import { PRODUCTS, getProductBySlug } from "@/lib/data/productRegistry";
 
@@ -101,37 +100,21 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     if (categoryRelated) related = [...related, ...categoryRelated];
   }
 
-  // 3. Fetch kits this product is part of
-  const { data: partOfKits } = await supabaseAdmin
-    .from('products')
-    .select('*')
-    .eq('subcategory', 'kits')
-    .contains('related_product_ids', [product.id])
-    .limit(2);
+  const primaryImage = product.images?.[0] || product.image_url || null;
+  const allImages = (product.images as (string | null)[] || (product.image_url ? [product.image_url] : []));
 
-  const categorySlug = product.product_categories?.slug || "";
-  const categoryImageMap: Record<string, string> = {
-    "electrical": "/images/electrical-technical.png",
-    "climate": "/images/heating-system-technical.png",
-    "plumbing": "/images/water-plumbing-technical.png",
-    "insulation": "/images/insulation-technical.png",
-    "windows-ventilation": "/images/insulation-technical.png",
-    "exterior-accessories": "/images/exterior-equipment-technical.png",
-    "kits": "/images/systems-showcase.png"
-  };
-  const fallbackImage = product.image_url || categoryImageMap[categorySlug] || "/images/hero-background.png";
-  const primaryImage = product.images?.[0] || fallbackImage;
-
-  // 4. Price and Fallback Logic
+  // 4. Price Logic
   const priceExVat = Math.round(product.price_gbp / 1.2);
 
   return (
-    <main className="bg-brand-obsidian min-h-screen">
+    <main className="bg-brand-obsidian min-h-screen pb-24">
       <Navbar />
+      
+      {/* 2px Orange Border Threshold */}
+      <div className="w-full h-[2px] bg-brand-orange" />
 
       {/* Hero Section */}
-      <section className="pt-48 pb-24 relative overflow-hidden">
-        <div className="blueprint-grid absolute inset-0 opacity-10 pointer-events-none" />
+      <section className="pt-24 pb-16 relative">
         <div className="container mx-auto px-6 relative z-10">
           
           {/* Breadcrumbs */}
@@ -140,83 +123,88 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <ChevronRight className="w-3 h-3" />
             <Link href={`/store/${product.product_categories?.slug}`} className="hover:text-brand-orange transition-colors">{product.product_categories?.name}</Link>
             <ChevronRight className="w-3 h-3" />
-            <span className="text-white">{product.name}</span>
+            <span className="text-brand-white">{product.name}</span>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
             {/* Gallery Panel */}
-            <div className="lg:col-span-12 xl:col-span-7 space-y-8">
-              <div className="aspect-square max-w-[600px] mx-auto bg-white blueprint-border rounded-2xl relative overflow-hidden group shadow-2xl">
-                <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-10" />
-                <Image 
-                  src={primaryImage} 
-                  alt={product.name} 
-                  fill 
-                  className="object-contain p-12 transition-transform duration-700 group-hover:scale-105" 
-                  priority
-                />
-              </div>
+            <div className="lg:col-span-12 xl:col-span-7 space-y-6">
+              <div className="aspect-square max-w-[600px] mx-auto bg-[#F8F8F6] rounded-xl relative overflow-hidden group shadow-sm flex items-center justify-center">
+                {primaryImage ? (
+                  <Image 
+                    src={primaryImage} 
+                    alt={product.name} 
+                    fill 
+                    className="object-contain p-8 transition-transform duration-700 hover:scale-125 cursor-zoom-in" 
+                    priority
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center bg-[#F0F0F0] w-full h-full">
+                    <span className="font-display text-8xl text-[#999999] opacity-30">{product.brand?.slice(0, 1) || "?"}</span>
+                    <span className="font-mono text-xs text-[#999999] uppercase tracking-widest mt-4">Image coming soon</span>
+                  </div>
+                )}
                 
                 {/* Product Meta Badge */}
-                <div className="absolute top-8 left-8 flex flex-col gap-2">
-                  <span className="px-4 py-1.5 bg-brand-orange text-white font-mono text-[9px] uppercase tracking-widest shadow-xl">
-                    Official UK Registry Item
-                  </span>
+                <div className="absolute top-6 left-6 flex flex-col gap-2 z-10">
                   {product.badge && (
-                    <span className="px-4 py-1.5 bg-brand-obsidian border border-brand-border text-brand-grey font-mono text-[9px] uppercase tracking-widest">
+                    <span className="px-3 py-1 bg-brand-orange text-white font-mono text-[9px] uppercase tracking-widest shadow-md rounded-sm">
                       {product.badge}
                     </span>
                   )}
                 </div>
-
-                {/* Thumbnails */}
-                <div className="grid grid-cols-4 gap-4 mt-8">
-                 {(product.images as (string | null)[] || (product.image_url ? [product.image_url] : [])).slice(0, 4).map((img: string | null, i: number) => (
-                   <div key={i} className={cn(
-                     "aspect-square bg-brand-carbon blueprint-border transition-all cursor-pointer group flex items-center justify-center p-4",
-                     i === 0 ? "border-brand-orange" : "opacity-40 hover:opacity-100"
-                   )}>
-                      {img ? <img src={img} className="w-full h-full object-contain" /> : <div className="text-brand-grey/20 font-display text-4xl">{i+1}</div>}
-                   </div>
-                 ))}
               </div>
+
+              {/* Thumbnails */}
+              {allImages.length > 0 && primaryImage && (
+                <div className="flex gap-4 max-w-[600px] mx-auto overflow-x-auto hide-scrollbar">
+                  {allImages.slice(0, 5).map((img: string | null, i: number) => (
+                    <div key={i} className={cn(
+                      "w-20 h-20 bg-[#F8F8F6] border rounded-md transition-all cursor-pointer flex items-center justify-center p-2 flex-shrink-0",
+                      i === 0 ? "border-brand-orange" : "border-[#E5E5E5] opacity-60 hover:opacity-100"
+                    )}>
+                      {img && <img src={img} className="w-full h-full object-contain" alt="" />}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Config Panel */}
             <div className="lg:col-span-12 xl:col-span-5 flex flex-col">
-              <div className="mb-8 p-10 bg-brand-carbon blueprint-border relative overflow-hidden">
+              <div className="mb-8 p-10 bg-white border border-brand-border rounded-xl shadow-sm relative">
                 <div className="absolute top-0 right-0 p-6 flex gap-4">
                   <button className="text-brand-grey hover:text-brand-orange"><Share2 size={16} /></button>
                   <button className="text-brand-grey hover:text-brand-orange"><Heart size={16} /></button>
                 </div>
 
                 <p className="font-mono text-xs text-brand-orange uppercase tracking-[0.3em] mb-4">{product.brand}</p>
-                <h1 className="font-display text-4xl lg:text-5xl uppercase leading-[0.9] mb-8">{product.name}</h1>
+                <h1 className="font-display text-4xl lg:text-5xl uppercase leading-[1.1] mb-8 text-brand-white">{product.name}</h1>
                 
-                  <div className="flex flex-col gap-2 mb-10">
-                    <div className="flex items-baseline gap-4">
-                      <span className="font-display text-5xl text-white">£{(product.price_gbp / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                      <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">inc. VAT</span>
-                    </div>
-                    <div className="font-mono text-xs text-brand-grey uppercase tracking-widest flex items-center gap-2">
-                      <span>£{(priceExVat / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                      <span className="text-[10px] opacity-60">ex. VAT</span>
-                    </div>
+                <div className="flex flex-col gap-2 mb-10">
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-display font-bold text-5xl text-brand-white">£{(product.price_gbp / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">inc. VAT</span>
                   </div>
+                  <div className="font-mono text-xs text-brand-grey uppercase tracking-widest flex items-center gap-2">
+                    <span>£{(priceExVat / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span className="text-[10px] opacity-60">ex. VAT</span>
+                  </div>
+                </div>
 
                 <p className="font-sans text-brand-grey text-lg leading-relaxed mb-6">
                   {product.short_description || "High-performance component verified for professional building standards."}
                 </p>
 
-                {/* Job 8: System Badge */}
+                {/* System Badge */}
                 {product.system_tier && (
-                  <div className="mb-12 flex items-center gap-4 p-4 border border-brand-orange/30 bg-brand-orange/5">
-                    <div className="w-8 h-8 rounded-full bg-brand-orange/20 flex items-center justify-center border border-brand-orange/40">
+                  <div className="mb-10 flex items-center gap-4 p-4 border border-[#E5E5E5] bg-[#F8F8F6] rounded-md">
+                    <div className="w-8 h-8 rounded-full bg-brand-orange/10 flex items-center justify-center">
                       <ShieldCheck className="w-4 h-4 text-brand-orange" />
                     </div>
                     <div>
-                      <span className="block font-mono text-[8px] text-brand-orange uppercase tracking-[0.2em] mb-0.5">Engineered Deployment</span>
-                      <span className="block font-display text-xs uppercase tracking-widest text-white">Recommended for {product.system_tier.replace(/-/g, ' ')} architecture</span>
+                      <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-[0.2em] mb-0.5">Engineered Deployment</span>
+                      <span className="block font-display text-xs uppercase tracking-widest text-brand-white">Recommended for {product.system_tier.replace(/-/g, ' ')} architecture</span>
                     </div>
                   </div>
                 )}
@@ -227,122 +215,61 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     name: product.name,
                     brand: product.brand,
                     price_gbp: product.price_gbp,
-                    image_url: product.images?.[0],
+                    image_url: product.images?.[0] || product.image_url,
                     slug: product.slug,
                     is_affiliate: product.is_affiliate,
                   }} />
-                  <Link href="/planner" className="w-full py-5 border border-brand-border text-brand-grey hover:text-white hover:bg-brand-orange/10 hover:border-brand-orange transition-all text-center font-display text-[10px] uppercase tracking-widest">
+                  <Link href="/planner" className="w-full py-4 border border-brand-border text-brand-white hover:text-brand-orange hover:bg-[#F8F8F6] transition-all text-center font-display text-[10px] uppercase tracking-widest rounded-sm font-bold">
                     Add to Build Plan
                   </Link>
                 </div>
               </div>
 
-              {/* Technical Spec Summary (Blueprint Style) */}
-              <div className="grid grid-cols-2 gap-px bg-brand-border">
+              {/* Technical Spec Summary */}
+              <div className="grid grid-cols-2 gap-px bg-brand-border rounded-xl overflow-hidden border border-brand-border">
                 {product.spec_line && (
-                   <div className="col-span-2 bg-brand-carbon p-6 flex items-center gap-4 border-b border-brand-border">
+                   <div className="col-span-2 bg-[#F8F8F6] p-6 flex items-center gap-4 border-b border-brand-border">
                       <Terminal className="text-brand-orange w-4 h-4" />
-                      <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest uppercase">{product.spec_line}</span>
+                      <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">{product.spec_line}</span>
                    </div>
                 )}
                 {Object.entries(product.specs || {}).slice(0, 4).map(([key, value]) => (
-                  <div key={key} className="bg-brand-carbon p-6">
+                  <div key={key} className="bg-white p-6">
                     <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-[0.2em] mb-1">{key}</span>
-                    <span className="block font-mono text-xs text-white uppercase">{String(value)}</span>
+                    <span className="block font-sans text-sm text-brand-white">{String(value)}</span>
                   </div>
                 ))}
-                <div className="bg-brand-carbon p-6">
-                  <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-[0.2em] mb-1">Weight</span>
-                  <span className="block font-mono text-xs text-white uppercase">{product.weight_kg ? product.weight_kg + 'kg' : 'N/A'}</span>
-                </div>
-                <div className="bg-brand-carbon p-6">
-                  <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-[0.2em] mb-1">Status</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                    <span className="font-mono text-xs text-white uppercase">{product.stock_quantity > 0 ? 'In Stock' : 'Pre-Order'}</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Tabs / Documentation */}
-      <section className="py-24 border-y border-brand-border bg-brand-carbon/50">
-        <div className="container mx-auto px-6">
-          <div className="grid lg:grid-cols-12 gap-16">
-            <ProductTabs 
-              product={product} 
-              related={related} 
-              fallbackImage={fallbackImage} 
-            />
-            
-            <div className="lg:col-span-4 space-y-12">
-               {/* Datasheet Download */}
-               {product.datasheet_url && (
-                 <div className="blueprint-border p-8 bg-brand-carbon">
-                    <h4 className="font-display text-xs uppercase tracking-widest mb-6">Documentation Hub</h4>
-                    <Link href={product.datasheet_url} className="flex items-center gap-6 group">
-                       <div className="w-12 h-12 bg-brand-obsidian flex items-center justify-center border border-brand-border group-hover:border-brand-orange transition-colors">
-                          <FileText className="text-brand-orange" />
-                       </div>
-                       <div>
-                          <span className="block font-mono text-[10px] uppercase text-white group-hover:text-brand-orange transition-colors">Manufacturer Datasheet</span>
-                          <span className="block font-sans text-[10px] text-brand-grey uppercase">PDF Document (1.2MB)</span>
-                       </div>
-                    </Link>
-                 </div>
-               )}
-
-               {/* Part of Kit Promo */}
-               {partOfKits && partOfKits.length > 0 && (
-                 <div className="space-y-6">
-                    <h4 className="font-display text-xs uppercase tracking-widest">Part of Curated Kits</h4>
-                    {partOfKits.map(kit => (
-                      <Link key={kit.id} href={`/store/product/${kit.slug}`} className="block border border-brand-border bg-brand-orange/5 p-6 hover:bg-brand-orange/10 transition-all group">
-                         <span className="font-mono text-[9px] text-brand-orange uppercase block mb-2">Save up to 15%</span>
-                         <span className="font-display text-sm uppercase block group-hover:text-brand-orange transition-colors mb-1">{kit.name}</span>
-                         <span className="font-sans text-[10px] text-brand-grey uppercase">View Bundle Registry →</span>
-                      </Link>
-                    ))}
-                 </div>
-               )}
-
-               {/* System Guide Bridge */}
-               <div className="blueprint-border p-8 bg-brand-obsidian p-8 border-l-4 border-brand-orange">
-                  <span className="font-mono text-[9px] text-brand-orange uppercase block mb-4">Educational Bridge</span>
-                  <h4 className="font-display text-sm uppercase mb-4 leading-tight">Used in our {product.product_categories?.name} Guide</h4>
-                  <p className="font-sans text-xs text-brand-grey mb-6">Learn how to correctly integrated this {product.brand} component into your build systems.</p>
-                  <Link href={`/systems/${product.product_categories?.slug === 'electrical' ? 'electrical-solar' : product.product_categories?.slug}`} className="font-mono text-[10px] uppercase text-white hover:text-brand-orange flex items-center gap-2">
-                     Read Guide <ArrowRight size={12} />
-                  </Link>
-               </div>
-            </div>
-          </div>
-        </div>
+      {/* Detail Tabs */}
+      <section className="border-t border-brand-border bg-white pt-12">
+        <ProductTabs product={product} />
       </section>
 
-      {/* Suggested Gear */}
-      {related && related.length > 0 && (
-        <section className="py-32">
+      {/* Compatible Systems Block */}
+      {related.length > 0 && (
+        <section className="py-24 bg-[#F8F8F6] border-y border-brand-border mt-12">
           <div className="container mx-auto px-6">
-            <h2 className="font-display text-4xl uppercase mb-16">Compatible Equipment</h2>
+            <div className="mb-12">
+              <h2 className="font-display text-3xl uppercase tracking-tighter text-brand-white mb-2">Compatible Architecture</h2>
+              <p className="font-sans text-brand-grey">Verified nodes for seamless integration.</p>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {related.map(p => (
+              {related.map(rel => (
                 <ProductCard 
-                  key={p.id}
-                  id={p.id}
-                  name={p.name}
-                  brand={p.brand}
-                  price={p.price_gbp}
-                  compareAtPrice={p.compare_at_price}
-                  image={p.images?.[0]}
-                  slug={p.slug}
-                  specLine={p.spec_line}
-                  badge={p.badge}
-                  isAffiliate={p.is_affiliate}
-                  systemTier={p.system_tier}
+                  key={rel.id}
+                  id={rel.id}
+                  name={rel.name}
+                  brand={rel.brand}
+                  price={rel.price_gbp}
+                  image={rel.images?.[0] || rel.image_url}
+                  slug={rel.slug}
+                  specLine={rel.spec_line}
+                  isAffiliate={rel.is_affiliate}
                 />
               ))}
             </div>
@@ -350,26 +277,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      <ProductHistoryTracker product={{
-        id: product.id,
-        name: product.name,
-        brand: product.brand,
-        price_gbp: product.price_gbp,
-        images: product.images,
-        slug: product.slug,
-        spec_line: product.spec_line,
-        badge: product.badge,
-        system_tier: product.system_tier
-      }} />
-      <StickyProductBar product={{
-        id: product.id,
-        name: product.name,
-        brand: product.brand,
-        price_gbp: product.price_gbp,
-        image: product.images?.[0],
-        slug: product.slug,
-        is_affiliate: product.is_affiliate,
-      }} />
+      {/* Sticky Action Bar */}
+      <StickyProductBar product={product} />
 
       <Footer />
     </main>

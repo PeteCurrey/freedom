@@ -6,6 +6,7 @@ import { GSAPInit } from "@/components/layout/GSAPInit";
 import { StructuredData, generateOrganizationSchema } from "@/components/seo/StructuredData";
 import { PromotionBanner } from "@/components/layout/PromotionBanner";
 import { BuildProvider } from "@/hooks/useBuild";
+import { ThemeHandler } from "@/components/layout/ThemeHandler";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -61,8 +62,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${syne.variable} ${dmSans.variable} ${jetbrainsMono.variable} font-sans bg-[#0A0A0A] text-[#F5F5F0] antialiased selection:bg-[#FF6B00] selection:text-white overflow-x-hidden`}
+        className={`${syne.variable} ${dmSans.variable} ${jetbrainsMono.variable} font-sans bg-[#0A0A0A] text-[#F5F5F0] antialiased selection:bg-[#FF6B00] selection:text-white overflow-x-hidden transition-colors duration-500`}
       >
+        <ThemeHandler />
         <StructuredData data={generateOrganizationSchema()} />
         <GSAPInit />
         <LenisProvider>
