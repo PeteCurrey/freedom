@@ -99,8 +99,10 @@ export default async function StoreHub() {
 
       <StoreHero image={configMap['store_hero_image']} />
       <EditorsPick product={editorPickProduct as any} />
+      <div className="h-4" />
       <CategoryGrid categories={mappedCategories} />
       <FeaturedProducts products={popularProducts as any} />
+      <div className="h-4" />
       <KitsBand />
       <BrandShowcase />
       <LifestyleBand images={lifestyleImages} />

@@ -36,17 +36,17 @@ export function StoreHero({ image = "/images/hero-background.png" }: StoreHeroPr
 
             {/* Trust Signals */}
             <div className="flex flex-wrap gap-8 items-center pt-8 border-t border-brand-border/30">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 py-2">
                 <Truck className="w-4 h-4 text-brand-orange" />
-                <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Free UK delivery over £150</span>
+                <span className="font-sans text-[13px] text-brand-grey">Free UK delivery over £150</span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 py-2">
                 <Headphones className="w-4 h-4 text-brand-orange" />
-                <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Expert technical support</span>
+                <span className="font-sans text-[13px] text-brand-grey">Expert technical support</span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 py-2">
                 <ShieldCheck className="w-4 h-4 text-brand-orange" />
-                <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Trade account pricing</span>
+                <span className="font-sans text-[13px] text-brand-grey">Trade account pricing</span>
               </div>
             </div>
           </div>

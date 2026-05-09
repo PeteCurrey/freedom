@@ -40,18 +40,13 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
               </div>
 
               {/* Content Section */}
-              <div className="p-4">
-                <h3 className="font-display text-sm font-semibold text-brand-white uppercase mb-1">
+              <div className="p-4 flex items-center justify-between">
+                <h3 className="font-display text-sm font-bold text-brand-white uppercase truncate pr-2">
                   {cat.name}
                 </h3>
-                <p className="font-sans text-[10px] text-brand-grey uppercase tracking-widest mb-4">
-                  {cat.subtitle || cat.description.split('.')[0]}
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-[9px] text-brand-orange uppercase tracking-widest font-bold">
-                    Explore Hub →
-                  </span>
-                </div>
+                <span className="font-mono text-[10px] text-brand-orange uppercase tracking-widest font-bold flex-shrink-0">
+                  Explore →
+                </span>
               </div>
             </Link>
           ))}

@@ -59,7 +59,7 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
                 brand={product.brand}
                 price={product.price_gbp}
                 compareAtPrice={product.compare_at_price_gbp}
-                image={product.images?.[0] || product.image_url || ""}
+                image={product.images?.[0] ?? product.image_url ?? ""}
                 slug={product.slug}
                 specLine={product.spec_line}
                 badge={product.is_featured ? "Bestseller" : undefined}

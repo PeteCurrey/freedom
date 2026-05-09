@@ -100,20 +100,19 @@ export function ProductCard({
       )}
 
       {/* Image Container */}
-      <Link href={`/store/product/${slug}`} className="block relative aspect-square overflow-hidden bg-brand-carbon p-8 flex-shrink-0">
-        {image ? (
-          <Image
+      <Link href={`/store/product/${slug}`} className="block relative h-[200px] overflow-hidden bg-[#F8F8F6] p-8 flex-shrink-0 border-b border-[#E5E5E5]">
+        {image && image.trim() !== "" ? (
+          <img
             src={image}
             alt={name}
-            fill
-            className="object-contain p-4 transition-transform duration-500 group-hover:scale-105 opacity-90 group-hover:opacity-100"
+            className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105 mix-blend-multiply"
           />
         ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#F0F0F0] dark:bg-brand-carbon">
-            <span className="font-display text-4xl text-brand-grey/50 uppercase tracking-tighter">
-              {brand?.slice(0, 1) || "?"}
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#F0F0F0]">
+            <span className="font-display text-4xl text-brand-grey/40 uppercase tracking-tighter">
+              {brand?.slice(0, 1) || "A"}
             </span>
-            <span className="font-mono text-[8px] text-brand-grey/60 uppercase tracking-widest mt-2">Image coming soon</span>
+            <span className="font-mono text-[8px] text-brand-grey/50 uppercase tracking-widest mt-2">No Image</span>
           </div>
         )}
         
