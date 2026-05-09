@@ -19,8 +19,14 @@ export function LenisProvider({ children }: { children: ReactNode }) {
 
     gsap.ticker.add(update);
 
+    // Force resize on mount and after a short delay for dynamic content
+    const timer = setTimeout(() => {
+      lenisRef.current?.lenis?.resize();
+    }, 500);
+
     return () => {
       gsap.ticker.remove(update);
+      clearTimeout(timer);
     };
   }, []);
 

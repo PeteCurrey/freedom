@@ -43,8 +43,16 @@
     @apply border-brand-border;
   }
   
+  html {
+    height: auto;
+    scroll-behavior: auto !important;
+  }
+  
   body {
     @apply bg-brand-obsidian text-brand-white font-sans;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {

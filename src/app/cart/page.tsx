@@ -104,12 +104,27 @@ export default function CartPage() {
     }
   };
 
-  const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const subtotal = Array.isArray(cartItems) 
+    ? cartItems.reduce((acc, item) => acc + ((item.price || 0) * (item.quantity || 0)), 0)
+    : 0;
   const discount = promoApplied ? Math.round(subtotal * 0.1) : 0;
   const vat = Math.round((subtotal - discount) * 0.2);
   const total = subtotal - discount + vat;
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return (
+      <main className="bg-brand-obsidian min-h-screen">
+        <Navbar />
+        <div className="pt-48 pb-32 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="w-12 h-12 text-brand-orange animate-spin" />
+            <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Initialising Build Registry...</span>
+          </div>
+        </div>
+        <Footer />
+      </main>
+    );
+  }
 
   return (
     <main className="bg-brand-obsidian min-h-screen">

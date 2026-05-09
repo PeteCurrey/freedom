@@ -145,18 +145,171 @@ export const getProductCTA = (product: Product): string => {
 };
 
 export const CATEGORIES = [
-  { id: 'electrical-core', name: 'Electrical Core', description: 'Power your build with industry-leading batteries, inverters, and charging systems.' },
-  { id: 'solar-roof', name: 'Solar & Roof Systems', description: 'Harvest clean energy with high-efficiency panels and robust mounting solutions.' },
-  { id: 'heating-climate', name: 'Heating & Climate', description: 'Maintain total comfort year-round with diesel heaters and advanced ventilation.' },
-  { id: 'water-plumbing', name: 'Water & Plumbing', description: 'Complete underslung and internal water systems for shower, sink, and waste.' },
-  { id: 'gas-cooking', name: 'Gas & Cooking', description: 'Safe gas installations and efficient induction or gas-powered cooking modules.' },
-  { id: 'toilets-washroom', name: 'Toilets & Washroom', description: 'From composting solutions to full wetroom waterproofing kits.' },
-  { id: 'windows-bodywork', name: 'Windows, Vents & Bodywork', description: 'Bonded glass, skylights, and rust treatment for a professional exterior finish.' },
-  { id: 'insulation-interior', name: 'Insulation & Interior Build', description: 'Sound deadening, thermal barriers, and premium ply lining kits.' },
-  { id: 'safety-security', name: 'Safety, Security & Compliance', description: 'Protect your investment with trackers, alarms, and fire safety systems.' },
-  { id: 'outdoor-living', name: 'Outdoor Living & Accessories', description: 'Awnings, bike racks, and camping kits to expand your living space.' },
-  { id: 'connectivity-power', name: 'Connectivity & Power Lifestyle', description: 'Stay online anywhere with Starlink mounts and 5G mobile routers.' },
-  { id: 'complete-kits', name: 'Complete System Kits', description: 'Engineered bundles for specific vehicles and build goals. Save time and cost.' },
+  { 
+    id: 'electrical-core', 
+    name: 'Electrical Core', 
+    slug: 'electrical-core',
+    description: 'Power your build with industry-leading batteries, inverters, and charging systems.',
+    subcategories: [
+      { slug: 'inverters-chargers', name: 'Inverters & Chargers' },
+      { slug: 'batteries', name: 'Batteries' },
+      { slug: 'dc-dc-chargers', name: 'DC-DC Chargers' },
+      { slug: 'solar-controllers', name: 'Solar Controllers' },
+      { slug: 'monitoring-bms', name: 'Monitoring & BMS' },
+      { slug: 'cables-fuses', name: 'Cables & Fuses' },
+      { slug: 'distribution-busbars', name: 'Distribution & Busbars' }
+    ]
+  },
+  { 
+    id: 'solar-roof', 
+    name: 'Solar & Roof Systems', 
+    slug: 'solar-roof',
+    description: 'Harvest clean energy with high-efficiency panels and robust mounting solutions.',
+    subcategories: [
+      { slug: 'solar-panels', name: 'Solar Panels' },
+      { slug: 'roof-mounts', name: 'Roof Mounts' },
+      { slug: 'cables-connectors', name: 'Cables & Connectors' },
+      { slug: 'charge-controllers', name: 'Charge Controllers' },
+      { slug: 'roof-vents-fans', name: 'Roof Vents & Fans' }
+    ]
+  },
+  { 
+    id: 'heating-climate', 
+    name: 'Heating & Climate', 
+    slug: 'heating-climate',
+    description: 'Maintain total comfort year-round with diesel heaters and advanced ventilation.',
+    subcategories: [
+      { slug: 'diesel-heaters', name: 'Diesel Heaters' },
+      { slug: 'lpg-heaters', name: 'LPG Heaters' },
+      { slug: 'combi-systems', name: 'Combi Systems' },
+      { slug: 'air-conditioning', name: 'Air Conditioning' },
+      { slug: 'water-heaters', name: 'Water Heaters' },
+      { slug: 'ducting-vents', name: 'Ducting & Vents' }
+    ]
+  },
+  { 
+    id: 'water-plumbing', 
+    name: 'Water & Plumbing', 
+    slug: 'water-plumbing',
+    description: 'Complete underslung and internal water systems for shower, sink, and waste.',
+    subcategories: [
+      { slug: 'fresh-water-tanks', name: 'Fresh Water Tanks' },
+      { slug: 'grey-water-tanks', name: 'Grey Water Tanks' },
+      { slug: 'pumps', name: 'Pumps' },
+      { slug: 'taps-mixers', name: 'Taps & Mixers' },
+      { slug: 'filtration', name: 'Filtration' },
+      { slug: 'pipe-fittings', name: 'Pipe & Fittings' }
+    ]
+  },
+  { 
+    id: 'gas-cooking', 
+    name: 'Gas & Cooking', 
+    slug: 'gas-cooking',
+    description: 'Safe gas installations and efficient induction or gas-powered cooking modules.',
+    subcategories: [
+      { slug: 'hobs', name: 'Hobs' },
+      { slug: 'sink-hob-combos', name: 'Sink & Hob Combos' },
+      { slug: 'ovens', name: 'Ovens' },
+      { slug: 'regulators', name: 'Regulators' },
+      { slug: 'gas-lockers', name: 'Gas Lockers' },
+      { slug: 'piping-safety', name: 'Piping & Safety' }
+    ]
+  },
+  { 
+    id: 'toilets-washroom', 
+    name: 'Toilets & Washroom', 
+    slug: 'toilets-washroom',
+    description: 'From composting solutions to full wetroom waterproofing kits.',
+    subcategories: [
+      { slug: 'cassette-toilets', name: 'Cassette Toilets' },
+      { slug: 'composting-toilets', name: 'Composting Toilets' },
+      { slug: 'wash-basins', name: 'Wash Basins' },
+      { slug: 'shower-systems', name: 'Shower Systems' },
+      { slug: 'waterproofing', name: 'Waterproofing' }
+    ]
+  },
+  { 
+    id: 'windows-bodywork', 
+    name: 'Windows, Vents & Bodywork', 
+    slug: 'windows-bodywork',
+    description: 'Bonded glass, skylights, and rust treatment for a professional exterior finish.',
+    subcategories: [
+      { slug: 'sliding-windows', name: 'Sliding Windows' },
+      { slug: 'fixed-windows', name: 'Fixed Windows' },
+      { slug: 'rooflights', name: 'Rooflights' },
+      { slug: 'ventilation-grilles', name: 'Ventilation Grilles' },
+      { slug: 'seals-trim', name: 'Seals & Trim' },
+      { slug: 'rust-treatment', name: 'Rust Treatment' }
+    ]
+  },
+  { 
+    id: 'insulation-interior', 
+    name: 'Insulation & Interior Build', 
+    slug: 'insulation-interior',
+    description: 'Sound deadening, thermal barriers, and premium ply lining kits.',
+    subcategories: [
+      { slug: 'sound-deadening', name: 'Sound Deadening' },
+      { slug: 'thermal-insulation', name: 'Thermal Insulation' },
+      { slug: 'wall-cladding', name: 'Wall Cladding' },
+      { slug: 'lightweight-ply', name: 'Lightweight Ply' },
+      { slug: 'flooring', name: 'Flooring' },
+      { slug: 'adhesives', name: 'Adhesives' }
+    ]
+  },
+  { 
+    id: 'safety-security', 
+    name: 'Safety, Security & Compliance', 
+    slug: 'safety-security',
+    description: 'Protect your investment with trackers, alarms, and fire safety systems.',
+    subcategories: [
+      { slug: 'gps-trackers', name: 'GPS Trackers' },
+      { slug: 'alarms', name: 'Alarms' },
+      { slug: 'deadlocks', name: 'Deadlocks' },
+      { slug: 'fire-safety', name: 'Fire Safety' },
+      { slug: 'carbon-monoxide', name: 'Carbon Monoxide' },
+      { slug: 'immobilisers', name: 'Immobilisers' }
+    ]
+  },
+  { 
+    id: 'outdoor-living', 
+    name: 'Outdoor Living & Accessories', 
+    slug: 'outdoor-living',
+    description: 'Awnings, bike racks, and camping kits to expand your living space.',
+    subcategories: [
+      { slug: 'awnings', name: 'Awnings' },
+      { slug: 'bike-racks', name: 'Bike Racks' },
+      { slug: 'roof-racks', name: 'Roof Racks' },
+      { slug: 'steps-ladders', name: 'Steps & Ladders' },
+      { slug: 'storage-pods', name: 'Storage Pods' },
+      { slug: 'outdoor-lighting', name: 'Outdoor Lighting' }
+    ]
+  },
+  { 
+    id: 'connectivity-power', 
+    name: 'Connectivity & Power Lifestyle', 
+    slug: 'connectivity-power',
+    description: 'Stay online anywhere with Starlink mounts and 5G mobile routers.',
+    subcategories: [
+      { slug: 'starlink-mounts', name: 'Starlink Mounts' },
+      { slug: '5g-routers', name: '5G Routers' },
+      { slug: 'signal-boosters', name: 'Signal Boosters' },
+      { slug: 'usb-hubs', name: 'USB Hubs' },
+      { slug: 'satellite-equipment', name: 'Satellite Equipment' }
+    ]
+  },
+  { 
+    id: 'complete-kits', 
+    name: 'Complete System Kits', 
+    slug: 'complete-kits',
+    description: 'Engineered bundles for specific vehicles and build goals. Save time and cost.',
+    subcategories: [
+      { slug: 'electrical-kits', name: 'Electrical Kits' },
+      { slug: 'heating-kits', name: 'Heating Kits' },
+      { slug: 'water-kits', name: 'Water Kits' },
+      { slug: 'full-build-kits', name: 'Full Build Kits' },
+      { slug: 'starter-kits', name: 'Starter Kits' }
+    ]
+  },
 ];
 
 export const PRODUCTS: Product[] = [
@@ -167,7 +320,7 @@ export const PRODUCTS: Product[] = [
     name: 'MultiPlus-II 12/3000/120-32 230V Inverter/Charger',
     brand: 'Victron Energy',
     category: 'electrical-core',
-    subcategory: 'Inverter Chargers',
+    subcategory: 'inverters-chargers',
     price: 1245.00,
     priceType: 'fixed',
     supplierType: 'internal',
@@ -189,7 +342,7 @@ export const PRODUCTS: Product[] = [
     name: '460Ah SMART LiFePO4 Lithium Battery',
     brand: 'Roamer',
     category: 'electrical-core',
-    subcategory: 'Lithium Batteries',
+    subcategory: 'batteries',
     price: 1849.00,
     priceType: 'fixed',
     supplierType: 'affiliate',
@@ -212,7 +365,7 @@ export const PRODUCTS: Product[] = [
     name: '175 Watt Monocrystalline Solar Panel',
     brand: 'Renogy',
     category: 'solar-roof',
-    subcategory: 'Rigid Panels',
+    subcategory: 'solar-panels',
     price: 165.00,
     priceType: 'fixed',
     supplierType: 'internal',
@@ -234,7 +387,7 @@ export const PRODUCTS: Product[] = [
     name: 'Autoterm Air 2D Diesel Heater Kit (2kW)',
     brand: 'Autoterm',
     category: 'heating-climate',
-    subcategory: 'Diesel Heaters',
+    subcategory: 'diesel-heaters',
     price: 520.00,
     priceType: 'fixed',
     supplierType: 'internal',
@@ -257,7 +410,7 @@ export const PRODUCTS: Product[] = [
     name: 'Ultimate Off-Grid Power Kit (Sprinter L3H2)',
     brand: 'Amplios Engineered',
     category: 'complete-kits',
-    subcategory: 'Electrical Kits',
+    subcategory: 'electrical-kits',
     price: 3450.00,
     priceType: 'from',
     supplierType: 'quote',
