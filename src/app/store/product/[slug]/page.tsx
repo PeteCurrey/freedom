@@ -209,6 +209,26 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   </div>
                 )}
 
+                {/* Victron Guide Link */}
+                {product.brand?.toLowerCase().includes('victron') && (
+                  <div className="mb-8 flex items-center justify-between p-4 border border-brand-orange/20 bg-brand-orange/5 rounded-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-brand-orange/10 flex items-center justify-center">
+                        <FileText className="w-4 h-4 text-brand-orange" />
+                      </div>
+                      <span className="font-sans text-[12px] text-brand-grey font-medium leading-tight">
+                        Need help with your Victron system?
+                      </span>
+                    </div>
+                    <Link 
+                      href="/brands/victron-energy" 
+                      className="text-brand-orange font-mono text-[9px] uppercase tracking-widest hover:underline whitespace-nowrap"
+                    >
+                      Read the guide →
+                    </Link>
+                  </div>
+                )}
+
                 <div className="flex flex-col gap-4">
                   <AddToCartButton product={{
                     id: product.id,

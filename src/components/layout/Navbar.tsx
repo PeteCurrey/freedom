@@ -76,9 +76,14 @@ const navLinks: NavLink[] = [
     href: "/resources",
     mega: true,
     items: [
-      { name: "Technical Guides", href: "/guides", tagline: "Engineering Library", image: "/images/hero-background.png" },
-      { name: "Control Centre", href: "/client-portal", tagline: "Manage Your Build", image: "/images/sprinter.png" },
-      { name: "Document Library", href: "/resources", tagline: "Manuals & Specs", image: "/images/man-tge-hero.png" },
+      { name: "Victron Energy Hub", href: "/brands/victron-energy", tagline: "UK Authorised Stockist", image: "/images/victron/brand-hero.jpg" },
+      { name: "Truma Specialist Hub", href: "/brands/truma", tagline: "Heating & Hot Water", image: "/images/truma/brand-hero.png" },
+      { name: "Propex Gas Hub", href: "/brands/propex", tagline: "British Gas Heating", image: "/images/cat-climate.png" },
+      { name: "Fogstar Lithium Hub", href: "/brands/fogstar", tagline: "UK Value Leader", image: "/images/cat-power.png" },
+      { name: "Webasto Diesel Hub", href: "/brands/webasto", tagline: "Premium Diesel Heating", image: "/images/cat-climate.png" },
+      { name: "Alpicool Value Fridge Hub", href: "/brands/alpicool", tagline: "Budget Compressor Cooling", image: "/images/cat-kitchen.png" },
+      { name: "Dodo Mat Insulation Hub", href: "/brands/dodo-mat", tagline: "Silence & Thermal", image: "/images/cat-windows.png" },
+      { name: "Whale Underslung Hub", href: "/brands/whale", tagline: "Space-Saving Heating", image: "/images/cat-plumbing.png" },
     ]
   },
   { 

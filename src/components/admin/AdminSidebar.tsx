@@ -40,7 +40,8 @@ import {
   MousePointerClick,
   Shield,
   ShieldCheck,
-  Zap
+  Zap,
+  Download
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -88,6 +89,7 @@ const navGroups = [
       { name: "Build Plans", href: "/admin/build-plans", icon: Layout },
       { name: "Quote Requests", href: "/admin/quotes", icon: Magnet },
       { name: "PDF Orders", href: "/admin/pdf-orders", icon: FileText },
+      { name: "Diagram Downloads", href: "/admin/diagram-downloads", icon: Download },
     ]
   },
   {

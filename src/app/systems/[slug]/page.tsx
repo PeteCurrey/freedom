@@ -98,6 +98,28 @@ export default async function SystemSlugPage({ params }: { params: Promise<{ slu
         </div>
       </section>
 
+      {/* Victron Guide Callout (Conditional for Electrical) */}
+      {slug === 'electrical-solar' && (
+        <section className="bg-brand-orange py-6 border-y border-white/10 relative z-20">
+          <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-white/10 flex items-center justify-center">
+                <Zap className="w-6 h-6 text-white" />
+              </div>
+              <p className="font-display text-xl uppercase tracking-tight text-white">
+                Looking for Victron-specific guidance?
+              </p>
+            </div>
+            <Link 
+              href="/brands/victron-energy" 
+              className="flex items-center gap-2 bg-brand-obsidian text-white px-8 py-3 font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all"
+            >
+              Read our complete Victron Energy guide <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+        </section>
+      )}
+
       {/* 2. SKILL TIERS / CONFIGURATIONS */}
       <section className="py-32 relative">
         <div className="blueprint-grid absolute inset-0 opacity-5 pointer-events-none" />

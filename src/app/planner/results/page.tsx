@@ -229,10 +229,10 @@ export default function PlannerResultsPage() {
                             </div>
                          </div>
                          {hasItems && (
-                           <div className="flex flex-col items-end">
-                              <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-1">Stage Hardware Total</span>
-                              <span className="font-display text-2xl text-white">£{stageTotal.toLocaleString()}</span>
-                           </div>
+                            <div className="flex flex-col items-end">
+                               <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-1">Stage Hardware Total</span>
+                               <span className="font-display text-2xl text-white">£{stageTotal.toLocaleString()}</span>
+                            </div>
                          )}
                       </div>
 
@@ -296,6 +296,68 @@ export default function PlannerResultsPage() {
                  );
                })}
             </div>
+
+            {/* TECHNICAL SCHEMATICS INTEGRATION */}
+            <section className="mt-40 pt-40 border-t border-brand-border">
+               <div className="flex flex-col lg:flex-row justify-between items-start gap-12">
+                  <div className="max-w-2xl">
+                     <span className="font-mono text-[10px] text-brand-orange uppercase tracking-[0.4em] block mb-4">// Engineering Documentation</span>
+                     <h2 className="font-display text-4xl lg:text-6xl uppercase tracking-tighter mb-8 leading-none">
+                        System <span className="text-brand-orange">Schematics</span>
+                     </h2>
+                     <p className="font-sans text-brand-grey text-lg leading-relaxed mb-8">
+                        Based on your <span className="text-white font-bold">{basket.stack["Electrical"]}</span> selection, we have mapped the following Victron Energy wiring schematic to your build. This diagram is included automatically in your paid Blueprint PDF.
+                     </p>
+
+                     <div className="space-y-6">
+                        {[
+                           { title: 'Standardized Termination', desc: 'Every cable run is specified for UK BS 7671 electrical standards.' },
+                           { title: 'Component Logic', desc: 'Logical signal flow between MPPT, Inverter, and BMS units.' },
+                           { title: 'Safety Infrastructure', desc: 'Correct fuse ratings and isolation points for off-grid safety.' },
+                        ].map(item => (
+                           <div key={item.title} className="flex gap-4">
+                              <CheckCircle2 className="w-5 h-5 text-brand-orange shrink-0" />
+                              <div>
+                                 <h4 className="font-display text-sm uppercase tracking-wider text-white mb-1">{item.title}</h4>
+                                 <p className="font-sans text-xs text-brand-grey">{item.desc}</p>
+                              </div>
+                           </div>
+                        ))}
+                     </div>
+                  </div>
+
+                  <div className="flex-1 w-full">
+                     <div className="bg-brand-carbon border border-brand-border p-2 relative group overflow-hidden">
+                        <div className="aspect-video relative bg-brand-obsidian flex items-center justify-center">
+                           <div className="absolute inset-0 blueprint-grid opacity-10" />
+                           <Zap className="w-16 h-16 text-brand-orange/20" />
+                           <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="text-center bg-brand-obsidian/80 backdrop-blur-sm border border-brand-border p-6 max-w-xs">
+                                 <span className="font-mono text-[10px] text-brand-orange uppercase tracking-widest block mb-2">Technical Preview</span>
+                                 <p className="font-sans text-[11px] text-brand-grey leading-relaxed">
+                                    Full-resolution A3 wiring diagram with component callouts is included in your professional engineering pack.
+                                 </p>
+                              </div>
+                           </div>
+                        </div>
+                        <div className="p-6 border-t border-brand-border flex justify-between items-center bg-brand-obsidian/50">
+                           <div>
+                              <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-1">Assigned Diagram</p>
+                              <p className="font-display text-base uppercase tracking-tight text-white">
+                                 {basket.stack["Electrical"].includes("3kVA") ? "Victron MultiPlus-II 12/3000 System" : "Victron 12V Starter System"}
+                              </p>
+                           </div>
+                           <Link 
+                              href="/guides/wiring-diagrams"
+                              className="font-mono text-[9px] text-brand-orange uppercase tracking-widest flex items-center gap-2 hover:text-white transition-colors"
+                           >
+                              View Guide <ExternalLink className="w-3 h-3" />
+                           </Link>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </section>
          </div>
       </section>
 
