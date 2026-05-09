@@ -10,11 +10,11 @@ interface StoreHeroProps {
 
 export function StoreHero({ image = "/images/hero-background.png" }: StoreHeroProps) {
   return (
-    <section className="bg-brand-carbon border-t-2 border-brand-orange">
-      <div className="container mx-auto px-6">
-        <div className="flex flex-col lg:flex-row min-h-[320px]">
+    <section className="bg-brand-carbon border-t-2 border-brand-orange pt-24 lg:pt-32">
+      <div className="container mx-auto px-6 h-full">
+        <div className="flex flex-col lg:flex-row min-h-[calc(100vh-120px)] items-stretch">
           {/* LEFT: Editorial Content */}
-          <div className="lg:w-[60%] py-12 lg:py-20 pr-12">
+          <div className="lg:w-[60%] py-12 pr-12 flex flex-col justify-center">
             <span className="font-mono text-[10px] text-brand-orange uppercase tracking-[0.4em] mb-4 block">
               // GEAR FOR SERIOUS BUILDS
             </span>
@@ -52,7 +52,7 @@ export function StoreHero({ image = "/images/hero-background.png" }: StoreHeroPr
           </div>
 
           {/* RIGHT: Image */}
-          <div className="lg:w-[40%] relative min-h-[300px] lg:min-h-auto">
+          <div className="lg:w-[40%] relative min-h-[300px] lg:min-h-auto h-full min-h-[50vh]">
             <Image 
               src={image}
               alt="Professional Build Environment"
