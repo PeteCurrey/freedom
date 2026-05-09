@@ -89,6 +89,17 @@
   }
 }
 
+@layer utilities {
+  @keyframes slow-zoom {
+    from { transform: scale(1.05); }
+    to { transform: scale(1.2); }
+  }
+
+  .animate-slow-zoom {
+    animation: slow-zoom 20s ease-in-out infinite alternate;
+  }
+}
+
 .text-stroke {
   -webkit-text-stroke: 1px rgba(245, 245, 240, 0.2);
   color: transparent;

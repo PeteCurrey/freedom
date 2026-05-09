@@ -17,22 +17,44 @@ export default function StoreHub() {
       <Navbar />
       
       {/* 1. TECHNICAL HERO */}
-      <section className="relative pt-48 pb-32 flex flex-col items-center justify-center overflow-hidden border-b border-brand-border">
-        <div className="absolute inset-0 blueprint-grid opacity-10 pointer-events-none" />
-        <div className="container mx-auto px-6 relative z-10 text-center">
+      <section className="relative pt-64 pb-48 flex flex-col items-center justify-center overflow-hidden border-b border-brand-border min-h-[85vh]">
+        {/* Background Image Node */}
+        <div className="absolute inset-0 z-0">
+          <Image 
+            src="/images/store-hero.png" 
+            alt="Rugged 4x4 Motorhome in snowy landscape" 
+            fill 
+            className="object-cover scale-105 animate-slow-zoom grayscale opacity-40 group-hover:grayscale-0 transition-all duration-1000"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-obsidian via-brand-obsidian/60 to-brand-obsidian z-10" />
+          <div className="absolute inset-0 blueprint-grid opacity-10 pointer-events-none z-20" />
+        </div>
+
+        <div className="container mx-auto px-6 relative z-30 text-center">
           <div className="max-w-4xl mx-auto">
-            <span className="font-mono text-[10px] text-brand-orange uppercase tracking-[0.4em] mb-6 block animate-pulse">// Official Parts Registry</span>
-            <h1 className="font-display text-5xl md:text-7xl lg:text-[7.5rem] mb-8 uppercase leading-[0.85] tracking-tighter text-white drop-shadow-2xl">
+            <span className="font-mono text-[10px] text-brand-orange uppercase tracking-[0.4em] mb-8 block animate-pulse">// Official Parts Registry</span>
+            <h1 className="font-display text-6xl md:text-8xl lg:text-[10rem] mb-10 uppercase leading-[0.8] tracking-tighter text-white drop-shadow-[0_0_50px_rgba(0,0,0,0.5)]">
               GEAR FOR<br />
               SERIOUS <span className="text-brand-orange">BUILDS</span>
             </h1>
-            <p className="font-sans text-brand-grey text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mb-16 italic">
+            <p className="font-sans text-brand-grey text-lg md:text-2xl leading-relaxed max-w-2xl mx-auto mb-20 italic">
               "Professional-grade components engineered for high-performance off-grid living. Every product in this registry is cross-referenced for system compatibility."
             </p>
             
-            <div className="flex flex-col sm:flex-row justify-center gap-6">
-              <Link href="/planner" className="bg-brand-orange text-white px-10 py-5 font-display text-xs uppercase tracking-widest hover:bg-white hover:text-brand-orange transition-all shadow-2xl font-bold">Launch AI Build Planner</Link>
-              <Link href="#categories" className="bg-brand-carbon border border-brand-border text-white px-10 py-5 font-display text-xs uppercase tracking-widest hover:border-brand-orange transition-all">Browse System Hubs</Link>
+            <div className="flex flex-col sm:flex-row justify-center gap-8">
+              <Link 
+                href="/planner" 
+                className="bg-brand-orange text-white px-12 py-6 font-display text-xs uppercase tracking-[0.2em] hover:bg-white hover:text-brand-obsidian transition-all shadow-[0_0_40px_rgba(255,107,0,0.3)] font-bold group"
+              >
+                Launch AI Build Planner <ArrowRight className="inline-block ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link 
+                href="#categories" 
+                className="bg-brand-carbon/80 backdrop-blur-md border border-brand-border text-white px-12 py-6 font-display text-xs uppercase tracking-[0.2em] hover:border-brand-orange transition-all font-bold"
+              >
+                Browse System Hubs
+              </Link>
             </div>
           </div>
         </div>
