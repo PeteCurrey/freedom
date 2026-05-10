@@ -16,11 +16,17 @@ interface NavSubItem {
   image: string;
 }
 
+interface NavCategory {
+  name: string;
+  items: NavSubItem[];
+}
+
 interface NavLink {
   name: string;
   href: string;
   mega?: boolean;
   items?: NavSubItem[];
+  categories?: NavCategory[];
 }
 
 const navLinks: NavLink[] = [
@@ -31,10 +37,10 @@ const navLinks: NavLink[] = [
     items: [
       { name: "Mercedes Sprinter", href: "/vehicles/mercedes-sprinter", image: "/images/sprinter.png", tagline: "The Gold Standard" },
       { name: "Ford Transit", href: "/vehicles/ford-transit", image: "/images/transit.png", tagline: "The Practical Choice" },
-      { name: "VW Crafter", href: "/vehicles/vw-crafter", image: "/images/vw-crafter-hero.png", tagline: "Modern Touring" },
-      { name: "MAN TGE", href: "/vehicles/man-tge", image: "/images/man-tge-hero.png", tagline: "The Hidden Bargain" },
-      { name: "Fiat Ducato", href: "/vehicles/fiat-ducato", image: "/images/fiat-ducato-hero.png", tagline: "Maximum Width" },
-      { name: "Iveco Daily", href: "/vehicles/iveco-daily", image: "/images/iveco-daily-hero.png", tagline: "Ultimate Payload" },
+      { name: "VW Crafter", href: "/vehicles/vw-crafter-hero.png", image: "/images/vw-crafter-hero.png", tagline: "Modern Touring" },
+      { name: "MAN TGE", href: "/vehicles/man-tge-hero.png", image: "/images/man-tge-hero.png", tagline: "The Hidden Bargain" },
+      { name: "Fiat Ducato", href: "/vehicles/fiat-ducato-hero.png", image: "/images/fiat-ducato-hero.png", tagline: "Maximum Width" },
+      { name: "Iveco Daily", href: "/vehicles/iveco-daily-hero.png", image: "/images/iveco-daily-hero.png", tagline: "Ultimate Payload" },
       { name: "Renault Master", href: "/vehicles/renault-master", image: "/images/bespoke-relay.png", tagline: "Efficient Fleet" },
       { name: "Compare All Chassis", href: "/vehicles/compare", image: "/images/sprinter-schematic.png", tagline: "Side-by-Side Analysis" },
     ]
@@ -71,86 +77,81 @@ const navLinks: NavLink[] = [
       { name: "Complete Kits", href: "/store/complete-kits", tagline: "System Bundles", image: "/images/kit-expedition.png" },
     ]
   },
-  {
-    name: "Learning",
-    href: "/guides",
-    mega: true,
-    items: [
-      { name: "Van Size Guide", href: "/guides/van-size-guide", tagline: "Choose Your Platform", image: "/images/transit-schematic.png" },
-      { name: "Conversion Costs", href: "/guides/van-conversion-cost-guide", tagline: "2026 Budget Reality", image: "/images/kit-essential.png" },
-      { name: "DVLA Reclassification", href: "/guides/dvla-motor-caravan-reclassification", tagline: "Legal UK Status", image: "/images/kit-base.png" },
-      { name: "Self-Build Insurance", href: "/guides/self-build-motorhome-insurance", tagline: "Protect Your Build", image: "/images/kit-luxury.png" },
-      { name: "Build Timeline", href: "/guides/motorhome-conversion-timeline", tagline: "How Long It Takes", image: "/images/peugeot-boxer-schematic.png" },
-      { name: "Should I Convert?", href: "/guides/should-i-convert-a-van", tagline: "The Honest Answer", image: "/images/systems-showcase.png" },
-      { name: "Resident Blog", href: "/blog", tagline: "Stories From the Road", image: "/images/community-showcase.png" },
-    ]
-  },
-  {
-    name: "Layouts",
-    href: "/guides",
-    mega: true,
-    items: [
-      { name: "Sprinter LWB/MWB", href: "/guides/sprinter-van-conversion-layout", tagline: "The World's Favorite", image: "/images/sprinter-schematic.png" },
-      { name: "VW Crafter LWB", href: "/guides/lwb-crafter-conversion-layout", tagline: "The Width Advantage", image: "/images/bespoke-crafter.png" },
-      { name: "Ducato/Boxer/Relay", href: "/guides/lwb-ducato-conversion-layout", tagline: "Square Efficiency", image: "/images/citroen-relay-schematic.png" },
-      { name: "MWB Sprinter", href: "/guides/mwb-sprinter-layout", tagline: "The 6 Metre Challenge", image: "/images/bespoke-sprinter.png" },
-      { name: "Fixed Bed vs Lounge", href: "/guides/fixed-bed-vs-u-shape-lounge", tagline: "The Ultimate Debate", image: "/images/tech-interior.png" },
-    ]
-  },
-  {
-    name: "Gear",
-    href: "/guides",
-    mega: true,
-    items: [
-      { name: "Power Stations", href: "/guides/best-portable-power-station", tagline: "EcoFlow vs Jackery", image: "/images/tech-electrical.png" },
-      { name: "12V Fridges", href: "/guides/best-12v-campervan-fridge", tagline: "Compressor Guide", image: "/images/cat-interior.png" },
-      { name: "Van Toilets", href: "/guides/best-campervan-toilet", tagline: "Composting Reality", image: "/images/tech-water.png" },
-      { name: "Starlink Roam", href: "/guides/starlink-campervan-installation", tagline: "Off-Grid Internet", image: "/images/exterior-equipment-technical.png" },
-      { name: "Roof Fans", href: "/guides/compare/maxxair-vs-fiamma", tagline: "MaxxAir vs Fiamma", image: "/images/cat-climate.png" },
-    ]
-  },
-  {
-    name: "Destinations",
-    href: "/guides",
-    mega: true,
-    items: [
-      { name: "NC500 Route Guide", href: "/guides/nc500-campervan-guide", tagline: "Scotland Road Trip", image: "/images/hero-background.png" },
-      { name: "Wild Camping UK", href: "/guides/wild-camping-uk-campervan", tagline: "Laws & Essential Apps", image: "/images/community-showcase.png" },
-      { name: "Europe Post-Brexit", href: "/guides/van-life-europe-guide", tagline: "90/180 Days & Tolls", image: "/images/bespoke-transit.png" },
-      { name: "Winter in the Alps", href: "/guides/winter-van-life-alps", tagline: "Surviving -15°C", image: "/images/cat-climate.png" },
-    ]
-  },
-  {
-    name: "Guides",
-    href: "/guides",
-    mega: true,
-    items: [
-      { name: "Electrical Guide", href: "/guides/campervan-electrical-guide", tagline: "Off-Grid Power Logic", image: "/images/electrical-technical.png" },
-      { name: "Plumbing Guide", href: "/guides/campervan-plumbing-guide", tagline: "Water Systems UK", image: "/images/water-plumbing-technical.png" },
-      { name: "Insulation Guide", href: "/guides/how-to-insulate-a-van-uk", tagline: "Silence & Warmth", image: "/images/insulation-technical.png" },
-      { name: "Heating Comparison", href: "/guides/campervan-heating-guide", tagline: "Diesel vs Gas", image: "/images/heating-system-technical.png" },
-      { name: "Order of Work", href: "/guides/build-sequence", tagline: "Master Build Timeline", image: "/images/kit-essential.png" },
-      { name: "Tyre Guide", href: "/guides/van-conversion-tyres", tagline: "Best Off-Road Rubber", image: "/images/wheels-tyres-technical.png" },
-      { name: "Alloy Wheels", href: "/guides/van-alloy-wheels-guide", tagline: "Load-Rated Style", image: "/images/bespoke-iveco.png" },
-      { name: "Suspension Upgrades", href: "/guides/van-suspension-upgrade", tagline: "Stop the Sag", image: "/images/bespoke-man.png" },
-    ]
-  },
   { 
     name: "Resources",
     href: "/resources",
     mega: true,
-    items: [
-      { name: "Victron Energy Hub", href: "/brands/victron-energy", tagline: "UK Authorised Stockist", image: "/images/victron/brand-hero.jpg" },
-      { name: "Truma Specialist Hub", href: "/brands/truma", tagline: "Heating & Hot Water", image: "/images/truma/brand-hero.png" },
-      { name: "Propex Gas Hub", href: "/brands/propex", tagline: "British Gas Heating", image: "/images/cat-gas.png" },
-      { name: "Fogstar Lithium Hub", href: "/brands/fogstar", tagline: "UK Value Leader", image: "/images/cat-power.png" },
-      { name: "Webasto Diesel Hub", href: "/brands/webasto", tagline: "Premium Diesel Heating", image: "/images/heating-system-technical.png" },
-      { name: "Fiamma Exterior Hub", href: "/brands/fiamma", tagline: "Awnings & Bike Racks", image: "/images/exterior-equipment-technical.png" },
-      { name: "MaxxAir Vent Hub", href: "/brands/maxxair", tagline: "Ultimate Ventilation", image: "/images/cat-climate.png" },
-      { name: "Alpicool Value Fridge Hub", href: "/brands/alpicool", tagline: "Budget Compressor Cooling", image: "/images/tech-interior.png" },
-      { name: "Dodo Mat Insulation Hub", href: "/brands/dodo-mat", tagline: "Silence & Thermal", image: "/images/cat-insulation.png" },
-      { name: "Whale Underslung Hub", href: "/brands/whale", tagline: "Space-Saving Heating", image: "/images/tech-water.png" },
-      { name: "Best Heaters 2024", href: "/guides/compare/best-campervan-heaters", tagline: "Diesel vs Gas Debate", image: "/images/heating-system-technical.png" },
+    categories: [
+      {
+        name: "Learning & Foundations",
+        items: [
+          { name: "Van Size Guide", href: "/guides/van-size-guide", tagline: "Choose Your Platform", image: "/images/transit-schematic.png" },
+          { name: "Conversion Costs", href: "/guides/van-conversion-cost-guide", tagline: "2026 Budget Reality", image: "/images/kit-essential.png" },
+          { name: "DVLA Reclassification", href: "/guides/dvla-motor-caravan-reclassification", tagline: "Legal UK Status", image: "/images/kit-base.png" },
+          { name: "Self-Build Insurance", href: "/guides/self-build-motorhome-insurance", tagline: "Protect Your Build", image: "/images/kit-luxury.png" },
+          { name: "Build Timeline", href: "/guides/motorhome-conversion-timeline", tagline: "How Long It Takes", image: "/images/peugeot-boxer-schematic.png" },
+          { name: "Should I Convert?", href: "/guides/should-i-convert-a-van", tagline: "The Honest Answer", image: "/images/systems-showcase.png" },
+          { name: "Resident Blog", href: "/blog", tagline: "Stories From the Road", image: "/images/community-showcase.png" },
+        ]
+      },
+      {
+        name: "Vehicle Layouts",
+        items: [
+          { name: "Sprinter LWB/MWB", href: "/guides/sprinter-van-conversion-layout", tagline: "The World's Favorite", image: "/images/sprinter-schematic.png" },
+          { name: "VW Crafter LWB", href: "/guides/lwb-crafter-conversion-layout", tagline: "The Width Advantage", image: "/images/bespoke-crafter.png" },
+          { name: "Ducato/Boxer/Relay", href: "/guides/lwb-ducato-conversion-layout", tagline: "Square Efficiency", image: "/images/citroen-relay-schematic.png" },
+          { name: "MWB Sprinter", href: "/guides/mwb-sprinter-layout", tagline: "The 6 Metre Challenge", image: "/images/bespoke-sprinter.png" },
+          { name: "Fixed Bed vs Lounge", href: "/guides/fixed-bed-vs-u-shape-lounge", tagline: "The Ultimate Debate", image: "/images/tech-interior.png" },
+        ]
+      },
+      {
+        name: "Essential Gear",
+        items: [
+          { name: "Power Stations", href: "/guides/best-portable-power-station", tagline: "EcoFlow vs Jackery", image: "/images/tech-electrical.png" },
+          { name: "12V Fridges", href: "/guides/best-12v-campervan-fridge", tagline: "Compressor Guide", image: "/images/cat-interior.png" },
+          { name: "Van Toilets", href: "/guides/best-campervan-toilet", tagline: "Composting Reality", image: "/images/tech-water.png" },
+          { name: "Starlink Roam", href: "/guides/starlink-campervan-installation", tagline: "Off-Grid Internet", image: "/images/exterior-equipment-technical.png" },
+          { name: "Roof Fans", href: "/guides/compare/maxxair-vs-fiamma", tagline: "MaxxAir vs Fiamma", image: "/images/cat-climate.png" },
+        ]
+      },
+      {
+        name: "Destinations",
+        items: [
+          { name: "NC500 Route Guide", href: "/guides/nc500-campervan-guide", tagline: "Scotland Road Trip", image: "/images/hero-background.png" },
+          { name: "Wild Camping UK", href: "/guides/wild-camping-uk-campervan", tagline: "Laws & Essential Apps", image: "/images/community-showcase.png" },
+          { name: "Europe Post-Brexit", href: "/guides/van-life-europe-guide", tagline: "90/180 Days & Tolls", image: "/images/bespoke-transit.png" },
+          { name: "Winter in the Alps", href: "/guides/winter-van-life-alps", tagline: "Surviving -15°C", image: "/images/cat-climate.png" },
+        ]
+      },
+      {
+        name: "Technical Guides",
+        items: [
+          { name: "Electrical Guide", href: "/guides/campervan-electrical-guide", tagline: "Off-Grid Power Logic", image: "/images/electrical-technical.png" },
+          { name: "Plumbing Guide", href: "/guides/campervan-plumbing-guide", tagline: "Water Systems UK", image: "/images/water-plumbing-technical.png" },
+          { name: "Insulation Guide", href: "/guides/how-to-insulate-a-van-uk", tagline: "Silence & Warmth", image: "/images/insulation-technical.png" },
+          { name: "Heating Comparison", href: "/guides/campervan-heating-guide", tagline: "Diesel vs Gas", image: "/images/cat-climate.png" },
+          { name: "Order of Work", href: "/guides/build-sequence", tagline: "Master Build Timeline", image: "/images/kit-essential.png" },
+          { name: "Tyre Guide", href: "/guides/van-conversion-tyres", tagline: "Best Off-Road Rubber", image: "/images/wheels-tyres-technical.png" },
+          { name: "Alloy Wheels", href: "/guides/van-alloy-wheels-guide", tagline: "Load-Rated Style", image: "/images/bespoke-iveco.png" },
+          { name: "Suspension Upgrades", href: "/guides/van-suspension-upgrade", tagline: "Stop the Sag", image: "/images/bespoke-man.png" },
+        ]
+      },
+      {
+        name: "Technical & Brand Hubs",
+        items: [
+          { name: "Victron Energy Hub", href: "/brands/victron-energy", tagline: "UK Authorised Stockist", image: "/images/victron/brand-hero.jpg" },
+          { name: "Truma Specialist Hub", href: "/brands/truma", tagline: "Heating & Hot Water", image: "/images/truma/brand-hero.png" },
+          { name: "Propex Gas Hub", href: "/brands/propex", tagline: "British Gas Heating", image: "/images/cat-gas.png" },
+          { name: "Fogstar Lithium Hub", href: "/brands/fogstar", tagline: "UK Value Leader", image: "/images/cat-power.png" },
+          { name: "Webasto Diesel Hub", href: "/brands/webasto", tagline: "Premium Diesel Heating", image: "/images/heating-system-technical.png" },
+          { name: "Fiamma Exterior Hub", href: "/brands/fiamma", tagline: "Awnings & Bike Racks", image: "/images/exterior-equipment-technical.png" },
+          { name: "MaxxAir Vent Hub", href: "/brands/maxxair", tagline: "Ultimate Ventilation", image: "/images/cat-climate.png" },
+          { name: "Alpicool Value Fridge Hub", href: "/brands/alpicool", tagline: "Budget Compressor Cooling", image: "/images/tech-interior.png" },
+          { name: "Dodo Mat Insulation Hub", href: "/brands/dodo-mat", tagline: "Silence & Thermal", image: "/images/cat-insulation.png" },
+          { name: "Whale Underslung Hub", href: "/brands/whale", tagline: "Space-Saving Heating", image: "/images/tech-water.png" },
+          { name: "Best Heaters 2024", href: "/guides/compare/best-campervan-heaters", tagline: "Diesel vs Gas Debate", image: "/images/heating-system-technical.png" },
+        ]
+      },
     ]
   },
   { 
@@ -172,6 +173,7 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<number>(0);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [cartCount, setCartCount] = useState(0);
   const pathname = usePathname();
@@ -199,6 +201,8 @@ export function Navbar() {
   const handleMouseEnter = (linkName: string) => {
     if (timeoutId) clearTimeout(timeoutId);
     setHoveredNav(linkName);
+    // Reset active category for new mega menu
+    setActiveCategory(0);
   };
 
   const handleMouseLeave = () => {
@@ -207,51 +211,6 @@ export function Navbar() {
     }, 150);
     setTimeoutId(id);
   };
-
-  /* 
-  useEffect(() => {
-    async function fetchStoreCategories() {
-      const { data } = await supabase
-        .from('product_categories')
-        .select('name, slug, description')
-        .order('sort_order', { ascending: true });
-        
-      const imageMap: Record<string, string> = {
-        'electrical': '/images/cat-power.png',
-        'climate': '/images/cat-climate.png',
-        'plumbing': '/images/cat-water.png',
-        'insulation': '/images/cat-insulation.png',
-        'windows-ventilation': '/images/cat-windows.png',
-        'exterior-accessories': '/images/exterior-equipment-technical.png',
-        'kits': '/images/community-showcase.png'
-      };
-        
-      if (data) {
-        // Filter to only included categories
-        const includedSlugs = ['electrical', 'climate', 'plumbing', 'insulation', 'windows-ventilation', 'exterior-accessories', 'kits'];
-        const filteredCats = data.filter(c => includedSlugs.includes(c.slug));
-
-        setLinks(currentLinks => {
-          const newLinks = [...currentLinks];
-          const storeIndex = newLinks.findIndex(l => l.name === 'Store');
-          if (storeIndex !== -1) {
-            newLinks[storeIndex] = {
-              ...newLinks[storeIndex],
-              items: filteredCats.map(cat => ({
-                name: cat.name,
-                href: `/store/${cat.slug}`,
-                tagline: cat.description || "Technical Registry",
-                image: imageMap[cat.slug] || "/images/hero-background.png" 
-              }))
-            };
-          }
-          return newLinks;
-        });
-      }
-    }
-    fetchStoreCategories();
-  }, []);
-  */
 
   useEffect(() => {
     const handleScroll = () => {
@@ -318,7 +277,7 @@ export function Navbar() {
               </Link>
 
               {/* Mega Menu Dropdown */}
-              {link.mega && link.items && (
+              {link.mega && (link.items || link.categories) && (
                 <div className={cn(
                   "absolute top-full left-0 right-0 border-b transition-all duration-300 overflow-hidden shadow-2xl z-[100]",
                   isLightMode && !isScrolled 
@@ -328,37 +287,94 @@ export function Navbar() {
                   hoveredNav === link.name ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
                 )}>
                   <div className="container mx-auto px-6 py-12">
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
-                      {link.items.map((item) => (
-                        <Link 
-                          key={item.name} 
-                          href={item.href}
-                          className="group/item block space-y-4"
-                        >
-                          <div className="aspect-[16/10] overflow-hidden blueprint-border bg-white/5">
-                              <img 
-                                src={item.image} 
-                                alt={item.name} 
-                                className="w-full h-full object-cover group-hover/item:scale-110 transition-all duration-500"
-                              />
+                    {link.categories ? (
+                      <div className="flex gap-12 min-h-[400px]">
+                        {/* Categories Sidebar */}
+                        <div className="w-72 border-r border-brand-border/30 pr-8 space-y-2">
+                          {link.categories.map((cat, idx) => (
+                            <button
+                              key={cat.name}
+                              onMouseEnter={() => setActiveCategory(idx)}
+                              className={cn(
+                                "block w-full text-left font-display text-sm uppercase tracking-tighter transition-all duration-300 py-3 px-4",
+                                activeCategory === idx 
+                                  ? "text-brand-orange bg-brand-orange/5 border-l-2 border-brand-orange" 
+                                  : (isLightMode && !isScrolled ? "text-slate-400 hover:text-brand-obsidian hover:bg-slate-50" : "text-brand-grey hover:text-white hover:bg-white/5")
+                              )}
+                            >
+                              {cat.name}
+                            </button>
+                          ))}
+                        </div>
+                        
+                        {/* Category Items Grid */}
+                        <div className="flex-1">
+                          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
+                            {link.categories[activeCategory].items.map((item) => (
+                              <Link 
+                                key={item.name} 
+                                href={item.href}
+                                className="group/item block space-y-4"
+                              >
+                                <div className="aspect-[16/10] overflow-hidden blueprint-border bg-white/5">
+                                    <img 
+                                      src={item.image} 
+                                      alt={item.name} 
+                                      className="w-full h-full object-cover group-hover/item:scale-110 transition-all duration-500"
+                                    />
+                                </div>
+                                <div>
+                                  <span className={cn(
+                                    "block font-display text-sm uppercase group-hover/item:text-brand-orange transition-colors tracking-tighter",
+                                    isLightMode && !isScrolled ? "text-[#111111]" : "text-white"
+                                  )}>
+                                    {item.name}
+                                  </span>
+                                  <span className={cn(
+                                    "block font-mono text-[8px] uppercase tracking-widest mt-1",
+                                    isLightMode && !isScrolled ? "text-[#666666]" : "text-brand-grey"
+                                  )}>
+                                    {item.tagline}
+                                  </span>
+                                </div>
+                              </Link>
+                            ))}
                           </div>
-                          <div>
-                            <span className={cn(
-                              "block font-display text-sm uppercase group-hover/item:text-brand-orange transition-colors tracking-tighter",
-                              isLightMode && !isScrolled ? "text-[#111111]" : "text-white"
-                            )}>
-                              {item.name}
-                            </span>
-                            <span className={cn(
-                              "block font-mono text-[8px] uppercase tracking-widest mt-1",
-                              isLightMode && !isScrolled ? "text-[#666666]" : "text-brand-grey"
-                            )}>
-                              {item.tagline}
-                            </span>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
+                        {link.items?.map((item) => (
+                          <Link 
+                            key={item.name} 
+                            href={item.href}
+                            className="group/item block space-y-4"
+                          >
+                            <div className="aspect-[16/10] overflow-hidden blueprint-border bg-white/5">
+                                <img 
+                                  src={item.image} 
+                                  alt={item.name} 
+                                  className="w-full h-full object-cover group-hover/item:scale-110 transition-all duration-500"
+                                />
+                            </div>
+                            <div>
+                              <span className={cn(
+                                "block font-display text-sm uppercase group-hover/item:text-brand-orange transition-colors tracking-tighter",
+                                isLightMode && !isScrolled ? "text-[#111111]" : "text-white"
+                              )}>
+                                {item.name}
+                              </span>
+                              <span className={cn(
+                                "block font-mono text-[8px] uppercase tracking-widest mt-1",
+                                isLightMode && !isScrolled ? "text-[#666666]" : "text-brand-grey"
+                              )}>
+                                {item.tagline}
+                              </span>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

@@ -6,13 +6,12 @@ import { PRODUCTS } from "@/lib/data/productRegistry";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { 
-  CheckCircle2, AlertTriangle, ArrowRight, BookOpen, 
-  Settings, Zap, ShieldCheck, Info, Package, Hammer
+  AlertTriangle, ArrowRight, 
+  Settings, Zap, Package, Hammer
 } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
-export default function GuidePage({ params }: { params: Promise<{ slug: string }> }) {
+export default function GuideContent({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params);
   const guide = GUIDES[resolvedParams.slug];
 

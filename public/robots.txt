@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://diymotorhomes.co.uk/sitemap.xml
+Sitemap: https://amplios.co.uk/sitemap.xml

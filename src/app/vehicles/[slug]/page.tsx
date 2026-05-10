@@ -45,11 +45,12 @@ export default async function VehicleProfile({ params }: { params: Promise<{ slu
         <div className="absolute inset-0">
           <Image 
             src={vehicle.schematicImage} 
-            alt={vehicle.name} 
+            alt={`${vehicle.name} technical schematic for campervan conversion`} 
             fill 
             className="object-cover grayscale opacity-60" 
           />
           <div className="absolute inset-0 bg-gradient-to-t from-brand-obsidian via-brand-obsidian/40 to-transparent" />
+          <div className="absolute inset-0 blueprint-grid opacity-10" />
         </div>
         
         <div className="container mx-auto px-6 pb-24 relative z-10">

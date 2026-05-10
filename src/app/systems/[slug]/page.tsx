@@ -23,6 +23,26 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder_key'
 );
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const { data: system } = await supabaseAdmin
+    .from('build_systems')
+    .select('name, description')
+    .eq('slug', slug)
+    .single();
+
+  if (!system) return { title: 'System Module | Amplios' };
+
+  return {
+    title: `${system.name} Guide | Campervan Conversion Systems | Amplios`,
+    description: system.description || `Technical guide and components for ${system.name} in campervan and motorhome conversions.`,
+    openGraph: {
+      title: `${system.name} | Amplios`,
+      description: system.description,
+    }
+  };
+}
+
 export default async function SystemSlugPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
