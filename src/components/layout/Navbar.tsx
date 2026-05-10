@@ -67,14 +67,55 @@ const navLinks: NavLink[] = [
     name: "Store", 
     href: "/store", 
     mega: true,
-    items: [
-      { name: "Electrical Core", href: "/store/electrical-core", tagline: "Batteries & Charging", image: "/images/cat-power.png" },
-      { name: "Solar & Roof", href: "/store/solar-roof", tagline: "Panels & Mounting", image: "/images/tech-electrical.png" },
-      { name: "Heating & Climate", href: "/store/heating-climate", tagline: "Diesel & Combi", image: "/images/cat-climate.png" },
-      { name: "Water & Plumbing", href: "/store/water-plumbing", tagline: "Tanks & Pumps", image: "/images/cat-water.png" },
-      { name: "Gas & Cooking", href: "/store/gas-cooking", tagline: "Lockers & Hobs", image: "/images/cat-gas.png" },
-      { name: "Toilets & Washroom", href: "/store/toilets-washroom", tagline: "Composting & Tubs", image: "/images/cat-interior.png" },
-      { name: "Complete Kits", href: "/store/complete-kits", tagline: "System Bundles", image: "/images/kit-expedition.png" },
+    categories: [
+      {
+        name: "Power & Solar",
+        items: [
+          { name: "Inverters & Chargers", href: "/store/electrical-core?sub=inverters-chargers", tagline: "Victron & MultiPlus", image: "/images/cat-power.png" },
+          { name: "Lithium Batteries", href: "/store/electrical-core?sub=batteries", tagline: "Fogstar & Roamer", image: "/images/tech-electrical.png" },
+          { name: "Solar Panels", href: "/store/solar-roof?sub=solar-panels", tagline: "Rigid & Flexible", image: "/images/cat-power.png" },
+          { name: "Monitoring & UI", href: "/store/electrical-core?sub=monitoring", tagline: "Cerbo & GX Touch", image: "/images/victron-monitoring.png" },
+          { name: "DC-DC & MPPT", href: "/store/electrical-core?sub=dc-dc", tagline: "Smart Charging", image: "/images/electrical-technical.png" },
+        ]
+      },
+      {
+        name: "Climate & Heating",
+        items: [
+          { name: "Diesel Heaters", href: "/store/heating-climate?sub=diesel-heaters", tagline: "Autoterm & Webasto", image: "/images/cat-climate.png" },
+          { name: "Combi Systems", href: "/store/heating-climate?sub=combi-systems", tagline: "Air & Water Heat", image: "/images/heating-system-technical.png" },
+          { name: "Air Conditioning", href: "/store/heating-climate?sub=air-conditioning", tagline: "Dometic FreshJet", image: "/images/cat-climate.png" },
+          { name: "Roof Ventilation", href: "/store/heating-climate?sub=ventilation", tagline: "MaxxFan & Fiamma", image: "/images/insulation-technical.png" },
+          { name: "LPG Heating", href: "/store/heating-climate?sub=lpg-heaters", tagline: "Propex HS2000", image: "/images/gas-lpg-technical.png" },
+        ]
+      },
+      {
+        name: "Water & Gas",
+        items: [
+          { name: "Water Heaters", href: "/store/water-plumbing?sub=water-heaters", tagline: "Whale & Truma", image: "/images/cat-water.png" },
+          { name: "Tanks & Plumbing", href: "/store/water-plumbing?sub=tanks", tagline: "Underslung & Fresh", image: "/images/water-plumbing-technical.png" },
+          { name: "Gas Lockers", href: "/store/gas-cooking?sub=gas-lockers", tagline: "Safe Storage", image: "/images/cat-gas.png" },
+          { name: "Hobs & Ovens", href: "/store/gas-cooking?sub=cooking", tagline: "Dometic & Thetford", image: "/images/cat-gas.png" },
+          { name: "Water Filtration", href: "/store/water-plumbing?sub=filtration", tagline: "Clean Drinkable Water", image: "/images/tech-water.png" },
+        ]
+      },
+      {
+        name: "Interior & Fittings",
+        items: [
+          { name: "S4 Windows", href: "/store/windows?sub=windows", tagline: "Dometic Glazing", image: "/images/exterior-equipment-technical.png" },
+          { name: "Refrigeration", href: "/store/appliances?sub=refrigeration", tagline: "12V Compressor", image: "/images/cat-interior.png" },
+          { name: "Insulation", href: "/store/insulation-sound?sub=thermal-insulation", tagline: "Dodo Mat & Wool", image: "/images/cat-insulation.png" },
+          { name: "Sound Deadening", href: "/store/insulation-sound?sub=sound-deadening", tagline: "Vibration Control", image: "/images/insulation-technical.png" },
+          { name: "Toilets", href: "/store/toilets-washroom?sub=toilets", tagline: "Composting & Cassette", image: "/images/tech-water.png" },
+        ]
+      },
+      {
+        name: "Bundles & Kits",
+        items: [
+          { name: "Electrical Kits", href: "/store/complete-kits?sub=electrical-kits", tagline: "Verified Victron Specs", image: "/images/kit-expedition.png" },
+          { name: "Plumbing Kits", href: "/store/complete-kits?sub=plumbing-kits", tagline: "Full System Packs", image: "/images/kit-essential.png" },
+          { name: "Full Build Bundles", href: "/store/complete-kits", tagline: "The Whole Van Spec", image: "/images/kit-luxury.png" },
+        ]
+      }
     ]
   },
   { 
