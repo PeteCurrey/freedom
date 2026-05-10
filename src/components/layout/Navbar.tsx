@@ -287,13 +287,13 @@ export function Navbar() {
         <Link href="/" className="group flex flex-col items-center w-fit mt-1">
             <span className={cn(
               "font-display text-[26px] leading-none tracking-[0.25em] flex items-end ml-[0.25em]",
-              isLightMode && !isScrolled ? "text-[#0A0A0A]" : "text-white"
+              isLightMode ? "text-[#0A0A0A]" : "text-white"
             )}>
               AMPLIOS<span className="text-brand-orange leading-[0.5] mb-[0.15em] -ml-1">.</span>
             </span>
             <span className={cn(
               "font-mono text-[8px] tracking-[0.5em] pl-[0.5em] uppercase whitespace-nowrap w-full text-center mt-1.5",
-              isLightMode && !isScrolled ? "text-[#0A0A0A]/60" : "text-brand-grey"
+              isLightMode ? "text-[#0A0A0A]/60" : "text-brand-grey"
             )}>
               Built for the road
             </span>
@@ -314,7 +314,7 @@ export function Navbar() {
                   "relative font-sans text-xs uppercase tracking-widest transition-colors hover:text-brand-orange py-8",
                   pathname === link.href 
                     ? "text-brand-orange" 
-                    : (isLightMode && !isScrolled ? "text-[#0A0A0A]" : "text-brand-white/70")
+                    : (isLightMode ? "text-[#0A0A0A]" : "text-brand-white/70")
                 )}
               >
                 {link.name}
@@ -430,7 +430,7 @@ export function Navbar() {
         {/* Utility Nav */}
         <div className={cn(
           "flex items-center space-x-6",
-          isLightMode && !isScrolled ? "text-[#0A0A0A]" : "text-brand-white/80"
+          isLightMode ? "text-[#0A0A0A]" : "text-brand-white/80"
         )}>
           <Link 
             href="/client-portal" 
@@ -442,14 +442,14 @@ export function Navbar() {
             <Shield className="w-3 h-3 text-brand-orange" />
             <span className={cn(
               "font-display text-[9px] uppercase tracking-widest transition-colors",
-              isLightMode && !isScrolled ? "text-[#0A0A0A]" : "text-brand-grey group-hover/journey:text-white"
+              isLightMode ? "text-[#0A0A0A]" : "text-brand-grey group-hover/journey:text-white"
             )}>Command Centre</span>
           </Link>
           <Link 
             href="/planner" 
             className={cn(
               "hidden xl:flex items-center gap-2 px-5 py-2 group/cta transition-all hover:bg-brand-orange",
-              isLightMode && !isScrolled ? "bg-[#0A0A0A] text-white" : "bg-brand-orange/10 border border-brand-orange/30 text-white"
+              isLightMode ? "bg-[#0A0A0A] text-white" : "bg-brand-orange/10 border border-brand-orange/30 text-white"
             )}
           >
             <span className="font-display text-[9px] uppercase tracking-widest group-hover/cta:text-white transition-colors">Build Planner</span>
