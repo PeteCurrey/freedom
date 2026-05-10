@@ -146,6 +146,40 @@ export default async function VehicleProfile({ params }: { params: Promise<{ slu
         ))}
       </HorizontalScroll>
 
+      {/* What It Will Fit Section */}
+      <section className="py-24 border-b border-brand-border bg-brand-obsidian">
+        <div className="container mx-auto px-6">
+          <div className="flex items-center gap-4 mb-16">
+            <Ruler className="w-8 h-8 text-brand-orange" />
+            <h2 className="font-display text-4xl uppercase tracking-tighter text-brand-white">What It Will Fit</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+             <div className="p-8 border border-brand-border bg-brand-carbon">
+                <h4 className="font-display text-sm text-brand-white mb-4 uppercase">Bed Layouts</h4>
+                <p className="font-sans text-brand-grey text-sm leading-relaxed mb-4">
+                   {vehicle.internalWidth.includes('1.8') || parseFloat(vehicle.internalWidth) >= 1.8 
+                     ? "Transverse Bed Ready: This chassis is wide enough for a sideways double bed, saving massive internal living space."
+                     : "Longitudinal Only: The narrow body requires a lengthwise bed unless you install side flares/pods."}
+                </p>
+             </div>
+             <div className="p-8 border border-brand-border bg-brand-carbon">
+                <h4 className="font-display text-sm text-brand-white mb-4 uppercase">Wet Room Potential</h4>
+                <p className="font-sans text-brand-grey text-sm leading-relaxed mb-4">
+                   {vehicle.configurations.some(c => c.label.includes('Long') || c.label.includes('170') || c.label.includes('L3') || c.label.includes('L4'))
+                     ? "High Potential: The LWB variants offer enough floor length for a dedicated shower and toilet unit without sacrificing the kitchen."
+                     : "Tight Fit: Short/Medium wheelbases require a hidden or pull-out toilet to maintain a usable kitchen."}
+                </p>
+             </div>
+             <div className="p-8 border border-brand-border bg-brand-carbon">
+                <h4 className="font-display text-sm text-brand-white mb-4 uppercase">Garage Space</h4>
+                <p className="font-sans text-brand-grey text-sm leading-relaxed mb-4">
+                   Typical high-roof builds allow for a 900mm–1100mm high garage space below a fixed bed, ideal for ebikes and technical systems.
+                </p>
+             </div>
+          </div>
+        </div>
+      </section>
+
       {/* Conversion Analysis (Pros/Cons) */}
       <section className="py-32 bg-brand-carbon relative">
         <div className="container mx-auto px-6">

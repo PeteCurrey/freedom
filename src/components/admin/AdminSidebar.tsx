@@ -129,8 +129,7 @@ export function AdminSidebar({ isLightMode, onToggleTheme }: AdminSidebarProps) 
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const isActive = (href: string) => {
-    if (href === "/admin") return pathname === "/admin";
-    return pathname === href || pathname.startsWith(href + "/");
+    return pathname === href || pathname?.startsWith(href + "/");
   };
 
   const handleSignOut = async () => {

@@ -18,6 +18,7 @@ const FIAMMA_PAGES = [
   { name: "Fiamma Brand Hub", href: "/brands/fiamma" },
   { name: "F80s Awning Guide", href: "/guides/fiamma/f80s-awning-guide" },
   { name: "F80s Installation", href: "/guides/fiamma/f80s-installation" },
+  { name: "MaxxAir vs Fiamma", href: "/guides/compare/maxxair-vs-fiamma" },
 ];
 
 export function FiammaSidebar({ items, currentPage }: FiammaSidebarProps) {

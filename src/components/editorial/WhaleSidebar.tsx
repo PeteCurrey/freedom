@@ -18,6 +18,8 @@ const WHALE_PAGES = [
   { name: "Whale Brand Hub", href: "/brands/whale" },
   { name: "Expanse Water Guide", href: "/guides/whale/expanse-water-heater-guide" },
   { name: "Expanse Installation", href: "/guides/whale/expanse-installation" },
+  { name: "Heat Air Guide", href: "/guides/whale/heat-air-guide" },
+  { name: "Heat Air Installation", href: "/guides/whale/heat-air-installation" },
 ];
 
 export function WhaleSidebar({ items, currentPage }: WhaleSidebarProps) {

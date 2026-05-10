@@ -14,6 +14,7 @@ import { ProductCard } from "@/components/store/ProductCard";
 import { ProductHistoryTracker } from "@/components/store/ProductHistoryTracker";
 import { StickyProductBar } from "@/components/store/StickyProductBar";
 import { ProductTabs } from "@/components/store/ProductTabs";
+import { ProductGallery } from "@/components/store/ProductGallery";
 import { Metadata } from "next";
 import { PRODUCTS, getProductBySlug } from "@/lib/data/productRegistry";
 
@@ -127,48 +128,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-            {/* Gallery Panel */}
-            <div className="lg:col-span-12 xl:col-span-7 space-y-6">
-              <div className="aspect-square max-w-[600px] mx-auto bg-[#F8F8F6] rounded-xl relative overflow-hidden group shadow-sm flex items-center justify-center">
-                {primaryImage ? (
-                  <Image 
-                    src={primaryImage} 
-                    alt={product.name} 
-                    fill 
-                    className="object-contain p-8 transition-transform duration-700 hover:scale-125 cursor-zoom-in" 
-                    priority
-                  />
-                ) : (
-                  <div className="flex flex-col items-center justify-center bg-[#F0F0F0] w-full h-full">
-                    <span className="font-display text-8xl text-[#999999] opacity-30">{product.brand?.slice(0, 1) || "?"}</span>
-                    <span className="font-mono text-xs text-[#999999] uppercase tracking-widest mt-4">Image coming soon</span>
-                  </div>
-                )}
-                
-                {/* Product Meta Badge */}
-                <div className="absolute top-6 left-6 flex flex-col gap-2 z-10">
-                  {product.badge && (
-                    <span className="px-3 py-1 bg-brand-orange text-white font-mono text-[9px] uppercase tracking-widest shadow-md rounded-sm">
-                      {product.badge}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Thumbnails */}
-              {allImages.length > 0 && primaryImage && (
-                <div className="flex gap-4 max-w-[600px] mx-auto overflow-x-auto hide-scrollbar">
-                  {allImages.slice(0, 5).map((img: string | null, i: number) => (
-                    <div key={i} className={cn(
-                      "w-20 h-20 bg-[#F8F8F6] border rounded-md transition-all cursor-pointer flex items-center justify-center p-2 flex-shrink-0",
-                      i === 0 ? "border-brand-orange" : "border-[#E5E5E5] opacity-60 hover:opacity-100"
-                    )}>
-                      {img && <img src={img} className="w-full h-full object-contain" alt="" />}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <ProductGallery 
+              name={product.name} 
+              brand={product.brand} 
+              images={allImages} 
+              badge={product.badge}
+            />
 
             {/* Config Panel */}
             <div className="lg:col-span-12 xl:col-span-5 flex flex-col">

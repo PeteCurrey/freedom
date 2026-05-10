@@ -18,7 +18,7 @@ const EBERSPACHER_PAGES = [
   { name: "Eberspächer Hub", href: "/brands/eberspacher" },
   { name: "Airtronic S3 Guide", href: "/guides/eberspacher/airtronic-s3-guide" },
   { name: "Airtronic Installation", href: "/guides/eberspacher/airtronic-installation" },
-  { name: "Comparison: vs Webasto", href: "/guides/compare/truma-vs-webasto" }, // Placeholder for broader diesel comparison
+  { name: "Comparison: Best Heaters", href: "/guides/compare/best-campervan-heaters" },
 ];
 
 export function EberspacherSidebar({ items, currentPage }: EberspacherSidebarProps) {

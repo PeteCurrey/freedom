@@ -344,8 +344,8 @@ export const WIRING_DIAGRAMS: WiringDiagram[] = [
       { number: 5, name: 'Exhaust Silencer', description: 'Reduces external noise. Must be routed away from windows and air intakes.', },
     ],
     cableRuns: [
-      { from: 'Leisure Battery', to: 'Webasto Main Fuse', cable: '6mm² Twin Core', protection: '20A Fuse' },
-      { from: 'Webasto Unit', to: 'SmartControl', cable: 'Webasto Signal Cable', protection: 'N/A' },
+      { run: 'Leisure Battery to Webasto Main Fuse', size: '6mm² Twin Core', notes: '20A Fuse protection' },
+      { run: 'Webasto Unit to SmartControl', size: 'Webasto Signal Cable', notes: 'Plug and play' },
     ],
     ukNotes: [
       'The exhaust MUST terminate outside the vehicle perimeter',
@@ -385,6 +385,7 @@ export const WIRING_DIAGRAMS: WiringDiagram[] = [
     whatItPowers: ['Natural light and ventilation', 'Thermal insulation (double glazed)', 'Insect protection'],
     upgradePathSlug: 'victron-12v-3kva-system',
     upgradePathLabel: 'View AC Power Requirements →',
+    upgradePathText: 'Learn more about powering your campervan.',
   },
   {
     slug: 'fogstar-drift-victron-multiplus-schematic',
@@ -394,7 +395,7 @@ export const WIRING_DIAGRAMS: WiringDiagram[] = [
     seoKeywords: ['fogstar drift victron schematic', 'lithium battery wiring diagram', 'multiplus ii wiring guide', 'fogstar drift installation'],
     monthlySearches: 750,
     price: 999,
-    systemTier: 'premium',
+    systemTier: 'full-autonomy',
     imagePlaceholder: '/images/tech-electrical.png',
     educationalFocus: 'High-current DC distribution. How to safely wire large lithium banks to 3000VA inverters using correct cable sizing and mega-fusing.',
     components: [
@@ -405,9 +406,9 @@ export const WIRING_DIAGRAMS: WiringDiagram[] = [
       { number: 5, name: 'Mega Fuse (400A)', description: 'Crucial protection for the main inverter cable run. Must be rated to 2x continuous discharge.', },
     ],
     cableRuns: [
-      { from: 'Fogstar Battery', to: 'Lynx Distributor', cable: '70mm² Tri-Rated', protection: '300A Mega Fuse' },
-      { from: 'Lynx Distributor', to: 'MultiPlus-II', cable: '95mm² Tri-Rated', protection: '400A Mega Fuse' },
-      { from: 'Solar Controller', to: 'Lynx Distributor', cable: '10mm² Twin Core', protection: '60A Midi Fuse' },
+      { run: 'Fogstar Battery to Lynx Distributor', size: '70mm² Tri-Rated', notes: '300A Mega Fuse' },
+      { run: 'Lynx Distributor to MultiPlus-II', size: '95mm² Tri-Rated', notes: '400A Mega Fuse' },
+      { run: 'Solar Controller to Lynx Distributor', size: '10mm² Twin Core', notes: '60A Midi Fuse' },
     ],
     ukNotes: [
       'Use only Tri-Rated or BS 6231 compliant cable for high-current runs',
@@ -428,7 +429,7 @@ export const WIRING_DIAGRAMS: WiringDiagram[] = [
     seoKeywords: ['eberspacher airtronic installation diagram', 'airtronic s3 wiring guide', 'silent fuel pump mounting', 'eberspacher d2l schematic'],
     monthlySearches: 450,
     price: 999,
-    systemTier: 'premium',
+    systemTier: 'full-autonomy',
     imagePlaceholder: '/images/cat-climate.png',
     educationalFocus: 'CAN-bus digital integration. How to safely wire the EasyStart Pro and mount the silent dosing pump for zero-vibration heating.',
     components: [
@@ -439,8 +440,8 @@ export const WIRING_DIAGRAMS: WiringDiagram[] = [
       { number: 5, name: 'Combustion Intake Silencer', description: 'Reduces high-pitched intake noise. Must be kept clear of debris.', },
     ],
     cableRuns: [
-      { from: 'Leisure Battery', to: 'Eberspacher Fuse Holder', cable: '6mm² Twin Core', protection: '25A Fuse' },
-      { from: 'EasyStart Pro', to: 'Heater Loom', cable: 'CAN-bus 4-wire', protection: 'N/A' },
+      { run: 'Leisure Battery to Eberspacher Fuse Holder', size: '6mm² Twin Core', notes: '25A Fuse' },
+      { run: 'EasyStart Pro to Heater Loom', size: 'CAN-bus 4-wire', notes: 'N/A' },
     ],
     ukNotes: [
       'The silent pump MUST be mounted at a 15-35° upward angle',
@@ -472,7 +473,7 @@ export const WIRING_DIAGRAMS: WiringDiagram[] = [
       { number: 5, name: 'Internal Garnish Ring', description: 'The finishing trim for the interior. Can be cut to match your ceiling thickness.', },
     ],
     cableRuns: [
-      { from: 'DC Fuse Box', to: 'MaxxFan Unit', cable: '2.5mm² Twin Core', protection: '5A Fuse' },
+      { run: 'DC Fuse Box to MaxxFan Unit', size: '2.5mm² Twin Core', notes: '5A Fuse' },
     ],
     ukNotes: [
       'Ensure the cut is exactly 400mm x 400mm (or 14" x 14")',
@@ -534,7 +535,7 @@ export const WIRING_DIAGRAMS: WiringDiagram[] = [
       { number: 5, name: 'Digital Thermostat', description: 'Wall-mounted controller. Connects via a multi-core signal cable to the heater body.', },
     ],
     cableRuns: [
-      { from: 'Leisure Battery', to: 'Propex Fuse Holder', cable: '2.5mm² Twin Core', protection: '5A Fuse' },
+      { run: 'Leisure Battery to Propex Fuse Holder', size: '2.5mm² Twin Core', notes: '5A Fuse' },
     ],
     ukNotes: [
       'All gas work must be carried out by or checked by a Gas Safe registered engineer',
@@ -566,8 +567,8 @@ export const WIRING_DIAGRAMS: WiringDiagram[] = [
       { number: 5, name: '12V Control Signals', description: 'Connects the heater to the internal control panel for mode switching and temperature setting.', },
     ],
     cableRuns: [
-      { from: 'AC Distribution Panel', to: 'Whale Expanse', cable: '1.5mm² 3-Core AC', protection: '10A RCBO' },
-      { from: 'DC Fuse Box', to: 'Whale Control Panel', cable: '1.0mm² Signal', protection: '2A Fuse' },
+      { run: 'AC Distribution Panel to Whale Expanse', size: '1.5mm² 3-Core AC', notes: '10A RCBO' },
+      { run: 'DC Fuse Box to Whale Control Panel', size: '1.0mm² Signal', notes: '2A Fuse' },
     ],
     ukNotes: [
       'The heater must be mounted at least 300mm from any fuel tank or fuel line',
@@ -629,7 +630,7 @@ export const WIRING_DIAGRAMS: WiringDiagram[] = [
       { number: 5, name: 'Ventilation Exhaust (High)', description: 'A matching exhaust vent to allow hot air from the compressor to escape.', },
     ],
     cableRuns: [
-      { from: 'Leisure Battery', to: 'Alpicool DC Socket', cable: '6.0mm² Twin Core', protection: '15A Fuse' },
+      { run: 'Leisure Battery to Alpicool DC Socket', size: '6.0mm² Twin Core', notes: '15A Fuse' },
     ],
     ukNotes: [
       'Voltage drop is the #1 cause of Alpicool error codes. Use at least 4mm² or 6mm² cable for runs over 2 metres',
@@ -641,6 +642,39 @@ export const WIRING_DIAGRAMS: WiringDiagram[] = [
     upgradePathText: 'For maximum off-grid run time, pair your Alpicool with a 100W+ solar panel and a Victron MPPT controller.',
     upgradePathSlug: 'victron-12v-starter-system',
     upgradePathLabel: 'View Solar Power Guide →',
+  },
+  {
+    slug: 'whale-heat-air-installation-schematic',
+    title: 'Whale Heat Air Underslung Heater Schematic',
+    h1: 'Whale Heat Air: Precision Under-Chassis Air Heating Schematic',
+    metaDescription: 'Official Whale Heat Air installation schematic for UK campervan builders. Under-chassis mounting, ducting layout, and 12V/Gas electrical integration. Download PDF £9.99.',
+    seoKeywords: ['whale heat air installation diagram', 'underslung diesel heater uk', 'whale heat air wiring guide', 'campervan air heating schematic'],
+    monthlySearches: 380,
+    price: 999,
+    systemTier: 'starter',
+    imagePlaceholder: '/images/cat-climate.png',
+    educationalFocus: 'Space-saving under-chassis heating. How to safely mount the unit and route insulated ducting into the living space.',
+    components: [
+      { number: 1, name: 'Whale Heat Air Unit', description: 'The main underslung heater. Provides up to 3kW of gas and 2kW of electric heating power.', storeSlug: 'whale-heat-air-underslung-gas-electric-heater' },
+      { number: 2, name: 'Insulated Ducting (65mm)', description: 'Transfers hot air into the van. Must be insulated for exterior runs to prevent heat loss.', },
+      { number: 3, name: 'Gas Connection (8mm)', description: 'Connected via a bulkhead fitting. Requires Gas Safe certification for the final connection.', },
+      { number: 4, name: 'Control Panel', description: 'The digital interface. Communicates with the heater via a dedicated signal loom.', },
+      { number: 5, name: '230V Heating Element', description: 'Internal electric element. Requires an RCD protected AC supply for mains operation.', },
+    ],
+    cableRuns: [
+      { run: 'Leisure Battery to Heat Air Unit', size: '4.0mm² Twin Core', notes: 'Fused at 15A. For 12V fan and control electronics.' },
+      { run: 'AC Distribution to Heat Air', size: '1.5mm² 3-Core AC', notes: '10A RCBO. For electric heating mode.' },
+    ],
+    ukNotes: [
+      'The heater MUST be mounted using the vehicle-specific chassis bracket kit',
+      'All exterior ducting must be lagged with high-performance thermal insulation',
+      'The gas connection must be leak-tested and comply with BS EN 1949',
+      'Ensure the air intake is positioned away from the exhaust outlet',
+    ],
+    whatItPowers: ['Rapid space heating (Gas/Electric)', 'Frost protection for internal systems', 'Climate control via digital thermostat'],
+    upgradePathText: 'For integrated hot water, pair your Heat Air with the Whale Expanse underslung water heater.',
+    upgradePathSlug: 'victron-12v-starter-system',
+    upgradePathLabel: 'View Water Heating Guide →',
   },
 ];
 

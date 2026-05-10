@@ -7,9 +7,9 @@ export function ThemeHandler() {
   const pathname = usePathname();
   
   useEffect(() => {
-    const isStore = pathname.startsWith('/store') || 
-                    pathname.startsWith('/cart') || 
-                    pathname.startsWith('/checkout');
+    const isStore = pathname?.startsWith('/store') || 
+                    pathname?.startsWith('/cart') || 
+                    pathname?.startsWith('/checkout');
                     
     if (isStore) {
       document.body.classList.add('store-light');

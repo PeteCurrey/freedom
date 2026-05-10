@@ -18,6 +18,7 @@ const MAXXAIR_PAGES = [
   { name: "MaxxAir Brand Hub", href: "/brands/maxxair" },
   { name: "MaxxFan Deluxe Review", href: "/guides/maxxair/maxxfan-deluxe-review" },
   { name: "MaxxFan Installation", href: "/guides/maxxair/maxxfan-installation" },
+  { name: "MaxxAir vs Fiamma", href: "/guides/compare/maxxair-vs-fiamma" },
 ];
 
 export function MaxxairSidebar({ items, currentPage }: MaxxairSidebarProps) {

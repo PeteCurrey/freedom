@@ -18,7 +18,7 @@ const PROPEX_PAGES = [
   { name: "Propex Brand Hub", href: "/brands/propex" },
   { name: "HS2000 Gas Guide", href: "/guides/propex/hs2000-gas-heating-guide" },
   { name: "HS2000 Installation", href: "/guides/propex/hs2000-installation" },
-  { name: "Comparison: Gas vs Diesel", href: "/guides/compare/truma-vs-chinese-diesel" }, // Placeholder for heating debate
+  { name: "Comparison: Best Heaters", href: "/guides/compare/best-campervan-heaters" },
 ];
 
 export function PropexSidebar({ items, currentPage }: PropexSidebarProps) {
