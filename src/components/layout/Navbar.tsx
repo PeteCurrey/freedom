@@ -177,7 +177,8 @@ export function Navbar() {
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [cartCount, setCartCount] = useState(0);
   const pathname = usePathname();
-  const isLightMode = pathname?.startsWith('/store') || pathname?.startsWith('/cart') || pathname?.startsWith('/checkout') || pathname?.startsWith('/account');
+  const isStorePage = pathname?.startsWith('/store');
+  const isLightMode = isStorePage; // Focused on store page visibility per request
 
   useEffect(() => {
     const updateCartCount = () => {
@@ -249,7 +250,10 @@ export function Navbar() {
             )}>
               AMPLIOS<span className="text-brand-orange leading-[0.5] mb-[0.15em] -ml-1">.</span>
             </span>
-            <span className="font-mono text-[8px] text-brand-grey tracking-[0.5em] pl-[0.5em] uppercase whitespace-nowrap w-full text-center mt-1.5">
+            <span className={cn(
+              "font-mono text-[8px] tracking-[0.5em] pl-[0.5em] uppercase whitespace-nowrap w-full text-center mt-1.5",
+              isLightMode && !isScrolled ? "text-brand-obsidian/60" : "text-brand-grey"
+            )}>
               Built for the road
             </span>
         </Link>
@@ -269,7 +273,7 @@ export function Navbar() {
                   "relative font-sans text-xs uppercase tracking-widest transition-colors hover:text-brand-orange py-8",
                   pathname === link.href 
                     ? "text-brand-orange" 
-                    : (isLightMode && !isScrolled ? "text-brand-obsidian/70" : "text-brand-white/70")
+                    : (isLightMode && !isScrolled ? "text-brand-obsidian" : "text-brand-white/70")
                 )}
               >
                 {link.name}
@@ -385,21 +389,30 @@ export function Navbar() {
         {/* Utility Nav */}
         <div className={cn(
           "flex items-center space-x-6",
-          isLightMode && !isScrolled ? "text-brand-obsidian/80" : "text-brand-white/80"
+          isLightMode && !isScrolled ? "text-brand-obsidian" : "text-brand-white/80"
         )}>
           <Link 
             href="/client-portal" 
-            className="hidden lg:flex items-center gap-2 border border-brand-border px-5 py-2 group/journey transition-all hover:border-brand-orange"
+            className={cn(
+              "hidden lg:flex items-center gap-2 border px-5 py-2 group/journey transition-all hover:border-brand-orange",
+              isLightMode && !isScrolled ? "border-brand-obsidian/20" : "border-brand-border"
+            )}
           >
             <Shield className="w-3 h-3 text-brand-orange" />
-            <span className="font-display text-[9px] uppercase tracking-widest text-brand-grey group-hover/journey:text-white transition-colors">Command Centre</span>
+            <span className={cn(
+              "font-display text-[9px] uppercase tracking-widest transition-colors",
+              isLightMode && !isScrolled ? "text-brand-obsidian" : "text-brand-grey group-hover/journey:text-white"
+            )}>Command Centre</span>
           </Link>
           <Link 
             href="/planner" 
-            className="hidden xl:flex items-center gap-2 bg-brand-orange/10 border border-brand-orange/30 px-5 py-2 group/cta transition-all hover:bg-brand-orange"
+            className={cn(
+              "hidden xl:flex items-center gap-2 px-5 py-2 group/cta transition-all hover:bg-brand-orange",
+              isLightMode && !isScrolled ? "bg-brand-obsidian text-white" : "bg-brand-orange/10 border border-brand-orange/30 text-white"
+            )}
           >
-            <span className="font-display text-[9px] uppercase tracking-widest text-white group-hover/cta:text-white transition-colors">Build Planner</span>
-            <ArrowRight className="w-3 h-3 text-white group-hover/cta:text-white transition-colors" />
+            <span className="font-display text-[9px] uppercase tracking-widest group-hover/cta:text-white transition-colors">Build Planner</span>
+            <ArrowRight className="w-3 h-3 group-hover/cta:text-white transition-colors" />
           </Link>
           <button className="hover:text-brand-orange transition-colors">
             <Search className="w-5 h-5" />
