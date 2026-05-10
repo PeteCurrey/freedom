@@ -35,8 +35,8 @@ const navLinks: NavLink[] = [
       { name: "MAN TGE", href: "/vehicles/man-tge", image: "/images/man-tge-hero.png", tagline: "The Hidden Bargain" },
       { name: "Fiat Ducato", href: "/vehicles/fiat-ducato", image: "/images/fiat-ducato-hero.png", tagline: "Maximum Width" },
       { name: "Iveco Daily", href: "/vehicles/iveco-daily", image: "/images/iveco-daily-hero.png", tagline: "Ultimate Payload" },
-      { name: "Renault Master", href: "/vehicles/renault-master", image: "/images/bespoke-master.png", tagline: "Efficient Fleet" },
-      { name: "Compare All Chassis", href: "/vehicles/compare", image: "/images/sprinter.png", tagline: "Side-by-Side Analysis" },
+      { name: "Renault Master", href: "/vehicles/renault-master", image: "/images/bespoke-relay.png", tagline: "Efficient Fleet" },
+      { name: "Compare All Chassis", href: "/vehicles/compare", image: "/images/sprinter-schematic.png", tagline: "Side-by-Side Analysis" },
     ]
   },
   { 
@@ -49,8 +49,8 @@ const navLinks: NavLink[] = [
       { name: "Water & Plumbing", href: "/systems/water-plumbing", tagline: "Flowing Without Constraints", image: "/images/water-plumbing-technical.png" },
       { name: "Insulation & Vent", href: "/systems/insulation-ventilation", tagline: "The Foundation", image: "/images/insulation-technical.png" },
       { name: "Gas & LPG", href: "/systems/gas-lpg", tagline: "Fueling the Adventure", image: "/images/gas-lpg-technical.png" },
-      { name: "Lighting Systems", href: "/systems/lighting", tagline: "Illuminate Your Adventure", image: "/images/hero-background.png" },
-      { name: "Air Conditioning", href: "/systems/air-conditioning", tagline: "Ultimate Climate Control", image: "/images/heating-system-technical.png" },
+      { name: "Lighting Systems", href: "/systems/lighting", tagline: "Illuminate Your Adventure", image: "/images/tech-interior.png" },
+      { name: "Air Conditioning", href: "/systems/air-conditioning", tagline: "Ultimate Climate Control", image: "/images/cat-climate.png" },
       { name: "Wheels & Tyres", href: "/systems/wheels-tyres", tagline: "The Foundation of Grip", image: "/images/wheels-tyres-technical.png" },
       { name: "Exterior Equipment", href: "/systems/exterior-equipment", tagline: "Racks, Ladders, Awnings", image: "/images/exterior-equipment-technical.png" },
       { name: "Security & Tracking", href: "/systems/security-tracking", tagline: "Protect Your Sanctuary", image: "/images/step_security_cinematic_1776675013013.png" },
@@ -63,12 +63,12 @@ const navLinks: NavLink[] = [
     mega: true,
     items: [
       { name: "Electrical Core", href: "/store/electrical-core", tagline: "Batteries & Charging", image: "/images/cat-power.png" },
-      { name: "Solar & Roof", href: "/store/solar-roof", tagline: "Panels & Mounting", image: "/images/solar-technical.png" },
+      { name: "Solar & Roof", href: "/store/solar-roof", tagline: "Panels & Mounting", image: "/images/tech-electrical.png" },
       { name: "Heating & Climate", href: "/store/heating-climate", tagline: "Diesel & Combi", image: "/images/cat-climate.png" },
       { name: "Water & Plumbing", href: "/store/water-plumbing", tagline: "Tanks & Pumps", image: "/images/cat-water.png" },
-      { name: "Gas & Cooking", href: "/store/gas-cooking", tagline: "Lockers & Hobs", image: "/images/gas-lpg-technical.png" },
-      { name: "Toilets & Washroom", href: "/store/toilets-washroom", tagline: "Composting & Tubs", image: "/images/cat-windows.png" },
-      { name: "Complete Kits", href: "/store/complete-kits", tagline: "System Bundles", image: "/images/community-showcase.png" },
+      { name: "Gas & Cooking", href: "/store/gas-cooking", tagline: "Lockers & Hobs", image: "/images/cat-gas.png" },
+      { name: "Toilets & Washroom", href: "/store/toilets-washroom", tagline: "Composting & Tubs", image: "/images/cat-interior.png" },
+      { name: "Complete Kits", href: "/store/complete-kits", tagline: "System Bundles", image: "/images/kit-expedition.png" },
     ]
   },
   {
@@ -76,12 +76,12 @@ const navLinks: NavLink[] = [
     href: "/guides",
     mega: true,
     items: [
-      { name: "Van Size Guide", href: "/guides/van-size-guide", tagline: "Choose Your Platform", image: "/images/sprinter.png" },
-      { name: "Conversion Costs", href: "/guides/van-conversion-cost-guide", tagline: "2026 Budget Reality", image: "/images/cat-power.png" },
-      { name: "DVLA Reclassification", href: "/guides/dvla-motor-caravan-reclassification", tagline: "Legal UK Status", image: "/images/cat-insulation.png" },
-      { name: "Self-Build Insurance", href: "/guides/self-build-motorhome-insurance", tagline: "Protect Your Build", image: "/images/cat-power.png" },
-      { name: "Build Timeline", href: "/guides/motorhome-conversion-timeline", tagline: "How Long It Takes", image: "/images/cat-insulation.png" },
-      { name: "Should I Convert?", href: "/guides/should-i-convert-a-van", tagline: "The Honest Answer", image: "/images/cat-insulation.png" },
+      { name: "Van Size Guide", href: "/guides/van-size-guide", tagline: "Choose Your Platform", image: "/images/transit-schematic.png" },
+      { name: "Conversion Costs", href: "/guides/van-conversion-cost-guide", tagline: "2026 Budget Reality", image: "/images/kit-essential.png" },
+      { name: "DVLA Reclassification", href: "/guides/dvla-motor-caravan-reclassification", tagline: "Legal UK Status", image: "/images/kit-base.png" },
+      { name: "Self-Build Insurance", href: "/guides/self-build-motorhome-insurance", tagline: "Protect Your Build", image: "/images/kit-luxury.png" },
+      { name: "Build Timeline", href: "/guides/motorhome-conversion-timeline", tagline: "How Long It Takes", image: "/images/peugeot-boxer-schematic.png" },
+      { name: "Should I Convert?", href: "/guides/should-i-convert-a-van", tagline: "The Honest Answer", image: "/images/systems-showcase.png" },
       { name: "Resident Blog", href: "/blog", tagline: "Stories From the Road", image: "/images/community-showcase.png" },
     ]
   },
@@ -90,11 +90,11 @@ const navLinks: NavLink[] = [
     href: "/guides",
     mega: true,
     items: [
-      { name: "Sprinter LWB/MWB", href: "/guides/sprinter-van-conversion-layout", tagline: "The World's Favorite", image: "/images/cat-insulation.png" },
-      { name: "VW Crafter LWB", href: "/guides/lwb-crafter-conversion-layout", tagline: "The Width Advantage", image: "/images/cat-insulation.png" },
-      { name: "Ducato/Boxer/Relay", href: "/guides/lwb-ducato-conversion-layout", tagline: "Square Efficiency", image: "/images/cat-insulation.png" },
-      { name: "MWB Sprinter", href: "/guides/mwb-sprinter-layout", tagline: "The 6 Metre Challenge", image: "/images/cat-insulation.png" },
-      { name: "Fixed Bed vs Lounge", href: "/guides/fixed-bed-vs-u-shape-lounge", tagline: "The Ultimate Debate", image: "/images/cat-insulation.png" },
+      { name: "Sprinter LWB/MWB", href: "/guides/sprinter-van-conversion-layout", tagline: "The World's Favorite", image: "/images/sprinter-schematic.png" },
+      { name: "VW Crafter LWB", href: "/guides/lwb-crafter-conversion-layout", tagline: "The Width Advantage", image: "/images/bespoke-crafter.png" },
+      { name: "Ducato/Boxer/Relay", href: "/guides/lwb-ducato-conversion-layout", tagline: "Square Efficiency", image: "/images/citroen-relay-schematic.png" },
+      { name: "MWB Sprinter", href: "/guides/mwb-sprinter-layout", tagline: "The 6 Metre Challenge", image: "/images/bespoke-sprinter.png" },
+      { name: "Fixed Bed vs Lounge", href: "/guides/fixed-bed-vs-u-shape-lounge", tagline: "The Ultimate Debate", image: "/images/tech-interior.png" },
     ]
   },
   {
@@ -102,10 +102,10 @@ const navLinks: NavLink[] = [
     href: "/guides",
     mega: true,
     items: [
-      { name: "Power Stations", href: "/guides/best-portable-power-station", tagline: "EcoFlow vs Jackery", image: "/images/cat-power.png" },
-      { name: "12V Fridges", href: "/guides/best-12v-campervan-fridge", tagline: "Compressor Guide", image: "/images/interior-showcase.png" },
-      { name: "Van Toilets", href: "/guides/best-campervan-toilet", tagline: "Composting Reality", image: "/images/cat-water.png" },
-      { name: "Starlink Roam", href: "/guides/starlink-campervan-installation", tagline: "Off-Grid Internet", image: "/images/cat-insulation.png" },
+      { name: "Power Stations", href: "/guides/best-portable-power-station", tagline: "EcoFlow vs Jackery", image: "/images/tech-electrical.png" },
+      { name: "12V Fridges", href: "/guides/best-12v-campervan-fridge", tagline: "Compressor Guide", image: "/images/cat-interior.png" },
+      { name: "Van Toilets", href: "/guides/best-campervan-toilet", tagline: "Composting Reality", image: "/images/tech-water.png" },
+      { name: "Starlink Roam", href: "/guides/starlink-campervan-installation", tagline: "Off-Grid Internet", image: "/images/exterior-equipment-technical.png" },
       { name: "Roof Fans", href: "/guides/compare/maxxair-vs-fiamma", tagline: "MaxxAir vs Fiamma", image: "/images/cat-climate.png" },
     ]
   },
@@ -114,10 +114,10 @@ const navLinks: NavLink[] = [
     href: "/guides",
     mega: true,
     items: [
-      { name: "NC500 Route Guide", href: "/guides/nc500-campervan-guide", tagline: "Scotland Road Trip", image: "/images/cat-insulation.png" },
-      { name: "Wild Camping UK", href: "/guides/wild-camping-uk-campervan", tagline: "Laws & Essential Apps", image: "/images/cat-insulation.png" },
-      { name: "Europe Post-Brexit", href: "/guides/van-life-europe-guide", tagline: "90/180 Days & Tolls", image: "/images/cat-insulation.png" },
-      { name: "Winter in the Alps", href: "/guides/winter-van-life-alps", tagline: "Surviving -15°C", image: "/images/cat-insulation.png" },
+      { name: "NC500 Route Guide", href: "/guides/nc500-campervan-guide", tagline: "Scotland Road Trip", image: "/images/hero-background.png" },
+      { name: "Wild Camping UK", href: "/guides/wild-camping-uk-campervan", tagline: "Laws & Essential Apps", image: "/images/community-showcase.png" },
+      { name: "Europe Post-Brexit", href: "/guides/van-life-europe-guide", tagline: "90/180 Days & Tolls", image: "/images/bespoke-transit.png" },
+      { name: "Winter in the Alps", href: "/guides/winter-van-life-alps", tagline: "Surviving -15°C", image: "/images/cat-climate.png" },
     ]
   },
   {
@@ -125,14 +125,14 @@ const navLinks: NavLink[] = [
     href: "/guides",
     mega: true,
     items: [
-      { name: "Electrical Guide", href: "/guides/campervan-electrical-guide", tagline: "Off-Grid Power Logic", image: "/images/cat-power.png" },
-      { name: "Plumbing Guide", href: "/guides/campervan-plumbing-guide", tagline: "Water Systems UK", image: "/images/cat-water.png" },
-      { name: "Insulation Guide", href: "/guides/how-to-insulate-a-van-uk", tagline: "Silence & Warmth", image: "/images/cat-insulation.png" },
-      { name: "Heating Comparison", href: "/guides/campervan-heating-guide", tagline: "Diesel vs Gas", image: "/images/cat-climate.png" },
-      { name: "Order of Work", href: "/guides/build-sequence", tagline: "Master Build Timeline", image: "/images/cat-insulation.png" },
-      { name: "Tyre Guide", href: "/guides/van-conversion-tyres", tagline: "Best Off-Road Rubber", image: "/images/cat-insulation.png" },
+      { name: "Electrical Guide", href: "/guides/campervan-electrical-guide", tagline: "Off-Grid Power Logic", image: "/images/electrical-technical.png" },
+      { name: "Plumbing Guide", href: "/guides/campervan-plumbing-guide", tagline: "Water Systems UK", image: "/images/water-plumbing-technical.png" },
+      { name: "Insulation Guide", href: "/guides/how-to-insulate-a-van-uk", tagline: "Silence & Warmth", image: "/images/insulation-technical.png" },
+      { name: "Heating Comparison", href: "/guides/campervan-heating-guide", tagline: "Diesel vs Gas", image: "/images/heating-system-technical.png" },
+      { name: "Order of Work", href: "/guides/build-sequence", tagline: "Master Build Timeline", image: "/images/kit-essential.png" },
+      { name: "Tyre Guide", href: "/guides/van-conversion-tyres", tagline: "Best Off-Road Rubber", image: "/images/wheels-tyres-technical.png" },
       { name: "Alloy Wheels", href: "/guides/van-alloy-wheels-guide", tagline: "Load-Rated Style", image: "/images/bespoke-iveco.png" },
-      { name: "Suspension Upgrades", href: "/guides/van-suspension-upgrade", tagline: "Stop the Sag", image: "/images/cat-insulation.png" },
+      { name: "Suspension Upgrades", href: "/guides/van-suspension-upgrade", tagline: "Stop the Sag", image: "/images/bespoke-man.png" },
     ]
   },
   { 
@@ -142,15 +142,15 @@ const navLinks: NavLink[] = [
     items: [
       { name: "Victron Energy Hub", href: "/brands/victron-energy", tagline: "UK Authorised Stockist", image: "/images/victron/brand-hero.jpg" },
       { name: "Truma Specialist Hub", href: "/brands/truma", tagline: "Heating & Hot Water", image: "/images/truma/brand-hero.png" },
-      { name: "Propex Gas Hub", href: "/brands/propex", tagline: "British Gas Heating", image: "/images/cat-climate.png" },
+      { name: "Propex Gas Hub", href: "/brands/propex", tagline: "British Gas Heating", image: "/images/cat-gas.png" },
       { name: "Fogstar Lithium Hub", href: "/brands/fogstar", tagline: "UK Value Leader", image: "/images/cat-power.png" },
-      { name: "Webasto Diesel Hub", href: "/brands/webasto", tagline: "Premium Diesel Heating", image: "/images/cat-climate.png" },
-      { name: "Fiamma Exterior Hub", href: "/brands/fiamma", tagline: "Awnings & Bike Racks", image: "/images/cat-insulation.png" },
+      { name: "Webasto Diesel Hub", href: "/brands/webasto", tagline: "Premium Diesel Heating", image: "/images/heating-system-technical.png" },
+      { name: "Fiamma Exterior Hub", href: "/brands/fiamma", tagline: "Awnings & Bike Racks", image: "/images/exterior-equipment-technical.png" },
       { name: "MaxxAir Vent Hub", href: "/brands/maxxair", tagline: "Ultimate Ventilation", image: "/images/cat-climate.png" },
-      { name: "Alpicool Value Fridge Hub", href: "/brands/alpicool", tagline: "Budget Compressor Cooling", image: "/images/interior-showcase.png" },
+      { name: "Alpicool Value Fridge Hub", href: "/brands/alpicool", tagline: "Budget Compressor Cooling", image: "/images/tech-interior.png" },
       { name: "Dodo Mat Insulation Hub", href: "/brands/dodo-mat", tagline: "Silence & Thermal", image: "/images/cat-insulation.png" },
-      { name: "Whale Underslung Hub", href: "/brands/whale", tagline: "Space-Saving Heating", image: "/images/cat-water.png" },
-      { name: "Best Heaters 2024", href: "/guides/compare/best-campervan-heaters", tagline: "Diesel vs Gas Debate", image: "/images/cat-climate.png" },
+      { name: "Whale Underslung Hub", href: "/brands/whale", tagline: "Space-Saving Heating", image: "/images/tech-water.png" },
+      { name: "Best Heaters 2024", href: "/guides/compare/best-campervan-heaters", tagline: "Diesel vs Gas Debate", image: "/images/heating-system-technical.png" },
     ]
   },
   { 
@@ -159,9 +159,9 @@ const navLinks: NavLink[] = [
     mega: true,
     items: [
       { name: "AI Build Planner", href: "/planner", tagline: "Spec Your Build", image: "/images/systems-showcase.png" },
-      { name: "Payload & Balance", href: "/tools/payload-balancer", tagline: "GVM Audit", image: "/images/bespoke-iveco.png" },
-      { name: "Cable Sizing", href: "/tools/cable-calculator", tagline: "Electrical Logic", image: "/images/systems-showcase.png" },
-      { name: "Build Plan PDF", href: "/planner/results", tagline: "Paid Build Dossier", image: "/images/hero-background.png" },
+      { name: "Payload & Balance", href: "/tools/payload-balancer", tagline: "GVM Audit", image: "/images/iveco-daily.png" },
+      { name: "Cable Sizing", href: "/tools/cable-calculator", tagline: "Electrical Logic", image: "/images/electrical-technical.png" },
+      { name: "Build Plan PDF", href: "/planner/results", tagline: "Paid Build Dossier", image: "/images/sprinter-schematic.png" },
     ]
   },
   { name: "Showcase", href: "/showcase" },
