@@ -72,8 +72,8 @@ export function CategoryContent({ category, initialProducts, editorsPick }: Cate
       {/* 2px Orange Border Threshold */}
       <div className="w-full h-[2px] bg-brand-orange" />
 
-      {/* 1. CATEGORY HEADER (100px tall) */}
-      <section className="relative h-[100px] flex items-center overflow-hidden bg-[#F8F8F6]">
+      {/* 1. CATEGORY HEADER (200px tall) */}
+      <section className="relative h-[200px] flex items-center overflow-hidden bg-[#F8F8F6]">
         {headerImage && (
           <div className="absolute inset-0 z-0">
             <img 
