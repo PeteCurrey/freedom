@@ -17,7 +17,8 @@ interface AdminProduct {
   supplier_sku?: string;
   brand: string;
   category: string;
-  price_gbp: number; // Updated from price to price_gbp to match DB
+  category_id?: string;
+  price_gbp: number;
   cost_price?: number;
   stock_quantity: number;
   stock_status: 'in-stock' | 'low-stock' | 'out-of-stock';
