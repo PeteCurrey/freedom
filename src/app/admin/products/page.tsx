@@ -34,26 +34,34 @@ export default function AdminProductsPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [brandFilter, setBrandFilter] = useState<string>("all");
   const [showFilters, setShowFilters] = useState(false);
+  const [categories, setCategories] = useState<any[]>([]);
 
   useEffect(() => {
-    async function fetchProducts() {
+    async function fetchData() {
       try {
         setLoading(true);
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .order('created_at', { ascending: false });
+        const [prodsRes, catsRes] = await Promise.all([
+          supabase
+            .from('products')
+            .select('*, product_categories(name)')
+            .order('created_at', { ascending: false }),
+          supabase
+            .from('product_categories')
+            .select('*')
+            .order('name')
+        ]);
 
-        if (error) throw error;
-        setProducts(data || []);
+        if (prodsRes.error) throw prodsRes.error;
+        setProducts(prodsRes.data || []);
+        setCategories(catsRes.data || []);
       } catch (err) {
-        console.error("Failed to fetch products:", err);
+        console.error("Failed to fetch dashboard data:", err);
         setProducts([]);
       } finally {
         setLoading(false);
       }
     }
-    fetchProducts();
+    fetchData();
   }, []);
 
   const filteredProducts = useMemo(() => {
@@ -74,7 +82,7 @@ export default function AdminProductsPage() {
       else if (statusFilter === 'no-image') matchesStatus = !p.image;
       else if (statusFilter === 'oos') matchesStatus = p.stock_status === 'out-of-stock';
 
-      const matchesCategory = categoryFilter === 'all' || p.category === categoryFilter;
+      const matchesCategory = categoryFilter === 'all' || p.category_id === categoryFilter;
       const matchesBrand = brandFilter === 'all' || p.brand === brandFilter;
 
       return matchesSearch && matchesStatus && matchesCategory && matchesBrand;
@@ -194,11 +202,11 @@ export default function AdminProductsPage() {
               <select 
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
-                className="w-full bg-white border border-slate-200 rounded-lg px-4 py-2 text-xs focus:ring-2 focus:ring-brand-orange/20 outline-none"
+                className="w-full bg-white border border-slate-200 rounded-lg px-4 py-2 text-xs focus:ring-2 focus:ring-brand-orange/20 outline-none text-slate-700"
               >
                 <option value="all">All Categories</option>
-                {Array.from(new Set(products.map(p => p.category))).sort().map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
                 ))}
               </select>
             </div>
@@ -307,7 +315,7 @@ export default function AdminProductsPage() {
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest bg-slate-100 px-2 py-1 rounded">
-                          {product.category}
+                          {(product as any).product_categories?.name || product.category || 'Uncategorized'}
                         </span>
                       </td>
                       <td className="px-6 py-4">
