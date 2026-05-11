@@ -151,8 +151,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
       }
 
       if (data) {
-        setBrands(prev => [...prev, data].sort((a, b) => a.name.localeCompare(b.name)));
-        setFormData(prev => ({ ...prev, brand_id: data.id }));
+        setBrands((prev: any[]) => [...prev, data].sort((a, b) => a.name.localeCompare(b.name)));
+        setFormData((prev: any) => ({ ...prev, brand_id: data.id }));
         setIsBrandModalOpen(false);
         setNewBrand({ name: "", website: "", logo: "", country: "" });
       }

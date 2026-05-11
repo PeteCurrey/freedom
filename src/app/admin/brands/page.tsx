@@ -69,7 +69,7 @@ export default function AdminBrandsPage() {
       }
 
       if (data) {
-        setBrands(prev => [...prev, { ...data, products_count: 0 }].sort((a, b) => a.name.localeCompare(b.name)));
+        setBrands((prev: any[]) => [...prev, { ...data, products_count: 0 }].sort((a, b) => a.name.localeCompare(b.name)));
         setIsModalOpen(false);
         setNewBrand({ name: "", website: "", country: "", logo: "" });
       }
