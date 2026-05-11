@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { 
-  Save, X, Wand2, Upload, Link as LinkIcon, 
-  Trash2, Plus, ChevronRight, AlertCircle, 
-  CheckCircle2, ExternalLink, Search, Eye, 
+import {
+  Save, X, Wand2, Upload, Link as LinkIcon,
+  Trash2, Plus, ChevronRight, AlertCircle,
+  CheckCircle2, ExternalLink, Search, Eye,
   ShoppingBag, Sparkles, Video, Info, GripVertical,
   Layers, Tag, Truck, Globe, ShieldCheck, FileText, Monitor
 } from "lucide-react";
@@ -24,7 +24,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
   const [isBrandModalOpen, setIsBrandModalOpen] = useState(false);
   const [newBrand, setNewBrand] = useState({ name: "", website: "", logo: "", country: "" });
   const [aiGenerating, setAiGenerating] = useState(false);
-  
+
   const defaults = {
     name: "",
     brand_id: "",
@@ -154,10 +154,10 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
 
     try {
       const { data, error } = await supabase.from("brands").insert([brandToInsert]).select().single();
-      
+
       if (error) {
         console.error("Failed to add brand:", error);
-        const msg = error.code === '42P01' 
+        const msg = error.code === '42P01'
           ? "Database error: The 'brands' table is missing. Please check the implementation plan for the SQL script."
           : `Error: ${error.message || "Failed to create brand registry node"}`;
         alert(msg);
@@ -188,7 +188,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
       supplier_sku: !!formData.sku,
       seo: !!formData.meta_title && !!formData.meta_description && !!formData.focus_keyword
     };
-    
+
     if (checks.name) score += 15;
     if (checks.price) score += 10;
     if (checks.description) score += 15;
@@ -197,7 +197,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
     if (checks.specs) score += 10;
     if (checks.supplier_sku) score += 10;
     if (checks.seo) score += 15;
-    
+
     return { score, checks };
   };
 
@@ -205,12 +205,12 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
 
   const handleSave = async (statusOverride?: string) => {
     setLoading(true);
-    const dataToSave = { 
-      ...formData, 
+    const dataToSave = {
+      ...formData,
       status: statusOverride || formData.status,
       updated_at: new Date().toISOString()
     };
-    
+
     if (!dataToSave.slug && dataToSave.name) {
       dataToSave.slug = dataToSave.name.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
     }
@@ -244,26 +244,26 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
     setAiGenerating(true);
     // Simulate AI delay
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     const brandName = brands.find(b => b.id === formData.brand_id)?.name || "premium";
     const catName = categories.find(c => c.id === formData.category_id)?.name || "component";
-    
+
     const mockDescription = `This ${brandName} ${formData.name || 'unit'} is a high-performance ${catName} designed for the most demanding DIY campervan conversions. Expertly engineered to meet UK building standards, it offers seamless integration into your 12V or 24V architecture. Whether you're planning a weekend getaway or a full-time off-grid expedition, this ${formData.name || 'part'} ensures reliability and efficiency in all conditions. Built with premium materials, it provides long-lasting service life and is favored by professional converters across Europe for its straightforward installation and robust performance profile.`;
-    
+
     setFormData((prev: any) => ({ ...prev, description: mockDescription }));
     setAiGenerating(false);
   };
- 
+
   const generateSEOMetadata = () => {
     const brandName = brands.find(b => b.id === formData.brand_id)?.name || "";
     const name = formData.name || "Product";
-    
+
     // Meta Title: Brand + Name + Platform
     const title = `${brandName} ${name} | Professional Off-Grid Hardware | Amplios`.trim();
-    
+
     // Meta Description: Short Bio + Key Promise
     const desc = `Buy the ${brandName} ${name} at Amplios. Professional-grade engineering for serious van builds. Authorized UK stockist with technical support and fast delivery.`.trim();
-    
+
     setFormData((prev: any) => ({
       ...prev,
       meta_title: title.slice(0, 60),
@@ -276,10 +276,10 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
 
   return (
     <div className="flex flex-col lg:flex-row gap-12 pb-32 relative">
-      
+
       {/* LEFT COLUMN - Main Content */}
       <div className="flex-1 space-y-12">
-        
+
         {/* PRODUCT IDENTITY */}
         <section className="bg-white border border-slate-200 p-10 shadow-sm rounded-xl">
           <div className="flex items-center gap-3 mb-8 pb-4 border-b border-slate-50">
@@ -289,8 +289,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="md:col-span-2">
               <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Product Name</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
@@ -303,7 +303,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                 <label className="block font-mono text-[10px] uppercase text-slate-400 tracking-widest">Brand</label>
                 <button onClick={() => setIsBrandModalOpen(true)} className="text-[9px] font-bold text-brand-orange uppercase hover:underline">+ Add New</button>
               </div>
-              <select 
+              <select
                 name="brand_id"
                 value={formData.brand_id}
                 onChange={handleChange}
@@ -315,7 +315,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             </div>
             <div>
               <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Supplier</label>
-              <select 
+              <select
                 name="supplier_id"
                 value={formData.supplier_id}
                 onChange={handleChange}
@@ -327,8 +327,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             </div>
             <div>
               <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Supplier SKU</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 name="sku"
                 value={formData.sku}
                 onChange={handleChange}
@@ -338,8 +338,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             </div>
             <div>
               <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Internal SKU</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 name="internal_sku"
                 value={formData.internal_sku || `AMP-${formData.sku || 'TEMP'}`}
                 onChange={handleChange}
@@ -348,8 +348,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             </div>
             <div>
               <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">EAN/GTIN</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 name="gtin"
                 value={formData.gtin}
                 onChange={handleChange}
@@ -395,8 +395,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                <div className="flex gap-2">
                   <div className="flex-1 relative">
                     <Video className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       name="video_url"
                       value={formData.video_url}
                       onChange={handleChange}
@@ -405,8 +405,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                     />
                   </div>
                   <div className="flex items-center gap-2 px-4 bg-white border border-slate-200 rounded-lg">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={formData.show_video}
                       onChange={(e) => setFormData({...formData, show_video: e.target.checked})}
                     />
@@ -424,7 +424,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
               <FileText className="w-5 h-5 text-brand-orange" />
               <h2 className="font-display text-xl uppercase tracking-tight text-slate-900">Commercial Narrative</h2>
             </div>
-            <button 
+            <button
               onClick={generateAIDescription}
               disabled={aiGenerating}
               className="flex items-center gap-2 text-brand-orange font-mono text-[10px] uppercase tracking-widest hover:text-slate-900 transition-all font-bold disabled:opacity-50"
@@ -436,7 +436,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
           <div className="space-y-8">
             <div>
               <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Short Description (150 chars)</label>
-              <textarea 
+              <textarea
                 name="short_description"
                 value={formData.short_description}
                 onChange={handleChange}
@@ -447,7 +447,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             </div>
             <div>
               <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Full Narrative</label>
-              <textarea 
+              <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
@@ -466,11 +466,11 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="p-6 bg-slate-900 text-white rounded-2xl space-y-4">
-               <label className="block font-mono text-[9px] uppercase text-brand-orange tracking-widest font-bold">Retail Price (£ Inc VAT)</label>
+               <label className="block font-mono text-[9px] uppercase text-brand-orange tracking-widest font-bold">Retail Price ( Inc VAT)</label>
                <div className="relative">
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 text-2xl font-display text-slate-500">£</span>
-                  <input 
-                    type="number" 
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 text-2xl font-display text-slate-500"></span>
+                  <input
+                    type="number"
                     step="0.01"
                     name="price_gbp"
                     defaultValue={formData.price_gbp / 100}
@@ -480,11 +480,11 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                </div>
             </div>
             <div className="p-6 bg-slate-50 border border-slate-100 rounded-2xl space-y-4">
-               <label className="block font-mono text-[9px] uppercase text-slate-400 tracking-widest font-bold">Cost Price (£ Trade)</label>
+               <label className="block font-mono text-[9px] uppercase text-slate-400 tracking-widest font-bold">Cost Price ( Trade)</label>
                <div className="relative">
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 text-xl font-display text-slate-300">£</span>
-                  <input 
-                    type="number" 
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 text-xl font-display text-slate-300"></span>
+                  <input
+                    type="number"
                     step="0.01"
                     name="cost_price"
                     defaultValue={formData.cost_price / 100}
@@ -509,9 +509,9 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                </div>
             </div>
             <div>
-               <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Compare At Price (£)</label>
-               <input 
-                 type="number" 
+               <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Compare At Price ()</label>
+               <input
+                 type="number"
                  name="compare_at_price"
                  defaultValue={formData.compare_at_price / 100}
                  onBlur={handlePriceChange}
@@ -520,7 +520,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             </div>
             <div>
                <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">VAT Rate</label>
-               <select 
+               <select
                  name="vat_rate"
                  value={formData.vat_rate}
                  onChange={handleChange}
@@ -533,11 +533,11 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             </div>
             <div className="flex flex-col justify-center px-4">
                <span className="font-mono text-[9px] uppercase text-slate-400 tracking-widest">Price Ex. VAT</span>
-               <span className="font-display text-xl text-slate-900">£{((formData.price_gbp / 100) / 1.2).toFixed(2)}</span>
+               <span className="font-display text-xl text-slate-900">{((formData.price_gbp / 100) / 1.2).toFixed(2)}</span>
             </div>
           </div>
         </section>
- 
+
          {/* SEO & SEARCH DOMINANCE */}
          <section className="bg-white border border-slate-200 p-10 shadow-sm rounded-xl">
            <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-50">
@@ -546,7 +546,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                <h2 className="font-display text-xl uppercase tracking-tight text-slate-900">Search Engine Dominance</h2>
              </div>
              <div className="flex items-center gap-4">
-                <button 
+                <button
                   onClick={generateSEOMetadata}
                   className="px-3 py-1 bg-slate-900 text-white font-mono text-[9px] uppercase tracking-widest hover:bg-brand-orange transition-all font-bold flex items-center gap-2"
                 >
@@ -560,7 +560,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                 </div>
              </div>
            </div>
-           
+
            <div className="space-y-10">
              {/* Focus Keyword */}
              <div className="p-6 bg-slate-900 rounded-xl space-y-4">
@@ -568,8 +568,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                    <label className="block font-mono text-[10px] uppercase text-brand-orange tracking-widest font-bold">Focus Keyword</label>
                    <Sparkles className="w-4 h-4 text-brand-orange animate-pulse" />
                 </div>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   name="focus_keyword"
                   value={formData.focus_keyword}
                   onChange={handleChange}
@@ -580,7 +580,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                   The primary search term you want this product to rank for.
                 </p>
              </div>
- 
+
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Meta Title */}
                 <div className="space-y-2">
@@ -591,20 +591,20 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                         formData.meta_title.length > 60 ? "text-red-500" : "text-slate-400"
                       )}>{formData.meta_title.length}/60</span>
                    </div>
-                   <input 
-                     type="text" 
+                   <input
+                     type="text"
                      name="meta_title"
                      value={formData.meta_title}
                      onChange={handleChange}
                      className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg"
                    />
                 </div>
- 
+
                 {/* Canonical URL */}
                 <div className="space-y-2">
                    <label className="block font-mono text-[10px] uppercase text-slate-400 tracking-widest">Canonical URL</label>
-                   <input 
-                     type="text" 
+                   <input
+                     type="text"
                      name="canonical_url"
                      value={formData.canonical_url}
                      onChange={handleChange}
@@ -612,7 +612,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                      className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg"
                    />
                 </div>
- 
+
                 {/* Meta Description */}
                 <div className="md:col-span-2 space-y-2">
                    <div className="flex justify-between items-center">
@@ -622,7 +622,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                         formData.meta_description.length > 160 ? "text-red-500" : "text-slate-400"
                       )}>{formData.meta_description.length}/160</span>
                    </div>
-                   <textarea 
+                   <textarea
                      name="meta_description"
                      value={formData.meta_description}
                      onChange={handleChange}
@@ -631,7 +631,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                    />
                 </div>
              </div>
- 
+
              {/* Open Graph & Social */}
              <div className="pt-8 border-t border-slate-100">
                 <div className="flex items-center gap-2 mb-6">
@@ -650,8 +650,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                              <span className="text-[8px] uppercase mt-2">Placeholder</span>
                            </div>
                          )}
-                         <input 
-                           type="text" 
+                         <input
+                           type="text"
                            name="og_image"
                            value={formData.og_image}
                            onChange={handleChange}
@@ -663,8 +663,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                    <div className="md:col-span-2 space-y-4">
                       <div>
                         <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2">OG Title</label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           name="og_title"
                           value={formData.og_title}
                           onChange={handleChange}
@@ -674,7 +674,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                       </div>
                       <div>
                         <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2">OG Description</label>
-                        <textarea 
+                        <textarea
                           name="og_description"
                           value={formData.og_description}
                           onChange={handleChange}
@@ -686,14 +686,14 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                    </div>
                 </div>
              </div>
- 
+
              {/* Robots & Indexing */}
              <div className="pt-8 border-t border-slate-100">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
                       <span className="font-mono text-[9px] uppercase font-bold text-slate-600">Index</span>
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         name="robots_index"
                         checked={formData.robots_index}
                         onChange={handleChange}
@@ -702,8 +702,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                    </div>
                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
                       <span className="font-mono text-[9px] uppercase font-bold text-slate-600">Follow</span>
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         name="robots_follow"
                         checked={formData.robots_follow}
                         onChange={handleChange}
@@ -712,7 +712,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                    </div>
                 </div>
              </div>
- 
+
              {/* SERP PREVIEW */}
              <div className="pt-8 border-t border-slate-100">
                 <label className="block font-mono text-[10px] uppercase text-slate-400 mb-4 tracking-widest">Google SERP Preview</label>
@@ -729,6 +729,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                 </div>
              </div>
            </div>
+         </section>
 
         {/* AFFILIATE & PARTNER LINKS */}
         <section className="bg-white border border-slate-200 p-10 shadow-sm rounded-xl">
@@ -739,8 +740,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             </div>
             <div className="flex items-center gap-2">
               <span className="font-mono text-[9px] uppercase font-bold text-slate-400">Enable Commissions</span>
-              <input 
-                type="checkbox" 
+              <input
+                type="checkbox"
                 name="is_affiliate"
                 checked={formData.is_affiliate}
                 onChange={(e) => setFormData({...formData, is_affiliate: e.target.checked})}
@@ -752,8 +753,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             <div className="md:col-span-2">
               <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Affiliate Redirect URL</label>
               <div className="flex gap-2">
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   name="affiliate_url"
                   value={formData.affiliate_url}
                   onChange={handleChange}
@@ -767,12 +768,12 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             </div>
             <div>
               <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Commission Rate</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 name="commission_rate"
                 value={formData.commission_rate}
                 onChange={handleChange}
-                placeholder="e.g. 5% or £10"
+                placeholder="e.g. 5% or 10"
                 className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg"
               />
             </div>
@@ -804,21 +805,21 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             ))}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-slate-50/50 border border-dashed border-slate-200 rounded-2xl">
-            <input 
-              type="text" 
-              placeholder="Label (e.g. Voltage)" 
+            <input
+              type="text"
+              placeholder="Label (e.g. Voltage)"
               value={newSpec.label}
               onChange={(e) => setNewSpec({ ...newSpec, label: e.target.value })}
               className="md:col-span-1 border border-slate-200 p-3 text-xs outline-none focus:border-brand-orange rounded-lg"
             />
-            <input 
-              type="text" 
-              placeholder="Value (e.g. 12V)" 
+            <input
+              type="text"
+              placeholder="Value (e.g. 12V)"
               value={newSpec.value}
               onChange={(e) => setNewSpec({ ...newSpec, value: e.target.value })}
               className="md:col-span-2 border border-slate-200 p-3 text-xs outline-none focus:border-brand-orange rounded-lg"
             />
-            <button 
+            <button
               onClick={handleAddSpec}
               className="bg-slate-900 text-white font-mono text-[9px] uppercase tracking-widest py-3 hover:bg-brand-orange transition-all font-bold rounded-lg"
             >
@@ -828,8 +829,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 pt-8 border-t border-slate-50">
              <div>
                 <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Weight (kg)</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   name="weight_kg"
                   value={formData.weight_kg}
                   onChange={handleChange}
@@ -840,9 +841,9 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                 <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Dimensions (L x W x H mm)</label>
                 <div className="flex gap-2">
                    {['l', 'w', 'h'].map(dim => (
-                     <input 
+                     <input
                        key={dim}
-                       type="number" 
+                       type="number"
                        placeholder={dim.toUpperCase()}
                        value={formData.dimensions[dim as keyof typeof formData.dimensions]}
                        onChange={(e) => setFormData({...formData, dimensions: {...formData.dimensions, [dim]: parseFloat(e.target.value)}})}
@@ -853,12 +854,11 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
              </div>
           </div>
         </section>
-
       </div>
 
       {/* RIGHT COLUMN - Sidebar */}
       <div className="w-full lg:w-96 space-y-8">
-        
+
         {/* PUBLISH CONTROLS */}
         <section className="bg-white border border-slate-200 p-8 shadow-xl rounded-2xl sticky top-8">
           <div className="flex items-center gap-3 mb-8 pb-4 border-b border-slate-50">
@@ -868,7 +868,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
           <div className="space-y-6">
             <div>
               <label className="block font-mono text-[9px] uppercase text-slate-400 mb-2 tracking-widest font-bold">Lifecycle Status</label>
-              <select 
+              <select
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
@@ -881,7 +881,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             </div>
             <div>
               <label className="block font-mono text-[9px] uppercase text-slate-400 mb-2 tracking-widest font-bold">Public Visibility</label>
-              <select 
+              <select
                 name="visibility"
                 value={formData.visibility}
                 onChange={handleChange}
@@ -894,18 +894,18 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             <div className="space-y-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
                <div className="flex items-center justify-between">
                   <span className="font-mono text-[9px] uppercase font-bold text-slate-600">Featured Item</span>
-                  <input 
-                    type="checkbox" 
-                    checked={formData.is_featured} 
+                  <input
+                    type="checkbox"
+                    checked={formData.is_featured}
                     onChange={(e) => setFormData({...formData, is_featured: e.target.checked})}
                     className="w-4 h-4 rounded text-brand-orange"
                   />
                </div>
                <div className="flex items-center justify-between">
                   <span className="font-mono text-[9px] uppercase font-bold text-slate-600">Editor's Pick</span>
-                  <input 
-                    type="checkbox" 
-                    checked={formData.is_editor_pick} 
+                  <input
+                    type="checkbox"
+                    checked={formData.is_editor_pick}
                     onChange={(e) => setFormData({...formData, is_editor_pick: e.target.checked})}
                     className="w-4 h-4 rounded text-brand-orange"
                   />
@@ -914,13 +914,13 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
           </div>
 
           <div className="mt-10 space-y-3">
-             <button 
+             <button
                onClick={() => handleSave()}
                className="w-full bg-brand-orange text-white py-5 rounded-xl font-display text-xs uppercase tracking-widest hover:bg-slate-900 transition-all font-bold shadow-xl shadow-brand-orange/20"
              >
                {productId ? 'Update Asset' : 'Publish to Store'}
              </button>
-             <button 
+             <button
                onClick={() => handleSave('draft')}
                className="w-full bg-white text-slate-900 py-5 rounded-xl font-display text-xs uppercase tracking-widest border border-slate-200 hover:bg-slate-50 transition-all font-bold"
              >
@@ -942,7 +942,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
               )}>{score}%</span>
            </div>
            <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-              <div className={cn("h-full transition-all duration-1000", 
+              <div className={cn("h-full transition-all duration-1000",
                 score >= 80 ? "bg-emerald-400" : score >= 40 ? "bg-amber-400" : "bg-red-400"
               )} style={{ width: `${score}%` }} />
            </div>
@@ -1013,7 +1013,6 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
               ))}
            </div>
         </section>
-
       </div>
 
       {/* BRAND MODAL */}
@@ -1027,8 +1026,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
               <div className="space-y-6">
                  <div>
                     <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2">Brand Name</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={newBrand.name}
                       onChange={e => setNewBrand({...newBrand, name: e.target.value})}
                       className="w-full border-2 border-slate-100 p-4 text-sm font-bold focus:border-brand-orange outline-none rounded-xl"
@@ -1037,8 +1036,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                  <div className="grid grid-cols-2 gap-4">
                     <div>
                        <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2">Website</label>
-                       <input 
-                         type="text" 
+                       <input
+                         type="text"
                          value={newBrand.website}
                          onChange={e => setNewBrand({...newBrand, website: e.target.value})}
                          className="w-full border-2 border-slate-100 p-4 text-xs focus:border-brand-orange outline-none rounded-xl"
@@ -1046,15 +1045,15 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                     </div>
                     <div>
                        <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2">Country</label>
-                       <input 
-                         type="text" 
+                       <input
+                         type="text"
                          value={newBrand.country}
                          onChange={e => setNewBrand({...newBrand, country: e.target.value})}
                          className="w-full border-2 border-slate-100 p-4 text-xs focus:border-brand-orange outline-none rounded-xl"
                        />
                     </div>
                  </div>
-                 <button 
+                 <button
                    onClick={handleAddBrand}
                    className="w-full bg-slate-900 text-white py-5 rounded-xl font-display text-[10px] uppercase tracking-widest hover:bg-brand-orange transition-all font-bold mt-4"
                  >
