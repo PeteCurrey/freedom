@@ -128,6 +128,30 @@ export function AdminSidebar({ isLightMode, onToggleTheme }: AdminSidebarProps) 
   const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('admin_sidebar_expanded');
+      return saved ? JSON.parse(saved) : {
+        "CATALOGUE": true,
+        "AFFILIATE": true,
+        "COMMERCE": true,
+        "REVENUE": true,
+        "MARKETING": true,
+        "SERVICE": true,
+        "SYSTEM": true
+      };
+    }
+    return {};
+  });
+
+  const toggleGroup = (label: string) => {
+    setExpandedGroups(prev => {
+      const next = { ...prev, [label]: !prev[label] };
+      localStorage.setItem('admin_sidebar_expanded', JSON.stringify(next));
+      return next;
+    });
+  };
+
   const isActive = (href: string) => {
     return pathname === href || pathname?.startsWith(href + "/");
   };
@@ -173,49 +197,69 @@ export function AdminSidebar({ isLightMode, onToggleTheme }: AdminSidebarProps) 
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-6 space-y-8 no-scrollbar">
-        {navGroups.map((group, gi) => (
-          <div key={gi} className="px-3">
-            {group.label && !isCollapsed && (
-              <div className="px-3 mb-3">
-                <span className="font-mono text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em]">{group.label}</span>
-              </div>
-            )}
-            <div className="space-y-1">
-              {group.items.map((item) => {
-                const active = isActive(item.href);
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
+      <nav className="flex-1 overflow-y-auto py-6 space-y-4 no-scrollbar">
+        {navGroups.map((group, gi) => {
+          const isExpanded = group.label ? expandedGroups[group.label] : true;
+          
+          return (
+            <div key={gi} className="px-3">
+              {group.label && !isCollapsed && (
+                <button 
+                  onClick={() => group.label && toggleGroup(group.label)}
+                  className="w-full flex items-center justify-between px-3 mb-2 group/header"
+                >
+                  <span className="font-mono text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em] group-hover/header:text-brand-orange transition-colors">
+                    {group.label}
+                  </span>
+                  <ChevronRight 
+                    size={10} 
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group relative text-xs font-bold",
-                      isCollapsed && "justify-center",
-                      active 
-                        ? (isLightMode 
-                           ? "bg-slate-900 text-white shadow-lg shadow-slate-900/10" 
-                           : "bg-brand-orange text-white shadow-lg shadow-brand-orange/20")
-                        : (isLightMode 
-                           ? "hover:bg-slate-50 text-slate-500 hover:text-slate-900" 
-                           : "hover:bg-slate-800 text-slate-400 hover:text-white")
-                    )}
-                  >
-                    <Icon size={16} className={cn("shrink-0 transition-colors", active ? "text-white" : "group-hover:text-brand-orange")} />
-                    {!isCollapsed && (
-                      <span className="uppercase tracking-widest">{item.name}</span>
-                    )}
-                    {isCollapsed && (
-                      <div className="absolute left-full ml-4 px-3 py-2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 pointer-events-none transition-all whitespace-nowrap z-[110] rounded-lg shadow-xl">
-                        {item.name}
-                      </div>
-                    )}
-                  </Link>
-                );
-              })}
+                      "text-slate-300 transition-transform duration-300",
+                      isExpanded && "rotate-90"
+                    )} 
+                  />
+                </button>
+              )}
+              
+              <div className={cn(
+                "space-y-1 overflow-hidden transition-all duration-300",
+                !isCollapsed && !isExpanded ? "max-h-0 opacity-0" : "max-h-[500px] opacity-100"
+              )}>
+                {group.items.map((item) => {
+                  const active = isActive(item.href);
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={cn(
+                        "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group relative text-xs font-bold",
+                        isCollapsed && "justify-center",
+                        active 
+                          ? (isLightMode 
+                             ? "bg-slate-900 text-white shadow-lg shadow-slate-900/10" 
+                             : "bg-brand-orange text-white shadow-lg shadow-brand-orange/20")
+                          : (isLightMode 
+                             ? "hover:bg-slate-50 text-slate-500 hover:text-slate-900" 
+                             : "hover:bg-slate-800 text-slate-400 hover:text-white")
+                      )}
+                    >
+                      <Icon size={16} className={cn("shrink-0 transition-colors", active ? "text-white" : "group-hover:text-brand-orange")} />
+                      {!isCollapsed && (
+                        <span className="uppercase tracking-widest">{item.name}</span>
+                      )}
+                      {isCollapsed && (
+                        <div className="absolute left-full ml-4 px-3 py-2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 pointer-events-none transition-all whitespace-nowrap z-[110] rounded-lg shadow-xl">
+                          {item.name}
+                        </div>
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </nav>
 
       {/* Footer Tools */}

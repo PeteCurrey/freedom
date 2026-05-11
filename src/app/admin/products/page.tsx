@@ -138,9 +138,9 @@ export default function AdminProductsPage() {
           <button className="px-6 py-3 border border-slate-200 text-slate-600 font-display text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all font-bold flex items-center gap-2">
             <Download size={14} /> Export
           </button>
-          <button className="px-6 py-3 border border-slate-200 text-slate-600 font-display text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all font-bold flex items-center gap-2">
+          <Link href="/admin/products/import" className="px-6 py-3 border border-slate-200 text-slate-600 font-display text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all font-bold flex items-center gap-2">
             <Upload size={14} /> Import CSV
-          </button>
+          </Link>
           <Link href="/admin/products/new" className="px-8 py-3 bg-brand-orange text-white font-display text-[10px] uppercase tracking-widest hover:bg-slate-900 transition-all font-bold shadow-lg shadow-brand-orange/20 flex items-center gap-2">
             <Plus size={16} /> Add Product
           </Link>

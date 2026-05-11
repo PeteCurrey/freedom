@@ -71,7 +71,10 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
     slug: "",
     related_products: [],
     is_featured: false,
-    is_editor_pick: false
+    is_editor_pick: false,
+    is_affiliate: false,
+    affiliate_url: "",
+    commission_rate: ""
   };
 
   const [formData, setFormData] = useState({
@@ -146,7 +149,10 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
       
       if (error) {
         console.error("Failed to add brand:", error);
-        alert(`Error: ${error.message || "Failed to create brand registry node"}`);
+        const msg = error.code === '42P01' 
+          ? "Database error: The 'brands' table is missing. Please check the implementation plan for the SQL script."
+          : `Error: ${error.message || "Failed to create brand registry node"}`;
+        alert(msg);
         return;
       }
 
@@ -489,6 +495,61 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             <div className="flex flex-col justify-center px-4">
                <span className="font-mono text-[9px] uppercase text-slate-400 tracking-widest">Price Ex. VAT</span>
                <span className="font-display text-xl text-slate-900">£{((formData.price_gbp / 100) / 1.2).toFixed(2)}</span>
+            </div>
+          </div>
+        </section>
+
+        {/* AFFILIATE & PARTNER LINKS */}
+        <section className="bg-white border border-slate-200 p-10 shadow-sm rounded-xl">
+          <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-50">
+            <div className="flex items-center gap-3">
+              <LinkIcon className="w-5 h-5 text-brand-orange" />
+              <h2 className="font-display text-xl uppercase tracking-tight text-slate-900">Affiliate & Partner Links</h2>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[9px] uppercase font-bold text-slate-400">Enable Commissions</span>
+              <input 
+                type="checkbox" 
+                name="is_affiliate"
+                checked={formData.is_affiliate}
+                onChange={(e) => setFormData({...formData, is_affiliate: e.target.checked})}
+                className="w-4 h-4 rounded text-brand-orange focus:ring-brand-orange"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="md:col-span-2">
+              <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Affiliate Redirect URL</label>
+              <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  name="affiliate_url"
+                  value={formData.affiliate_url}
+                  onChange={handleChange}
+                  placeholder="https://supplier.com/product?ref=..."
+                  className="flex-1 border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none transition-all rounded-lg"
+                />
+                <button className="px-4 bg-slate-50 border border-slate-200 rounded-lg text-slate-400 hover:text-brand-orange">
+                  <ExternalLink size={16} />
+                </button>
+              </div>
+            </div>
+            <div>
+              <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Commission Rate</label>
+              <input 
+                type="text" 
+                name="commission_rate"
+                value={formData.commission_rate}
+                onChange={handleChange}
+                placeholder="e.g. 5% or £10"
+                className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg"
+              />
+            </div>
+            <div className="flex items-center gap-4 p-4 bg-orange-50/50 border border-orange-100 rounded-xl">
+               <AlertCircle size={16} className="text-brand-orange shrink-0" />
+               <p className="text-[10px] text-brand-orange/80 font-medium leading-relaxed">
+                 When enabled, the primary CTA on the product page will redirect to this URL instead of the local checkout flow.
+               </p>
             </div>
           </div>
         </section>

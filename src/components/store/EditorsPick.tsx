@@ -57,17 +57,17 @@ export function EditorsPick({ product }: EditorsPickProps) {
           </div>
 
           {/* Content Centre */}
-          <div className="flex-1 lg:px-8 border-t lg:border-t-0 lg:border-r border-[#E5E5E5]">
+          <div className="flex-1 lg:px-8 pt-8 lg:pt-0 border-t lg:border-t-0 lg:border-r border-[#E5E5E5]">
             <span className="font-mono text-[9px] text-brand-orange uppercase tracking-[0.3em] mb-4 block">
               EDITOR'S PICK
             </span>
             <span className="font-mono text-[10px] text-[#666666] uppercase tracking-widest mb-1 block">
               {product.brand}
             </span>
-            <h2 className="font-display text-3xl lg:text-4xl uppercase mb-4 leading-tight text-[#111111]">
+            <h2 className="font-display text-2xl lg:text-4xl uppercase mb-4 leading-tight text-[#111111]">
               {product.name}
             </h2>
-            <p className="font-sans text-[#666666] text-base leading-relaxed mb-6 max-w-xl">
+            <p className="font-sans text-[#666666] text-sm lg:text-base leading-relaxed mb-6 max-w-xl">
               {stripMarkdown(product.description)}
             </p>
             

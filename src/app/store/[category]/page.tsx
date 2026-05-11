@@ -52,7 +52,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
       name: p.name,
       brand: p.brand,
       description: p.shortDescription,
-      price_gbp: Math.round(p.price * 100),
+      price_gbp: Math.round(p.price),
       images: p.image ? [p.image] : [],
       slug: p.slug,
       subcategory: p.subcategory,

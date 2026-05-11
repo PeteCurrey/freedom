@@ -44,9 +44,9 @@ const layoutTemplates = [
 ];
 
 const sleepSystems = [
-  { id: "fixed-rear", name: "Fixed Rear Bed", price: 800, weight: 45, features: ["Standard Double", "Huge Garage Space"], icon: Layout },
-  { id: "rib-seat", name: "RIB Seat/Bed", price: 2800, weight: 85, features: ["Crash Tested", "Passenger Safety", "Flexible Space"], icon: Layout },
-  { id: "transverse", name: "Transverse Bed", price: 1200, weight: 35, features: ["Flares Required", "Maximizes Living Space"], icon: Layout },
+  { id: "fixed-rear", name: "Fixed Rear Bed", price: 80000, weight: 45, features: ["Standard Double", "Huge Garage Space"], icon: Layout },
+  { id: "rib-seat", name: "RIB Seat/Bed", price: 280000, weight: 85, features: ["Crash Tested", "Passenger Safety", "Flexible Space"], icon: Layout },
+  { id: "transverse", name: "Transverse Bed", price: 120000, weight: 35, features: ["Flares Required", "Maximizes Living Space"], icon: Layout },
 ];
 
 const systemConfigs = {
@@ -55,9 +55,9 @@ const systemConfigs = {
     proTip: "Always use oversized cables for inverter-to-battery connections to prevent voltage drop and heating.",
     image: "/images/tech-electrical.png",
     tiers: [
-      { id: "basic", name: "First Light (Basic 12V)", price: 500, weight: 15, position: 1.5, features: ["100Ah AGM", "Split Charge", "USB Sockets"], icon: Zap },
-      { id: "mid", name: "Grid Independent (Lithium)", price: 2400, weight: 35, position: 1.5, features: ["200Ah Lithium", "200W Solar", "800W Inverter"], icon: Zap },
-      { id: "pro", name: "Full Autonomy (Premium)", price: 6500, weight: 65, position: 1.5, features: ["400Ah Lithium", "600W Solar", "3000W Multiplus"], icon: Zap },
+      { id: "basic", name: "First Light (Basic 12V)", price: 50000, weight: 15, position: 1.5, features: ["100Ah AGM", "Split Charge", "USB Sockets"], icon: Zap },
+      { id: "mid", name: "Grid Independent (Lithium)", price: 240000, weight: 35, position: 1.5, features: ["200Ah Lithium", "200W Solar", "800W Inverter"], icon: Zap },
+      { id: "pro", name: "Full Autonomy (Premium)", price: 650000, weight: 65, position: 1.5, features: ["400Ah Lithium", "600W Solar", "3000W Multiplus"], icon: Zap },
     ]
   },
   lighting: {
@@ -65,9 +65,9 @@ const systemConfigs = {
     proTip: "Use warm white (3000K) LEDs for the interior to avoid a clinical, 'hospital' feel.",
     image: "/images/step_lighting_cinematic_1776674939507.png",
     tiers: [
-      { id: "basic", name: "Stealth Setup", price: 200, weight: 2, position: 2.0, features: ["Soft White LED Strips", "Single Zone Control"], icon: Sun },
-      { id: "mid", name: "Multi-Zone Pro", price: 550, weight: 4, position: 2.0, features: ["3-Zone Dimming", "Under-Cabinet LEDs", "App Control"], icon: Sun },
-      { id: "pro", name: "Cinematic Luxe", price: 1200, weight: 10, position: 2.0, features: ["RGBW Ambient Strips", "External Scene Lights", "Motion Entry Lighting"], icon: Sun },
+      { id: "basic", name: "Stealth Setup", price: 20000, weight: 2, position: 2.0, features: ["Soft White LED Strips", "Single Zone Control"], icon: Sun },
+      { id: "mid", name: "Multi-Zone Pro", price: 55000, weight: 4, position: 2.0, features: ["3-Zone Dimming", "Under-Cabinet LEDs", "App Control"], icon: Sun },
+      { id: "pro", name: "Cinematic Luxe", price: 120000, weight: 10, position: 2.0, features: ["RGBW Ambient Strips", "External Scene Lights", "Motion Entry Lighting"], icon: Sun },
     ]
   },
   heating: {
@@ -75,9 +75,9 @@ const systemConfigs = {
     proTip: "A diesel heater altitude kit is essential if you plan on skiing or mountain trekking above 1500m.",
     image: "/images/cat-climate.png",
     tiers: [
-      { id: "basic", name: "Take the Edge Off", price: 250, weight: 5, position: 0.5, features: ["5kW Diesel Heater", "2 Outlets"], icon: Thermometer },
-      { id: "mid", name: "Four Season (Webasto)", price: 1500, weight: 12, position: 0.5, features: ["Webasto Air Top", "Digital Controller"], icon: Thermometer },
-      { id: "pro", name: "Home Comfort (Truma)", price: 3000, weight: 22, position: 1.0, features: ["Truma Combi 4E", "Dual Fuel", "10L Water Tank"], icon: Thermometer },
+      { id: "basic", name: "Take the Edge Off", price: 25000, weight: 5, position: 0.5, features: ["5kW Diesel Heater", "2 Outlets"], icon: Thermometer },
+      { id: "mid", name: "Four Season (Webasto)", price: 150000, weight: 12, position: 0.5, features: ["Webasto Air Top", "Digital Controller"], icon: Thermometer },
+      { id: "pro", name: "Home Comfort (Truma)", price: 300000, weight: 22, position: 1.0, features: ["Truma Combi 4E", "Dual Fuel", "10L Water Tank"], icon: Thermometer },
     ]
   },
   water: {
@@ -85,9 +85,9 @@ const systemConfigs = {
     proTip: "Accumulator tanks drastically reduce pump cycling noise and extend the life of your plumbing joints.",
     image: "/images/tech-water.png",
     tiers: [
-      { id: "basic", name: "The Essentials", price: 300, weight: 10, position: 3.5, features: ["40L Fresh", "25L Grey", "Submersible Pump"], icon: Droplets },
-      { id: "mid", name: "Clean Living", price: 700, weight: 25, position: 3.5, features: ["80L Fresh", "Pressure Pump", "Hot Mixer Tap"], icon: Droplets },
-      { id: "pro", name: "Full Wet Room", price: 1200, weight: 45, position: 3.0, features: ["100L Fresh", "Internal Shower", "Water Filter"], icon: Droplets },
+      { id: "basic", name: "The Essentials", price: 30000, weight: 10, position: 3.5, features: ["40L Fresh", "25L Grey", "Submersible Pump"], icon: Droplets },
+      { id: "mid", name: "Clean Living", price: 70000, weight: 25, position: 3.5, features: ["80L Fresh", "Pressure Pump", "Hot Mixer Tap"], icon: Droplets },
+      { id: "pro", name: "Full Wet Room", price: 120000, weight: 45, position: 3.0, features: ["100L Fresh", "Internal Shower", "Water Filter"], icon: Droplets },
     ]
   },
   gas: {
@@ -96,8 +96,8 @@ const systemConfigs = {
     image: "/images/cat-gas.png",
     tiers: [
       { id: "none", name: "No Gas (All Electric)", price: 0, weight: 0, position: 0, features: ["Induction Cooking", "Diesel Heating"], icon: Flame },
-      { id: "basic", name: "Single Bottle", price: 300, weight: 15, position: 3.8, features: ["6kg Calor", "2-Burner Hob"], icon: Flame },
-      { id: "pro", name: "Dual Bottle / Auto Change", price: 700, weight: 30, position: 3.8, features: ["2x 6kg Bottles", "Oven/Grill", "BBQ Point"], icon: Flame },
+      { id: "basic", name: "Single Bottle", price: 30000, weight: 15, position: 3.8, features: ["6kg Calor", "2-Burner Hob"], icon: Flame },
+      { id: "pro", name: "Dual Bottle / Auto Change", price: 70000, weight: 30, position: 3.8, features: ["2x 6kg Bottles", "Oven/Grill", "BBQ Point"], icon: Flame },
     ]
   },
   insulation: {
@@ -105,9 +105,9 @@ const systemConfigs = {
     proTip: "Cover every inch of exposed metal with insulation or lining carpet to prevent condensation cold-spots.",
     image: "/images/cat-insulation.png",
     tiers: [
-      { id: "basic", name: "Three Season", price: 400, weight: 30, position: 2.0, features: ["25mm Foam", "Dodo Mat", "1x MaxxFan"], icon: Wind },
-      { id: "mid", name: "All Season", price: 800, weight: 50, position: 2.0, features: ["50mm Rigid Board", "Thinsulate", "Rain Sensor Fan"], icon: Wind },
-      { id: "pro", name: "Extreme Climate", price: 1700, weight: 80, position: 2.0, features: ["Full Composite", "Underfloor Heating", "Double Glazing"], icon: Wind },
+      { id: "basic", name: "Three Season", price: 40000, weight: 30, position: 2.0, features: ["25mm Foam", "Dodo Mat", "1x MaxxFan"], icon: Wind },
+      { id: "mid", name: "All Season", price: 80000, weight: 50, position: 2.0, features: ["50mm Rigid Board", "Thinsulate", "Rain Sensor Fan"], icon: Wind },
+      { id: "pro", name: "Extreme Climate", price: 170000, weight: 80, position: 2.0, features: ["Full Composite", "Underfloor Heating", "Double Glazing"], icon: Wind },
     ]
   },
   windows: {
@@ -115,8 +115,8 @@ const systemConfigs = {
     proTip: "Bonded windows provide a much cleaner, factory look than traditional rubber-seal windows.",
     image: "/images/cat-interior.png",
     tiers: [
-      { id: "basic", name: "Standard Venting", price: 400, weight: 12, position: 2.0, features: ["1x Sliding Window", "1x Fixed Window"], icon: Eye },
-      { id: "pro", name: "Full Panoramic", price: 1200, weight: 35, position: 2.0, features: ["All-Round Glass", "Privacy Tint", "Blackout Blinds"], icon: Eye },
+      { id: "basic", name: "Standard Venting", price: 40000, weight: 12, position: 2.0, features: ["1x Sliding Window", "1x Fixed Window"], icon: Eye },
+      { id: "pro", name: "Full Panoramic", price: 120000, weight: 35, position: 2.0, features: ["All-Round Glass", "Privacy Tint", "Blackout Blinds"], icon: Eye },
     ]
   },
   exterior: {
@@ -124,9 +124,9 @@ const systemConfigs = {
     proTip: "Side-mounted ladders are less stress on the rear door hinges and don't block your rearview optics.",
     image: "/images/step_exterior_cinematic_1776674981526.png",
     tiers: [
-      { id: "basic", name: "Minimalist Utility", price: 350, weight: 15, position: 4.5, features: ["Roof Cross Bars", "Side Steps"], icon: Settings },
-      { id: "mid", name: "Basecamp Ready", price: 1400, weight: 45, position: 4.5, features: ["Fiamma Awning", "Rear Ladder", "Lashing Points"], icon: Settings },
-      { id: "pro", name: "Expedition Grade", price: 3500, weight: 85, position: 4.5, features: ["Full Walk-On Rack", "Side Ladder", "Case Storage"], icon: Settings },
+      { id: "basic", name: "Minimalist Utility", price: 35000, weight: 15, position: 4.5, features: ["Roof Cross Bars", "Side Steps"], icon: Settings },
+      { id: "mid", name: "Basecamp Ready", price: 140000, weight: 45, position: 4.5, features: ["Fiamma Awning", "Rear Ladder", "Lashing Points"], icon: Settings },
+      { id: "pro", name: "Expedition Grade", price: 350000, weight: 85, position: 4.5, features: ["Full Walk-On Rack", "Side Ladder", "Case Storage"], icon: Settings },
     ]
   },
   security: {
@@ -134,9 +134,9 @@ const systemConfigs = {
     proTip: "A Ghost immobiliser is the single most effective electronic theft deterrent currently available in the UK.",
     image: "/images/step_security_cinematic_1776675013013.png",
     tiers: [
-      { id: "basic", name: "Deterrent Level", price: 250, weight: 5, position: 0.5, features: ["External Deadlocks", "OBD Port Lock"], icon: Shield },
-      { id: "mid", name: "Pro Monitoring", price: 650, weight: 8, position: 0.5, features: ["Thatcham S7 Tracker", "24/7 Monitoring", "Internal Alarm"], icon: Shield },
-      { id: "pro", name: "Fortress Mode", price: 1500, weight: 12, position: 0.5, features: ["Ghost Immobiliser", "S5+ Tracker", "Motion CCTV"], icon: Shield },
+      { id: "basic", name: "Deterrent Level", price: 25000, weight: 5, position: 0.5, features: ["External Deadlocks", "OBD Port Lock"], icon: Shield },
+      { id: "mid", name: "Pro Monitoring", price: 65000, weight: 8, position: 0.5, features: ["Thatcham S7 Tracker", "24/7 Monitoring", "Internal Alarm"], icon: Shield },
+      { id: "pro", name: "Fortress Mode", price: 150000, weight: 12, position: 0.5, features: ["Ghost Immobiliser", "S5+ Tracker", "Motion CCTV"], icon: Shield },
     ]
   },
   finishing: {
@@ -144,9 +144,9 @@ const systemConfigs = {
     proTip: "Opt for marine-grade fabrics; they're UV resistant and much easier to clean after a muddy adventure.",
     image: "/images/step_finishing_touches_cinematic_1776675074937.png",
     tiers: [
-      { id: "basic", name: "Raw Efficiency", price: 500, weight: 10, position: 2.5, features: ["Birch Ply Trim", "Canvas Upholstery"], icon: Sparkles },
-      { id: "mid", name: "Mountain Modern", price: 1800, weight: 25, position: 2.5, features: ["Bamboo Worktops", "Velour Lining", "Premium Foam"], icon: Sparkles },
-      { id: "pro", name: "Luxury High-End", price: 4500, weight: 40, position: 2.5, features: ["Solid Walnut", "Alcantara Upholstery", "Stone Worktops"], icon: Sparkles },
+      { id: "basic", name: "Raw Efficiency", price: 50000, weight: 10, position: 2.5, features: ["Birch Ply Trim", "Canvas Upholstery"], icon: Sparkles },
+      { id: "mid", name: "Mountain Modern", price: 180000, weight: 25, position: 2.5, features: ["Bamboo Worktops", "Velour Lining", "Premium Foam"], icon: Sparkles },
+      { id: "pro", name: "Luxury High-End", price: 450000, weight: 40, position: 2.5, features: ["Solid Walnut", "Alcantara Upholstery", "Stone Worktops"], icon: Sparkles },
     ]
   }
 };
@@ -258,8 +258,8 @@ export default function BuildPlanner() {
   }, [totals.totalMass, selectedVehicle]);
 
   const formatCurrency = (val: number) => {
-    if (!mounted) return `£${val || 0}`;
-    return `£${(val || 0).toLocaleString()}`;
+    if (!mounted) return `£${(val / 100) || 0}`;
+    return `£${((val || 0) / 100).toLocaleString()}`;
   };
 
   const formatWeight = (val: number) => {

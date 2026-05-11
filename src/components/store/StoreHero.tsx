@@ -10,18 +10,18 @@ interface StoreHeroProps {
 
 export function StoreHero({ image = "/images/hero-background.png" }: StoreHeroProps) {
   return (
-    <section className="bg-brand-carbon border-t-2 border-brand-orange pt-24 lg:pt-32">
+    <section className="bg-brand-carbon border-t-2 border-brand-orange pt-20 lg:pt-32">
       <div className="container mx-auto px-6 h-full">
-        <div className="flex flex-col lg:flex-row min-h-[calc(100vh-120px)] items-stretch">
+        <div className="flex flex-col lg:flex-row lg:min-h-[calc(100vh-160px)] items-stretch gap-8 lg:gap-0">
           {/* LEFT: Editorial Content */}
           <div className="lg:w-[60%] py-12 pr-12 flex flex-col justify-center">
             <span className="font-mono text-[10px] text-brand-orange uppercase tracking-[0.4em] mb-4 block">
               // GEAR FOR SERIOUS BUILDS
             </span>
-            <h1 className="font-display text-4xl lg:text-5xl uppercase leading-[1.1] tracking-tight mb-6 text-brand-white">
-              Professional-grade components for <br /> serious off-grid builds.
+            <h1 className="font-display text-3xl md:text-4xl lg:text-5xl uppercase leading-[1.1] tracking-tight mb-6 text-brand-white">
+              Professional-grade components for <br className="hidden lg:block" /> serious off-grid builds.
             </h1>
-            <p className="font-sans text-brand-grey text-lg mb-10 max-w-xl">
+            <p className="font-sans text-brand-grey text-base lg:text-lg mb-10 max-w-xl">
               Every product in this registry is cross-referenced for system compatibility and engineered for high-performance living.
             </p>
             
