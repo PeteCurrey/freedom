@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { 
   Plus, Search, Edit2, Trash2, Globe, 
@@ -139,9 +140,12 @@ export default function AdminBrandsPage() {
                         <Globe size={14} />
                      </a>
                    )}
-                   <button className="p-2 text-slate-300 hover:text-slate-900 transition-colors">
+                   <Link 
+                     href={`/admin/brands/${brand.id}`}
+                     className="p-2 text-slate-300 hover:text-brand-orange transition-colors"
+                   >
                       <Edit2 size={14} />
-                   </button>
+                   </Link>
                 </div>
              </div>
           </div>

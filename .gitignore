@@ -43,3 +43,6 @@ next-env.d.ts
 # Local env
 .env.local
 .env*.local
+
+# Credentials
+src/config/gmc-credentials.json

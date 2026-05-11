@@ -115,6 +115,21 @@ const navLinks: NavLink[] = [
           { name: "Plumbing Kits", href: "/store/complete-kits?sub=plumbing-kits", tagline: "Full System Packs", image: "/images/kit-essential.png" },
           { name: "Full Build Bundles", href: "/store/complete-kits", tagline: "The Whole Van Spec", image: "/images/kit-luxury.png" },
         ]
+      },
+      {
+        name: "Brands",
+        items: [
+          { name: "Victron Energy", href: "/brands/victron-energy", tagline: "Power Systems", image: "/images/victron-monitoring.png" },
+          { name: "Fogstar", href: "/brands/fogstar", tagline: "Lithium Batteries", image: "/images/tech-electrical.png" },
+          { name: "Webasto", href: "/brands/webasto", tagline: "Diesel Heating", image: "/images/cat-climate.png" },
+          { name: "Truma", href: "/brands/truma", tagline: "Combi Heating", image: "/images/heating-system-technical.png" },
+          { name: "Dometic", href: "/brands/dometic", tagline: "Fridges & Windows", image: "/images/cat-interior.png" },
+          { name: "Eberspacher", href: "/brands/eberspacher", tagline: "Diesel Heaters", image: "/images/cat-climate.png" },
+          { name: "Whale", href: "/brands/whale", tagline: "Pumps & Heating", image: "/images/cat-water.png" },
+          { name: "Dodo Mat", href: "/brands/dodo-mat", tagline: "Insulation", image: "/images/cat-insulation.png" },
+          { name: "MaxxAir", href: "/brands/maxxair", tagline: "Roof Fans", image: "/images/insulation-technical.png" },
+          { name: "EcoFlow", href: "/brands/ecoflow", tagline: "Portable Power", image: "/images/cat-power.png" },
+        ]
       }
     ]
   },

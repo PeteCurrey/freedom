@@ -140,6 +140,7 @@ export default function IntegrationsPage() {
       logo: <ShoppingBag className="text-[#4285F4]" size={24} />,
       fields: [
         { id: "merchant_id", label: "Merchant ID", type: "text" as const, required: true },
+        { id: "service_account_json", label: "Service Account JSON", type: "password" as const, description: "Paste the contents of your .json key file here for real-time sync", required: true },
         { id: "feed_url", label: "Feed URL", type: "text" as const, description: "https://amplios.co.uk/api/feeds/google-merchant" }
       ]
     },

@@ -74,7 +74,15 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
     is_editor_pick: false,
     is_affiliate: false,
     affiliate_url: "",
-    commission_rate: ""
+    commission_rate: "",
+    focus_keyword: "",
+    og_title: "",
+    og_description: "",
+    og_image: "",
+    canonical_url: "",
+    robots_index: true,
+    robots_follow: true,
+    structured_data: {}
   };
 
   const [formData, setFormData] = useState({
@@ -177,16 +185,18 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
       image: (formData.images?.length || 0) > 0,
       category: !!formData.category_id,
       specs: Object.keys(formData.specs || {}).length > 0,
-      supplier_sku: !!formData.sku
+      supplier_sku: !!formData.sku,
+      seo: !!formData.meta_title && !!formData.meta_description && !!formData.focus_keyword
     };
     
     if (checks.name) score += 15;
-    if (checks.price) score += 15;
-    if (checks.description) score += 20;
-    if (checks.image) score += 20;
+    if (checks.price) score += 10;
+    if (checks.description) score += 15;
+    if (checks.image) score += 15;
     if (checks.category) score += 10;
     if (checks.specs) score += 10;
     if (checks.supplier_sku) score += 10;
+    if (checks.seo) score += 15;
     
     return { score, checks };
   };
@@ -206,11 +216,22 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
     }
 
     try {
+      let result;
       if (productId) {
-        await supabase.from("products").update(dataToSave).eq("id", productId);
+        result = await supabase.from("products").update(dataToSave).eq("id", productId).select().single();
       } else {
-        await supabase.from("products").insert([dataToSave]);
+        result = await supabase.from("products").insert([dataToSave]).select().single();
       }
+
+      // Real-time Sync to GMC if active
+      if (result.data && result.data.status === 'active') {
+         // We'll call an API route to handle the server-side GMC push
+         fetch('/api/admin/integrations/gmc/sync', {
+           method: 'POST',
+           body: JSON.stringify({ productId: result.data.id })
+         }).catch(err => console.error("Auto-sync failed:", err));
+      }
+
       router.push("/admin/products");
     } catch (error) {
       console.error("Error saving product:", error);
@@ -231,6 +252,24 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
     
     setFormData((prev: any) => ({ ...prev, description: mockDescription }));
     setAiGenerating(false);
+  };
+ 
+  const generateSEOMetadata = () => {
+    const brandName = brands.find(b => b.id === formData.brand_id)?.name || "";
+    const name = formData.name || "Product";
+    
+    // Meta Title: Brand + Name + Platform
+    const title = `${brandName} ${name} | Professional Off-Grid Hardware | Amplios`.trim();
+    
+    // Meta Description: Short Bio + Key Promise
+    const desc = `Buy the ${brandName} ${name} at Amplios. Professional-grade engineering for serious van builds. Authorized UK stockist with technical support and fast delivery.`.trim();
+    
+    setFormData((prev: any) => ({
+      ...prev,
+      meta_title: title.slice(0, 60),
+      meta_description: desc.slice(0, 160),
+      focus_keyword: `${brandName} ${name}`.toLowerCase()
+    }));
   };
 
   const margin = formData.price_gbp > 0 ? (((formData.price_gbp / 1.2) - formData.cost_price) / (formData.price_gbp / 1.2)) * 100 : 0;
@@ -498,6 +537,198 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
             </div>
           </div>
         </section>
+ 
+         {/* SEO & SEARCH DOMINANCE */}
+         <section className="bg-white border border-slate-200 p-10 shadow-sm rounded-xl">
+           <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-50">
+             <div className="flex items-center gap-3">
+               <Search className="w-5 h-5 text-brand-orange" />
+               <h2 className="font-display text-xl uppercase tracking-tight text-slate-900">Search Engine Dominance</h2>
+             </div>
+             <div className="flex items-center gap-4">
+                <button 
+                  onClick={generateSEOMetadata}
+                  className="px-3 py-1 bg-slate-900 text-white font-mono text-[9px] uppercase tracking-widest hover:bg-brand-orange transition-all font-bold flex items-center gap-2"
+                >
+                  <Wand2 size={10} /> Auto-Generate
+                </button>
+                <div className={cn(
+                  "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest",
+                  checks.seo ? "bg-emerald-100 text-emerald-600" : "bg-orange-100 text-brand-orange"
+                )}>
+                  {checks.seo ? 'Optimized' : 'Needs Work'}
+                </div>
+             </div>
+           </div>
+           
+           <div className="space-y-10">
+             {/* Focus Keyword */}
+             <div className="p-6 bg-slate-900 rounded-xl space-y-4">
+                <div className="flex justify-between items-center">
+                   <label className="block font-mono text-[10px] uppercase text-brand-orange tracking-widest font-bold">Focus Keyword</label>
+                   <Sparkles className="w-4 h-4 text-brand-orange animate-pulse" />
+                </div>
+                <input 
+                  type="text" 
+                  name="focus_keyword"
+                  value={formData.focus_keyword}
+                  onChange={handleChange}
+                  placeholder="e.g. Victron MultiPlus 3000W 12V"
+                  className="w-full bg-white/5 border border-white/10 p-4 text-white text-sm focus:border-brand-orange outline-none rounded-xl"
+                />
+                <p className="text-[9px] text-slate-500 font-mono uppercase tracking-widest">
+                  The primary search term you want this product to rank for.
+                </p>
+             </div>
+ 
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Meta Title */}
+                <div className="space-y-2">
+                   <div className="flex justify-between items-center">
+                      <label className="block font-mono text-[10px] uppercase text-slate-400 tracking-widest">Meta Title</label>
+                      <span className={cn(
+                        "text-[9px] font-mono",
+                        formData.meta_title.length > 60 ? "text-red-500" : "text-slate-400"
+                      )}>{formData.meta_title.length}/60</span>
+                   </div>
+                   <input 
+                     type="text" 
+                     name="meta_title"
+                     value={formData.meta_title}
+                     onChange={handleChange}
+                     className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg"
+                   />
+                </div>
+ 
+                {/* Canonical URL */}
+                <div className="space-y-2">
+                   <label className="block font-mono text-[10px] uppercase text-slate-400 tracking-widest">Canonical URL</label>
+                   <input 
+                     type="text" 
+                     name="canonical_url"
+                     value={formData.canonical_url}
+                     onChange={handleChange}
+                     placeholder={formData.slug ? `https://amplios.co.uk/store/product/${formData.slug}` : "Auto-generated"}
+                     className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg"
+                   />
+                </div>
+ 
+                {/* Meta Description */}
+                <div className="md:col-span-2 space-y-2">
+                   <div className="flex justify-between items-center">
+                      <label className="block font-mono text-[10px] uppercase text-slate-400 tracking-widest">Meta Description</label>
+                      <span className={cn(
+                        "text-[9px] font-mono",
+                        formData.meta_description.length > 160 ? "text-red-500" : "text-slate-400"
+                      )}>{formData.meta_description.length}/160</span>
+                   </div>
+                   <textarea 
+                     name="meta_description"
+                     value={formData.meta_description}
+                     onChange={handleChange}
+                     rows={3}
+                     className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg resize-none"
+                   />
+                </div>
+             </div>
+ 
+             {/* Open Graph & Social */}
+             <div className="pt-8 border-t border-slate-100">
+                <div className="flex items-center gap-2 mb-6">
+                   <Globe className="w-4 h-4 text-slate-400" />
+                   <h3 className="font-display text-sm uppercase tracking-widest">Social Graph (OG) Settings</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                   <div className="md:col-span-1">
+                      <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2">OG Image</label>
+                      <div className="aspect-video bg-slate-100 rounded-xl overflow-hidden border border-slate-200 relative group">
+                         {formData.og_image || formData.images?.[0] ? (
+                           <img src={formData.og_image || formData.images?.[0]} className="w-full h-full object-cover" />
+                         ) : (
+                           <div className="flex flex-col items-center justify-center h-full text-slate-400">
+                             <ImageIcon size={24} />
+                             <span className="text-[8px] uppercase mt-2">Placeholder</span>
+                           </div>
+                         )}
+                         <input 
+                           type="text" 
+                           name="og_image"
+                           value={formData.og_image}
+                           onChange={handleChange}
+                           placeholder="Custom Image URL"
+                           className="absolute bottom-0 left-0 right-0 p-2 bg-white/90 text-[8px] focus:ring-0 outline-none border-t border-slate-200"
+                         />
+                      </div>
+                   </div>
+                   <div className="md:col-span-2 space-y-4">
+                      <div>
+                        <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2">OG Title</label>
+                        <input 
+                          type="text" 
+                          name="og_title"
+                          value={formData.og_title}
+                          onChange={handleChange}
+                          placeholder={formData.meta_title}
+                          className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2">OG Description</label>
+                        <textarea 
+                          name="og_description"
+                          value={formData.og_description}
+                          onChange={handleChange}
+                          placeholder={formData.meta_description}
+                          rows={2}
+                          className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg resize-none"
+                        />
+                      </div>
+                   </div>
+                </div>
+             </div>
+ 
+             {/* Robots & Indexing */}
+             <div className="pt-8 border-t border-slate-100">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                   <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                      <span className="font-mono text-[9px] uppercase font-bold text-slate-600">Index</span>
+                      <input 
+                        type="checkbox" 
+                        name="robots_index"
+                        checked={formData.robots_index}
+                        onChange={handleChange}
+                        className="w-4 h-4 rounded text-brand-orange"
+                      />
+                   </div>
+                   <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                      <span className="font-mono text-[9px] uppercase font-bold text-slate-600">Follow</span>
+                      <input 
+                        type="checkbox" 
+                        name="robots_follow"
+                        checked={formData.robots_follow}
+                        onChange={handleChange}
+                        className="w-4 h-4 rounded text-brand-orange"
+                      />
+                   </div>
+                </div>
+             </div>
+ 
+             {/* SERP PREVIEW */}
+             <div className="pt-8 border-t border-slate-100">
+                <label className="block font-mono text-[10px] uppercase text-slate-400 mb-4 tracking-widest">Google SERP Preview</label>
+                <div className="p-6 bg-white border border-slate-100 rounded-xl shadow-sm max-w-xl">
+                   <div className="text-[14px] text-[#1a0dab] font-sans hover:underline cursor-pointer truncate">
+                      {formData.meta_title || formData.name || "Product Title Preview"} | Amplios
+                   </div>
+                   <div className="text-[12px] text-[#006621] font-sans truncate mb-1">
+                      https://amplios.co.uk/store/product/{formData.slug || "product-url"}
+                   </div>
+                   <div className="text-[13px] text-[#545454] font-sans line-clamp-2">
+                      {formData.meta_description || "Please provide a meta description to see how your product will appear in Google search results."}
+                   </div>
+                </div>
+             </div>
+           </div>
 
         {/* AFFILIATE & PARTNER LINKS */}
         <section className="bg-white border border-slate-200 p-10 shadow-sm rounded-xl">
@@ -721,7 +952,8 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                 { label: "Commercial Pricing", ok: checks.price },
                 { label: "Technical Specs", ok: checks.specs },
                 { label: "Asset Media", ok: checks.image },
-                { label: "Narrative Content", ok: checks.description }
+                { label: "Narrative Content", ok: checks.description },
+                { label: "SEO Optimization", ok: checks.seo }
               ].map(item => (
                 <li key={item.label} className="flex items-center justify-between text-[10px] font-mono uppercase tracking-widest">
                    <span className={item.ok ? "text-slate-300" : "text-slate-600"}>{item.label}</span>
@@ -729,6 +961,33 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
                 </li>
               ))}
            </ul>
+        </section>
+
+        {/* SEO STRATEGY CHECKLIST */}
+        <section className="bg-white border border-slate-200 p-8 shadow-sm rounded-2xl space-y-6">
+           <div className="flex items-center gap-3">
+              <Sparkles className="w-5 h-5 text-brand-orange" />
+              <h3 className="font-display text-sm uppercase tracking-widest text-slate-900">SEO Best Practices</h3>
+           </div>
+           <div className="space-y-4">
+              {[
+                { q: "Keyword in Meta Title?", a: formData.meta_title.toLowerCase().includes(formData.focus_keyword.toLowerCase()) && formData.focus_keyword !== "" },
+                { q: "Meta Title < 60 chars?", a: formData.meta_title.length > 0 && formData.meta_title.length <= 60 },
+                { q: "Keyword in Slug?", a: formData.slug.includes(formData.focus_keyword.toLowerCase().replace(/ /g, '-')) && formData.focus_keyword !== "" },
+                { q: "Meta Description < 160 chars?", a: formData.meta_description.length > 0 && formData.meta_description.length <= 160 },
+                { q: "Primary Image OG Set?", a: !!formData.og_image || formData.images.length > 0 }
+              ].map(item => (
+                <div key={item.q} className="flex items-center gap-3">
+                   <div className={cn(
+                     "w-4 h-4 rounded-full flex items-center justify-center border",
+                     item.a ? "bg-emerald-500 border-emerald-500 text-white" : "border-slate-200 text-transparent"
+                   )}>
+                     {item.a && <CheckCircle2 size={10} />}
+                   </div>
+                   <span className="text-[10px] font-mono uppercase text-slate-500">{item.q}</span>
+                </div>
+              ))}
+           </div>
         </section>
 
         {/* CHANNELS */}
