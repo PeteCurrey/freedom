@@ -1,8 +1,33 @@
 "use client";
 
+import { useState, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FilterSidebar } from "@/components/store/FilterSidebar";
-import { Filter, SlidersHorizontal, ArrowUpDown, ChevronDown, X } from "lucide-react";
+import { ProductCard } from "@/components/store/ProductCard";
+import { Filter, SlidersHorizontal, ArrowUpDown, ChevronDown, X, Package, Search } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
+
+function SubcategoryPills({ subcategories, activeSub, onSelect, className }: any) {
+  return (
+    <div className={cn("flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 lg:pb-0", className)}>
+      {subcategories.map((sub: any) => (
+        <button
+          key={sub.slug}
+          onClick={() => onSelect(sub.slug)}
+          className={cn(
+            "px-4 py-2 rounded-full font-mono text-[9px] uppercase tracking-widest whitespace-nowrap transition-all border",
+            activeSub === sub.slug 
+              ? "bg-brand-orange border-brand-orange text-white" 
+              : "bg-white border-[#E5E5E5] text-brand-grey hover:border-brand-orange hover:text-brand-orange"
+          )}
+        >
+          {sub.name} ({sub.count})
+        </button>
+      ))}
+    </div>
+  );
+}
 
 interface Product {
   id: string;
