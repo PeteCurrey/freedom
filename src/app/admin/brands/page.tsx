@@ -51,11 +51,31 @@ export default function AdminBrandsPage() {
   }, [brands, searchTerm]);
 
   const handleAddBrand = async () => {
-    const { data, error } = await supabase.from('brands').insert([newBrand]).select().single();
-    if (data) {
-      setBrands([...brands, { ...data, products_count: 0 }].sort((a, b) => a.name.localeCompare(b.name)));
-      setIsModalOpen(false);
-      setNewBrand({ name: "", website: "", country: "", logo: "" });
+    if (!newBrand.name) {
+      alert("Brand name is required");
+      return;
+    }
+
+    const slug = newBrand.name.toLowerCase().trim().replace(/ /g, "-").replace(/[^\w-]+/g, "");
+    const brandToInsert = { ...newBrand, slug };
+
+    try {
+      const { data, error } = await supabase.from('brands').insert([brandToInsert]).select().single();
+      
+      if (error) {
+        console.error("Failed to add brand:", error);
+        alert(`Error: ${error.message || "Failed to create brand registry node"}`);
+        return;
+      }
+
+      if (data) {
+        setBrands(prev => [...prev, { ...data, products_count: 0 }].sort((a, b) => a.name.localeCompare(b.name)));
+        setIsModalOpen(false);
+        setNewBrand({ name: "", website: "", country: "", logo: "" });
+      }
+    } catch (err) {
+      console.error("Unexpected error adding brand:", err);
+      alert("An unexpected error occurred while saving the brand dossier.");
     }
   };
 

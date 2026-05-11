@@ -133,13 +133,32 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
   };
 
   const handleAddBrand = async () => {
-    if (!newBrand.name) return;
-    const { data, error } = await supabase.from("brands").insert([newBrand]).select().single();
-    if (data) {
-      setBrands([...brands, data].sort((a, b) => a.name.localeCompare(b.name)));
-      setFormData({ ...formData, brand_id: data.id });
-      setIsBrandModalOpen(false);
-      setNewBrand({ name: "", website: "", logo: "", country: "" });
+    if (!newBrand.name) {
+      alert("Brand name is required");
+      return;
+    }
+
+    const slug = newBrand.name.toLowerCase().trim().replace(/ /g, "-").replace(/[^\w-]+/g, "");
+    const brandToInsert = { ...newBrand, slug };
+
+    try {
+      const { data, error } = await supabase.from("brands").insert([brandToInsert]).select().single();
+      
+      if (error) {
+        console.error("Failed to add brand:", error);
+        alert(`Error: ${error.message || "Failed to create brand registry node"}`);
+        return;
+      }
+
+      if (data) {
+        setBrands(prev => [...prev, data].sort((a, b) => a.name.localeCompare(b.name)));
+        setFormData(prev => ({ ...prev, brand_id: data.id }));
+        setIsBrandModalOpen(false);
+        setNewBrand({ name: "", website: "", logo: "", country: "" });
+      }
+    } catch (err) {
+      console.error("Unexpected error adding brand:", err);
+      alert("An unexpected error occurred while saving the brand dossier.");
     }
   };
 
