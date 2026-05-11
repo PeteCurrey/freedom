@@ -61,7 +61,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   }
 
   return (
-    <main className="bg-brand-obsidian min-h-screen">
+    <main className="bg-brand-obsidian min-h-screen pt-24 lg:pt-32">
       <Navbar />
       <CategoryContent 
         category={category} 

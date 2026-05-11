@@ -34,7 +34,7 @@ export default async function SearchAllPage({ searchParams }: { searchParams: Pr
   };
 
   return (
-    <main className="bg-brand-obsidian min-h-screen">
+    <main className="bg-brand-obsidian min-h-screen pt-24 lg:pt-32">
       <Navbar />
       <CategoryContent 
         category={searchCategory} 
