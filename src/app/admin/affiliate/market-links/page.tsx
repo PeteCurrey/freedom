@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { Link as LinkIcon, Plus, Copy, ExternalLink, Activity, Loader2, X, Save, Globe, Zap, Percent } from "lucide-react";
 import { cn } from "@/lib/utils";
