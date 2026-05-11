@@ -31,6 +31,9 @@ export default function AdminProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [brandFilter, setBrandFilter] = useState<string>("all");
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -63,8 +66,18 @@ export default function AdminProductsPage() {
       const search = searchTerm.toLowerCase();
       
       const matchesSearch = name.includes(search) || sku.includes(search) || brand.includes(search);
-      const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
-      return matchesSearch && matchesStatus;
+      
+      let matchesStatus = true;
+      if (statusFilter === 'active') matchesStatus = p.status === 'active';
+      else if (statusFilter === 'draft') matchesStatus = p.status === 'draft';
+      else if (statusFilter === 'low') matchesStatus = p.stock_status === 'low-stock';
+      else if (statusFilter === 'no-image') matchesStatus = !p.image;
+      else if (statusFilter === 'oos') matchesStatus = p.stock_status === 'out-of-stock';
+
+      const matchesCategory = categoryFilter === 'all' || p.category === categoryFilter;
+      const matchesBrand = brandFilter === 'all' || p.brand === brandFilter;
+
+      return matchesSearch && matchesStatus && matchesCategory && matchesBrand;
     });
   }, [products, searchTerm, statusFilter]);
 
@@ -161,10 +174,63 @@ export default function AdminProductsPage() {
             className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 transition-all"
           />
         </div>
-        <button className="px-6 py-3 border border-slate-200 text-slate-600 font-display text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all font-bold flex items-center gap-2">
-          <Filter size={14} /> Filters
+        <button 
+          onClick={() => setShowFilters(!showFilters)}
+          className={cn(
+            "px-6 py-3 border font-display text-[10px] uppercase tracking-widest transition-all font-bold flex items-center gap-2",
+            showFilters ? "bg-brand-orange text-white border-brand-orange" : "border-slate-200 text-slate-600 hover:bg-slate-50"
+          )}
+        >
+          <Filter size={14} /> {showFilters ? 'Hide Filters' : 'Filters'}
         </button>
       </div>
+
+      {/* Advanced Filter Panel */}
+      {showFilters && (
+        <div className="bg-slate-50 border border-slate-200 p-6 rounded-xl animate-in slide-in-from-top-4 duration-300">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <label className="block font-mono text-[9px] uppercase tracking-widest text-slate-400 mb-2">Category Filter</label>
+              <select 
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="w-full bg-white border border-slate-200 rounded-lg px-4 py-2 text-xs focus:ring-2 focus:ring-brand-orange/20 outline-none"
+              >
+                <option value="all">All Categories</option>
+                {Array.from(new Set(products.map(p => p.category))).sort().map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block font-mono text-[9px] uppercase tracking-widest text-slate-400 mb-2">Brand Filter</label>
+              <select 
+                value={brandFilter}
+                onChange={(e) => setBrandFilter(e.target.value)}
+                className="w-full bg-white border border-slate-200 rounded-lg px-4 py-2 text-xs focus:ring-2 focus:ring-brand-orange/20 outline-none"
+              >
+                <option value="all">All Brands</option>
+                {Array.from(new Set(products.map(p => p.brand))).sort().map(brand => (
+                  <option key={brand} value={brand}>{brand}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-end">
+              <button 
+                onClick={() => {
+                  setStatusFilter('all');
+                  setCategoryFilter('all');
+                  setBrandFilter('all');
+                  setSearchTerm('');
+                }}
+                className="text-[10px] font-bold uppercase tracking-widest text-brand-orange hover:text-slate-900 transition-colors"
+              >
+                Reset All Filters
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Product Table */}
       <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
