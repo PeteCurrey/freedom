@@ -58,7 +58,7 @@ export async function syncProductToGMC(productId: string) {
     if (!product || product.status !== 'active') {
       // If inactive or deleted, remove from GMC
       await content.products.delete({
-        merchantId: config.merchant_id,
+        merchantId: merchantId,
         productId: `online:en:GB:${productId}`,
       });
       return { success: true, action: 'deleted' };
@@ -98,7 +98,7 @@ export async function syncProductToGMC(productId: string) {
 
     // 4. Push to Content API
     const response = await content.products.insert({
-      merchantId: config.merchant_id,
+      merchantId: merchantId,
       requestBody: googleProduct,
     });
 
