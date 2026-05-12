@@ -42,6 +42,18 @@ export default function IntegrationsVault() {
         { label: "Measurement ID", value: "G-XXXXXXXXXX", type: "public" },
       ],
       description: "Provides high-resolution tracking of user drop-offs during the AI Build Planner."
+    },
+    {
+      id: "gmc",
+      name: "Google Merchant Center",
+      type: "Sales Channels",
+      icon: CreditCard, // We'll just use CreditCard or add another icon if needed
+      status: "disconnected",
+      lastSync: "Never",
+      keys: [
+        { label: "Service Account", value: "amplios-rv.json", type: "secret" },
+      ],
+      description: "Submit your products to Google Shopping (Organic and Paid listings) via real-time Content API."
     }
   ];
 

@@ -1,0 +1,495 @@
+export type SourceConfidence = "manufacturer" | "industry-data" | "estimated";
+
+export type ChassisVariant = {
+  id: string;
+  vehicleId: string;
+  manufacturer: string;
+  model: string;
+  displayName: string;
+  variantLabel: string;
+  ukEquivalent?: string;
+  wheelbaseLabel: string;
+  roofLabel?: string;
+  baseKerbWeightKg: number;
+  grossVehicleWeightKg: number;
+  estimatedPayloadKg: number;
+  frontAxleLimitKg?: number;
+  rearAxleLimitKg?: number;
+  defaultFrontWeightRatio: number;
+  defaultRearWeightRatio: number;
+  loadVolumeM3?: number;
+  notes?: string;
+  sourceConfidence: SourceConfidence;
+};
+
+export const chassisData: ChassisVariant[] = [
+  // Mercedes-Benz Sprinter
+  {
+    id: "sprinter-144-standard",
+    vehicleId: "mercedes-sprinter",
+    manufacturer: "mercedes-benz",
+    model: "sprinter",
+    displayName: "Mercedes-Benz Sprinter",
+    variantLabel: "144\" WB Standard",
+    ukEquivalent: "Approx. L2 standard/normal roof",
+    wheelbaseLabel: "144\"",
+    baseKerbWeightKg: 2301,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1199,
+    defaultFrontWeightRatio: 0.58,
+    defaultRearWeightRatio: 0.42,
+    sourceConfidence: "industry-data",
+    notes: "3.5t Sprinter planning estimate. Actual weight varies heavily by engine, drivetrain and trim."
+  },
+  {
+    id: "sprinter-144-high",
+    vehicleId: "mercedes-sprinter",
+    manufacturer: "mercedes-benz",
+    model: "sprinter",
+    displayName: "Mercedes-Benz Sprinter",
+    variantLabel: "144\" WB High Roof",
+    ukEquivalent: "Approx. L2H2",
+    wheelbaseLabel: "144\"",
+    roofLabel: "High Roof",
+    baseKerbWeightKg: 2375,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1125,
+    defaultFrontWeightRatio: 0.58,
+    defaultRearWeightRatio: 0.42,
+    sourceConfidence: "estimated"
+  },
+  {
+    id: "sprinter-170-high",
+    vehicleId: "mercedes-sprinter",
+    manufacturer: "mercedes-benz",
+    model: "sprinter",
+    displayName: "Mercedes-Benz Sprinter",
+    variantLabel: "170\" WB High Roof",
+    ukEquivalent: "Approx. L3/L4 high roof",
+    wheelbaseLabel: "170\"",
+    roofLabel: "High Roof",
+    baseKerbWeightKg: 2475,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1025,
+    defaultFrontWeightRatio: 0.57,
+    defaultRearWeightRatio: 0.43,
+    sourceConfidence: "estimated"
+  },
+  {
+    id: "sprinter-170-ext-high",
+    vehicleId: "mercedes-sprinter",
+    manufacturer: "mercedes-benz",
+    model: "sprinter",
+    displayName: "Mercedes-Benz Sprinter",
+    variantLabel: "170\" EXT High Roof",
+    ukEquivalent: "Approx. extra-long high roof",
+    wheelbaseLabel: "170\" EXT",
+    roofLabel: "High Roof",
+    baseKerbWeightKg: 2543,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 957,
+    defaultFrontWeightRatio: 0.56,
+    defaultRearWeightRatio: 0.44,
+    sourceConfidence: "estimated"
+  },
+
+  // VW Crafter
+  {
+    id: "crafter-mwb",
+    vehicleId: "vw-crafter",
+    manufacturer: "vw",
+    model: "crafter",
+    displayName: "VW Crafter",
+    variantLabel: "Medium Wheelbase",
+    ukEquivalent: "MWB high roof planning baseline",
+    wheelbaseLabel: "MWB",
+    baseKerbWeightKg: 2200,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1300,
+    defaultFrontWeightRatio: 0.57,
+    defaultRearWeightRatio: 0.43,
+    sourceConfidence: "estimated"
+  },
+  {
+    id: "crafter-lwb",
+    vehicleId: "vw-crafter",
+    manufacturer: "vw",
+    model: "crafter",
+    displayName: "VW Crafter",
+    variantLabel: "Long Wheelbase",
+    ukEquivalent: "LWB high roof",
+    wheelbaseLabel: "LWB",
+    baseKerbWeightKg: 2350,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1150,
+    defaultFrontWeightRatio: 0.56,
+    defaultRearWeightRatio: 0.44,
+    sourceConfidence: "estimated"
+  },
+  {
+    id: "crafter-lwb-maxi",
+    vehicleId: "vw-crafter",
+    manufacturer: "vw",
+    model: "crafter",
+    displayName: "VW Crafter",
+    variantLabel: "LWB Maxi",
+    ukEquivalent: "Long/Maxi high roof",
+    wheelbaseLabel: "LWB Maxi",
+    baseKerbWeightKg: 2480,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1020,
+    defaultFrontWeightRatio: 0.55,
+    defaultRearWeightRatio: 0.45,
+    sourceConfidence: "estimated"
+  },
+
+  // Ford Transit
+  {
+    id: "transit-l2",
+    vehicleId: "ford-transit",
+    manufacturer: "ford",
+    model: "transit",
+    displayName: "Ford Transit",
+    variantLabel: "L2 Medium",
+    ukEquivalent: "L2",
+    wheelbaseLabel: "L2",
+    baseKerbWeightKg: 2100,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1400,
+    defaultFrontWeightRatio: 0.57,
+    defaultRearWeightRatio: 0.43,
+    sourceConfidence: "estimated"
+  },
+  {
+    id: "transit-l3",
+    vehicleId: "ford-transit",
+    manufacturer: "ford",
+    model: "transit",
+    displayName: "Ford Transit",
+    variantLabel: "L3 Long",
+    ukEquivalent: "L3",
+    wheelbaseLabel: "L3",
+    baseKerbWeightKg: 2250,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1250,
+    defaultFrontWeightRatio: 0.56,
+    defaultRearWeightRatio: 0.44,
+    sourceConfidence: "estimated"
+  },
+  {
+    id: "transit-l4",
+    vehicleId: "ford-transit",
+    manufacturer: "ford",
+    model: "transit",
+    displayName: "Ford Transit",
+    variantLabel: "L4 Jumbo",
+    ukEquivalent: "L4",
+    wheelbaseLabel: "L4",
+    baseKerbWeightKg: 2400,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1100,
+    defaultFrontWeightRatio: 0.55,
+    defaultRearWeightRatio: 0.45,
+    sourceConfidence: "estimated"
+  },
+
+  // MAN TGE
+  {
+    id: "tge-standard",
+    vehicleId: "man-tge",
+    manufacturer: "man",
+    model: "tge",
+    displayName: "MAN TGE",
+    variantLabel: "Standard Wheelbase",
+    ukEquivalent: "Standard / MWB",
+    wheelbaseLabel: "Standard",
+    baseKerbWeightKg: 2203,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1297,
+    defaultFrontWeightRatio: 0.57,
+    defaultRearWeightRatio: 0.43,
+    sourceConfidence: "industry-data"
+  },
+  {
+    id: "tge-long",
+    vehicleId: "man-tge",
+    manufacturer: "man",
+    model: "tge",
+    displayName: "MAN TGE",
+    variantLabel: "Long Wheelbase",
+    ukEquivalent: "Long wheelbase",
+    wheelbaseLabel: "Long",
+    baseKerbWeightKg: 2402,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1098,
+    defaultFrontWeightRatio: 0.56,
+    defaultRearWeightRatio: 0.44,
+    sourceConfidence: "industry-data"
+  },
+
+  // Fiat Ducato
+  {
+    id: "ducato-l2h2",
+    vehicleId: "fiat-ducato",
+    manufacturer: "fiat",
+    model: "ducato",
+    displayName: "Fiat Ducato",
+    variantLabel: "L2H2 (MWB)",
+    ukEquivalent: "L2H2",
+    wheelbaseLabel: "L2",
+    roofLabel: "H2",
+    baseKerbWeightKg: 2055,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1445,
+    defaultFrontWeightRatio: 0.57,
+    defaultRearWeightRatio: 0.43,
+    sourceConfidence: "industry-data"
+  },
+  {
+    id: "ducato-l3h2",
+    vehicleId: "fiat-ducato",
+    manufacturer: "fiat",
+    model: "ducato",
+    displayName: "Fiat Ducato",
+    variantLabel: "L3H2 (LWB)",
+    ukEquivalent: "L3H2",
+    wheelbaseLabel: "L3",
+    roofLabel: "H2",
+    baseKerbWeightKg: 2105,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1395,
+    defaultFrontWeightRatio: 0.56,
+    defaultRearWeightRatio: 0.44,
+    sourceConfidence: "industry-data"
+  },
+  {
+    id: "ducato-l4h3",
+    vehicleId: "fiat-ducato",
+    manufacturer: "fiat",
+    model: "ducato",
+    displayName: "Fiat Ducato",
+    variantLabel: "L4H3 (XLWB)",
+    ukEquivalent: "L4H3 / Maxi style planning baseline",
+    wheelbaseLabel: "L4",
+    roofLabel: "H3",
+    baseKerbWeightKg: 2190,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1310,
+    defaultFrontWeightRatio: 0.55,
+    defaultRearWeightRatio: 0.45,
+    sourceConfidence: "industry-data"
+  },
+
+  // Peugeot Boxer
+  {
+    id: "boxer-l2h2",
+    vehicleId: "peugeot-boxer",
+    manufacturer: "peugeot",
+    model: "boxer",
+    displayName: "Peugeot Boxer",
+    variantLabel: "L2H2 (MWB)",
+    ukEquivalent: "L2H2",
+    wheelbaseLabel: "L2",
+    roofLabel: "H2",
+    baseKerbWeightKg: 2055,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1445,
+    defaultFrontWeightRatio: 0.57,
+    defaultRearWeightRatio: 0.43,
+    sourceConfidence: "industry-data"
+  },
+  {
+    id: "boxer-l3h2",
+    vehicleId: "peugeot-boxer",
+    manufacturer: "peugeot",
+    model: "boxer",
+    displayName: "Peugeot Boxer",
+    variantLabel: "L3H2 (LWB)",
+    ukEquivalent: "L3H2",
+    wheelbaseLabel: "L3",
+    roofLabel: "H2",
+    baseKerbWeightKg: 2105,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1395,
+    defaultFrontWeightRatio: 0.56,
+    defaultRearWeightRatio: 0.44,
+    sourceConfidence: "industry-data"
+  },
+  {
+    id: "boxer-l4h2",
+    vehicleId: "peugeot-boxer",
+    manufacturer: "peugeot",
+    model: "boxer",
+    displayName: "Peugeot Boxer",
+    variantLabel: "L4H2 (XLWB)",
+    ukEquivalent: "L4H2 / Heavy long body planning baseline",
+    wheelbaseLabel: "L4",
+    roofLabel: "H2",
+    baseKerbWeightKg: 2250,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1250,
+    defaultFrontWeightRatio: 0.55,
+    defaultRearWeightRatio: 0.45,
+    sourceConfidence: "estimated"
+  },
+
+  // Citroen Relay
+  {
+    id: "relay-l1h1",
+    vehicleId: "citroen-relay",
+    manufacturer: "citroen",
+    model: "relay",
+    displayName: "Citroen Relay",
+    variantLabel: "L1H1 (SWB)",
+    ukEquivalent: "L1H1",
+    wheelbaseLabel: "L1",
+    roofLabel: "H1",
+    baseKerbWeightKg: 2000,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1500,
+    defaultFrontWeightRatio: 0.58,
+    defaultRearWeightRatio: 0.42,
+    sourceConfidence: "industry-data"
+  },
+  {
+    id: "relay-l2h2",
+    vehicleId: "citroen-relay",
+    manufacturer: "citroen",
+    model: "relay",
+    displayName: "Citroen Relay",
+    variantLabel: "L2H2 (MWB)",
+    ukEquivalent: "L2H2",
+    wheelbaseLabel: "L2",
+    roofLabel: "H2",
+    baseKerbWeightKg: 2055,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1445,
+    defaultFrontWeightRatio: 0.57,
+    defaultRearWeightRatio: 0.43,
+    sourceConfidence: "industry-data"
+  },
+  {
+    id: "relay-l3h2",
+    vehicleId: "citroen-relay",
+    manufacturer: "citroen",
+    model: "relay",
+    displayName: "Citroen Relay",
+    variantLabel: "L3H2 (LWB)",
+    ukEquivalent: "L3H2",
+    wheelbaseLabel: "L3",
+    roofLabel: "H2",
+    baseKerbWeightKg: 2105,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1395,
+    defaultFrontWeightRatio: 0.56,
+    defaultRearWeightRatio: 0.44,
+    sourceConfidence: "industry-data"
+  },
+
+  // Iveco Daily
+  {
+    id: "daily-v-series",
+    vehicleId: "iveco-daily",
+    manufacturer: "iveco",
+    model: "daily",
+    displayName: "Iveco Daily",
+    variantLabel: "V-Series (High)",
+    ukEquivalent: "Approx. L3H2 3.5t planning baseline",
+    wheelbaseLabel: "V-Series",
+    baseKerbWeightKg: 2235,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1265,
+    defaultFrontWeightRatio: 0.56,
+    defaultRearWeightRatio: 0.44,
+    sourceConfidence: "estimated"
+  },
+  {
+    id: "daily-xl-series",
+    vehicleId: "iveco-daily",
+    manufacturer: "iveco",
+    model: "daily",
+    displayName: "Iveco Daily",
+    variantLabel: "XL-Series",
+    ukEquivalent: "Large high roof planning baseline",
+    wheelbaseLabel: "XL-Series",
+    baseKerbWeightKg: 2450,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1050,
+    defaultFrontWeightRatio: 0.55,
+    defaultRearWeightRatio: 0.45,
+    sourceConfidence: "estimated"
+  },
+  {
+    id: "daily-super-xl",
+    vehicleId: "iveco-daily",
+    manufacturer: "iveco",
+    model: "daily",
+    displayName: "Iveco Daily",
+    variantLabel: "Super XL",
+    ukEquivalent: "Extra-large high roof planning baseline",
+    wheelbaseLabel: "Super XL",
+    baseKerbWeightKg: 2650,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 850,
+    defaultFrontWeightRatio: 0.54,
+    defaultRearWeightRatio: 0.46,
+    sourceConfidence: "estimated",
+    notes: "Iveco Daily is available in heavier GVW variants. Add optional GVW override later for 4.2t, 5.2t, 7.0t+ builds."
+  },
+
+  // Renault Master
+  {
+    id: "master-l2h2",
+    vehicleId: "renault-master",
+    manufacturer: "renault",
+    model: "master",
+    displayName: "Renault Master",
+    variantLabel: "L2H2 (Medium)",
+    ukEquivalent: "L2H2",
+    wheelbaseLabel: "L2",
+    roofLabel: "H2",
+    baseKerbWeightKg: 1529,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1971,
+    defaultFrontWeightRatio: 0.57,
+    defaultRearWeightRatio: 0.43,
+    sourceConfidence: "industry-data",
+    notes: "Very light published baseline; actual build vehicle should be checked carefully."
+  },
+  {
+    id: "master-l3h2",
+    vehicleId: "renault-master",
+    manufacturer: "renault",
+    model: "master",
+    displayName: "Renault Master",
+    variantLabel: "L3H2 (Long)",
+    ukEquivalent: "L3H2",
+    wheelbaseLabel: "L3",
+    roofLabel: "H2",
+    baseKerbWeightKg: 1595,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1905,
+    defaultFrontWeightRatio: 0.56,
+    defaultRearWeightRatio: 0.44,
+    sourceConfidence: "industry-data",
+    notes: "Very light published baseline; actual build vehicle should be checked carefully."
+  },
+  {
+    id: "master-l4h3",
+    vehicleId: "renault-master",
+    manufacturer: "renault",
+    model: "master",
+    displayName: "Renault Master",
+    variantLabel: "L4H3 (XLWB)",
+    ukEquivalent: "L4H3",
+    wheelbaseLabel: "L4",
+    roofLabel: "H3",
+    baseKerbWeightKg: 1800,
+    grossVehicleWeightKg: 3500,
+    estimatedPayloadKg: 1700,
+    defaultFrontWeightRatio: 0.55,
+    defaultRearWeightRatio: 0.45,
+    sourceConfidence: "estimated",
+    notes: "Estimate because current dataset/source table did not expose a clean L4H3 diesel kerbweight."
+  }
+];

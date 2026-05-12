@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { vehicleData } from "@/lib/data/vehicles";
+import { chassisData, ChassisVariant } from "@/lib/data/chassisData";
 import { systemManifests } from "@/lib/data/manifests";
 import { TechnicalBOM } from '@/components/planner/TechnicalBOM';
 import { BuildAdvisor } from "@/components/chat/BuildAdvisor";
@@ -162,7 +163,8 @@ export default function BuildPlanner() {
   
   const [selections, setSelections] = useState({
     vehicleId: "mercedes-sprinter",
-    configId: "144\" WB",
+    variantId: "sprinter-144-standard",
+    configId: "144\" WB Standard",
     layoutId: "expedition",
     sleepingId: "fixed-rear",
     systems: {
@@ -186,76 +188,89 @@ export default function BuildPlanner() {
     }
   });
 
+  const [manualOverride, setManualOverride] = useState({
+    active: false,
+    baseKerbWeightKg: 2301,
+    grossVehicleWeightKg: 3500,
+    frontAxleLimitKg: 1860,
+    rearAxleLimitKg: 2250,
+  });
+
   useEffect(() => {
     setMounted(true);
     setClientBuildId("BUILD-" + Math.random().toString(36).substring(2, 9).toUpperCase());
   }, []);
 
   // --- Engineering Calculation Engine ---
+  const getSelectedChassisVariant = () => {
+    return chassisData.find(v => v.id === selections.variantId) || chassisData[0];
+  };
+
   const totals = useMemo(() => {
     let cost = 0;
-    let weight = 0;
+    let hardwareWeight = 0;
     let moment = 0; // kg*m relative to front axle
     
+    const variant = getSelectedChassisVariant();
+    const baseKerbWeightKg = manualOverride.active ? manualOverride.baseKerbWeightKg : variant.baseKerbWeightKg;
+    const grossVehicleWeightKg = manualOverride.active ? manualOverride.grossVehicleWeightKg : variant.grossVehicleWeightKg;
+    
     const vehicle = vehicleData[selections.vehicleId];
-    if (!vehicle) return { 
-      cost: 0, weight: 0, frontAxle: 0, rearAxle: 0, cog: 0, 
-      totalMass: 0, gvmOver: false, frontOver: false, rearOver: false 
-    };
+    const frontAxleLimitKg = manualOverride.active ? manualOverride.frontAxleLimitKg : (variant.frontAxleLimitKg || vehicle?.frontAxleLimit || 1850);
+    const rearAxleLimitKg = manualOverride.active ? manualOverride.rearAxleLimitKg : (variant.rearAxleLimitKg || vehicle?.rearAxleLimit || 2100);
 
     // Sum system tiers
     Object.entries(selections.systems).forEach(([key, tierId]) => {
       const config = (systemConfigs as any)[key]?.tiers.find((t: any) => t.id === tierId);
       if (config) {
         cost += config.price;
-        weight += config.weight;
-        // Calculation: Moment = Mass * Position (from front axle)
-        moment += config.weight * (config.position || 0.5);
+        hardwareWeight += config.weight;
       }
     });
 
-    // Add sleeping system (Assume position is rear-heavy for fixed, mid for seat)
+    // Add sleeping system
     const sleep = sleepSystems.find(s => s.id === selections.sleepingId);
     if (sleep) {
       cost += sleep.price;
-      weight += sleep.weight;
-      const sleepPos = selections.sleepingId === 'fixed-rear' ? (vehicle.wheelbase * 0.9) : 2.5;
-      moment += sleep.weight * sleepPos;
+      hardwareWeight += sleep.weight;
     }
 
-    // Moment Principle: Rear Axle Incremental Load = Total Moment / Wheelbase
-    const rearIncremental = moment / vehicle.wheelbase;
-    const frontIncremental = weight - rearIncremental;
+    const estimatedGrossMassKg = baseKerbWeightKg + hardwareWeight;
+    const payloadRemainingKg = grossVehicleWeightKg - estimatedGrossMassKg;
 
-    const frontAxle = vehicle.unladenFront + frontIncremental;
-    const rearAxle = vehicle.unladenRear + rearIncremental;
-    
-    // Combined Center of Gravity (m from front axle)
-    const totalMass = vehicle.unladenMass + weight;
-    const totalMoment = (vehicle.unladenRear * vehicle.wheelbase) + moment;
-    const cog = totalMoment / totalMass;
+    const defaultFrontWeightRatio = variant.defaultFrontWeightRatio || 0.55;
+    const defaultRearWeightRatio = variant.defaultRearWeightRatio || 0.45;
+
+    // Simplified Axle Estimate using standard ratios 
+    // (In future: + frontBiasedModuleWeightKg / rearBiasedModuleWeightKg)
+    const frontAxleEstimateKg = estimatedGrossMassKg * defaultFrontWeightRatio; 
+    const rearAxleEstimateKg = estimatedGrossMassKg * defaultRearWeightRatio; 
 
     return { 
       cost, 
-      weight, 
-      frontAxle, 
-      rearAxle, 
-      cog,
-      totalMass,
-      gvmOver: totalMass > vehicle.gvm,
-      frontOver: frontAxle > vehicle.frontAxleLimit,
-      rearOver: rearAxle > vehicle.rearAxleLimit
+      weight: hardwareWeight, 
+      baseKerbWeightKg,
+      grossVehicleWeightKg,
+      estimatedGrossMassKg,
+      payloadRemainingKg,
+      frontAxleEstimateKg,
+      rearAxleEstimateKg,
+      frontAxleLimitKg,
+      rearAxleLimitKg,
+      gvmOver: payloadRemainingKg < 0,
+      frontOver: frontAxleEstimateKg > frontAxleLimitKg,
+      rearOver: rearAxleEstimateKg > rearAxleLimitKg
     };
-  }, [selections.systems, selections.sleepingId, selections.vehicleId]);
+  }, [selections.systems, selections.sleepingId, selections.variantId, selections.vehicleId, manualOverride]);
 
   const selectedVehicle = useMemo(() => {
     return selections.vehicleId ? vehicleData[selections.vehicleId] : null;
   }, [selections.vehicleId]);
 
   const payloadUsagePercent = useMemo(() => {
-    if (!selectedVehicle || !selectedVehicle.gvm || selectedVehicle.gvm === 0) return 0;
-    return Math.round((totals.totalMass / selectedVehicle.gvm) * 100);
-  }, [totals.totalMass, selectedVehicle]);
+    if (!totals.grossVehicleWeightKg) return 0;
+    return Math.round((totals.estimatedGrossMassKg / totals.grossVehicleWeightKg) * 100);
+  }, [totals.estimatedGrossMassKg, totals.grossVehicleWeightKg]);
 
   const formatCurrency = (val: number) => {
     if (!mounted) return `£${(val / 100) || 0}`;

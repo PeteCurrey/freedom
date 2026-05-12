@@ -1,5 +1,6 @@
 import { google } from 'googleapis';
 import { supabase } from '@/lib/supabase';
+import { gmcCredentialsB64 } from './gmc-creds';
 import fs from 'fs';
 import path from 'path';
 
@@ -10,31 +11,42 @@ import path from 'path';
 
 export async function syncProductToGMC(productId: string) {
   try {
-    let merchantId: string | undefined;
-    let serviceAccountJson: string | undefined;
+    let merchantId: string | undefined = "143093282"; // Example default merchant ID, should be replaced if needed
+    let serviceAccountJson: string | undefined = Buffer.from(gmcCredentialsB64, 'base64').toString('utf8');
 
-    // 1. Check for local credentials override (useful for dev or if DB is not set)
-    const localCredsPath = path.resolve(process.cwd(), 'src/config/gmc-credentials.json');
-    if (fs.existsSync(localCredsPath)) {
-      const localCreds = JSON.parse(fs.readFileSync(localCredsPath, 'utf8'));
-      merchantId = localCreds.merchant_id;
-      serviceAccountJson = JSON.stringify(localCreds.service_account_json);
+    // 1. Check for environment variable (primary for production)
+    if (process.env.GMC_SERVICE_ACCOUNT_JSON) {
+      serviceAccountJson = process.env.GMC_SERVICE_ACCOUNT_JSON;
+      // We still need merchantId, hopefully it's in another env var or we fetch it
+      if (process.env.GMC_MERCHANT_ID) merchantId = process.env.GMC_MERCHANT_ID;
     }
 
-    // 2. If not found locally, fetch from Supabase
-    if (!merchantId || !serviceAccountJson) {
+    // 2. Check for local credentials override (useful for dev)
+    const localCredsPath = path.resolve(process.cwd(), 'src/config/gmc-credentials.json');
+    if (!process.env.GMC_SERVICE_ACCOUNT_JSON && fs.existsSync(localCredsPath)) {
+      try {
+        const localCreds = JSON.parse(fs.readFileSync(localCredsPath, 'utf8'));
+        if (localCreds.merchant_id) merchantId = localCreds.merchant_id;
+        if (localCreds.service_account_json) serviceAccountJson = JSON.stringify(localCreds.service_account_json);
+      } catch (e) {
+        // Ignore read error
+      }
+    }
+
+    // 3. If not found locally, fetch from Supabase
+    if (!merchantId) {
       const { data: settings } = await supabase
         .from('integrations')
         .select('config')
         .eq('id', 'gmc')
         .single();
       
-      merchantId = settings?.config?.merchant_id;
-      serviceAccountJson = settings?.config?.service_account_json;
+      if (settings?.config?.merchant_id) merchantId = settings.config.merchant_id;
+      if (settings?.config?.service_account_json) serviceAccountJson = settings.config.service_account_json;
     }
 
     if (!merchantId || !serviceAccountJson) {
-      console.warn("GMC Integration not fully configured. Skipping real-time sync.");
+      console.warn("GMC Integration not fully configured. Missing Merchant ID.");
       return null;
     }
 
