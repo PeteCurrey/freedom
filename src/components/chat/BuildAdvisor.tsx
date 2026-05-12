@@ -12,9 +12,11 @@ interface Message {
 interface BuildAdvisorProps {
   context?: {
     vehicle?: string;
+    variant?: string;
     layout?: string;
     systems?: any;
     weight?: number;
+    payloadRemaining?: number;
     cost?: number;
   };
 }
