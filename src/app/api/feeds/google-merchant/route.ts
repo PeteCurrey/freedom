@@ -19,11 +19,11 @@ export async function GET() {
     <title>Amplios Store Feed</title>
     <link>https://amplios.co.uk</link>
     <description>Premium van conversion parts and kits</description>
-    ${products?.map(product => {
+    ${products?.map((product: any) => {
       const price = (product.price_gbp / 100).toFixed(2);
       const images = Array.isArray(product.images) ? product.images : [];
       const imageUrl = images[0] ? (images[0].startsWith('http') ? images[0] : `https://amplios.co.uk${images[0]}`) : '';
-      const additionalImages = images.slice(1, 10).map(img => {
+      const additionalImages = images.slice(1, 10).map((img: string) => {
         const url = img.startsWith('http') ? img : `https://amplios.co.uk${img}`;
         return `<g:additional_image_link>${url}</g:additional_image_link>`;
       }).join('\n      ');
