@@ -8,7 +8,8 @@ import {
   Trash2, Plus, ChevronRight, AlertCircle,
   CheckCircle2, ExternalLink, Search, Eye,
   ShoppingBag, Sparkles, Video, Info, GripVertical,
-  Layers, Tag, Truck, Globe, ShieldCheck, FileText, Monitor
+  Layers, Tag, Truck, Globe, ShieldCheck, FileText, Monitor,
+  Image as ImageIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
