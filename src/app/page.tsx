@@ -25,7 +25,7 @@ interface System {
   index: number;
   name: string;
   slug: string;
-  icon: React.ElementType;
+  icon: any;
   description: string;
   image: string;
 }
