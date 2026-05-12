@@ -422,14 +422,22 @@ export default function BuildPlanner() {
                   {currentStep === 0 && (
                     <div className="space-y-12 animate-in fade-in duration-700">
                       <div>
-                        <h2 className="font-display text-5xl uppercase mb-4 tracking-tighter leading-none">Chassis Node Selection</h2>
-                        <p className="font-sans text-brand-grey text-lg max-w-xl">Every serious build starts with the right foundation. Select your preferred vehicle platform.</p>
+                        <h2 className="font-display text-5xl uppercase mb-4 tracking-tighter leading-none">Chassis & Wheelbase Selection</h2>
+                        <p className="font-sans text-brand-grey text-lg max-w-xl">Every serious build starts with the right foundation. Select your vehicle platform and wheelbase so the planner can calculate payload, space and system recommendations more accurately.</p>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {Object.entries(vehicleData).map(([id, v]) => (
                           <button
                             key={id}
-                            onClick={() => setSelections({ ...selections, vehicleId: id })}
+                            onClick={() => {
+                              const firstVariant = chassisData.find(c => c.vehicleId === id);
+                              setSelections({ 
+                                ...selections, 
+                                vehicleId: id,
+                                variantId: firstVariant ? firstVariant.id : selections.variantId,
+                                configId: firstVariant ? firstVariant.variantLabel : selections.configId 
+                              });
+                            }}
                             className={cn(
                               "p-8 text-left blueprint-border transition-all group relative",
                               selections.vehicleId === id ? "bg-brand-orange/10 border-brand-orange shadow-[0_0_30px_rgba(255,107,0,0.1)]" : "bg-brand-obsidian/50 hover:border-brand-grey"
@@ -466,22 +474,78 @@ export default function BuildPlanner() {
                         <p className="font-sans text-brand-grey text-lg">Define the physical footprint of your conversion.</p>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {Object.entries(vehicleData).find(([id]) => id === selections.vehicleId)?.[1].configurations.map(c => (
+                        {chassisData.filter(v => v.vehicleId === selections.vehicleId).map(c => (
                           <button
-                            key={c.label}
-                            onClick={() => setSelections({...selections, configId: c.label})}
+                            key={c.id}
+                            onClick={() => setSelections({...selections, variantId: c.id, configId: c.variantLabel})}
                             className={cn(
-                              "p-10 blueprint-border text-center transition-all bg-brand-obsidian/50",
-                              selections.configId === c.label ? "bg-brand-orange/10 border-brand-orange shadow-lg" : "border-brand-border/30 hover:border-brand-grey"
+                              "p-10 blueprint-border text-center transition-all bg-brand-obsidian/50 group flex flex-col items-center",
+                              selections.variantId === c.id ? "bg-brand-orange/10 border-brand-orange shadow-lg" : "border-brand-border/30 hover:border-brand-grey"
                             )}
                           >
                              <div className="w-12 h-12 bg-brand-obsidian border border-brand-border flex items-center justify-center mx-auto mb-6 text-brand-grey group-hover:text-brand-orange transition-colors">
                                 <Layout className="w-6 h-6" />
                              </div>
-                             <span className="font-display text-2xl uppercase block mb-2">{c.label}</span>
-                             <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Optimised Plot</span>
+                             <span className="font-display text-2xl uppercase block mb-2">{c.wheelbaseLabel} {c.roofLabel && `- ${c.roofLabel}`}</span>
+                             <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest block mb-4">{c.variantLabel}</span>
+                             
+                             {/* Variant Data */}
+                             <div className="mt-auto pt-4 border-t border-brand-border/30 w-full font-mono text-[8px] uppercase tracking-widest text-brand-grey">
+                               Base {c.baseKerbWeightKg}kg · GVW {c.grossVehicleWeightKg}kg<br/><span className="text-brand-orange">Est. Payload {c.estimatedPayloadKg}kg</span>
+                             </div>
                           </button>
                         ))}
+                      </div>
+
+                      {/* Manual Override Form */}
+                      <div className="mt-12 pt-8 border-t border-brand-border/30">
+                        <button 
+                          onClick={() => setManualOverride({...manualOverride, active: !manualOverride.active})}
+                          className="font-mono text-[10px] uppercase tracking-widest text-brand-orange hover:text-white transition-colors flex items-center gap-2"
+                        >
+                          <Settings className="w-3 h-3" /> Advanced: Actual Weight Override
+                        </button>
+                        
+                        {manualOverride.active && (
+                          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 p-6 bg-brand-obsidian border border-brand-border/50 animate-in fade-in slide-in-from-top-4">
+                             <div>
+                               <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Actual Base Kerb Weight (kg)</label>
+                               <input 
+                                 type="number" 
+                                 value={manualOverride.baseKerbWeightKg}
+                                 onChange={e => setManualOverride({...manualOverride, baseKerbWeightKg: parseInt(e.target.value) || 0})}
+                                 className="w-full bg-brand-carbon border border-brand-border p-3 text-white font-mono"
+                               />
+                             </div>
+                             <div>
+                               <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Actual Gross Vehicle Weight (kg)</label>
+                               <input 
+                                 type="number" 
+                                 value={manualOverride.grossVehicleWeightKg}
+                                 onChange={e => setManualOverride({...manualOverride, grossVehicleWeightKg: parseInt(e.target.value) || 0})}
+                                 className="w-full bg-brand-carbon border border-brand-border p-3 text-white font-mono"
+                               />
+                             </div>
+                             <div>
+                               <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Front Axle Limit (kg)</label>
+                               <input 
+                                 type="number" 
+                                 value={manualOverride.frontAxleLimitKg}
+                                 onChange={e => setManualOverride({...manualOverride, frontAxleLimitKg: parseInt(e.target.value) || 0})}
+                                 className="w-full bg-brand-carbon border border-brand-border p-3 text-white font-mono"
+                               />
+                             </div>
+                             <div>
+                               <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Rear Axle Limit (kg)</label>
+                               <input 
+                                 type="number" 
+                                 value={manualOverride.rearAxleLimitKg}
+                                 onChange={e => setManualOverride({...manualOverride, rearAxleLimitKg: parseInt(e.target.value) || 0})}
+                                 className="w-full bg-brand-carbon border border-brand-border p-3 text-white font-mono"
+                               />
+                             </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
@@ -700,8 +764,8 @@ export default function BuildPlanner() {
                                     <Weight className="w-6 h-6 text-brand-orange" />
                                  </div>
                                  <div>
-                                    <h4 className="font-display text-lg uppercase text-white mb-1">Structural Audit</h4>
-                                    <p className="font-sans text-brand-grey text-xs">Load center optimized at {Math.round(totals.frontAxle / totals.totalMass * 100)}% front bias for dynamic stability.</p>
+                                     <h4 className="font-display text-lg uppercase text-white mb-1">Structural Audit</h4>
+                                     <p className="font-sans text-brand-grey text-xs">Load center optimized at {Math.round(totals.frontAxleEstimateKg / totals.estimatedGrossMassKg * 100)}% front bias for dynamic stability.</p>
                                  </div>
                               </div>
                            </div>
@@ -812,10 +876,10 @@ export default function BuildPlanner() {
                   <div className="space-y-10">
                     <div>
                       <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest mb-2 flex items-center gap-2">
-                         <Layout className="w-3 h-3" /> selected foundation
+                         <Layout className="w-3 h-3" /> active build
                       </p>
-                      <p className="font-display text-2xl uppercase leading-none text-white">{selectedVehicle?.name || 'No Vehicle'}</p>
-                      <p className="font-mono text-[10px] text-brand-orange uppercase mt-2 tracking-widest">{selections.configId}</p>
+                      <p className="font-display text-2xl uppercase leading-none text-white">{getSelectedChassisVariant().displayName}</p>
+                      <p className="font-mono text-[10px] text-brand-orange uppercase mt-2 tracking-widest">{getSelectedChassisVariant().variantLabel}</p>
                     </div>
                     
                     <div className="pt-10 border-t border-brand-border/40 space-y-8">
@@ -832,12 +896,12 @@ export default function BuildPlanner() {
                         <div className="flex justify-between items-end">
                            <div className="flex items-center gap-2">
                               <Weight className="w-3.5 h-3.5 text-brand-grey" />
-                              <span className="font-mono text-[10px] uppercase tracking-widest text-brand-grey">gross vehicle mass (est)</span>
+                              <span className="font-mono text-[10px] uppercase tracking-widest text-brand-grey">estimated build mass</span>
                            </div>
                            <span className={cn(
                              "font-display text-3xl",
                              totals.gvmOver ? "text-red-500" : "text-white"
-                           )}>{formatWeight(Math.round(totals.totalMass))}</span>
+                           )}>{formatWeight(Math.round(totals.estimatedGrossMassKg))}</span>
                         </div>
                         <div className="h-1 bg-brand-carbon relative overflow-hidden">
                            <div 
@@ -849,9 +913,37 @@ export default function BuildPlanner() {
                            />
                         </div>
                         <div className="flex justify-between font-mono text-[8px] uppercase tracking-widest text-brand-grey">
-                           <span>Base Net {formatWeight(selectedVehicle?.unladenMass || 0)}</span>
-                           <span className={totals.gvmOver ? "text-red-500 font-bold" : ""}>PL Limit: {formatWeight(selectedVehicle?.gvm || 0)}</span>
+                           <span>Base Kerb: {formatWeight(totals.baseKerbWeightKg)}</span>
+                           <span className={totals.gvmOver ? "text-red-500 font-bold" : ""}>GVW Limit: {formatWeight(totals.grossVehicleWeightKg)}</span>
                         </div>
+                        
+                        {/* Payload Status */}
+                        {(() => {
+                           const payload = totals.payloadRemainingKg;
+                           let color = "text-green-500";
+                           let message = "Healthy payload margin";
+                           if (payload < 0) {
+                             color = "text-red-600 font-bold";
+                             message = "Estimated overweight — revise build before proceeding";
+                           } else if (payload < 250) {
+                             color = "text-red-500";
+                             message = "Payload risk — reduce weight or confirm higher GVW";
+                           } else if (payload < 500) {
+                             color = "text-yellow-500";
+                             message = "Payload tightening — monitor system choices";
+                           }
+                           return (
+                             <>
+                               <div className="flex justify-between items-center mt-3 pt-3 border-t border-brand-border/20">
+                                 <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest">Est. Payload Remaining</span>
+                                 <span className={cn("font-mono text-[10px] uppercase tracking-widest font-bold", color)}>
+                                    {payload > 0 ? "+" : ""}{Math.round(payload)}kg
+                                 </span>
+                               </div>
+                               <div className={cn("font-mono text-[8px] uppercase tracking-widest text-right mt-1", color)}>{message}</div>
+                             </>
+                           );
+                        })()}
                       </div>
 
                       {/* AXLE DISTRIBUTION */}
@@ -865,12 +957,12 @@ export default function BuildPlanner() {
                         <div className="space-y-2">
                           <div className="flex justify-between items-end">
                              <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Front Axle Hub</span>
-                             <span className={cn("font-display text-lg", totals.frontOver ? "text-red-500" : "text-white")}>{formatWeight(Math.round(totals.frontAxle))}</span>
+                             <span className={cn("font-display text-lg", totals.frontOver ? "text-red-500" : "text-white")}>{formatWeight(Math.round(totals.frontAxleEstimateKg))}</span>
                           </div>
                           <div className="h-0.5 bg-brand-carbon">
                              <div 
                                className={cn("h-full transition-all duration-700", totals.frontOver ? "bg-red-500" : "bg-brand-orange")}
-                               style={{ width: `${Math.min(100, (totals.frontAxle / (selectedVehicle?.frontAxleLimit || 1)) * 100)}%` }}
+                               style={{ width: `${Math.min(100, (totals.frontAxleEstimateKg / (totals.frontAxleLimitKg || 1)) * 100)}%` }}
                              />
                           </div>
                         </div>
@@ -879,12 +971,12 @@ export default function BuildPlanner() {
                         <div className="space-y-2">
                           <div className="flex justify-between items-end">
                              <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Rear Axle Hub</span>
-                             <span className={cn("font-display text-lg", totals.rearOver ? "text-red-500" : "text-white")}>{formatWeight(Math.round(totals.rearAxle))}</span>
+                             <span className={cn("font-display text-lg", totals.rearOver ? "text-red-500" : "text-white")}>{formatWeight(Math.round(totals.rearAxleEstimateKg))}</span>
                           </div>
                           <div className="h-0.5 bg-brand-carbon">
                              <div 
                                className={cn("h-full transition-all duration-700", totals.rearOver ? "bg-red-500" : "bg-brand-orange")}
-                               style={{ width: `${Math.min(100, (totals.rearAxle / (selectedVehicle?.rearAxleLimit || 1)) * 100)}%` }}
+                               style={{ width: `${Math.min(100, (totals.rearAxleEstimateKg / (totals.rearAxleLimitKg || 1)) * 100)}%` }}
                              />
                           </div>
                         </div>
@@ -1009,10 +1101,12 @@ export default function BuildPlanner() {
       {/* AI Configurator Contextual Integration */}
       <BuildAdvisor 
         context={{
-          vehicle: selectedVehicle?.name,
+          vehicle: getSelectedChassisVariant().displayName,
+          variant: getSelectedChassisVariant().variantLabel,
           layout: layoutTemplates.find(l => l.id === selections.layoutId)?.name,
           systems: selections.systems,
-          weight: totals.weight,
+          weight: totals.estimatedGrossMassKg,
+          payloadRemaining: totals.payloadRemainingKg,
           cost: totals.cost
         }}
       />
