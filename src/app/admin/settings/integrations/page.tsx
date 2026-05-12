@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { IntegrationCard } from "@/components/admin/integrations/IntegrationCard";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
 export default function IntegrationsPage() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -27,8 +28,22 @@ export default function IntegrationsPage() {
   const categories = ["All", "Analytics", "Sales Channels", "Marketing", "Email", "Affiliate", "Communication"];
 
   const handleSave = async (id: string, data: any): Promise<void> => {
-    console.log(`Saving ${id}:`, data);
-    return new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      const { error } = await supabase
+        .from('integrations')
+        .upsert({ 
+          id, 
+          config: data,
+          is_active: true,
+          updated_at: new Date().toISOString()
+        });
+
+      if (error) throw error;
+      console.log(`Saved ${id} successfully.`);
+    } catch (err) {
+      console.error(`Error saving ${id}:`, err);
+      throw err;
+    }
   };
 
   const handleTest = async (id: string): Promise<boolean> => {
