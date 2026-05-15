@@ -22,7 +22,9 @@ import {
 import Image from "next/image";
 import { vehicleData } from "@/lib/data/vehicles";
 import { chassisData, ChassisVariant } from "@/lib/data/chassisData";
+import { vehicleGeometryData, getVehicleGeometryById } from "@/lib/data/vehicleGeometryData";
 import { systemManifests } from "@/lib/data/manifests";
+import { ThreeDViewer } from "@/components/planner/ThreeDViewer";
 import { TechnicalBOM } from '@/components/planner/TechnicalBOM';
 import { BuildAdvisor } from "@/components/chat/BuildAdvisor";
 import { supabase } from "@/lib/supabase";
@@ -30,7 +32,7 @@ import { supabase } from "@/lib/supabase";
 // --- CONFIGURATION DATA ---
 
 const steps = [
-  "Foundation", "Chassis", "Layout", "Sleeping", 
+  "Chassis", "Layout", "Sleeping", 
   "Electrical", "Lighting", "Heating", "Water", 
   "Gas", "Insulation", "Windows", "Exterior",
   "Security", "Finishing", "Review"
@@ -39,9 +41,43 @@ const steps = [
 // Redundant Foundations removed in favor of @/lib/data/vehicles
 
 const layoutTemplates = [
-  { id: "expedition", name: "The Expedition", description: "Fixed rear transverse bed, mid kitchen, front dinette.", bestFor: "Solo or Couples", image: "/images/bespoke-sprinter.png" },
-  { id: "fulltimer", name: "The Full-Timer", description: "Longitudinal bed, mid wet-room, large kitchen.", bestFor: "Full-time living", image: "/images/bespoke-crafter.png" },
-  { id: "workshop", name: "The Workshop", description: "Rear garage for bikes/tools, mid galley, front bed over cab.", bestFor: "Digital Nomads / Gearheads", image: "/images/bespoke-man.png" },
+  { 
+    id: "expedition", 
+    name: "The Expedition", 
+    description: "Fixed rear transverse bed, mid kitchen, front dinette.", 
+    bestFor: "Solo or Couples", 
+    image: "/images/bespoke-sprinter.png",
+    modules: [
+      { id: "exp-bed", name: "Fixed Transverse Bed", type: "bed", dimensionsMm: [1780, 900, 1400], positionMm: [0, 0, 700], weightKg: 45 },
+      { id: "exp-garage", name: "Rear Garage", type: "garage", dimensionsMm: [1780, 900, 1400], positionMm: [0, 0, 700], weightKg: 10 },
+      { id: "exp-kitchen", name: "Mid Galley", type: "kitchen", dimensionsMm: [500, 900, 1200], positionMm: [-640, 0, 2000], weightKg: 35 },
+      { id: "exp-seating", name: "Front Dinette", type: "seating", dimensionsMm: [1000, 450, 600], positionMm: [400, 0, 2800], weightKg: 20 },
+    ]
+  },
+  { 
+    id: "fulltimer", 
+    name: "The Full-Timer", 
+    description: "Longitudinal bed, mid wet-room, large kitchen.", 
+    bestFor: "Full-time living", 
+    image: "/images/bespoke-crafter.png",
+    modules: [
+      { id: "full-bed", name: "Longitudinal Bed", type: "bed", dimensionsMm: [1400, 900, 1900], positionMm: [-190, 0, 950], weightKg: 55 },
+      { id: "full-bath", name: "Mid Wet-Room", type: "bathroom", dimensionsMm: [800, 1900, 800], positionMm: [500, 0, 2000], weightKg: 40 },
+      { id: "full-kitchen", name: "L-Shape Kitchen", type: "kitchen", dimensionsMm: [1200, 900, 1000], positionMm: [-290, 0, 2800], weightKg: 50 },
+    ]
+  },
+  { 
+    id: "workshop", 
+    name: "The Workshop", 
+    description: "Rear garage for bikes/tools, mid galley, front bed over cab.", 
+    bestFor: "Digital Nomads / Gearheads", 
+    image: "/images/bespoke-man.png",
+    modules: [
+      { id: "work-garage", name: "Gear Workshop", type: "garage", dimensionsMm: [1780, 1200, 2000], positionMm: [0, 0, 1000], weightKg: 80 },
+      { id: "work-kitchen", name: "Compact Galley", type: "kitchen", dimensionsMm: [450, 900, 1000], positionMm: [-665, 0, 2600], weightKg: 30 },
+      { id: "work-bulk", name: "Safety Bulkhead", type: "bulkhead", dimensionsMm: [1780, 1800, 50], positionMm: [0, 0, 3100], weightKg: 25 },
+    ]
+  },
 ];
 
 const sleepSystems = [
@@ -56,9 +92,26 @@ const systemConfigs = {
     proTip: "Always use oversized cables for inverter-to-battery connections to prevent voltage drop and heating.",
     image: "/images/tech-electrical.png",
     tiers: [
-      { id: "basic", name: "First Light (Basic 12V)", price: 50000, weight: 15, position: 1.5, features: ["100Ah AGM", "Split Charge", "USB Sockets"], icon: Zap },
-      { id: "mid", name: "Grid Independent (Lithium)", price: 240000, weight: 35, position: 1.5, features: ["200Ah Lithium", "200W Solar", "800W Inverter"], icon: Zap },
-      { id: "pro", name: "Full Autonomy (Premium)", price: 650000, weight: 65, position: 1.5, features: ["400Ah Lithium", "600W Solar", "3000W Multiplus"], icon: Zap },
+      { 
+        id: "basic", name: "First Light (Basic 12V)", price: 50000, weight: 15, position: 1.5, features: ["100Ah AGM", "Split Charge", "USB Sockets"], icon: Zap,
+        components: [{ id: "bat-1", name: "100Ah AGM", type: "battery", dimensionsMm: [330, 220, 170], positionMm: [-500, 0, 800], weightKg: 28 }]
+      },
+      { 
+        id: "mid", name: "Grid Independent (Lithium)", price: 240000, weight: 35, position: 1.5, features: ["200Ah Lithium", "200W Solar", "800W Inverter"], icon: Zap,
+        components: [
+          { id: "bat-2", name: "200Ah Lithium", type: "battery", dimensionsMm: [480, 240, 170], positionMm: [-500, 0, 800], weightKg: 22 },
+          { id: "inv-1", name: "800W Inverter", type: "inverter", dimensionsMm: [250, 150, 100], positionMm: [-500, 250, 800], weightKg: 4 },
+          { id: "sol-1", name: "200W Solar Array", type: "solar", dimensionsMm: [1000, 40, 1500], positionMm: [0, 2000, 1500], weightKg: 12 }
+        ]
+      },
+      { 
+        id: "pro", name: "Full Autonomy (Premium)", price: 650000, weight: 65, position: 1.5, features: ["400Ah Lithium", "600W Solar", "3000W Multiplus"], icon: Zap,
+        components: [
+          { id: "bat-3", name: "400Ah Lithium Bank", type: "battery", dimensionsMm: [600, 300, 400], positionMm: [-500, 0, 800], weightKg: 45 },
+          { id: "inv-2", name: "3000W Multiplus", type: "inverter", dimensionsMm: [400, 200, 300], positionMm: [-500, 450, 800], weightKg: 18 },
+          { id: "sol-2", name: "600W Solar Array", type: "solar", dimensionsMm: [1500, 40, 3000], positionMm: [0, 2000, 2000], weightKg: 35 }
+        ]
+      },
     ]
   },
   lighting: {
@@ -66,8 +119,18 @@ const systemConfigs = {
     proTip: "Use warm white (3000K) LEDs for the interior to avoid a clinical, 'hospital' feel.",
     image: "/images/step_lighting_cinematic_1776674939507.png",
     tiers: [
-      { id: "basic", name: "Stealth Setup", price: 20000, weight: 2, position: 2.0, features: ["Soft White LED Strips", "Single Zone Control"], icon: Sun },
-      { id: "mid", name: "Multi-Zone Pro", price: 55000, weight: 4, position: 2.0, features: ["3-Zone Dimming", "Under-Cabinet LEDs", "App Control"], icon: Sun },
+      { 
+        id: "basic", name: "Stealth Setup", price: 20000, weight: 2, position: 2.0, features: ["Soft White LED Strips", "Single Zone Control"], icon: Sun,
+        components: [{ id: "light-1", name: "Main LED Strip", type: "light-strip", dimensionsMm: [10, 10, 3000], positionMm: [0, 1950, 1500], weightKg: 1, color: "#fff9e6" }]
+      },
+      { 
+        id: "mid", name: "Multi-Zone Pro", price: 55000, weight: 4, position: 2.0, features: ["3-Zone Dimming", "Under-Cabinet LEDs", "App Control"], icon: Sun,
+        components: [
+          { id: "light-2", name: "Ceiling North", type: "light-strip", dimensionsMm: [5, 5, 2000], positionMm: [-500, 1950, 1000], weightKg: 1, color: "#fff9e6" },
+          { id: "light-3", name: "Ceiling South", type: "light-strip", dimensionsMm: [5, 5, 2000], positionMm: [500, 1950, 1000], weightKg: 1, color: "#fff9e6" },
+          { id: "light-4", name: "Kick Plate", type: "light-strip", dimensionsMm: [2000, 5, 5], positionMm: [0, 100, 2000], weightKg: 1, color: "#ff6b00" }
+        ]
+      },
       { id: "pro", name: "Cinematic Luxe", price: 120000, weight: 10, position: 2.0, features: ["RGBW Ambient Strips", "External Scene Lights", "Motion Entry Lighting"], icon: Sun },
     ]
   },
@@ -76,8 +139,14 @@ const systemConfigs = {
     proTip: "A diesel heater altitude kit is essential if you plan on skiing or mountain trekking above 1500m.",
     image: "/images/cat-climate.png",
     tiers: [
-      { id: "basic", name: "Take the Edge Off", price: 25000, weight: 5, position: 0.5, features: ["5kW Diesel Heater", "2 Outlets"], icon: Thermometer },
-      { id: "mid", name: "Four Season (Webasto)", price: 150000, weight: 12, position: 0.5, features: ["Webasto Air Top", "Digital Controller"], icon: Thermometer },
+      { 
+        id: "basic", name: "Take the Edge Off", price: 25000, weight: 5, position: 0.5, features: ["5kW Diesel Heater", "2 Outlets"], icon: Thermometer,
+        components: [{ id: "heat-1", name: "5kW Diesel Unit", type: "heater", dimensionsMm: [400, 150, 150], positionMm: [0, 0, 3500], weightKg: 5 }]
+      },
+      { 
+        id: "mid", name: "Four Season (Webasto)", price: 150000, weight: 12, position: 0.5, features: ["Webasto Air Top", "Digital Controller"], icon: Thermometer,
+        components: [{ id: "heat-2", name: "Webasto Air Top", type: "heater", dimensionsMm: [350, 120, 120], positionMm: [0, 0, 3500], weightKg: 8 }]
+      },
       { id: "pro", name: "Home Comfort (Truma)", price: 300000, weight: 22, position: 1.0, features: ["Truma Combi 4E", "Dual Fuel", "10L Water Tank"], icon: Thermometer },
     ]
   },
@@ -86,9 +155,18 @@ const systemConfigs = {
     proTip: "Accumulator tanks drastically reduce pump cycling noise and extend the life of your plumbing joints.",
     image: "/images/tech-water.png",
     tiers: [
-      { id: "basic", name: "The Essentials", price: 30000, weight: 10, position: 3.5, features: ["40L Fresh", "25L Grey", "Submersible Pump"], icon: Droplets },
-      { id: "mid", name: "Clean Living", price: 70000, weight: 25, position: 3.5, features: ["80L Fresh", "Pressure Pump", "Hot Mixer Tap"], icon: Droplets },
-      { id: "pro", name: "Full Wet Room", price: 120000, weight: 45, position: 3.0, features: ["100L Fresh", "Internal Shower", "Water Filter"], icon: Droplets },
+      { 
+        id: "basic", name: "The Essentials", price: 30000, weight: 10, position: 3.5, features: ["40L Fresh", "25L Grey", "Submersible Pump"], icon: Droplets,
+        components: [{ id: "tank-1", name: "40L Fresh", type: "tank", dimensionsMm: [400, 300, 400], positionMm: [400, 0, 1000], weightKg: 40 }]
+      },
+      { 
+        id: "mid", name: "Clean Living", price: 70000, weight: 25, position: 3.5, features: ["80L Fresh", "Pressure Pump", "Hot Mixer Tap"], icon: Droplets,
+        components: [{ id: "tank-2", name: "80L Fresh", type: "tank", dimensionsMm: [600, 350, 400], positionMm: [400, 0, 1200], weightKg: 80 }]
+      },
+      { 
+        id: "pro", name: "Full Wet Room", price: 120000, weight: 45, position: 3.0, features: ["100L Fresh", "Internal Shower", "Water Filter"], icon: Droplets,
+        components: [{ id: "tank-3", name: "100L High-Cap Fresh", type: "tank", dimensionsMm: [800, 400, 400], positionMm: [400, 0, 1500], weightKg: 100 }]
+      },
     ]
   },
   gas: {
@@ -97,7 +175,10 @@ const systemConfigs = {
     image: "/images/cat-gas.png",
     tiers: [
       { id: "none", name: "No Gas (All Electric)", price: 0, weight: 0, position: 0, features: ["Induction Cooking", "Diesel Heating"], icon: Flame },
-      { id: "basic", name: "Single Bottle", price: 30000, weight: 15, position: 3.8, features: ["6kg Calor", "2-Burner Hob"], icon: Flame },
+      { 
+        id: "basic", name: "Single Bottle", price: 30000, weight: 15, position: 3.8, features: ["6kg Calor", "2-Burner Hob"], icon: Flame,
+        components: [{ id: "gas-1", name: "Safety Locker", type: "gas-locker", dimensionsMm: [300, 400, 300], positionMm: [500, 0, 500], weightKg: 15 }]
+      },
       { id: "pro", name: "Dual Bottle / Auto Change", price: 70000, weight: 30, position: 3.8, features: ["2x 6kg Bottles", "Oven/Grill", "BBQ Point"], icon: Flame },
     ]
   },
@@ -116,8 +197,20 @@ const systemConfigs = {
     proTip: "Bonded windows provide a much cleaner, factory look than traditional rubber-seal windows.",
     image: "/images/cat-interior.png",
     tiers: [
-      { id: "basic", name: "Standard Venting", price: 40000, weight: 12, position: 2.0, features: ["1x Sliding Window", "1x Fixed Window"], icon: Eye },
-      { id: "pro", name: "Full Panoramic", price: 120000, weight: 35, position: 2.0, features: ["All-Round Glass", "Privacy Tint", "Blackout Blinds"], icon: Eye },
+      { 
+        id: "basic", name: "Standard Venting", price: 40000, weight: 12, position: 2.0, features: ["1x Sliding Window", "1x Fixed Window"], icon: Eye,
+        components: [
+          { id: "win-1", name: "Side Slider", type: "window", dimensionsMm: [1000, 500, 10], positionMm: [-900, 1000, 1500], weightKg: 6 },
+          { id: "win-2", name: "Fixed Panel", type: "window", dimensionsMm: [1000, 500, 10], positionMm: [900, 1000, 1500], weightKg: 6 }
+        ]
+      },
+      { 
+        id: "pro", name: "Full Panoramic", price: 120000, weight: 35, position: 2.0, features: ["All-Round Glass", "Privacy Tint", "Blackout Blinds"], icon: Eye,
+        components: [
+          { id: "win-3", name: "Rear Quarters", type: "window", dimensionsMm: [800, 450, 10], positionMm: [-900, 1000, 500], weightKg: 5 },
+          { id: "win-4", name: "Rear Quarters", type: "window", dimensionsMm: [800, 450, 10], positionMm: [900, 1000, 500], weightKg: 5 }
+        ]
+      },
     ]
   },
   exterior: {
@@ -125,8 +218,17 @@ const systemConfigs = {
     proTip: "Side-mounted ladders are less stress on the rear door hinges and don't block your rearview optics.",
     image: "/images/step_exterior_cinematic_1776674981526.png",
     tiers: [
-      { id: "basic", name: "Minimalist Utility", price: 35000, weight: 15, position: 4.5, features: ["Roof Cross Bars", "Side Steps"], icon: Settings },
-      { id: "mid", name: "Basecamp Ready", price: 140000, weight: 45, position: 4.5, features: ["Fiamma Awning", "Rear Ladder", "Lashing Points"], icon: Settings },
+      { 
+        id: "basic", name: "Minimalist Utility", price: 35000, weight: 15, position: 4.5, features: ["Roof Cross Bars", "Side Steps"], icon: Settings,
+        components: [{ id: "rack-1", name: "Cross Bars", type: "rack", dimensionsMm: [1800, 50, 100], positionMm: [0, 2050, 1000], weightKg: 15 }]
+      },
+      { 
+        id: "mid", name: "Basecamp Ready", price: 140000, weight: 45, position: 4.5, features: ["Fiamma Awning", "Rear Ladder", "Lashing Points"], icon: Settings,
+        components: [
+          { id: "awn-1", name: "Fiamma F45", type: "awning", dimensionsMm: [150, 150, 3000], positionMm: [950, 2000, 1500], weightKg: 25 },
+          { id: "rack-2", name: "Utility Rack", type: "rack", dimensionsMm: [1700, 100, 3500], positionMm: [0, 2100, 1750], weightKg: 35 }
+        ]
+      },
       { id: "pro", name: "Expedition Grade", price: 350000, weight: 85, position: 4.5, features: ["Full Walk-On Rack", "Side Ladder", "Case Storage"], icon: Settings },
     ]
   },
@@ -163,7 +265,7 @@ export default function BuildPlanner() {
   
   const [selections, setSelections] = useState({
     vehicleId: "mercedes-sprinter",
-    variantId: "sprinter-144-standard",
+    variantId: "sprinter-144-standard", // Maps to vehicleGeometryData ID
     configId: "144\" WB Standard",
     layoutId: "expedition",
     sleepingId: "fixed-rear",
@@ -190,10 +292,17 @@ export default function BuildPlanner() {
 
   const [manualOverride, setManualOverride] = useState({
     active: false,
-    baseKerbWeightKg: 2301,
-    grossVehicleWeightKg: 3500,
-    frontAxleLimitKg: 1860,
-    rearAxleLimitKg: 2250,
+    baseKerbWeightKg: 0, // Using 0 so we fallback to variant data unless overridden
+    grossVehicleWeightKg: 0,
+    frontAxleLimitKg: 0,
+    rearAxleLimitKg: 0,
+    exteriorLengthMm: 0,
+    exteriorWidthMm: 0,
+    exteriorHeightMm: 0,
+    loadLengthMm: 0,
+    loadWidthMm: 0,
+    loadHeightMm: 0,
+    wheelbaseMm: 0,
   });
 
   useEffect(() => {
@@ -203,21 +312,32 @@ export default function BuildPlanner() {
 
   // --- Engineering Calculation Engine ---
   const getSelectedChassisVariant = () => {
-    return chassisData.find(v => v.id === selections.variantId) || chassisData[0];
+    return getVehicleGeometryById(selections.variantId) || vehicleGeometryData[0];
+  };
+
+  const getActiveDimensions = () => {
+    const variant = getSelectedChassisVariant();
+    return {
+      exteriorLengthMm: manualOverride.active && manualOverride.exteriorLengthMm ? manualOverride.exteriorLengthMm : variant.exteriorLengthMm,
+      exteriorWidthMm: manualOverride.active && manualOverride.exteriorWidthMm ? manualOverride.exteriorWidthMm : variant.exteriorWidthMm,
+      exteriorHeightMm: manualOverride.active && manualOverride.exteriorHeightMm ? manualOverride.exteriorHeightMm : variant.exteriorHeightMm,
+      loadLengthMm: manualOverride.active && manualOverride.loadLengthMm ? manualOverride.loadLengthMm : variant.loadLengthMm,
+      loadWidthMm: manualOverride.active && manualOverride.loadWidthMm ? manualOverride.loadWidthMm : variant.loadWidthMm,
+      loadHeightMm: manualOverride.active && manualOverride.loadHeightMm ? manualOverride.loadHeightMm : variant.loadHeightMm,
+      wheelbaseMm: manualOverride.active && manualOverride.wheelbaseMm ? manualOverride.wheelbaseMm : variant.wheelbaseMm,
+    };
   };
 
   const totals = useMemo(() => {
     let cost = 0;
     let hardwareWeight = 0;
-    let moment = 0; // kg*m relative to front axle
     
     const variant = getSelectedChassisVariant();
-    const baseKerbWeightKg = manualOverride.active ? manualOverride.baseKerbWeightKg : variant.baseKerbWeightKg;
-    const grossVehicleWeightKg = manualOverride.active ? manualOverride.grossVehicleWeightKg : variant.grossVehicleWeightKg;
+    const baseKerbWeightKg = manualOverride.active && manualOverride.baseKerbWeightKg ? manualOverride.baseKerbWeightKg : variant.baseKerbWeightKg;
+    const grossVehicleWeightKg = manualOverride.active && manualOverride.grossVehicleWeightKg ? manualOverride.grossVehicleWeightKg : variant.grossVehicleWeightKg;
     
-    const vehicle = vehicleData[selections.vehicleId];
-    const frontAxleLimitKg = manualOverride.active ? manualOverride.frontAxleLimitKg : (variant.frontAxleLimitKg || vehicle?.frontAxleLimit || 1850);
-    const rearAxleLimitKg = manualOverride.active ? manualOverride.rearAxleLimitKg : (variant.rearAxleLimitKg || vehicle?.rearAxleLimit || 2100);
+    const frontAxleLimitKg = manualOverride.active && manualOverride.frontAxleLimitKg ? manualOverride.frontAxleLimitKg : 1850;
+    const rearAxleLimitKg = manualOverride.active && manualOverride.rearAxleLimitKg ? manualOverride.rearAxleLimitKg : 2100;
 
     // Sum system tiers
     Object.entries(selections.systems).forEach(([key, tierId]) => {
@@ -235,20 +355,69 @@ export default function BuildPlanner() {
       hardwareWeight += sleep.weight;
     }
 
-    const estimatedGrossMassKg = baseKerbWeightKg + hardwareWeight;
+    // Calculate moment and weight from layout modules
+    const selectedLayout = layoutTemplates.find(l => l.id === selections.layoutId);
+    let layoutWeight = 0;
+    let layoutMoment = 0; // Relative to front axle
+    
+    if (selectedLayout) {
+      selectedLayout.modules.forEach(m => {
+        layoutWeight += m.weightKg;
+        // Position is relative to REAR center of floor. 
+        // Need to convert to distance from FRONT axle.
+        // frontAxlePos (relative to rear) = loadLength + 0.5 (approx)
+        // distance from rear = - m.positionMm[2] (because z is negative moving forward)
+        // Actually my z in 3D is negative moving forward from rear.
+        // So distance from rear = m.positionMm[2] 
+        // No, in my 3D I put modules at [x, y, z] relative to loadspace rear.
+        // Let's assume z is distance from rear wall.
+        const distFromRear = m.positionMm[2];
+        const distFromFrontAxle = (variant.loadLengthMm + 500) - distFromRear; 
+        layoutMoment += m.weightKg * (distFromFrontAxle / 1000); // kg*m
+      });
+    }
+
+    // Calculate moment and weight from system components
+    let systemMoment = 0;
+    let systemCompWeight = 0;
+    
+    Object.entries(selections.systems).forEach(([key, tierId]) => {
+      const config = (systemConfigs as any)[key]?.tiers.find((t: any) => t.id === tierId);
+      if (config?.components) {
+        config.components.forEach((m: any) => {
+          systemCompWeight += m.weightKg;
+          const distFromRear = m.positionMm[2];
+          const distFromFrontAxle = (variant.loadLengthMm + 500) - distFromRear; 
+          systemMoment += m.weightKg * (distFromFrontAxle / 1000);
+        });
+      }
+    });
+
+    // Calculate insulation mass based on surface area
+    const dims = getActiveDimensions();
+    const surfaceAreaM2 = (dims.loadLengthMm * dims.loadWidthMm * 2 + dims.loadLengthMm * dims.loadHeightMm * 2 + dims.loadWidthMm * dims.loadHeightMm) / 1000000;
+    const insulationTier = systemConfigs.insulation.tiers.find(t => t.id === selections.systems.insulation);
+    const insulationWeight = surfaceAreaM2 * (insulationTier?.id === 'pro' ? 8 : insulationTier?.id === 'mid' ? 5 : 3);
+
+    const totalHardwareWeight = hardwareWeight + layoutWeight + systemCompWeight + insulationWeight;
+    const estimatedGrossMassKg = baseKerbWeightKg + totalHardwareWeight;
     const payloadRemainingKg = grossVehicleWeightKg - estimatedGrossMassKg;
 
-    const defaultFrontWeightRatio = variant.defaultFrontWeightRatio || 0.55;
-    const defaultRearWeightRatio = variant.defaultRearWeightRatio || 0.45;
+    // Base chassis moment (assuming 55/45 distribution of empty van)
+    const wheelbaseM = (variant.wheelbaseMm || 3665) / 1000;
+    const baseRearLoad = baseKerbWeightKg * 0.45;
+    const baseMoment = baseRearLoad * wheelbaseM;
 
-    // Simplified Axle Estimate using standard ratios 
-    // (In future: + frontBiasedModuleWeightKg / rearBiasedModuleWeightKg)
-    const frontAxleEstimateKg = estimatedGrossMassKg * defaultFrontWeightRatio; 
-    const rearAxleEstimateKg = estimatedGrossMassKg * defaultRearWeightRatio; 
+    // Total moment relative to front axle
+    const totalMoment = baseMoment + layoutMoment + systemMoment;
+    
+    // Calculate axle loads
+    const rearAxleEstimateKg = totalMoment / wheelbaseM;
+    const frontAxleEstimateKg = estimatedGrossMassKg - rearAxleEstimateKg;
 
     return { 
       cost, 
-      weight: hardwareWeight, 
+      weight: totalHardwareWeight, 
       baseKerbWeightKg,
       grossVehicleWeightKg,
       estimatedGrossMassKg,
@@ -261,11 +430,22 @@ export default function BuildPlanner() {
       frontOver: frontAxleEstimateKg > frontAxleLimitKg,
       rearOver: rearAxleEstimateKg > rearAxleLimitKg
     };
-  }, [selections.systems, selections.sleepingId, selections.variantId, selections.vehicleId, manualOverride]);
+  }, [selections.systems, selections.sleepingId, selections.variantId, selections.vehicleId, selections.layoutId, manualOverride]);
 
   const selectedVehicle = useMemo(() => {
     return selections.vehicleId ? vehicleData[selections.vehicleId] : null;
   }, [selections.vehicleId]);
+
+  const systemComponents = useMemo(() => {
+    const components: any[] = [];
+    Object.entries(selections.systems).forEach(([key, tierId]) => {
+      const config = (systemConfigs as any)[key]?.tiers.find((t: any) => t.id === tierId);
+      if (config?.components) {
+        components.push(...config.components);
+      }
+    });
+    return components;
+  }, [selections.systems]);
 
   const payloadUsagePercent = useMemo(() => {
     if (!totals.grossVehicleWeightKg) return 0;
@@ -418,182 +598,220 @@ export default function BuildPlanner() {
                 
                 <div className="relative z-10 flex-1">
                   
-                  {/* Foundation Selector */}
+                  {/* Chassis Selection Stage */}
                   {currentStep === 0 && (
-                    <div className="space-y-12 animate-in fade-in duration-700">
+                    <div className="space-y-8 animate-in fade-in duration-700">
                       <div>
                         <h2 className="font-display text-5xl uppercase mb-4 tracking-tighter leading-none">Chassis & Wheelbase Selection</h2>
                         <p className="font-sans text-brand-grey text-lg max-w-xl">Every serious build starts with the right foundation. Select your vehicle platform and wheelbase so the planner can calculate payload, space and system recommendations more accurately.</p>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {Object.entries(vehicleData).map(([id, v]) => (
-                          <button
-                            key={id}
-                            onClick={() => {
-                              const firstVariant = chassisData.find(c => c.vehicleId === id);
-                              setSelections({ 
-                                ...selections, 
-                                vehicleId: id,
-                                variantId: firstVariant ? firstVariant.id : selections.variantId,
-                                configId: firstVariant ? firstVariant.variantLabel : selections.configId 
-                              });
-                            }}
-                            className={cn(
-                              "p-8 text-left blueprint-border transition-all group relative",
-                              selections.vehicleId === id ? "bg-brand-orange/10 border-brand-orange shadow-[0_0_30px_rgba(255,107,0,0.1)]" : "bg-brand-obsidian/50 hover:border-brand-grey"
-                            )}
-                          >
-                            <span className="font-display text-2xl uppercase block mb-2">{v.name}</span>
-                            <div className="flex items-center gap-4 text-brand-grey font-mono text-[9px] uppercase tracking-widest">
-                              <div className="flex flex-wrap gap-2 mt-8">
-                                {v.configurations.map(c => (
-                                  <span 
-                                    key={c.label}
-                                    onClick={(e) => { e.stopPropagation(); setSelections({...selections, configId: c.label}) }}
-                                    className={cn(
-                                      "px-3 py-1.5 border text-[9px] font-mono tracking-widest cursor-pointer transition-all",
-                                      selections.configId === c.label ? "border-brand-orange text-brand-orange bg-brand-orange/10" : "border-brand-border text-brand-grey hover:border-brand-white"
-                                    )}
-                                  >
-                                    {c.label}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
 
-                  {/* Chassis Configuration */}
-                  {currentStep === 1 && (
-                    <div className="space-y-12 animate-in fade-in duration-700">
-                      <div>
-                        <h2 className="font-display text-5xl uppercase mb-4 tracking-tighter">Wheelbase Registry</h2>
-                        <p className="font-sans text-brand-grey text-lg">Define the physical footprint of your conversion.</p>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {chassisData.filter(v => v.vehicleId === selections.vehicleId).map(c => (
-                          <button
-                            key={c.id}
-                            onClick={() => setSelections({...selections, variantId: c.id, configId: c.variantLabel})}
-                            className={cn(
-                              "p-10 blueprint-border text-center transition-all bg-brand-obsidian/50 group flex flex-col items-center",
-                              selections.variantId === c.id ? "bg-brand-orange/10 border-brand-orange shadow-lg" : "border-brand-border/30 hover:border-brand-grey"
-                            )}
-                          >
-                             <div className="w-12 h-12 bg-brand-obsidian border border-brand-border flex items-center justify-center mx-auto mb-6 text-brand-grey group-hover:text-brand-orange transition-colors">
-                                <Layout className="w-6 h-6" />
-                             </div>
-                             <span className="font-display text-2xl uppercase block mb-2">{c.wheelbaseLabel} {c.roofLabel && `- ${c.roofLabel}`}</span>
-                             <span className="font-mono text-[9px] text-brand-grey uppercase tracking-widest block mb-4">{c.variantLabel}</span>
-                             
-                             {/* Variant Data */}
-                             <div className="mt-auto pt-4 border-t border-brand-border/30 w-full font-mono text-[8px] uppercase tracking-widest text-brand-grey">
-                               Base {c.baseKerbWeightKg}kg · GVW {c.grossVehicleWeightKg}kg<br/><span className="text-brand-orange">Est. Payload {c.estimatedPayloadKg}kg</span>
-                             </div>
-                          </button>
-                        ))}
+                      {/* Main visual area: 3D translucent van viewer */}
+                      <div className="w-full h-[50vh] min-h-[400px]">
+                        <ThreeDViewer vehicle={{...getSelectedChassisVariant(), ...getActiveDimensions()}} />
                       </div>
 
-                      {/* Manual Override Form */}
-                      <div className="mt-12 pt-8 border-t border-brand-border/30">
-                        <button 
-                          onClick={() => setManualOverride({...manualOverride, active: !manualOverride.active})}
-                          className="font-mono text-[10px] uppercase tracking-widest text-brand-orange hover:text-white transition-colors flex items-center gap-2"
-                        >
-                          <Settings className="w-3 h-3" /> Advanced: Actual Weight Override
-                        </button>
-                        
-                        {manualOverride.active && (
-                          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 p-6 bg-brand-obsidian border border-brand-border/50 animate-in fade-in slide-in-from-top-4">
-                             <div>
-                               <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Actual Base Kerb Weight (kg)</label>
-                               <input 
-                                 type="number" 
-                                 value={manualOverride.baseKerbWeightKg}
-                                 onChange={e => setManualOverride({...manualOverride, baseKerbWeightKg: parseInt(e.target.value) || 0})}
-                                 className="w-full bg-brand-carbon border border-brand-border p-3 text-white font-mono"
-                               />
-                             </div>
-                             <div>
-                               <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Actual Gross Vehicle Weight (kg)</label>
-                               <input 
-                                 type="number" 
-                                 value={manualOverride.grossVehicleWeightKg}
-                                 onChange={e => setManualOverride({...manualOverride, grossVehicleWeightKg: parseInt(e.target.value) || 0})}
-                                 className="w-full bg-brand-carbon border border-brand-border p-3 text-white font-mono"
-                               />
-                             </div>
-                             <div>
-                               <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Front Axle Limit (kg)</label>
-                               <input 
-                                 type="number" 
-                                 value={manualOverride.frontAxleLimitKg}
-                                 onChange={e => setManualOverride({...manualOverride, frontAxleLimitKg: parseInt(e.target.value) || 0})}
-                                 className="w-full bg-brand-carbon border border-brand-border p-3 text-white font-mono"
-                               />
-                             </div>
-                             <div>
-                               <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Rear Axle Limit (kg)</label>
-                               <input 
-                                 type="number" 
-                                 value={manualOverride.rearAxleLimitKg}
-                                 onChange={e => setManualOverride({...manualOverride, rearAxleLimitKg: parseInt(e.target.value) || 0})}
-                                 className="w-full bg-brand-carbon border border-brand-border p-3 text-white font-mono"
-                               />
-                             </div>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        {/* Chassis cards */}
+                        <div>
+                          <h3 className="font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-4">1. Vehicle Platform</h3>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {Object.entries(vehicleData).map(([id, v]) => (
+                              <button
+                                key={id}
+                                onClick={() => {
+                                  const firstVariant = vehicleGeometryData.find(c => c.id.startsWith(id.split('-')[1] || id));
+                                  setSelections({ 
+                                    ...selections, 
+                                    vehicleId: id,
+                                    variantId: firstVariant ? firstVariant.id : selections.variantId,
+                                  });
+                                }}
+                                className={cn(
+                                  "p-4 text-left blueprint-border transition-all",
+                                  selections.vehicleId === id ? "bg-brand-orange/10 border-brand-orange" : "bg-brand-obsidian/50 hover:border-brand-grey"
+                                )}
+                              >
+                                <span className="font-display text-lg uppercase block">{v.name}</span>
+                              </button>
+                            ))}
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
+                        </div>
 
-                  {/* Layout Selection */}
-                  {currentStep === 2 && (
-                    <div className="space-y-12 animate-in fade-in duration-700">
-                      <div>
-                        <h2 className="font-display text-5xl uppercase mb-4 tracking-tighter">Spatial Architecture</h2>
-                        <p className="font-sans text-brand-grey text-lg">Choose a template to initialize your internal living zones.</p>
-                      </div>
-                      <div className="grid grid-cols-1 gap-6">
-                        {layoutTemplates.map((l) => (
-                          <div
-                            key={l.id}
-                            onClick={() => setSelections({ ...selections, layoutId: l.id })}
-                            className={cn(
-                              "relative p-10 blueprint-border transition-all cursor-pointer overflow-hidden group",
-                              selections.layoutId === l.id ? "bg-brand-orange/5 border-brand-orange shadow-inner" : "bg-brand-obsidian/40 border-brand-border/30"
-                            )}
-                          >
-                            <div className="relative z-10 flex flex-col md:flex-row gap-12 items-center">
-                              <div className="w-full md:w-2/5 aspect-[4/3] bg-brand-obsidian blueprint-border overflow-hidden relative">
-                                <Image src={l.image} alt={l.name} fill className="object-cover grayscale group-hover:grayscale-0 opacity-50 group-hover:opacity-100 transition-all duration-700" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-brand-obsidian via-transparent to-transparent" />
-                              </div>
-                              <div className="flex-1 space-y-6">
-                                <div className="flex justify-between items-start">
-                                  <h3 className="font-display text-3xl uppercase group-hover:text-brand-orange transition-colors tracking-tight">{l.name}</h3>
-                                  <span className="font-mono text-[9px] text-brand-orange bg-brand-orange/10 px-3 py-1 border border-brand-orange/20 uppercase tracking-widest">{l.bestFor}</span>
+                        {/* Variant selector & Advanced override */}
+                        <div className="space-y-8">
+                          <div>
+                            <h3 className="font-mono text-[10px] text-brand-grey uppercase tracking-widest mb-4">2. Wheelbase & Roof Variant</h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                              {vehicleGeometryData.filter(v => v.id.includes(selections.vehicleId.split('-')[1] || selections.vehicleId)).map(c => (
+                                <button
+                                  key={c.id}
+                                  onClick={() => setSelections({...selections, variantId: c.id})}
+                                  className={cn(
+                                    "p-4 blueprint-border text-left transition-all bg-brand-obsidian/50",
+                                    selections.variantId === c.id ? "bg-brand-orange/10 border-brand-orange" : "border-brand-border/30 hover:border-brand-grey"
+                                  )}
+                                >
+                                  <span className="font-display text-sm uppercase block mb-1">{c.wheelbaseLabel} {c.roofLabel && `- ${c.roofLabel}`}</span>
+                                  <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest block">{c.variantLabel}</span>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Manual Override Form */}
+                          <div className="pt-4 border-t border-brand-border/30">
+                            <button 
+                              onClick={() => setManualOverride({...manualOverride, active: !manualOverride.active})}
+                              className="font-mono text-[10px] uppercase tracking-widest text-brand-orange hover:text-white transition-colors flex items-center gap-2"
+                            >
+                              <Settings className="w-3 h-3" /> Advanced: Actual Vehicle Dimensions Override
+                            </button>
+                            
+                            {manualOverride.active && (
+                              <div className="mt-4 space-y-6 p-6 bg-brand-obsidian border border-brand-border/50 animate-in fade-in">
+                                <div>
+                                  <p className="font-mono text-[9px] text-brand-orange uppercase tracking-widest mb-4">Using user-supplied vehicle data for this build.</p>
+                                  <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                      <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">External Length (mm)</label>
+                                      <input type="number" value={manualOverride.exteriorLengthMm || ''} onChange={e => setManualOverride({...manualOverride, exteriorLengthMm: parseInt(e.target.value) || 0})} className="w-full bg-brand-carbon border border-brand-border p-2 text-white font-mono text-xs" />
+                                    </div>
+                                    <div>
+                                      <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">External Width (mm)</label>
+                                      <input type="number" value={manualOverride.exteriorWidthMm || ''} onChange={e => setManualOverride({...manualOverride, exteriorWidthMm: parseInt(e.target.value) || 0})} className="w-full bg-brand-carbon border border-brand-border p-2 text-white font-mono text-xs" />
+                                    </div>
+                                    <div>
+                                      <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">External Height (mm)</label>
+                                      <input type="number" value={manualOverride.exteriorHeightMm || ''} onChange={e => setManualOverride({...manualOverride, exteriorHeightMm: parseInt(e.target.value) || 0})} className="w-full bg-brand-carbon border border-brand-border p-2 text-white font-mono text-xs" />
+                                    </div>
+                                    <div>
+                                      <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Internal Load Length (mm)</label>
+                                      <input type="number" value={manualOverride.loadLengthMm || ''} onChange={e => setManualOverride({...manualOverride, loadLengthMm: parseInt(e.target.value) || 0})} className="w-full bg-brand-carbon border border-brand-border p-2 text-white font-mono text-xs" />
+                                    </div>
+                                    <div>
+                                      <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Internal Load Width (mm)</label>
+                                      <input type="number" value={manualOverride.loadWidthMm || ''} onChange={e => setManualOverride({...manualOverride, loadWidthMm: parseInt(e.target.value) || 0})} className="w-full bg-brand-carbon border border-brand-border p-2 text-white font-mono text-xs" />
+                                    </div>
+                                    <div>
+                                      <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Internal Load Height (mm)</label>
+                                      <input type="number" value={manualOverride.loadHeightMm || ''} onChange={e => setManualOverride({...manualOverride, loadHeightMm: parseInt(e.target.value) || 0})} className="w-full bg-brand-carbon border border-brand-border p-2 text-white font-mono text-xs" />
+                                    </div>
+                                    <div>
+                                      <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Wheelbase (mm)</label>
+                                      <input type="number" value={manualOverride.wheelbaseMm || ''} onChange={e => setManualOverride({...manualOverride, wheelbaseMm: parseInt(e.target.value) || 0})} className="w-full bg-brand-carbon border border-brand-border p-2 text-white font-mono text-xs" />
+                                    </div>
+                                  </div>
                                 </div>
-                                <p className="font-sans text-brand-grey text-sm leading-relaxed">{l.description}</p>
-                                <div className="flex items-center gap-4 pt-4">
-                                   <div className="flex -space-x-1">
-                                      {[1,2,3].map(i => <div key={i} className="w-2 h-2 rounded-full bg-brand-orange/40" />)}
+                                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-brand-border/30">
+                                   <div>
+                                     <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Actual Base Kerb Weight (kg)</label>
+                                     <input type="number" value={manualOverride.baseKerbWeightKg || ''} onChange={e => setManualOverride({...manualOverride, baseKerbWeightKg: parseInt(e.target.value) || 0})} className="w-full bg-brand-carbon border border-brand-border p-2 text-white font-mono text-xs" />
                                    </div>
-                                   <span className="font-mono text-[9px] uppercase tracking-widest text-brand-grey">Blueprint Compatibility: 100%</span>
+                                   <div>
+                                     <label className="block font-mono text-[9px] uppercase tracking-widest text-brand-grey mb-2">Actual Gross Vehicle Weight (kg)</label>
+                                     <input type="number" value={manualOverride.grossVehicleWeightKg || ''} onChange={e => setManualOverride({...manualOverride, grossVehicleWeightKg: parseInt(e.target.value) || 0})} className="w-full bg-brand-carbon border border-brand-border p-2 text-white font-mono text-xs" />
+                                   </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-8 p-4 border border-brand-border/30 bg-brand-obsidian/30">
+                        <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest leading-relaxed">
+                          Disclaimer: Dimensions and weights are planning estimates. Confirm your actual vehicle measurements, VIN plate, V5C/specification data and weighbridge results before cutting, ordering or relying on payload calculations.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Interior Layout Architect */}
+                  {currentStep === 1 && (
+                    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                      <div>
+                        <h2 className="font-display text-5xl uppercase mb-4 tracking-tighter leading-none">Interior Layout Architect</h2>
+                        <p className="font-sans text-brand-grey text-lg max-w-xl">
+                          Select your build template. Each layout is engineering-optimized for weight distribution, 
+                          structural integrity, and internal build volume.
+                        </p>
+                      </div>
+
+                      {/* Layout Visualizer */}
+                      <div className="w-full h-[50vh] min-h-[400px]">
+                        <ThreeDViewer 
+                          vehicle={{...getSelectedChassisVariant(), ...getActiveDimensions()}} 
+                          mode="Interior Build Envelope"
+                          layoutModules={layoutTemplates.find(l => l.id === selections.layoutId)?.modules as any}
+                          systemComponents={systemComponents}
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {layoutTemplates.map((template) => (
+                          <button
+                            key={template.id}
+                            onClick={() => setSelections({ ...selections, layoutId: template.id })}
+                            className={cn(
+                              "group relative p-8 border text-left transition-all duration-500 overflow-hidden",
+                              selections.layoutId === template.id 
+                                ? "bg-brand-orange/10 border-brand-orange ring-1 ring-brand-orange" 
+                                : "bg-brand-obsidian/40 border-brand-border hover:border-brand-grey"
+                            )}
+                          >
+                            <div className="flex flex-col h-full gap-6">
+                              <div className="flex justify-between items-start">
+                                <Layout className={cn(
+                                  "w-8 h-8 transition-colors",
+                                  selections.layoutId === template.id ? "text-brand-orange" : "text-brand-grey group-hover:text-white"
+                                )} />
+                                <span className="font-mono text-[10px] text-brand-grey uppercase tracking-widest">{template.bestFor}</span>
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <h3 className="font-display text-2xl uppercase text-white">{template.name}</h3>
+                                <p className="font-sans text-xs text-brand-grey leading-relaxed">{template.description}</p>
+                              </div>
+
+                              <div className="mt-auto pt-6 border-t border-brand-border/20 space-y-4">
+                                <div className="flex justify-between font-mono text-[9px] uppercase tracking-widest">
+                                  <span className="text-brand-grey">Module Weight</span>
+                                  <span className="text-white">{template.modules.reduce((acc, m) => acc + m.weightKg, 0)}kg</span>
+                                </div>
+                                <div className="flex justify-between font-mono text-[9px] uppercase tracking-widest">
+                                  <span className="text-brand-grey">Storage Cap</span>
+                                  <span className="text-white">High</span>
                                 </div>
                               </div>
                             </div>
-                          </div>
+                            
+                            {selections.layoutId === template.id && (
+                              <div className="absolute top-0 right-0 p-2 bg-brand-orange text-white">
+                                <CheckCircle2 className="w-4 h-4" />
+                              </div>
+                            )}
+                          </button>
                         ))}
+                      </div>
+
+                      <div className="p-8 bg-brand-carbon/40 border border-brand-border flex items-start gap-6">
+                        <div className="p-3 bg-brand-orange/10 border border-brand-orange/30">
+                          <Settings className="w-6 h-6 text-brand-orange" />
+                        </div>
+                        <div className="space-y-2">
+                          <h4 className="font-display text-sm uppercase text-white">Technical Stability Note</h4>
+                          <p className="font-sans text-xs text-brand-grey leading-relaxed max-w-2xl">
+                            All layouts are centered on the vehicle floor axis. Transverse modules are fixed to wall boundaries. 
+                            If your Actual Vehicle dimensions differ from manufacturer standards, modules will automatically scale to fit the available envelope.
+                          </p>
+                        </div>
                       </div>
                     </div>
                   )}
 
                   {/* Sleeping Configuration */}
-                  {currentStep === 3 && (
+                  {currentStep === 2 && (
                     <div className="space-y-12 animate-in fade-in duration-700">
                       <h2 className="font-display text-5xl uppercase tracking-tighter">Sleeping Module</h2>
                       <div className="grid grid-cols-1 gap-4">
@@ -668,6 +886,15 @@ export default function BuildPlanner() {
                                 <SVGSchematic system={currentSystemKey as SystemTier} tier={selections.systems[currentSystemKey as keyof typeof selections.systems] as SystemTier} />
                              </div>
                           </div>
+
+                          <div className="w-full h-[400px] lg:h-[600px] blueprint-border bg-brand-carbon/20">
+                            <ThreeDViewer 
+                               vehicle={{...getSelectedChassisVariant(), ...getActiveDimensions()}} 
+                               mode="System X-Ray"
+                               layoutModules={layoutTemplates.find(l => l.id === selections.layoutId)?.modules as any}
+                               systemComponents={systemComponents}
+                            />
+                          </div>
                         </div>
                         
                         <div className="grid grid-cols-1 gap-6">
@@ -709,7 +936,7 @@ export default function BuildPlanner() {
                     );
                   })()}
 
-                  {currentStep === 14 && (
+                  {currentStep === 13 && (
                     <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 space-y-16">
                       {/* Premium Header */}
                       <div className="relative pt-12">
@@ -879,7 +1106,46 @@ export default function BuildPlanner() {
                          <Layout className="w-3 h-3" /> active build
                       </p>
                       <p className="font-display text-2xl uppercase leading-none text-white">{getSelectedChassisVariant().displayName}</p>
-                      <p className="font-mono text-[10px] text-brand-orange uppercase mt-2 tracking-widest">{getSelectedChassisVariant().variantLabel}</p>
+                      <div className="flex items-center justify-between mt-2">
+                        <p className="font-mono text-[10px] text-brand-orange uppercase tracking-widest">{getSelectedChassisVariant().variantLabel}</p>
+                        <span className={cn(
+                          "font-mono text-[8px] uppercase tracking-widest px-2 py-0.5 border",
+                          getSelectedChassisVariant().dimensionConfidence === 'manufacturer' ? "border-green-500 text-green-500 bg-green-500/10" :
+                          getSelectedChassisVariant().dimensionConfidence === 'industry-data' ? "border-blue-500 text-blue-500 bg-blue-500/10" :
+                          "border-yellow-500 text-yellow-500 bg-yellow-500/10"
+                        )}>
+                          {getSelectedChassisVariant().dimensionConfidence.replace('-', ' ')} data
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="pt-8 border-t border-brand-border/40 space-y-4">
+                      <p className="font-mono text-[9px] text-brand-grey uppercase tracking-widest flex items-center gap-2">
+                         <Monitor className="w-3 h-3" /> Vehicle Dimensions
+                      </p>
+                      <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                        <div>
+                          <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-widest mb-1">Exterior L/W/H</span>
+                          <span className="block font-mono text-[11px] text-white">
+                            {getActiveDimensions().exteriorLengthMm} x {getActiveDimensions().exteriorWidthMm} x {getActiveDimensions().exteriorHeightMm} mm
+                          </span>
+                        </div>
+                        <div>
+                          <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-widest mb-1">Interior Load L/W/H</span>
+                          <span className="block font-mono text-[11px] text-white">
+                            {getActiveDimensions().loadLengthMm} x {getActiveDimensions().loadWidthMm} x {getActiveDimensions().loadHeightMm} mm
+                          </span>
+                        </div>
+                        <div>
+                          <span className="block font-mono text-[8px] text-brand-grey uppercase tracking-widest mb-1">Wheelbase</span>
+                          <span className="block font-mono text-[11px] text-white">{getActiveDimensions().wheelbaseMm} mm</span>
+                        </div>
+                      </div>
+                      {manualOverride.active && (
+                        <p className="font-mono text-[8px] text-brand-orange uppercase tracking-widest animate-pulse mt-2">
+                          Using user-supplied vehicle data for this build.
+                        </p>
+                      )}
                     </div>
                     
                     <div className="pt-10 border-t border-brand-border/40 space-y-8">
@@ -917,7 +1183,48 @@ export default function BuildPlanner() {
                            <span className={totals.gvmOver ? "text-red-500 font-bold" : ""}>GVW Limit: {formatWeight(totals.grossVehicleWeightKg)}</span>
                         </div>
                         
-                        {/* Payload Status */}
+                         {/* System Performance Monitor */}
+                         <div className="pt-6 border-t border-brand-border/20 space-y-4">
+                           <div className="flex items-center gap-2 mb-2">
+                             <Monitor className="w-3 h-3 text-brand-orange" />
+                             <span className="font-mono text-[9px] text-brand-orange uppercase tracking-[0.2em]">System Performance</span>
+                           </div>
+                           
+                           <div className="grid grid-cols-2 gap-4">
+                             <div className="bg-brand-carbon/30 p-3 border border-brand-border/40">
+                               <div className="flex items-center gap-2 mb-1">
+                                 <Zap className="w-2.5 h-2.5 text-brand-grey" />
+                                 <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Electrical Cap</span>
+                               </div>
+                               <span className="font-display text-xl text-white">
+                                 {systemComponents.filter(c => c.type === 'battery').reduce((acc, c) => acc + parseInt(c.name) || 100, 0)}Ah
+                               </span>
+                             </div>
+                             <div className="bg-brand-carbon/30 p-3 border border-brand-border/40">
+                               <div className="flex items-center gap-2 mb-1">
+                                 <Droplets className="w-2.5 h-2.5 text-brand-grey" />
+                                 <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Water Storage</span>
+                               </div>
+                               <span className="font-display text-xl text-white">
+                                 {systemComponents.filter(c => c.type === 'tank').reduce((acc, c) => acc + parseInt(c.name) || 0, 0)}L
+                               </span>
+                             </div>
+                             <div className="bg-brand-carbon/30 p-3 border border-brand-border/40 col-span-2">
+                               <div className="flex items-center gap-2 mb-1">
+                                 <Thermometer className="w-2.5 h-2.5 text-brand-grey" />
+                                 <span className="font-mono text-[8px] text-brand-grey uppercase tracking-widest">Thermal Rating</span>
+                               </div>
+                               <div className="flex items-end justify-between">
+                                 <span className="font-display text-xl text-brand-orange uppercase">
+                                   {selections.systems.insulation === 'pro' ? 'Extreme Arctic' : selections.systems.insulation === 'mid' ? '4-Season Alpine' : '3-Season Standard'}
+                                 </span>
+                                 <span className="font-mono text-[10px] text-brand-grey">R-{selections.systems.insulation === 'pro' ? '6.2' : selections.systems.insulation === 'mid' ? '4.5' : '2.1'}</span>
+                               </div>
+                             </div>
+                           </div>
+                         </div>
+                         
+                         {/* Payload Status */}
                         {(() => {
                            const payload = totals.payloadRemainingKg;
                            let color = "text-green-500";
@@ -1010,8 +1317,8 @@ export default function BuildPlanner() {
                         </div>
                         <PDFExportPortal 
                           data={{
-                            vehicleName: selectedVehicle?.name || "Unknown Chassis",
-                            configId: selections.configId,
+                            vehicleName: getSelectedChassisVariant().displayName,
+                            configId: getSelectedChassisVariant().variantLabel,
                             buildId: clientBuildId || "PENDING",
                             tier: "Freedom Blueprint",
                             totalWeight: totals.weight || 0,
