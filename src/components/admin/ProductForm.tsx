@@ -83,7 +83,19 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
     canonical_url: "",
     robots_index: true,
     robots_follow: true,
-    structured_data: {}
+    structured_data: {},
+    // Intelligence Fields
+    manufacturer_id: "",
+    product_type: "component",
+    system_category: "",
+    install_location: "",
+    power_draw_w: 0,
+    compatibility_tags: [],
+    install_complexity: "intermediate",
+    usage_category: [],
+    bom_category: "",
+    planner_placement_hint: "",
+    placeholder_3d_id: ""
   };
 
   const [formData, setFormData] = useState({
@@ -95,23 +107,28 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
     system_tier: initialData?.system_tier || defaults.system_tier,
     vehicle_compatibility: initialData?.vehicle_compatibility || defaults.vehicle_compatibility,
     tags: initialData?.tags || defaults.tags,
+    compatibility_tags: initialData?.compatibility_tags || defaults.compatibility_tags,
+    usage_category: initialData?.usage_category || defaults.usage_category,
   });
 
   const [categories, setCategories] = useState<any[]>([]);
   const [brands, setBrands] = useState<any[]>([]);
+  const [manufacturers, setManufacturers] = useState<any[]>([]);
   const [suppliers, setSuppliers] = useState<any[]>([]);
   const [newSpec, setNewSpec] = useState({ label: "", value: "" });
 
   useEffect(() => {
     async function fetchData() {
-      const [catsRes, brandsRes, suppsRes] = await Promise.all([
+      const [catsRes, brandsRes, suppsRes, mfgRes] = await Promise.all([
         supabase.from("product_categories").select("*").order("name"),
         supabase.from("brands").select("*").order("name"),
-        supabase.from("suppliers").select("*").order("name")
+        supabase.from("suppliers").select("*").order("name"),
+        supabase.from("manufacturers").select("*").order("name")
       ]);
       setCategories(catsRes.data || []);
       setBrands(brandsRes.data || []);
       setSuppliers(suppsRes.data || []);
+      setManufacturers(mfgRes.data || []);
     }
     fetchData();
   }, []);
@@ -1014,6 +1031,154 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
               ))}
            </div>
         </section>
+
+        {/* PRODUCT INTELLIGENCE LAYER */}
+        <section className="bg-white border border-slate-200 p-10 shadow-sm rounded-xl border-t-4 border-t-brand-orange">
+          <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-50">
+            <div className="flex items-center gap-3">
+              <Sparkles className="w-5 h-5 text-brand-orange" />
+              <h2 className="font-display text-xl uppercase tracking-tight text-slate-900">Product Intelligence Layer</h2>
+            </div>
+            <span className="bg-orange-100 text-brand-orange text-[9px] font-bold uppercase px-2 py-1 rounded-full">Planner Ready</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-8 p-6 bg-slate-50 border border-slate-100 rounded-xl">
+              <div>
+                <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest font-bold">Manufacturer Identity</label>
+                <select
+                  name="manufacturer_id"
+                  value={formData.manufacturer_id}
+                  onChange={handleChange}
+                  className="w-full border border-slate-200 bg-white p-4 text-sm focus:border-brand-orange outline-none transition-all rounded-lg"
+                >
+                  <option value="">Select Manufacturer</option>
+                  {manufacturers.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
+                </select>
+                <p className="text-[9px] text-slate-400 mt-2 font-mono uppercase tracking-widest">Links product to official manufacturer brief.</p>
+              </div>
+
+              <div>
+                <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest font-bold">Product Type</label>
+                <select
+                  name="product_type"
+                  value={formData.product_type}
+                  onChange={handleChange}
+                  className="w-full border border-slate-200 bg-white p-4 text-sm focus:border-brand-orange outline-none transition-all rounded-lg"
+                >
+                  <option value="system">Complete System (Kit)</option>
+                  <option value="component">Core Component</option>
+                  <option value="accessory">Accessory / Add-on</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">System Category</label>
+              <select
+                name="system_category"
+                value={formData.system_category}
+                onChange={handleChange}
+                className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg"
+              >
+                <option value="">None</option>
+                <option value="electrical">Electrical / Power</option>
+                <option value="plumbing">Plumbing / Water</option>
+                <option value="hvac">HVAC / Climate</option>
+                <option value="interior">Interior Build</option>
+                <option value="exterior">Exterior Systems</option>
+                <option value="suspension">Chassis / Suspension</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Install Location</label>
+              <select
+                name="install_location"
+                value={formData.install_location}
+                onChange={handleChange}
+                className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg"
+              >
+                <option value="">Select Location</option>
+                <option value="floor">Floor / Under-seat</option>
+                <option value="wall">Wall Panel</option>
+                <option value="roof">Roof Mount</option>
+                <option value="underbody">Underbody / Chassis</option>
+                <option value="exterior">Exterior Body</option>
+                <option value="interior">General Interior</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Install Complexity</label>
+              <select
+                name="install_complexity"
+                value={formData.install_complexity}
+                onChange={handleChange}
+                className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg"
+              >
+                <option value="beginner">Beginner (DIY Friendly)</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced (Requires Tools)</option>
+                <option value="professional">Professional (Certified)</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Power Draw (Watts)</label>
+              <input
+                type="number"
+                name="power_draw_w"
+                value={formData.power_draw_w}
+                onChange={handleChange}
+                placeholder="e.g. 1500"
+                className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg"
+              />
+              <p className="text-[9px] text-slate-400 mt-1 uppercase tracking-widest font-mono">Used for Planner electrical capacity calculation</p>
+            </div>
+
+            <div className="lg:col-span-2">
+              <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">BOM Category (Build Wizard)</label>
+              <input
+                type="text"
+                name="bom_category"
+                value={formData.bom_category}
+                onChange={handleChange}
+                placeholder="e.g. 'Primary Heating', 'Lithium Bank'"
+                className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg"
+              />
+            </div>
+            
+            <div className="lg:col-span-3 border-t border-slate-100 pt-6 mt-2">
+              <h3 className="font-mono text-[10px] uppercase text-slate-400 mb-4 tracking-widest font-bold">Future 3D Planner Integrations</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">Planner Placement Hint</label>
+                  <input
+                    type="text"
+                    name="planner_placement_hint"
+                    value={formData.planner_placement_hint}
+                    onChange={handleChange}
+                    placeholder="e.g. 'Rear Roof', 'Driver Side Underbody'"
+                    className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm focus:border-brand-orange focus:bg-white outline-none rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-[10px] uppercase text-slate-400 mb-2 tracking-widest">3D Asset Placeholder ID</label>
+                  <input
+                    type="text"
+                    name="placeholder_3d_id"
+                    value={formData.placeholder_3d_id}
+                    onChange={handleChange}
+                    placeholder="e.g. 'dometic_rtx_1000_v1'"
+                    className="w-full border border-slate-200 bg-slate-50/50 p-4 text-sm font-mono focus:border-brand-orange focus:bg-white outline-none rounded-lg"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
       </div>
 
       {/* BRAND MODAL */}

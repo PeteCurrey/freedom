@@ -59,6 +59,7 @@ const navGroups = [
     label: "CATALOGUE",
     items: [
       { name: "Products", href: "/admin/products", icon: Package },
+      { name: "Manufacturers", href: "/admin/manufacturers", icon: Layers },
       { name: "Build Kits", href: "/admin/kits", icon: Box },
       { name: "Categories", href: "/admin/categories", icon: Layers },
       { name: "Brands", href: "/admin/brands", icon: Tag },

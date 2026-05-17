@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       vehicles: { Row: Record<string, unknown> };
       products: { Row: Record<string, unknown> };
+      manufacturers: { Row: Record<string, unknown> };
       build_systems: { Row: Record<string, unknown> };
       resources: { Row: Record<string, unknown> };
       orders: { Row: Record<string, unknown> };

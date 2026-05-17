@@ -43,6 +43,9 @@ interface Product {
   system_tier?: string;
   subcategory?: string;
   is_editor_pick?: boolean;
+  system_category?: string;
+  install_complexity?: string;
+  usage_category?: string[];
 }
 
 interface CategoryContentProps {
@@ -66,13 +69,27 @@ export function CategoryContent({ category, initialProducts, editorsPick }: Cate
   const filterGroups = useMemo(() => {
     const brandsMap: Record<string, number> = {};
     const tiersMap: Record<string, number> = {};
+    const sysCatMap: Record<string, number> = {};
+    const complexityMap: Record<string, number> = {};
+    const usageMap: Record<string, number> = {};
     
     initialProducts.forEach(p => {
       // Brands
-      brandsMap[p.brand] = (brandsMap[p.brand] || 0) + 1;
+      if (p.brand) brandsMap[p.brand] = (brandsMap[p.brand] || 0) + 1;
       // Tiers
       if (p.system_tier) {
         tiersMap[p.system_tier] = (tiersMap[p.system_tier] || 0) + 1;
+      }
+      if (p.system_category) {
+        sysCatMap[p.system_category] = (sysCatMap[p.system_category] || 0) + 1;
+      }
+      if (p.install_complexity) {
+        complexityMap[p.install_complexity] = (complexityMap[p.install_complexity] || 0) + 1;
+      }
+      if (p.usage_category && Array.isArray(p.usage_category)) {
+        p.usage_category.forEach(u => {
+          usageMap[u] = (usageMap[u] || 0) + 1;
+        });
       }
     });
 
@@ -85,6 +102,33 @@ export function CategoryContent({ category, initialProducts, editorsPick }: Cate
           value: name,
           count
         })).sort((a, b) => a.label.localeCompare(b.label))
+      },
+      {
+        id: "syscat",
+        name: "System Logic",
+        options: Object.entries(sysCatMap).map(([name, count]) => ({
+          label: name.charAt(0).toUpperCase() + name.slice(1),
+          value: name,
+          count
+        })).sort((a, b) => b.count - a.count)
+      },
+      {
+        id: "complexity",
+        name: "Install Complexity",
+        options: Object.entries(complexityMap).map(([name, count]) => ({
+          label: name.charAt(0).toUpperCase() + name.slice(1),
+          value: name,
+          count
+        })).sort((a, b) => b.count - a.count)
+      },
+      {
+        id: "usage",
+        name: "Usage Profile",
+        options: Object.entries(usageMap).map(([name, count]) => ({
+          label: name.charAt(0).toUpperCase() + name.slice(1),
+          value: name,
+          count
+        })).sort((a, b) => b.count - a.count)
       },
       {
         id: "tier",
@@ -105,7 +149,7 @@ export function CategoryContent({ category, initialProducts, editorsPick }: Cate
       }
     ];
 
-    return groups;
+    return groups.filter(g => g.options.length > 0);
   }, [initialProducts]);
 
   const subcategoriesWithCounts = useMemo(() => {
@@ -140,11 +184,23 @@ export function CategoryContent({ category, initialProducts, editorsPick }: Cate
       const selectedTiers = selectedFilters.tier || [];
       const matchesTier = selectedTiers.length === 0 || (p.system_tier && selectedTiers.includes(p.system_tier));
       
+      // System Category Filter
+      const selectedSysCats = selectedFilters.syscat || [];
+      const matchesSysCat = selectedSysCats.length === 0 || (p.system_category && selectedSysCats.includes(p.system_category));
+      
+      // Complexity Filter
+      const selectedComplexities = selectedFilters.complexity || [];
+      const matchesComplexity = selectedComplexities.length === 0 || (p.install_complexity && selectedComplexities.includes(p.install_complexity));
+      
+      // Usage Filter
+      const selectedUsages = selectedFilters.usage || [];
+      const matchesUsage = selectedUsages.length === 0 || (p.usage_category && p.usage_category.some(u => selectedUsages.includes(u)));
+
       // Price Filter
       const price = p.price_gbp / 100;
       const matchesPrice = price >= priceRange[0] && price <= priceRange[1];
       
-      return matchesSub && matchesBrand && matchesTier && matchesPrice;
+      return matchesSub && matchesBrand && matchesTier && matchesSysCat && matchesComplexity && matchesUsage && matchesPrice;
     });
 
     // Sorting Logic
