@@ -97,11 +97,9 @@ export default async function StoreHub() {
   ].filter(Boolean) as string[];
 
   return (
-    <main className="bg-brand-obsidian min-h-screen pt-24 lg:pt-32">
+    <main className="bg-brand-obsidian min-h-screen">
       <Navbar />
-      
-      {/* 2px Orange Border Threshold */}
-      <div className="w-full h-[2px] bg-brand-orange" />
+
 
       <StoreHero 
         image={cms(cmsContent, 'hero', 'image_url', configMap['store_hero_image'])}

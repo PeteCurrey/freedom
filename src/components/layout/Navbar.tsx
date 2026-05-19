@@ -234,7 +234,8 @@ export function Navbar() {
   const [cartCount, setCartCount] = useState(0);
   const pathname = usePathname();
   const isStorePage = pathname?.startsWith('/store');
-  const isLightMode = isStorePage; // Focused on store page visibility per request
+  const isStoreRoot = pathname === '/store';
+  const isLightMode = isStorePage && !isStoreRoot;
 
   useEffect(() => {
     const updateCartCount = () => {
