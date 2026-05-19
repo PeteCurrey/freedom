@@ -13,7 +13,12 @@ export type ContentMap = Record<string, Record<string, string>>;
 export async function getPageContent(pageKey: string): Promise<ContentMap> {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      global: {
+        fetch: (url, init) => fetch(url, { ...init, cache: 'no-store' })
+      }
+    }
   );
 
   const { data, error } = await supabase
@@ -39,7 +44,12 @@ export async function getPageContent(pageKey: string): Promise<ContentMap> {
 export async function getPageContentClient(pageKey: string): Promise<ContentMap> {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      global: {
+        fetch: (url, init) => fetch(url, { ...init, cache: 'no-store' })
+      }
+    }
   );
 
   const { data, error } = await supabase

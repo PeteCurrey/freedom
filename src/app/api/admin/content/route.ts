@@ -4,7 +4,12 @@ import { NextRequest, NextResponse } from 'next/server';
 function getAdminClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      global: {
+        fetch: (url, init) => fetch(url, { ...init, cache: 'no-store' })
+      }
+    }
   );
 }
 
@@ -14,7 +19,12 @@ function getAnonClient(request: NextRequest) {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { global: { headers: { Cookie: cookieHeader } } }
+    { 
+      global: { 
+        headers: { Cookie: cookieHeader },
+        fetch: (url, init) => fetch(url, { ...init, cache: 'no-store' })
+      } 
+    }
   );
 }
 
