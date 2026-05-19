@@ -391,9 +391,9 @@ export default function ContentPagesAdmin() {
   const hasDirty = Object.values(dirty).some(Boolean);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
+    <div className="flex h-[calc(100vh-120px)] overflow-hidden bg-white border border-slate-200 rounded-2xl mx-8 mb-8 shadow-sm">
       {/* LEFT TREE */}
-      <aside className="w-60 shrink-0 bg-white border-r border-slate-200 overflow-y-auto flex flex-col">
+      <aside className="w-60 shrink-0 bg-slate-50/50 border-r border-slate-200 overflow-y-auto flex flex-col">
         <div className="p-5 border-b border-slate-100">
           <div className="flex items-center gap-2"><FileText className="w-4 h-4 text-brand-orange" /><span className="font-display text-sm uppercase tracking-widest">Pages</span></div>
         </div>

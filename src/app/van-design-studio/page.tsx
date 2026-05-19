@@ -1,7 +1,9 @@
-"use client";
+export const dynamic = 'force-dynamic';
 
-import { AppShell } from "@/features/van-design-studio/components/AppShell";
+import { getPageContent } from "@/lib/cms/getPageContent";
+import VanDesignStudioClient from "./page.client";
 
-export default function VanDesignStudioPage() {
-  return <AppShell />;
+export default async function VanDesignStudioPage() {
+  const content = await getPageContent('van-design-studio');
+  return <VanDesignStudioClient content={content} />;
 }

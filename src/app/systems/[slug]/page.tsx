@@ -8,6 +8,9 @@ import {
   Layers,
   Shield
 } from "lucide-react";
+
+export const dynamic = 'force-dynamic';
+
 import { PowerCalculator } from "@/components/tools/PowerCalculator";
 import { cn } from "@/lib/utils";
 import Link from "next/link";

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { StoreHero } from "@/components/store/StoreHero";
 import { EditorsPick } from "@/components/store/EditorsPick";
 import { CategoryGrid } from "@/components/store/CategoryGrid";

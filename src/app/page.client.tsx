@@ -1,0 +1,405 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import gsap from "gsap";
+
+import { supabase } from "@/lib/supabase";
+import { HeroSection } from "@/components/home/HeroSection";
+import { HorizontalScroll } from "@/components/ui/HorizontalScroll";
+import { ProductCard } from "@/components/store/ProductCard";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { Zap, Thermometer, Droplets, Shield, Layers, Layout } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { getPageContentClient } from "@/lib/cms/getPageContent";
+import { cms } from "@/lib/cms/withFallback";
+import type { ContentMap } from "@/lib/cms/getPageContent";
+
+// Definining types for better safety
+interface Vehicle {
+  name: string;
+  slug: string;
+  specs: string;
+  image: string;
+}
+
+interface System {
+  index: number;
+  name: string;
+  slug: string;
+  icon: any;
+  description: string;
+  image: string;
+}
+
+export default function HomeClient({ content }: { content: ContentMap }) {
+  const whyRef = useRef<HTMLDivElement>(null);
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Why We Exist animations
+      gsap.from(".why-text-item", {
+        scrollTrigger: {
+          trigger: whyRef.current,
+          start: "top 80%",
+          scrub: 1,
+        },
+        y: 60,
+        opacity: 0,
+        stagger: 0.2,
+      });
+
+      // Stats counters
+      gsap.from(".stat-number", {
+        scrollTrigger: {
+          trigger: ".stats-container",
+          start: "top 85%",
+        },
+        innerText: 0,
+        duration: 2,
+        snap: { innerText: 1 },
+        stagger: 0.1,
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  useEffect(() => {
+    async function fetchFeatured() {
+      const { data } = await supabase
+        .from('products')
+        .select('*')
+        .in('slug', [
+          'victron-multiplus-ii-12-3000-120-32',
+          'dometic-cfx3-55im',
+          'truma-combi-4e-kit'
+        ]);
+      
+      if (data) {
+        // Sort to maintain original order
+        const order = ['victron-multiplus-ii-12-3000-120-32', 'dometic-cfx3-55im', 'truma-combi-4e-kit'];
+        const sorted = data.sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug));
+        setFeaturedProducts(sorted);
+      }
+    }
+    fetchFeatured();
+  }, []);
+
+  return (
+    <main className="bg-brand-obsidian">
+      <Navbar />
+      <HeroSection 
+        title={cms(content, 'hero', 'heading', 'Engineering Freedom.')} 
+        subtitle={cms(content, 'hero', 'subheading')} 
+        backgroundImage={cms(content, 'hero', 'image_url', '/images/hero-mountain.jpg')} 
+      />
+
+      {/* Section 2 — Why We Exist */}
+      <section ref={whyRef} className="py-32 relative overflow-hidden">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+            <div className="space-y-12">
+              <h2 className="why-text-item font-display text-5xl lg:text-7xl leading-none">
+                {cms(content, 'intro', 'heading', "THIS ISN'T")} <span className="text-brand-orange">VANLIFE</span>
+              </h2>
+              <div className="why-text-item space-y-6">
+                <p className="font-sans text-brand-grey text-lg lg:text-xl leading-relaxed">
+                  {cms(content, 'intro', 'body', "Forget the Instagram filter. We're here for the builds that run induction hobs off lithium, heat through Alpine winters, and carry you 100,000 miles without breaking a sweat.")}
+                </p>
+                <p className="font-sans text-brand-white text-lg lg:text-xl leading-relaxed">
+                  {cms(content, 'intro', 'body_secondary', "This is engineering. This is craft. This is freedom — done properly.")}
+                </p>
+              </div>
+              <div className="why-text-item stats-container grid grid-cols-2 gap-12 pt-12 border-t border-brand-border">
+                <div>
+                  <div className="font-display text-4xl text-brand-orange mb-2">
+                    <span className="stat-number">6</span>
+                  </div>
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-brand-grey">
+                    Base Vehicles Compared
+                  </p>
+                </div>
+                <div>
+                   <div className="font-display text-2xl text-brand-orange mb-2 leading-tight">
+                     Expert
+                   </div>
+                   <p className="font-mono text-[10px] uppercase tracking-widest text-brand-grey" >
+                     Technical Guides
+                   </p>
+                 </div>
+              </div>
+            </div>
+            <div className="why-text-item relative aspect-square blueprint-border">
+              <div className="blueprint-grid absolute inset-0 opacity-20" />
+              <Image
+                src="/images/interior-showcase.png"
+                alt="Engineering focus"
+                fill
+                className="object-cover grayscale-0 opacity-80"
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-brand-orange/20 to-transparent" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 3 — Base Vehicles Preview (Horizontal Scroll) */}
+      <HorizontalScroll 
+        title={cms(content, 'gear', 'heading', 'CHOOSE YOUR FOUNDATION')}
+        subtitle="6 Pro-grade chassis compared for your next build."
+      >
+        {vehicles.map((vehicle) => (
+          <VehicleCard key={vehicle.name} vehicle={vehicle} />
+        ))}
+      </HorizontalScroll>
+
+      {/* Section 4 — Build Systems Grid */}
+      <section className="py-32 bg-brand-carbon relative">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+            <div className="max-w-xl">
+              <h2 className="font-display text-5xl mb-6">ENGINEERED SYSTEMS</h2>
+              <p className="font-sans text-brand-grey text-lg">
+                High-performance modules designed to work together seamlessly in 
+                the most demanding off-grid environments.
+              </p>
+            </div>
+            <Link 
+              href="/systems" 
+              className="font-mono text-xs uppercase tracking-[0.2em] text-brand-orange border-b border-brand-orange/30 pb-2 hover:border-brand-orange transition-all"
+            >
+              Explore All Systems
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {systems.map((system) => (
+              <SystemCard key={system.name} system={system} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 5 — Featured Products */}
+      <HorizontalScroll title={cms(content, 'products', 'heading', 'GEAR THAT GOES THE DISTANCE')}>
+        {featuredProducts.map((product) => (
+          <div key={product.id} className="w-[350px]">
+            <ProductCard 
+              id={product.id}
+              name={product.name}
+              brand={product.brand}
+              price={product.price_gbp}
+              image={product.images?.[0] || product.image_url}
+              slug={product.slug}
+              specLine={product.spec_line}
+              badge={product.badge}
+              systemTier={product.system_tier}
+            />
+          </div>
+        ))}
+        <div className="w-[400px] h-full flex items-center justify-center p-12">
+          <Link 
+            href="/store"
+            className="group font-display text-4xl text-right hover:text-brand-orange transition-colors"
+          >
+            BROWSE FULL <br /> STORE <span className="text-brand-orange">→</span>
+          </Link>
+        </div>
+      </HorizontalScroll>
+
+      {/* Section 6 — Build Planner CTA */}
+      <section className="py-32 relative overflow-hidden">
+        <div className="blueprint-grid absolute inset-0 opacity-10" />
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="max-w-4xl mx-auto text-center blueprint-border p-16 bg-brand-carbon/80 backdrop-blur-xl">
+            <h2 className="font-display text-5xl lg:text-7xl mb-8 leading-tight">
+              {cms(content, 'planner_cta', 'heading', 'PLAN YOUR')} <span className="text-brand-orange">BUILD</span>
+            </h2>
+            <p className="font-sans text-brand-grey text-xl mb-12 max-w-2xl mx-auto">
+              {cms(content, 'planner_cta', 'body', 'Select your base vehicle. Configure your systems. Get a complete parts list and budget estimate in real-time.')}
+            </p>
+            <a
+              href={cms(content, 'planner_cta', 'cta_href', '/planner')}
+              className="inline-block px-12 py-6 bg-brand-orange text-white font-display text-lg uppercase tracking-widest hover:scale-105 transition-transform"
+            >
+              {cms(content, 'planner_cta', 'cta_label', 'Launch Build Planner →')}
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 7 — Community Showcase */}
+      <section className="py-32 bg-brand-carbon">
+        <div className="container mx-auto px-6">
+          <div className="flex justify-between items-center mb-16">
+            <h2 className="font-display text-4xl">BUILT BY THE COMMUNITY</h2>
+            <Link href="/showcase" className="btn-secondary">View All Builds</Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {showcaseBuilds.map((build, i) => (
+              <div 
+                key={i} 
+                className={cn(
+                  "relative aspect-[4/5] overflow-hidden group",
+                  i === 0 && "md:col-span-2 md:row-span-2"
+                )}
+              >
+                <Image
+                  src={build.image}
+                  alt={build.title}
+                  fill
+                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-obsidian via-transparent to-transparent opacity-60" />
+                <div className="absolute bottom-0 left-0 p-6">
+                  <p className="font-mono text-[10px] text-brand-orange uppercase mb-2">{build.vehicle}</p>
+                  <h3 className="font-display text-lg uppercase">{build.title}</h3>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </main>
+  );
+}
+
+// Sub-components & Mock Data
+
+function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
+  return (
+    <Link 
+      href={`/vehicles/${vehicle.slug}`}
+      className="w-[450px] group blueprint-border bg-brand-graphite/30 overflow-hidden block hover:border-brand-orange transition-colors"
+    >
+      <div className="relative aspect-[16/10] overflow-hidden">
+        <Image
+          src={vehicle.image}
+          alt={vehicle.name}
+          fill
+          className="object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0"
+        />
+        <div className="absolute inset-0 bg-brand-obsidian/20" />
+      </div>
+      <div className="p-8">
+        <h3 className="font-display text-2xl mb-4 group-hover:text-brand-orange transition-colors">
+          {vehicle.name}
+        </h3>
+        <p className="font-mono text-xs text-brand-grey uppercase tracking-widest mb-8">
+          {vehicle.specs}
+        </p>
+        <span className="font-mono text-[10px] text-brand-white uppercase tracking-[0.2em] border-b border-brand-white/20 pb-2 group-hover:border-brand-orange group-hover:text-brand-orange transition-all">
+          View Full Profile
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+function SystemCard({ system }: { system: System }) {
+  const Icon = system.icon;
+  return (
+    <Link 
+      href={`/systems/${system.slug}`} 
+      className="group relative blueprint-border p-10 bg-brand-surface overflow-hidden transition-all duration-500 hover:-translate-y-2"
+    >
+      {/* Hover Background Image */}
+      <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+        <Image
+          src={system.image}
+          alt={system.name}
+          fill
+          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100"
+        />
+        <div className="absolute inset-0 bg-brand-obsidian/80 group-hover:bg-brand-obsidian/60 transition-colors" />
+      </div>
+
+      <div className="relative z-10">
+        <div className="flex items-center justify-between mb-12">
+          <div className="w-16 h-16 bg-brand-obsidian border border-brand-border flex items-center justify-center text-brand-orange group-hover:border-brand-orange transition-transform duration-500">
+            <Icon className="w-8 h-8" />
+          </div>
+          <div className="font-mono text-[10px] text-brand-grey group-hover:text-brand-orange transition-colors">
+            0{system.index} /
+          </div>
+        </div>
+        <h3 className="font-display text-2xl mb-4 group-hover:text-white transition-colors">{system.name}</h3>
+        <p className="font-sans text-brand-grey text-sm leading-relaxed mb-6 group-hover:text-brand-white/80 transition-colors">
+          {system.description}
+        </p>
+        <div className="flex items-center text-brand-orange font-mono text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+          Explore Deep-Dive →
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+const vehicles = [
+  { name: "MERCEDES SPRINTER", slug: "mercedes-sprinter", specs: "L3H3 — 170\" WB — High Roof", image: "/images/bespoke-sprinter.png" },
+  { name: "VW CRAFTER", slug: "vw-crafter", specs: "LWB — High Roof — 4Motion", image: "/images/bespoke-crafter.png" },
+  { name: "MAN TGE", slug: "man-tge", specs: "LWB — Lion's Cap Cab", image: "/images/bespoke-man.png" },
+  { name: "FORD TRANSIT", slug: "ford-transit", specs: "L4H3 — AWD — Jumbo", image: "/images/bespoke-transit.png" },
+  { name: "FIAT DUCATO", slug: "fiat-ducato", specs: "L4H3 — Maxi — 180 MultiJet", image: "/images/bespoke-fiat.png" },
+  { name: "PEUGEOT BOXER", slug: "peugeot-boxer", specs: "L3H2 — BlueHDi — LWB", image: "/images/bespoke-boxer.png" },
+  { name: "CITROEN RELAY", slug: "citroen-relay", specs: "L2H2 — Enterprise — MWB", image: "/images/bespoke-relay.png" },
+  { name: "IVECO DAILY", slug: "iveco-daily", specs: "7-Tonne — 4100L — Hi-Matic", image: "/images/bespoke-iveco.png" },
+];
+
+const systems = [
+  { index: 1, name: "ELECTRICAL & SOLAR", slug: "electrical-solar", icon: Zap, description: "Victron-powered off-grid power systems including Lithium monitoring and solar arrays.", image: "/images/tech-electrical.png" },
+  { index: 2, name: "HEATING & HOT WATER", slug: "heating-hot-water", icon: Thermometer, description: "Truma, Webasto and Eberspächer air and water heating solutions for all climates.", image: "/images/heating-system-technical.png" },
+  { index: 3, name: "WATER & PLUMBING", slug: "water-plumbing", icon: Droplets, description: "Fresh and waste water management, pressurized systems and luxury wet-room design.", image: "/images/tech-water.png" },
+  { index: 4, name: "INSULATION & VENT", slug: "insulation-ventilation", icon: Layers, description: "Advanced insulation materials, sound deadening and MaxxAir ventilation systems.", image: "/images/insulation-technical.png" },
+  { index: 5, name: "GAS & LPG", slug: "gas-lpg", icon: Shield, description: "EIL certified gas lockers, underslung tanks and manifold distribution systems.", image: "/images/gas-lpg-technical.png" },
+  { index: 6, name: "INTERIOR & FURNITURE", slug: "interior-furniture", icon: Layout, description: "Precision CNC cabinetry, lightweight birch ply and premium finishing materials.", image: "/images/tech-interior.png" },
+];
+
+const featuredProducts = [
+  { 
+    id: "victron-multiplus-ii-12-3000-120-32", 
+    name: "Victron MultiPlus-II 12/3000/120-32", 
+    brand: "VICTRON ENERGY", 
+    price: 124500, 
+    image: "/images/electrical-system-technical.png", 
+    slug: "victron-multiplus-ii-12-3000-120-32",
+    specLine: "12V | 3000VA | 120A",
+    badge: "Bestseller",
+    systemTier: "off-grid"
+  },
+  { 
+    id: "dometic-cfx3-55im", 
+    name: "Dometic CFX3 55IM Fridge", 
+    brand: "DOMETIC", 
+    price: 89900, 
+    image: "/images/interior-showcase.png", 
+    slug: "dometic-cfx3-55im",
+    specLine: "55L | 12/24V | WiFi Control",
+    badge: "Elite Gear",
+    systemTier: "adventure"
+  },
+  { 
+    id: "truma-combi-4e-kit", 
+    name: "Truma Combi 4E Kit", 
+    brand: "TRUMA", 
+    price: 185000, 
+    image: "/images/heating-system-technical.png", 
+    slug: "truma-combi-4e-kit",
+    specLine: "4kW | Gas/230V | 10L Vessel",
+    badge: "Build Essential",
+    systemTier: "expedition"
+  },
+];
+
+const showcaseBuilds = [
+  { title: "THE SUMMIT OVERLANDER", vehicle: "MERCEDES SPRINTER 170 4X4", image: "/images/community-showcase.png" },
+  { title: "ALPINE NOMAD", vehicle: "VW CRAFTER LWB", image: "/images/interior-showcase.png" },
+  { title: "DESERT WARRIOR", vehicle: "IVECO DAILY 4X4", image: "/images/hero-background.png" },
+  { title: "ARCTIC EXPLORER", vehicle: "FORD TRANSIT AWD", image: "/images/systems-showcase.png" },
+];
