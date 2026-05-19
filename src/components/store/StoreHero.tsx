@@ -6,9 +6,15 @@ import { ArrowRight, ShieldCheck, Truck, Headphones } from "lucide-react";
 
 interface StoreHeroProps {
   image?: string;
+  heading?: string;
+  subheading?: string;
 }
 
-export function StoreHero({ image = "/images/hero-background.png" }: StoreHeroProps) {
+export function StoreHero({
+  image = "/images/hero-background.png",
+  heading,
+  subheading,
+}: StoreHeroProps) {
   return (
     <section className="bg-brand-carbon border-t-2 border-brand-orange pt-20 lg:pt-32">
       <div className="container mx-auto px-6 h-full">
@@ -19,10 +25,10 @@ export function StoreHero({ image = "/images/hero-background.png" }: StoreHeroPr
               // GEAR FOR SERIOUS BUILDS
             </span>
             <h1 className="font-display text-3xl md:text-4xl lg:text-5xl uppercase leading-[1.1] tracking-tight mb-6 text-brand-white">
-              Professional-grade components for <br className="hidden lg:block" /> serious off-grid builds.
+              {heading || <>Professional-grade components for <br className="hidden lg:block" /> serious off-grid builds.</>}
             </h1>
             <p className="font-sans text-brand-grey text-base lg:text-lg mb-10 max-w-xl">
-              Every product in this registry is cross-referenced for system compatibility and engineered for high-performance living.
+              {subheading || 'Every product in this registry is cross-referenced for system compatibility and engineered for high-performance living.'}
             </p>
             
             <div className="flex flex-wrap gap-4 mb-12">

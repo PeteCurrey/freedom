@@ -11,7 +11,7 @@ interface HeroSectionProps {
   backgroundImage?: string;
 }
 
-export function HeroSection({ title, subtitle, backgroundImage = "/images/bespoke-sprinter.png" }: HeroSectionProps) {
+export function HeroSection({ title, subtitle, backgroundImage = "/images/hero-mountain.jpg" }: HeroSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);

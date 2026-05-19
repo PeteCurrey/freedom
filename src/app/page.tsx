@@ -12,6 +12,9 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Zap, Thermometer, Droplets, Shield, Layers, Layout } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getPageContentClient } from "@/lib/cms/getPageContent";
+import { cms } from "@/lib/cms/withFallback";
+import type { ContentMap } from "@/lib/cms/getPageContent";
 
 // Definining types for better safety
 interface Vehicle {
@@ -32,20 +35,11 @@ interface System {
 
 export default function Home() {
   const whyRef = useRef<HTMLDivElement>(null);
-  const [cmsConfig, setCmsConfig] = useState<any>(null);
+  const [cmsContent, setCmsContent] = useState<ContentMap>({});
   const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
 
   useEffect(() => {
-    async function fetchCms() {
-      const { data } = await supabase
-        .from('site_config')
-        .select('value')
-        .eq('key', 'page_home')
-        .single();
-      
-      if (data) setCmsConfig(data.value);
-    }
-    fetchCms();
+    getPageContentClient('home').then(setCmsContent);
   }, []);
 
   useEffect(() => {
@@ -103,9 +97,9 @@ export default function Home() {
     <main className="bg-brand-obsidian">
       <Navbar />
       <HeroSection 
-        title={cmsConfig?.hero?.title} 
-        subtitle={cmsConfig?.hero?.subtitle} 
-        backgroundImage="/images/bespoke-sprinter.png" 
+        title={cms(cmsContent, 'hero', 'heading', 'Engineering Freedom.')} 
+        subtitle={cms(cmsContent, 'hero', 'subheading')} 
+        backgroundImage={cms(cmsContent, 'hero', 'image_url', '/images/hero-mountain.jpg')} 
       />
 
       {/* Section 2 — Why We Exist */}
@@ -114,14 +108,14 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
             <div className="space-y-12">
               <h2 className="why-text-item font-display text-5xl lg:text-7xl leading-none">
-                {cmsConfig?.why?.title_part || "THIS ISN'T"} <span className="text-brand-orange">{cmsConfig?.why?.title_orange || "VANLIFE"}</span>
+                {cms(cmsContent, 'intro', 'heading', "THIS ISN'T")} <span className="text-brand-orange">VANLIFE</span>
               </h2>
               <div className="why-text-item space-y-6">
                 <p className="font-sans text-brand-grey text-lg lg:text-xl leading-relaxed">
-                  {cmsConfig?.why?.p1 || "Forget the Instagram filter. We're here for the builds that run induction hobs off lithium, heat through Alpine winters, and carry you 100,000 miles without breaking a sweat."}
+                  {cms(cmsContent, 'intro', 'body', "Forget the Instagram filter. We're here for the builds that run induction hobs off lithium, heat through Alpine winters, and carry you 100,000 miles without breaking a sweat.")}
                 </p>
                 <p className="font-sans text-brand-white text-lg lg:text-xl leading-relaxed">
-                  {cmsConfig?.why?.p2 || "This is engineering. This is craft. This is freedom — done properly."}
+                  {cms(cmsContent, 'intro', 'body_secondary', "This is engineering. This is craft. This is freedom — done properly.")}
                 </p>
               </div>
               <div className="why-text-item stats-container grid grid-cols-2 gap-12 pt-12 border-t border-brand-border">
@@ -159,7 +153,7 @@ export default function Home() {
 
       {/* Section 3 — Base Vehicles Preview (Horizontal Scroll) */}
       <HorizontalScroll 
-        title="CHOOSE YOUR FOUNDATION"
+        title={cms(cmsContent, 'gear', 'heading', 'CHOOSE YOUR FOUNDATION')}
         subtitle="6 Pro-grade chassis compared for your next build."
       >
         {vehicles.map((vehicle) => (
@@ -195,7 +189,7 @@ export default function Home() {
       </section>
 
       {/* Section 5 — Featured Products */}
-      <HorizontalScroll title="GEAR THAT GOES THE DISTANCE">
+      <HorizontalScroll title={cms(cmsContent, 'products', 'heading', 'GEAR THAT GOES THE DISTANCE')}>
         {featuredProducts.map((product) => (
           <div key={product.id} className="w-[350px]">
             <ProductCard 
@@ -227,18 +221,17 @@ export default function Home() {
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center blueprint-border p-16 bg-brand-carbon/80 backdrop-blur-xl">
             <h2 className="font-display text-5xl lg:text-7xl mb-8 leading-tight">
-              PLAN YOUR <span className="text-brand-orange">BUILD</span>
+              {cms(cmsContent, 'planner_cta', 'heading', 'PLAN YOUR')} <span className="text-brand-orange">BUILD</span>
             </h2>
             <p className="font-sans text-brand-grey text-xl mb-12 max-w-2xl mx-auto">
-              Select your base vehicle. Configure your systems. Get a complete parts list and 
-              budget estimate in real-time.
+              {cms(cmsContent, 'planner_cta', 'body', 'Select your base vehicle. Configure your systems. Get a complete parts list and budget estimate in real-time.')}
             </p>
-            <Link
-              href="/planner"
+            <a
+              href={cms(cmsContent, 'planner_cta', 'cta_href', '/planner')}
               className="inline-block px-12 py-6 bg-brand-orange text-white font-display text-lg uppercase tracking-widest hover:scale-105 transition-transform"
             >
-              Launch Build Planner →
-            </Link>
+              {cms(cmsContent, 'planner_cta', 'cta_label', 'Launch Build Planner →')}
+            </a>
           </div>
         </div>
       </section>

@@ -41,7 +41,9 @@ import {
   Shield,
   ShieldCheck,
   Zap,
-  Download
+  Download,
+  FileText as FileTextIcon,
+  Image as ImageIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -53,6 +55,13 @@ const navGroups = [
     items: [
       { name: "Command Centre", href: "/admin", icon: LayoutDashboard },
       { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+    ]
+  },
+  {
+    label: "CONTENT",
+    items: [
+      { name: "Pages", href: "/admin/content/pages", icon: FileTextIcon },
+      { name: "Media Library", href: "/admin/content/media", icon: ImageIcon },
     ]
   },
   {

@@ -10,6 +10,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CATEGORIES, PRODUCTS } from "@/lib/data/productRegistry";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { getPageContent } from "@/lib/cms/getPageContent";
+import { cms } from "@/lib/cms/withFallback";
 
 // Define fallback config locally to ensure rendering even if DB fails
 const FALLBACK_CONFIG: Record<string, string> = {
@@ -33,10 +35,12 @@ const FALLBACK_CONFIG: Record<string, string> = {
 };
 
 export default async function StoreHub() {
+  // Fetch CMS content
+  const cmsContent = await getPageContent('store');
+
   // Fetch store config
   let configMap: Record<string, string> = { ...FALLBACK_CONFIG };
   try {
-    // Attempt to fetch from DB if available
     const { data: configData } = await supabaseAdmin.from('store_config').select('key, value');
     if (configData) {
       configData.forEach((item: any) => {
@@ -97,7 +101,11 @@ export default async function StoreHub() {
       {/* 2px Orange Border Threshold */}
       <div className="w-full h-[2px] bg-brand-orange" />
 
-      <StoreHero image={configMap['store_hero_image']} />
+      <StoreHero 
+        image={cms(cmsContent, 'hero', 'image_url', configMap['store_hero_image'])}
+        heading={cms(cmsContent, 'hero', 'heading', 'THE HARDWARE REGISTRY')}
+        subheading={cms(cmsContent, 'hero', 'subheading', '')}
+      />
       <EditorsPick product={editorPickProduct as any} />
       <div className="h-4" />
       <CategoryGrid categories={mappedCategories} />

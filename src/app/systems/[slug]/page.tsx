@@ -17,6 +17,8 @@ import { ProductCard } from "@/components/store/ProductCard";
 import { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { getPageContent } from "@/lib/cms/getPageContent";
+import { cms } from "@/lib/cms/withFallback";
 
 // Initialize admin client to fetch content
 const supabaseAdmin = createClient(
@@ -69,6 +71,10 @@ export default async function SystemSlugPage({ params }: { params: Promise<{ slu
   const tiers = system.tiers || {};
   const mistakes = system.common_mistakes || [];
 
+  // Load CMS overrides for this system page
+  const cmsPageKey = `systems/${slug}`;
+  const cmsContent = await getPageContent(cmsPageKey);
+
   // Fetch 3 relevant products for CTA
   let ctaProducts: any[] = [];
   const { data: catData } = await supabaseAdmin
@@ -110,10 +116,10 @@ export default async function SystemSlugPage({ params }: { params: Promise<{ slu
                <span className="opacity-100">{system.name}</span>
              </div>
              <h1 className="font-display text-7xl lg:text-9xl mb-8 uppercase font-bold tracking-tighter leading-none">
-               {system.name}
+               {cms(cmsContent, 'hero', 'heading', system.name)}
              </h1>
              <p className="font-sans text-brand-grey text-xl lg:text-2xl leading-relaxed max-w-2xl">
-               {system.description}
+               {cms(cmsContent, 'hero', 'subheading', system.description)}
              </p>
           </div>
         </div>
@@ -260,7 +266,7 @@ export default async function SystemSlugPage({ params }: { params: Promise<{ slu
       {/* 4. SHOP CTA */}
       <section className="py-32 relative">
          <div className="container mx-auto px-6 text-center">
-            <h2 className="font-display text-5xl lg:text-7xl mb-8 uppercase tracking-tighter">Ready to Start Your <span className="text-brand-orange">Installation?</span></h2>
+            <h2 className="font-display text-5xl lg:text-7xl mb-8 uppercase tracking-tighter">{cms(cmsContent, 'cta', 'heading', 'Ready to Start Your')} <span className="text-brand-orange">Installation?</span></h2>
             <p className="font-sans text-brand-grey text-xl max-w-2xl mx-auto mb-16">
               Shop the exact same professional-grade components used in the blueprints. Tested, verified, and ready for your build.
             </p>

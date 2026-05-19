@@ -9,6 +9,8 @@ import { ProductCard } from "@/components/store/ProductCard";
 import { vehicleData } from "@/lib/data/vehicles";
 import { Metadata } from "next";
 import { supabase } from "@/lib/supabase";
+import { getPageContent } from "@/lib/cms/getPageContent";
+import { cms } from "@/lib/cms/withFallback";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -27,6 +29,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function VehicleProfile({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const vehicle = vehicleData[slug as keyof typeof vehicleData] || vehicleData["mercedes-sprinter"];
+
+  // CMS content overlay
+  const cmsContent = await getPageContent(`vehicles/${slug}`);
 
   // Fetch marketplaces for this specific vehicle
   const { data: marketplaceLinks } = await supabase
@@ -55,7 +60,7 @@ export default async function VehicleProfile({ params }: { params: Promise<{ slu
         
         <div className="container mx-auto px-6 pb-24 relative z-10">
           <div className="max-w-4xl">
-            <h1 className="font-display text-6xl lg:text-9xl mb-4 leading-none">{vehicle.name}</h1>
+            <h1 className="font-display text-6xl lg:text-9xl mb-4 leading-none">{cms(cmsContent, 'hero', 'heading', vehicle.name)}</h1>
             <div className="flex flex-col md:flex-row md:items-center gap-6">
               <p className="font-mono text-sm lg:text-lg text-brand-orange uppercase tracking-[0.3em]">
                 {"//"} {vehicle.tagline}
@@ -94,7 +99,7 @@ export default async function VehicleProfile({ params }: { params: Promise<{ slu
             <div className="lg:col-span-2">
               <h2 className="font-display text-xs tracking-[0.3em] text-brand-grey uppercase mb-8">Foundation Analysis</h2>
               <p className="font-sans text-brand-white text-xl lg:text-3xl leading-relaxed">
-                {vehicle.description}
+                {cms(cmsContent, 'intro', 'body', vehicle.description)}
               </p>
               <div className="mt-12 flex items-center gap-6">
                 <Link
@@ -186,7 +191,7 @@ export default async function VehicleProfile({ params }: { params: Promise<{ slu
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
             <div>
-              <h2 className="font-display text-4xl mb-12">THE VERDICT</h2>
+              <h2 className="font-display text-4xl mb-12">{cms(cmsContent, 'verdict', 'heading', 'THE VERDICT')}</h2>
               <div className="space-y-4 mb-16">
                 <div className="blueprint-border p-8 bg-brand-obsidian/50 border-l-4 border-l-brand-orange">
                   <p className="font-sans text-brand-grey text-xs uppercase tracking-widest mb-2 font-bold">Best For</p>

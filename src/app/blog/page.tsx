@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ArrowRight, Calendar, User, Clock, MessageSquare } from "lucide-react";
+import { getPageContent } from "@/lib/cms/getPageContent";
+import { cms } from "@/lib/cms/withFallback";
 
 export const metadata: Metadata = {
   title: "Amplios Blog | Resident Blogger & Community Stories",
@@ -49,7 +51,8 @@ const blogPosts = [
   }
 ];
 
-export default function BlogIndex() {
+export default async function BlogIndex() {
+  const cmsContent = await getPageContent('blog');
   return (
     <main className="bg-brand-obsidian min-h-screen">
       <Navbar />
@@ -62,11 +65,10 @@ export default function BlogIndex() {
               // STORIES FROM THE ROAD
             </span>
             <h1 className="font-display text-6xl lg:text-9xl uppercase tracking-tighter text-brand-white leading-[0.85] mb-8">
-              RESIDENT<br /><span className="text-brand-orange">BLOGGER</span>
+              {cms(cmsContent, 'hero', 'heading', 'THE BUILD JOURNAL')}
             </h1>
             <p className="font-sans text-brand-grey text-lg lg:text-2xl leading-relaxed max-w-2xl italic border-l-2 border-brand-orange pl-6">
-              Technical guides are for the day. Blog stories are for the night. 
-              Real experiences from real people living in vans they built themselves.
+              {cms(cmsContent, 'hero', 'subheading', 'Technical guides, build reports, and engineering deep-dives from the Amplios team.')}
             </p>
           </div>
         </div>
