@@ -104,7 +104,7 @@ export const PAGE_SEEDS: Record<string, SeedField[]> = {
   store: [
     { sectionKey: 'hero', fieldKey: 'heading', fieldType: 'text', value: 'THE HARDWARE REGISTRY' },
     { sectionKey: 'hero', fieldKey: 'subheading', fieldType: 'textarea', value: 'Professional-grade components for serious campervan conversions. Tested, verified, and ready for your build.' },
-    { sectionKey: 'hero', fieldKey: 'image_url', fieldType: 'image', value: '/images/systems-showcase.png' },
+    { sectionKey: 'hero', fieldKey: 'image_url', fieldType: 'image', value: '/images/store-hero.jpg' },
     { sectionKey: 'intro', fieldKey: 'heading', fieldType: 'text', value: 'ENGINEERED COMPONENTS' },
     { sectionKey: 'intro', fieldKey: 'body', fieldType: 'textarea', value: 'Every product in our registry has been evaluated for payload impact, installation complexity, and system compatibility.' },
     { sectionKey: 'featured', fieldKey: 'heading', fieldType: 'text', value: 'FEATURED SYSTEMS' },

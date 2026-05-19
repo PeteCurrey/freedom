@@ -17,7 +17,7 @@ import { cms } from "@/lib/cms/withFallback";
 
 // Define fallback config locally to ensure rendering even if DB fails
 const FALLBACK_CONFIG: Record<string, string> = {
-  'store_hero_image': '/images/hero-background.png',
+  'store_hero_image': '/images/store-hero.jpg',
   'category_image_electrical-core': '/images/electrical-technical.png',
   'category_image_solar-roof': '/images/systems-showcase.png',
   'category_image_heating-climate': '/images/heating-system-technical.png',

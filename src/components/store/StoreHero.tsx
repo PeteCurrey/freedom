@@ -16,7 +16,7 @@ export function StoreHero({
   subheading,
 }: StoreHeroProps) {
   return (
-    <section className="relative w-full flex items-center min-h-[85vh] bg-brand-obsidian overflow-hidden">
+    <section className="relative w-full flex items-center h-screen bg-brand-obsidian overflow-hidden">
       {/* Background Image Layer */}
       <div className="absolute inset-0 z-0">
         <Image 
